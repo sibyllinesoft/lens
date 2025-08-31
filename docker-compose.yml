@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # NATS server for work distribution
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"      # NATS client port
+      - "8222:8222"      # HTTP management port
+    command: [
+      "--jetstream",     # Enable JetStream
+      "--store_dir=/data/jetstream",
+      "--max_memory_store=1GB",
+      "--max_file_store=10GB"
+    ]
+    volumes:
+      - nats_data:/data/jetstream
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Jaeger for distributed tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "14268:14268"    # Jaeger collector HTTP
+      - "16686:16686"    # Jaeger UI
+    environment:
+      COLLECTOR_OTLP_ENABLED: true
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"      # Prometheus UI
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+
+  # Lens search service
+  lens:
+    build: .
+    ports:
+      - "3000:3000"      # Main API
+      - "9464:9464"      # Metrics endpoint
+    environment:
+      - NODE_ENV=production
+      - NATS_URL=nats://nats:4222
+      - JAEGER_ENDPOINT=http://jaeger:14268/api/traces
+    depends_on:
+      nats:
+        condition: service_healthy
+      jaeger:
+        condition: service_started
+    volumes:
+      - lens_data:/app/data
+      - lens_segments:/app/segments
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  nats_data:
+  lens_data:
+  lens_segments:
