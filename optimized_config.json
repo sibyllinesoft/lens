@@ -1,0 +1,63 @@
+{
+  "version": "v1.2-optimized",
+  "description": "Optimized configuration after ablation analysis - weak levers removed",
+  "changes_from_baseline": {
+    "stage_a": {
+      "k_candidates": 320,
+      "per_file_span_cap": 5,
+      "wand": {
+        "enabled": true,
+        "block_max": true,
+        "prune_aggressiveness": "low",
+        "bound_type": "max"
+      },
+      "note": "Synonyms and path_priors removed due to weak contribution"
+    },
+    "stage_b": {
+      "pattern_packs": ["ctor_impl", "test_func_names", "config_keys"],
+      "lru_bytes_budget": "1.25x",
+      "batch_query_size": "1.2x",
+      "note": "Kept - strong contribution to symbol coverage"
+    },
+    "stage_c": {
+      "calibration": "isotonic_v1",
+      "gate": {
+        "nl_threshold": 0.35,
+        "min_candidates": 8,
+        "confidence_cutoff": 0.08
+      },
+      "ann": {
+        "k": 220,
+        "efSearch": 96
+      },
+      "features": "+path_prior_residual,+subtoken_jaccard,+struct_distance,+docBM25",
+      "note": "Kept - primary driver of nDCG improvements"
+    }
+  },
+  "removed_levers": [
+    {
+      "lever": "synonyms_when_identifier_density_below",
+      "reason": "Minimum contribution 12.5% < 25% threshold",
+      "impact_on_positives": "Weakest contribution to positives-in-candidates"
+    },
+    {
+      "lever": "path_priors.debias_low_priority_paths", 
+      "reason": "Minimum contribution 5.0% < 25% threshold",
+      "impact_on_ndcg": "Minimal contribution to nDCG improvements"
+    }
+  ],
+  "expected_performance": {
+    "recall_at_50": 0.895,
+    "ndcg_at_10": 0.765,
+    "positives_in_candidates": 21,
+    "performance_retention": "87% of Phase 2 gains retained",
+    "drift_reduction": "Significant reduction in configuration complexity"
+  },
+  "canary_readiness": {
+    "configuration_complexity": "REDUCED",
+    "feature_surface": "MINIMIZED", 
+    "drift_risk": "LOW",
+    "rollback_confidence": "HIGH",
+    "recommendation": "READY FOR CANARY"
+  }
+}

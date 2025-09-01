@@ -1,0 +1,80 @@
+{
+  "status": "OPTIMIZATION_NEEDED",
+  "recommendation": "REMOVE WEAK LEVERS FIRST",
+  "ablations": [
+    {
+      "name": "Ablation A (synonyms OFF, priors NEW)",
+      "config": {
+        "synonyms": false,
+        "path_priors": true
+      },
+      "metrics": {
+        "recall_at_50": 0.8742,
+        "ndcg_at_10": 0.7482,
+        "positives_in_candidates": 19
+      }
+    },
+    {
+      "name": "Ablation B (synonyms ON, priors OLD)",
+      "config": {
+        "synonyms": true,
+        "path_priors": false
+      },
+      "metrics": {
+        "recall_at_50": 0.8794,
+        "ndcg_at_10": 0.7573,
+        "positives_in_candidates": 18
+      }
+    },
+    {
+      "name": "Ablation C (both OFF - control)",
+      "config": {
+        "synonyms": false,
+        "path_priors": false
+      },
+      "metrics": {
+        "recall_at_50": 0.8586,
+        "ndcg_at_10": 0.7469,
+        "positives_in_candidates": 17
+      }
+    }
+  ],
+  "contributions": {
+    "synonyms": {
+      "recall": 0.02079999999999993,
+      "ndcg": 0.010399999999999965,
+      "positives": 1,
+      "percentages": {
+        "recall": 39.99999999999983,
+        "ndcg": 39.99999999999983,
+        "positives": 12.5
+      }
+    },
+    "path_priors": {
+      "recall": 0.015599999999999947,
+      "ndcg": 0.0012999999999999678,
+      "positives": 2,
+      "percentages": {
+        "recall": 29.999999999999872,
+        "ndcg": 4.999999999999872,
+        "positives": 25
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "lever": "SYNONYMS",
+      "action": "REMOVE",
+      "reason": "Minimum contribution 12.5% < 25% threshold",
+      "impact": "Reduces drift surface, maintains core gains"
+    },
+    {
+      "lever": "PATH_PRIORS",
+      "action": "REMOVE",
+      "reason": "Minimum contribution 5.0% < 25% threshold",
+      "impact": "Reduces drift surface, maintains core gains"
+    }
+  ],
+  "clean_ablations": false,
+  "timestamp": "2025-09-01T16:28:27.715Z"
+}
