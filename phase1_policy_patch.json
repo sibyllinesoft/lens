@@ -1,0 +1,18 @@
+{
+  "rare_term_fuzzy": "backoff",
+  "fuzzy_max_edits": 2,
+  "synonyms_when_identifier_density_below": 0.65,
+  "synonyms_source": "pmi_subtokens_docstrings_v1",
+  "k_candidates": 320,
+  "per_file_span_cap": 5,
+  "path_priors": {
+    "debias_low_priority_paths": true,
+    "max_deboost": 0.6
+  },
+  "wand": {
+    "enabled": true,
+    "block_max": true,
+    "prune_aggressiveness": "low",
+    "bound_type": "max"
+  }
+}
