@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-09-01T16:15:13.071Z",
+  "config_fingerprint": "baseline-policy-1756743313071",
+  "api_version": "v1.0.0-rc.1",
+  "index_version": "v1.0.0",
+  "policy_version": "v1.0.0",
+  "stage_configurations": {
+    "stage_a": {
+      "rare_term_fuzzy": true,
+      "synonyms_when_identifier_density_below": 0.3,
+      "per_file_span_cap": 3,
+      "native_scanner": "auto",
+      "wand": {
+        "enabled": true,
+        "block_max": true
+      }
+    },
+    "stage_b": {
+      "enabled": true,
+      "max_candidates": 200
+    },
+    "stage_c": {
+      "enabled": true,
+      "semantic_gating": {
+        "nl_likelihood_threshold": 0.5,
+        "min_candidates": 10
+      },
+      "confidence_cutoff": 0.1
+    }
+  },
+  "kill_switches": {
+    "stage_b_enabled": true,
+    "stage_c_enabled": true,
+    "stage_a_native_scanner": true,
+    "kill_switch_active": false
+  },
+  "telemetry": {
+    "trace_sample_rate": 0.15,
+    "metrics_enabled": true
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-09-01T16:16:39.415Z",
+  "trace_id": "baseline-smoke-1756707524",
+  "system": "SMOKE",
+  "total_queries": 50,
+  "completed_queries": 48,
+  "failed_queries": 2,
+  "span_coverage": 0.96,
+  "metrics": {
+    "recall_at_10": 0.752,
+    "recall_at_50": 0.856,
+    "ndcg_at_10": 0.743,
+    "mrr": 0.681,
+    "first_relevant_tokens": 8.3
+  },
+  "stage_latencies": {
+    "stage_a_p50": 42,
+    "stage_a_p95": 78,
+    "stage_a_p99": 115,
+    "stage_b_p50": 68,
+    "stage_b_p95": 103,
+    "stage_b_p99": 142,
+    "stage_c_p50": 85,
+    "stage_c_p95": 131,
+    "stage_c_p99": 189,
+    "e2e_p95": 312
+  },
+  "fan_out_sizes": {
+    "positives_in_candidates": 16,
+    "stage_a_candidates": 847,
+    "stage_b_candidates": 213
+  },
+  "errors": [
+    {
+      "query_id": "q_23",
+      "error_type": "timeout",
+      "stage": "stage_c",
+      "message": "Semantic search timeout after 300ms"
+    },
+    {
+      "query_id": "q_41",
+      "error_type": "index_missing",
+      "stage": "stage_a",
+      "message": "Repository not found in lexical index"
+    }
+  ]
+}
