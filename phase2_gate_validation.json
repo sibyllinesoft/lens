@@ -1,0 +1,39 @@
+{
+  "overall_status": "PASS",
+  "gates_passed": 4,
+  "gates_total": 4,
+  "critical_failures": 0,
+  "gates": [
+    {
+      "name": "ΔnDCG@10 ≥ +2%",
+      "required": "≥ +2%",
+      "actual": "+3.5%",
+      "passed": true,
+      "critical": true,
+      "primary": true
+    },
+    {
+      "name": "Recall@50 ≥ baseline",
+      "required": "≥ 0.856",
+      "actual": "0.908",
+      "passed": true,
+      "critical": true
+    },
+    {
+      "name": "spans ≥ 98%",
+      "required": "≥ 98%",
+      "actual": "98.5%",
+      "passed": true,
+      "critical": true
+    },
+    {
+      "name": "hard-negative leakage ≤ +1.5% abs",
+      "required": "≤ 1.5%",
+      "actual": "0.8%",
+      "passed": true,
+      "critical": false
+    }
+  ],
+  "recommendation": "PROMOTE",
+  "timestamp": "2025-09-01T16:26:53.531Z"
+}

@@ -1,0 +1,13 @@
+{
+  "calibration": "isotonic_v1",
+  "gate": {
+    "nl_threshold": 0.35,
+    "min_candidates": 8,
+    "confidence_cutoff": 0.08
+  },
+  "ann": {
+    "k": 220,
+    "efSearch": 96
+  },
+  "features": "+path_prior_residual,+subtoken_jaccard,+struct_distance,+docBM25"
+}

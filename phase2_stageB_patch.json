@@ -1,0 +1,5 @@
+{
+  "pattern_packs": ["ctor_impl", "test_func_names", "config_keys"],
+  "lru_bytes_budget": "1.25x",
+  "batch_query_size": "1.2x"
+}
