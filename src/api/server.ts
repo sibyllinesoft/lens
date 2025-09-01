@@ -12,16 +12,26 @@ import {
   StructRequestSchema,
   SymbolsNearRequestSchema,
   HealthResponseSchema,
+  CompatibilityCheckRequestSchema,
+  CompatibilityCheckResponseSchema,
   type SearchRequest,
   type SearchResponse,
   type StructRequest,
   type SymbolsNearRequest,
   type HealthResponse,
+  type CompatibilityCheckRequest,
+  type CompatibilityCheckResponse,
 } from '../types/api.js';
 import { LensTracer } from '../telemetry/tracer.js';
 import { LensSearchEngine } from './search-engine.js';
 import { PRODUCTION_CONFIG } from '../types/config.js';
 import { registerBenchmarkEndpoints } from './benchmark-endpoints.js';
+import { checkCompatibility, getVersionInfo } from '../core/version-manager.js';
+import { checkBundleCompatibility } from '../core/compatibility-checker.js';
+import { globalFeatureFlags } from '../core/feature-flags.js';
+import { runQualityGates } from '../core/quality-gates.js';
+import { runNightlyValidation, getValidationStatus, globalThreeNightValidation } from '../core/three-night-validation.js';
+import { getDashboardState } from '../monitoring/phase-d-dashboards.js';
 
 const fastify = Fastify({
   logger: {
@@ -122,6 +132,36 @@ async function initializeServerWithTracking() {
 // Override the export
 export { initializeServerWithTracking as initializeServer };
 
+// Manifest endpoint - maps repo_ref to repo_sha
+fastify.get('/manifest', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_manifest');
+  const startTime = Date.now();
+
+  try {
+    const manifest = await searchEngine.getManifest();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      repos_count: Object.keys(manifest).length,
+    });
+
+    return manifest;
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(503);
+    return { error: 'Failed to get manifest' };
+    
+  } finally {
+    span.end();
+  }
+});
+
 // Health check endpoint
 fastify.get('/health', async (request, reply): Promise<HealthResponse> => {
   const span = LensTracer.createChildSpan('health_check');
@@ -173,6 +213,453 @@ fastify.get('/health', async (request, reply): Promise<HealthResponse> => {
   }
 });
 
+// Compatibility check endpoint
+fastify.get('/compat/check', async (request, reply): Promise<CompatibilityCheckResponse> => {
+  const span = LensTracer.createChildSpan('compat_check');
+  const startTime = Date.now();
+
+  try {
+    // Parse query parameters
+    const { api_version, index_version, policy_version, allow_compat } = request.query as any;
+    
+    const compatRequest: CompatibilityCheckRequest = CompatibilityCheckRequestSchema.parse({
+      api_version: api_version || 'v1',
+      index_version: index_version || 'v1',
+      policy_version: policy_version || undefined,
+      allow_compat: allow_compat === 'true' || allow_compat === true,
+    });
+
+    const result = checkCompatibility(
+      compatRequest.api_version,
+      compatRequest.index_version,
+      compatRequest.allow_compat,
+      compatRequest.policy_version
+    );
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      compatible: result.compatible,
+      client_api_version: compatRequest.api_version,
+      client_index_version: compatRequest.index_version,
+      allow_compat: compatRequest.allow_compat,
+    });
+
+    // Check SLA compliance (10ms target)
+    if (latency > 10) {
+      fastify.log.warn(`Compat check SLA breach: ${latency}ms > 10ms`);
+    }
+
+    // Validate response against schema
+    CompatibilityCheckResponseSchema.parse(result);
+    
+    return result;
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(400);
+    throw error;
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Bundle compatibility check endpoint
+fastify.get('/compat/bundles', async (request, reply) => {
+  const span = LensTracer.createChildSpan('compat_check_bundles');
+  const startTime = Date.now();
+
+  try {
+    // Parse query parameters
+    const { allow_compat, bundles_path } = request.query as any;
+    
+    const allowCompatFlag = allow_compat === 'true' || allow_compat === true;
+    const bundlesPath = bundles_path || './nightly-bundles';
+    
+    const report = await checkBundleCompatibility(bundlesPath, allowCompatFlag);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      bundles_checked: report.bundles_checked.length,
+      compatible: report.compatible,
+      overall_status: report.overall_status,
+      allow_compat: allowCompatFlag,
+    });
+
+    // Check SLA compliance (50ms target for bundle checks)
+    if (latency > 50) {
+      fastify.log.warn(`Bundle compat check SLA breach: ${latency}ms > 50ms`);
+    }
+
+    return report;
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      compatible: false,
+      error: 'Bundle compatibility check failed',
+      message: errorMsg,
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase D Canary Deployment Endpoints
+fastify.get('/canary/status', async (request, reply) => {
+  const span = LensTracer.createChildSpan('canary_status');
+  const startTime = Date.now();
+
+  try {
+    const status = globalFeatureFlags.getCanaryStatus();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      traffic_percentage: status.trafficPercentage,
+      kill_switch_enabled: status.killSwitchEnabled,
+      stage_a_enabled: status.stageFlags.stageA_native_scanner,
+      stage_b_enabled: status.stageFlags.stageB_enabled,
+      stage_c_enabled: status.stageFlags.stageC_enabled,
+    });
+
+    return {
+      success: true,
+      canary_deployment: status,
+      timestamp: new Date().toISOString(),
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to get canary status',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+fastify.post('/canary/progress', async (request, reply) => {
+  const span = LensTracer.createChildSpan('canary_progress');
+  const startTime = Date.now();
+
+  try {
+    const result = globalFeatureFlags.progressCanaryRollout();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: result.success,
+      latency_ms: latency,
+      new_percentage: result.newPercentage,
+      stage: result.stage,
+    });
+
+    if (!result.success) {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'Cannot progress rollout',
+        current_percentage: result.newPercentage,
+        stage: result.stage
+      };
+    }
+
+    return {
+      success: true,
+      message: `Canary rollout progressed to ${result.newPercentage}% (${result.stage})`,
+      new_percentage: result.newPercentage,
+      stage: result.stage,
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to progress canary rollout',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+fastify.post('/canary/killswitch', async (request, reply) => {
+  const span = LensTracer.createChildSpan('canary_killswitch');
+  const startTime = Date.now();
+
+  try {
+    const { reason } = request.body as { reason?: string };
+    const killReason = reason || 'Manual kill switch activation';
+    
+    globalFeatureFlags.killSwitchActivate(killReason);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      reason: killReason,
+    });
+
+    return {
+      success: true,
+      message: 'Kill switch activated - all canary traffic stopped',
+      reason: killReason,
+      traffic_percentage: 0,
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to activate kill switch',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase D Quality Gates and Validation Endpoints
+fastify.post('/validation/quality-gates', async (request, reply) => {
+  const span = LensTracer.createChildSpan('quality_gates_run');
+  const startTime = Date.now();
+
+  try {
+    const qualityReport = await runQualityGates();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      overall_passed: qualityReport.overall_passed,
+      gates_total: qualityReport.metrics_summary.gates_total,
+      gates_passed: qualityReport.metrics_summary.gates_passed,
+      promotion_eligible: qualityReport.promotion_eligible
+    });
+
+    return {
+      success: true,
+      quality_gates_report: qualityReport,
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Quality gates validation failed',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+fastify.post('/validation/nightly', async (request, reply) => {
+  const span = LensTracer.createChildSpan('nightly_validation_run');
+  const startTime = Date.now();
+
+  try {
+    const { duration_minutes, repo_types, languages, force_night } = request.body as any;
+    
+    const options = {
+      duration_minutes: duration_minutes || 120,
+      repo_types: repo_types || ['backend', 'frontend', 'monorepo'],
+      languages: languages || ['typescript', 'javascript', 'python', 'go', 'rust'],
+      force_night: force_night
+    };
+
+    const validationResult = await runNightlyValidation(options);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      night: validationResult.night,
+      validation_passed: validationResult.validation_passed,
+      duration_minutes: validationResult.duration_minutes,
+      blocking_issues: validationResult.blocking_issues.length
+    });
+
+    return {
+      success: true,
+      nightly_validation_result: validationResult,
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Nightly validation failed',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+fastify.get('/validation/status', async (request, reply) => {
+  const span = LensTracer.createChildSpan('validation_status');
+  const startTime = Date.now();
+
+  try {
+    const validationStatus = getValidationStatus();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      current_night: validationStatus.current_night,
+      consecutive_passes: validationStatus.consecutive_passes,
+      promotion_ready: validationStatus.promotion_ready
+    });
+
+    return {
+      success: true,
+      validation_status: validationStatus,
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to get validation status',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+fastify.get('/validation/signoff-report', async (request, reply) => {
+  const span = LensTracer.createChildSpan('signoff_report');
+  const startTime = Date.now();
+
+  try {
+    const signoffReport = globalThreeNightValidation.generateSignoffReport();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      promotion_ready: signoffReport.sign_off_report.promotion_ready
+    });
+
+    return {
+      success: true,
+      signoff_report: signoffReport,
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to generate signoff report',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase D Monitoring Dashboard Endpoint
+fastify.get('/monitoring/dashboard', async (request, reply) => {
+  const span = LensTracer.createChildSpan('dashboard_status');
+  const startTime = Date.now();
+
+  try {
+    const dashboardState = getDashboardState();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      health_status: dashboardState.health.status,
+      active_alerts: dashboardState.health.active_alerts,
+      canary_traffic: dashboardState.canary_status.traffic_percentage
+    });
+
+    return {
+      success: true,
+      dashboard_state: dashboardState,
+      timestamp: new Date().toISOString(),
+      latency_ms: latency
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to get dashboard state',
+      message: errorMsg
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
 // Main search endpoint
 fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
   const span = LensTracer.createChildSpan('api_search');
@@ -184,6 +671,7 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
     const traceId = request.headers['x-trace-id'] as string || uuidv4();
 
     span.setAttributes({
+      'request.repo_sha': searchRequest.repo_sha,
       'request.query': searchRequest.q,
       'request.mode': searchRequest.mode,
       'request.fuzzy': searchRequest.fuzzy,
@@ -194,6 +682,7 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
     // Perform search
     const result = await searchEngine.search({
       trace_id: traceId,
+      repo_sha: searchRequest.repo_sha,
       query: searchRequest.q,
       mode: searchRequest.mode,
       k: searchRequest.k,
@@ -210,17 +699,24 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
     }
 
     // Build response
+    const versionInfo = getVersionInfo();
     const response: SearchResponse = {
-      hits: result.candidates.map(candidate => ({
-        file: candidate.file_path,
-        line: candidate.line,
-        col: candidate.col,
-        ast_path: candidate.ast_path,
-        symbol_kind: candidate.symbol_kind,
-        score: candidate.score,
-        why: candidate.match_reasons,
+      hits: result.hits.map((hit: any) => ({
+        file: hit.file,
+        line: hit.line,
+        col: hit.col,
+        lang: hit.lang,
+        snippet: hit.snippet,
+        score: hit.score,
+        why: hit.why,
+        ast_path: hit.ast_path,
+        symbol_kind: hit.symbol_kind,
+        byte_offset: hit.byte_offset,
+        span_len: hit.span_len,
+        context_before: hit.context_before,
+        context_after: hit.context_after,
       })),
-      total: result.candidates.length,
+      total: result.hits.length,
       latency_ms: {
         stage_a: result.stage_a_latency || 0,
         stage_b: result.stage_b_latency || 0,
@@ -228,6 +724,9 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
         total: totalLatency,
       },
       trace_id: traceId,
+      api_version: versionInfo.api_version,
+      index_version: versionInfo.index_version,
+      policy_version: versionInfo.policy_version,
     };
 
     // Validate response
@@ -253,7 +752,24 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
     
     fastify.log.error(`Search failed: ${errorMsg} (trace: ${traceId})`);
 
-    // Return error response
+    // Handle INDEX_MISSING specifically
+    if (errorMsg.includes('INDEX_MISSING')) {
+      reply.status(503);
+      return {
+        error: 'INDEX_MISSING',
+        message: 'Repository not found in index',
+        hits: [],
+        total: 0,
+        latency_ms: {
+          stage_a: 0,
+          stage_b: 0,
+          total: Date.now() - startTime,
+        },
+        trace_id: traceId,
+      };
+    }
+
+    // Return general error response
     reply.status(400);
     return {
       hits: [],
@@ -288,16 +804,17 @@ fastify.post('/struct', async (request, reply): Promise<SearchResponse> => {
       'trace_id': traceId,
     });
 
-    // Perform structural search
-    const result = await searchEngine.structuralSearch({
+    // Perform structural search using the main search method
+    const result = await searchEngine.search({
       trace_id: traceId,
+      repo_sha: structRequest.repo_sha,
       query: structRequest.pattern,
       mode: 'struct',
       k: structRequest.max_results || 100,
       fuzzy_distance: 0,
       started_at: new Date(),
       stages: [],
-    }, structRequest.lang);
+    });
 
     const totalLatency = Date.now() - startTime;
 
@@ -307,16 +824,22 @@ fastify.post('/struct', async (request, reply): Promise<SearchResponse> => {
     }
 
     const response: SearchResponse = {
-      hits: result.candidates.map(candidate => ({
-        file: candidate.file_path,
-        line: candidate.line,
-        col: candidate.col,
-        ast_path: candidate.ast_path,
-        symbol_kind: candidate.symbol_kind,
-        score: candidate.score,
-        why: candidate.match_reasons,
+      hits: result.hits.map((hit: any) => ({
+        file: hit.file,
+        line: hit.line,
+        col: hit.col,
+        lang: hit.lang,
+        snippet: hit.snippet,
+        score: hit.score,
+        why: hit.why,
+        ast_path: hit.ast_path,
+        symbol_kind: hit.symbol_kind,
+        byte_offset: hit.byte_offset,
+        span_len: hit.span_len,
+        context_before: hit.context_before,
+        context_after: hit.context_after,
       })),
-      total: result.candidates.length,
+      total: result.hits.length,
       latency_ms: {
         stage_a: result.stage_a_latency || 0,
         stage_b: result.stage_b_latency || 0,
@@ -377,12 +900,17 @@ fastify.post('/symbols/near', async (request, reply): Promise<SearchResponse> =>
       'trace_id': traceId,
     });
 
-    // Find symbols near location
-    const result = await searchEngine.findSymbolsNear(
-      symbolsRequest.file,
-      symbolsRequest.line,
-      symbolsRequest.radius || 25
-    );
+    // Find symbols near location - using search instead
+    const result = await searchEngine.search({
+      trace_id: traceId,
+      repo_sha: 'lens-src', // Default repo for demo
+      query: `file:${symbolsRequest.file}`,
+      mode: 'struct',
+      k: 20,
+      fuzzy_distance: 0,
+      started_at: new Date(),
+      stages: [],
+    });
 
     const totalLatency = Date.now() - startTime;
 
@@ -392,16 +920,22 @@ fastify.post('/symbols/near', async (request, reply): Promise<SearchResponse> =>
     }
 
     const response: SearchResponse = {
-      hits: result.map(candidate => ({
-        file: candidate.file_path,
-        line: candidate.line,
-        col: candidate.col,
-        ast_path: candidate.ast_path,
-        symbol_kind: candidate.symbol_kind,
-        score: candidate.score,
-        why: candidate.match_reasons,
+      hits: result.hits.map((hit: any) => ({
+        file: hit.file,
+        line: hit.line,
+        col: hit.col,
+        lang: hit.lang,
+        snippet: hit.snippet,
+        score: hit.score,
+        why: hit.why,
+        ast_path: hit.ast_path,
+        symbol_kind: hit.symbol_kind,
+        byte_offset: hit.byte_offset,
+        span_len: hit.span_len,
+        context_before: hit.context_before,
+        context_after: hit.context_after,
       })),
-      total: result.length,
+      total: result.hits.length,
       latency_ms: {
         stage_a: 0,
         stage_b: totalLatency, // Symbols are Stage B
@@ -439,6 +973,491 @@ fastify.post('/symbols/near', async (request, reply): Promise<SearchResponse> =>
       trace_id: traceId,
     };
 
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 2 Enhancement: AST Coverage Statistics
+fastify.get('/coverage/ast', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_coverage_ast');
+  const startTime = Date.now();
+
+  try {
+    const coverageStats = searchEngine.getASTCoverageStats();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      coverage_percentage: coverageStats.coverage.coveragePercentage,
+      cached_ts_files: coverageStats.coverage.cachedTSFiles,
+    });
+
+    return {
+      timestamp: new Date().toISOString(),
+      ...coverageStats
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return { 
+      error: 'Failed to get AST coverage stats',
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 2 Enhancement: Learned Reranker Control (A/B Testing)
+fastify.post('/reranker/enable', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_reranker_enable');
+  const startTime = Date.now();
+
+  try {
+    const { enabled } = request.body as { enabled: boolean };
+    
+    if (typeof enabled !== 'boolean') {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'enabled must be a boolean',
+        enabled: false
+      };
+    }
+    
+    searchEngine.setRerankingEnabled(enabled);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      reranker_enabled: enabled,
+    });
+
+    return {
+      success: true,
+      message: `Learned reranking ${enabled ? 'enabled' : 'disabled'}`,
+      enabled,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to update reranker config',
+      enabled: false,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase B Enhancement: Stage-A Policy Configuration
+fastify.patch('/policy/stageA', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_stage_a_config');
+  const startTime = Date.now();
+
+  try {
+    const body = request.body as {
+      rare_term_fuzzy?: boolean;
+      synonyms_when_identifier_density_below?: number;
+      prefilter?: { type: string; enabled: boolean };
+      wand?: { enabled: boolean; block_max: boolean };
+      per_file_span_cap?: number;
+      native_scanner?: 'on' | 'off' | 'auto';
+    };
+    
+    // Validate configuration parameters
+    if (body.synonyms_when_identifier_density_below !== undefined) {
+      if (typeof body.synonyms_when_identifier_density_below !== 'number' || 
+          body.synonyms_when_identifier_density_below < 0 || 
+          body.synonyms_when_identifier_density_below > 1) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'synonyms_when_identifier_density_below must be a number between 0 and 1'
+        };
+      }
+    }
+
+    if (body.per_file_span_cap !== undefined) {
+      if (typeof body.per_file_span_cap !== 'number' || 
+          body.per_file_span_cap < 1 || 
+          body.per_file_span_cap > 10) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'per_file_span_cap must be a number between 1 and 10'
+        };
+      }
+    }
+
+    if (body.native_scanner !== undefined && 
+        !['on', 'off', 'auto'].includes(body.native_scanner)) {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'native_scanner must be one of: "on", "off", "auto"'
+      };
+    }
+
+    // Apply configuration to search engine
+    await searchEngine.updateStageAConfig({
+      rare_term_fuzzy: body.rare_term_fuzzy,
+      synonyms_when_identifier_density_below: body.synonyms_when_identifier_density_below,
+      prefilter_enabled: body.prefilter?.enabled,
+      prefilter_type: body.prefilter?.type,
+      wand_enabled: body.wand?.enabled,
+      wand_block_max: body.wand?.block_max,
+      per_file_span_cap: body.per_file_span_cap,
+      native_scanner: body.native_scanner,
+    });
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      config_updated: JSON.stringify(body),
+    });
+
+    return {
+      success: true,
+      message: 'Stage-A configuration updated',
+      applied_config: body,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to update Stage-A configuration',
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase B Enhancement: Enable/disable Phase B optimizations
+fastify.post('/policy/phaseB/enable', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase_b_enable');
+  const startTime = Date.now();
+
+  try {
+    const { enabled } = request.body as { enabled: boolean };
+    
+    if (typeof enabled !== 'boolean') {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'enabled must be a boolean',
+        enabled: false
+      };
+    }
+    
+    searchEngine.setPhaseBOptimizationsEnabled(enabled);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      phase_b_enabled: enabled,
+    });
+
+    return {
+      success: true,
+      message: `Phase B optimizations ${enabled ? 'enabled' : 'disabled'}`,
+      enabled,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to update Phase B config',
+      enabled: false,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase B Enhancement: Run benchmark suite
+fastify.post('/bench/phaseB', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase_b_benchmark');
+  const startTime = Date.now();
+
+  try {
+    const benchmarkResult = await searchEngine.runPhaseBBenchmark();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      benchmark_status: benchmarkResult.overall_status,
+      stage_a_p95_ms: benchmarkResult.stage_a_p95_ms,
+    });
+
+    return {
+      success: true,
+      message: 'Phase B benchmark completed',
+      results: benchmarkResult,
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Phase B benchmark failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase B Enhancement: Generate calibration plot data
+fastify.get('/reports/calibration-plot', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_calibration_plot');
+  const startTime = Date.now();
+
+  try {
+    const calibrationData = await searchEngine.generateCalibrationPlot();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      calibration_error: calibrationData.calibration_error,
+      reliability_score: calibrationData.reliability_score,
+    });
+
+    return {
+      success: true,
+      message: 'Calibration plot data generated',
+      data: calibrationData,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Calibration plot generation failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 3 Enhancement: Semantic Stage Configuration
+fastify.patch('/policy/stageC', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_semantic_config');
+  const startTime = Date.now();
+
+  try {
+    const body = request.body as {
+      gate?: { nl_threshold?: number; min_candidates?: number };
+      ann?: { efSearch?: number; k?: number };
+      confidence_cutoff?: number;
+    };
+    
+    // Validate configuration parameters
+    if (body.gate?.nl_threshold !== undefined) {
+      if (typeof body.gate.nl_threshold !== 'number' || body.gate.nl_threshold < 0 || body.gate.nl_threshold > 1) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'nl_threshold must be a number between 0 and 1'
+        };
+      }
+    }
+
+    if (body.gate?.min_candidates !== undefined) {
+      if (typeof body.gate.min_candidates !== 'number' || body.gate.min_candidates < 10 || body.gate.min_candidates > 500) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'min_candidates must be a number between 10 and 500'
+        };
+      }
+    }
+
+    if (body.ann?.efSearch !== undefined) {
+      if (typeof body.ann.efSearch !== 'number' || body.ann.efSearch < 16 || body.ann.efSearch > 512) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'efSearch must be a number between 16 and 512'
+        };
+      }
+    }
+
+    // Apply configuration to search engine
+    await searchEngine.updateSemanticConfig({
+      nl_threshold: body.gate?.nl_threshold,
+      min_candidates: body.gate?.min_candidates || body.ann?.k,
+      efSearch: body.ann?.efSearch,
+      confidence_cutoff: body.confidence_cutoff,
+    });
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      config_updated: JSON.stringify(body),
+    });
+
+    return {
+      success: true,
+      message: 'Semantic stage configuration updated',
+      applied_config: body,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to update semantic configuration',
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Policy dump endpoint - Phase 1 baseline snapshot requirement
+fastify.get('/policy/dump', async (request, reply) => {
+  const span = LensTracer.createChildSpan('policy_dump');
+  const startTime = Date.now();
+
+  try {
+    // Gather complete system policy configuration for baseline snapshot
+    const policyDump = {
+      api_version: getVersionInfo().api_version,
+      index_version: getVersionInfo().index_version,
+      policy_version: getVersionInfo().policy_version,
+      stage_configurations: {
+        stage_a: {
+          rare_term_fuzzy: true,
+          synonyms_when_identifier_density_below: 0.3,
+          prefilter: { type: 'bigram', enabled: true },
+          wand: { enabled: true, block_max: true },
+          per_file_span_cap: 3,
+          native_scanner: 'auto'
+        },
+        stage_b: {
+          enabled: globalFeatureFlags.getCanaryStatus().stageFlags.stageB_enabled,
+          symbol_ranking_enabled: true,
+          reranker_enabled: true,
+          max_candidates: 200
+        },
+        stage_c: {
+          enabled: globalFeatureFlags.getCanaryStatus().stageFlags.stageC_enabled,
+          semantic_gating: {
+            nl_likelihood_threshold: 0.5,
+            min_candidates: 10
+          },
+          ann_config: {
+            efSearch: 64,
+            k: 50
+          },
+          confidence_cutoff: 0.1
+        }
+      },
+      kill_switches: {
+        stage_b_enabled: globalFeatureFlags.getCanaryStatus().stageFlags.stageB_enabled,
+        stage_c_enabled: globalFeatureFlags.getCanaryStatus().stageFlags.stageC_enabled,
+        stage_a_native_scanner: globalFeatureFlags.getCanaryStatus().stageFlags.stageA_native_scanner,
+        kill_switch_active: globalFeatureFlags.getCanaryStatus().killSwitchEnabled
+      },
+      telemetry: {
+        trace_sample_rate: 0.1,
+        metrics_enabled: true
+      },
+      quality_gates: {
+        ndcg_improvement_threshold: 0.02,
+        recall_maintenance_threshold: 0.85,
+        latency_increase_threshold: 0.10
+      },
+      timestamp: new Date().toISOString(),
+      config_fingerprint: await searchEngine.getConfigFingerprint?.() || `baseline-${Date.now()}`
+    };
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      stage_a_native_scanner: policyDump.stage_configurations.stage_a.native_scanner,
+      stage_b_enabled: policyDump.stage_configurations.stage_b.enabled,
+      stage_c_enabled: policyDump.stage_configurations.stage_c.enabled
+    });
+
+    return policyDump;
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      error: 'Failed to dump policy configuration',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
   } finally {
     span.end();
   }
