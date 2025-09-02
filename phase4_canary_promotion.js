@@ -13,8 +13,8 @@ const fs = require('fs');
 
 class CanaryPromotion {
   constructor() {
-    this.optimizedConfig = JSON.parse(fs.readFileSync('optimized_config.json', 'utf8'));
-    this.ablationAnalysis = JSON.parse(fs.readFileSync('ablation_analysis.json', 'utf8'));
+    this.optimizedConfig = JSON.parse(fs.readFileSync('config/policies/optimized_config.json', 'utf8'));
+    this.ablationAnalysis = JSON.parse(fs.readFileSync('results/analysis/ablation_analysis.json', 'utf8'));
   }
 
   async promoteToCanary() {
@@ -201,8 +201,8 @@ class CanaryPromotion {
       };
       
       // Save promotion plan
-      fs.writeFileSync('canary_promotion_plan.json', JSON.stringify(result, null, 2));
-      console.log('\n💾 Canary promotion plan saved to canary_promotion_plan.json');
+      fs.writeFileSync('results/analysis/canary_promotion_plan.json', JSON.stringify(result, null, 2));
+      console.log('\n💾 Canary promotion plan saved to results/analysis/canary_promotion_plan.json');
       
       return result;
       

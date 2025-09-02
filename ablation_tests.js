@@ -223,8 +223,8 @@ class AblationRunner {
       };
       
       // Save results
-      fs.writeFileSync('ablation_analysis.json', JSON.stringify(result, null, 2));
-      console.log('\n💾 Analysis saved to ablation_analysis.json');
+      fs.writeFileSync('results/analysis/ablation_analysis.json', JSON.stringify(result, null, 2));
+      console.log('\n💾 Analysis saved to results/analysis/ablation_analysis.json');
       
       return result;
       

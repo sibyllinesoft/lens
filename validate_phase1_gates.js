@@ -19,8 +19,8 @@ function validatePhase1Gates() {
   
   try {
     // Load baseline and phase1 results
-    const baseline = JSON.parse(fs.readFileSync('baseline_metrics.json', 'utf8'));
-    const phase1 = JSON.parse(fs.readFileSync('phase1_results.json', 'utf8'));
+    const baseline = JSON.parse(fs.readFileSync('results/baseline/baseline_metrics.json', 'utf8'));
+    const phase1 = JSON.parse(fs.readFileSync('results/phase1/phase1_results.json', 'utf8'));
     
     const gates = [];
     let allPassed = true;
@@ -136,8 +136,8 @@ function validatePhase1Gates() {
     };
     
     // Save validation results
-    fs.writeFileSync('phase1_gate_validation.json', JSON.stringify(result, null, 2));
-    console.log('\n💾 Results saved to phase1_gate_validation.json');
+    fs.writeFileSync('results/phase1/phase1_gate_validation.json', JSON.stringify(result, null, 2));
+    console.log('\n💾 Results saved to results/phase1/phase1_gate_validation.json');
     
     return result;
     

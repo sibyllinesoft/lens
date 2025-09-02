@@ -218,7 +218,7 @@ async function executePhase1Steps() {
       trace_id: traceId
     };
 
-    require('fs').writeFileSync('./config_fingerprint.json', JSON.stringify(configFingerprint, null, 2));
+    require('fs').writeFileSync('./config/benchmarks/config_fingerprint.json', JSON.stringify(configFingerprint, null, 2));
     console.log('✅ Config fingerprint documented');
     console.log(`   Baseline: ${configFingerprint.baseline_fingerprint}`);
 

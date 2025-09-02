@@ -18,6 +18,24 @@ venv/
 __pycache__/
 *.egg-info/
 
+# TypeScript build cache
+*.tsbuildinfo
+
+# Test artifacts  
+test-results/
+.vitest/
+.coverage/
+
+# Modern Node.js cache
+.pnp.*
+.yarn/
+.cache/
+.eslintcache
+.nyc_output
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # Runtime data
 /data/
 /shards/
@@ -45,7 +63,8 @@ __pycache__/
 *.cpuprofile
 *.memprofile
 
-# Benchmark results
+# Benchmark results (organized)
+/results/
 /benchmarks/results/
 /benchmarks/reports/
 *.bench
