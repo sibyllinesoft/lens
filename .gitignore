@@ -3,6 +3,7 @@
 
 # Build outputs
 /dist/
+/dist-*/
 /build/
 /target/
 *.o
