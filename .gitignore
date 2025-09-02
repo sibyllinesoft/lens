@@ -3,7 +3,6 @@
 
 # Build outputs
 /dist/
-/dist-*/
 /build/
 /target/
 *.o
@@ -18,24 +17,6 @@ target/
 venv/
 __pycache__/
 *.egg-info/
-
-# TypeScript build cache
-*.tsbuildinfo
-
-# Test artifacts  
-test-results/
-.vitest/
-.coverage/
-
-# Modern Node.js cache
-.pnp.*
-.yarn/
-.cache/
-.eslintcache
-.nyc_output
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Runtime data
 /data/
@@ -68,7 +49,21 @@ yarn-error.log*
 /results/
 /benchmarks/results/
 /benchmarks/reports/
+/benchmark-results/
+/anchor-benchmark-results/
+/anchor-datasets/
+/baseline-results/
+/ladder-datasets/
+/pinned-datasets/
+/validation-data/
+/indexed-content/
+/span-audit-results/
 *.bench
+*.json.parquet
+*benchmark*.json
+*results*.json
+*metrics*.json
+*analysis*.json
 
 # Development tools
 .vscode/

@@ -26,12 +26,15 @@ import { LensTracer } from '../telemetry/tracer.js';
 import { LensSearchEngine } from './search-engine.js';
 import { PRODUCTION_CONFIG } from '../types/config.js';
 import { registerBenchmarkEndpoints } from './benchmark-endpoints.js';
+import { registerPrecisionMonitoringEndpoints } from './precision-monitoring-endpoints.js';
 import { checkCompatibility, getVersionInfo } from '../core/version-manager.js';
 import { checkBundleCompatibility } from '../core/compatibility-checker.js';
 import { globalFeatureFlags } from '../core/feature-flags.js';
 import { runQualityGates } from '../core/quality-gates.js';
 import { runNightlyValidation, getValidationStatus, globalThreeNightValidation } from '../core/three-night-validation.js';
 import { getDashboardState } from '../monitoring/phase-d-dashboards.js';
+import { globalAdaptiveFanout } from '../core/adaptive-fanout.js';
+import { globalExperimentFramework } from '../core/precision-optimization.js';
 
 const fastify = Fastify({
   logger: {
@@ -766,6 +769,9 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
           total: Date.now() - startTime,
         },
         trace_id: traceId,
+        api_version: 'v1' as const,
+        index_version: 'v1' as const,
+        policy_version: 'v1' as const,
       };
     }
 
@@ -780,6 +786,9 @@ fastify.post('/search', async (request, reply): Promise<SearchResponse> => {
         total: Date.now() - startTime,
       },
       trace_id: traceId,
+      api_version: 'v1' as const,
+      index_version: 'v1' as const,
+      policy_version: 'v1' as const,
     };
 
   } finally {
@@ -847,6 +856,9 @@ fastify.post('/struct', async (request, reply): Promise<SearchResponse> => {
         total: totalLatency,
       },
       trace_id: traceId,
+      api_version: 'v1' as const,
+      index_version: 'v1' as const,
+      policy_version: 'v1' as const,
     };
 
     SearchResponseSchema.parse(response);
@@ -876,6 +888,9 @@ fastify.post('/struct', async (request, reply): Promise<SearchResponse> => {
         total: Date.now() - startTime,
       },
       trace_id: traceId,
+      api_version: 'v1' as const,
+      index_version: 'v1' as const,
+      policy_version: 'v1' as const,
     };
 
   } finally {
@@ -942,6 +957,9 @@ fastify.post('/symbols/near', async (request, reply): Promise<SearchResponse> =>
         total: totalLatency,
       },
       trace_id: traceId,
+      api_version: 'v1' as const,
+      index_version: 'v1' as const,
+      policy_version: 'v1' as const,
     };
 
     SearchResponseSchema.parse(response);
@@ -971,6 +989,9 @@ fastify.post('/symbols/near', async (request, reply): Promise<SearchResponse> =>
         total: Date.now() - startTime,
       },
       trace_id: traceId,
+      api_version: 'v1' as const,
+      index_version: 'v1' as const,
+      policy_version: 'v1' as const,
     };
 
   } finally {
@@ -1079,6 +1100,8 @@ fastify.patch('/policy/stageA', async (request, reply) => {
       wand?: { enabled: boolean; block_max: boolean };
       per_file_span_cap?: number;
       native_scanner?: 'on' | 'off' | 'auto';
+      k_candidates?: string | number; // "adaptive(180,380)" or fixed number
+      fanout_features?: string; // "+rare_terms,+fuzzy_edits,+id_entropy,+path_var,+cand_slope" or "off"
     };
     
     // Validate configuration parameters
@@ -1115,17 +1138,92 @@ fastify.patch('/policy/stageA', async (request, reply) => {
       };
     }
 
-    // Apply configuration to search engine
-    await searchEngine.updateStageAConfig({
-      rare_term_fuzzy: body.rare_term_fuzzy,
-      synonyms_when_identifier_density_below: body.synonyms_when_identifier_density_below,
-      prefilter_enabled: body.prefilter?.enabled,
-      prefilter_type: body.prefilter?.type,
-      wand_enabled: body.wand?.enabled,
-      wand_block_max: body.wand?.block_max,
-      per_file_span_cap: body.per_file_span_cap,
-      native_scanner: body.native_scanner,
-    });
+    // Validate and configure adaptive fan-out
+    let adaptiveEnabled = false;
+    if (body.k_candidates !== undefined) {
+      if (typeof body.k_candidates === 'string') {
+        const adaptiveMatch = body.k_candidates.match(/^adaptive\((\d+),(\d+)\)$/);
+        if (adaptiveMatch) {
+          const [, min, max] = adaptiveMatch;
+          const minVal = parseInt(min!, 10);
+          const maxVal = parseInt(max!, 10);
+          
+          if (minVal < 100 || maxVal > 500 || minVal >= maxVal) {
+            reply.status(400);
+            return {
+              success: false,
+              error: 'adaptive k_candidates must be in format "adaptive(min,max)" with 100 <= min < max <= 500'
+            };
+          }
+          
+          globalAdaptiveFanout.updateConfig({
+            k_candidates: { min: minVal, max: maxVal }
+          });
+          adaptiveEnabled = true;
+        } else {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'k_candidates string must be in format "adaptive(min,max)"'
+          };
+        }
+      } else if (typeof body.k_candidates === 'number') {
+        if (body.k_candidates < 100 || body.k_candidates > 500) {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'k_candidates must be between 100 and 500'
+          };
+        }
+      }
+    }
+
+    if (body.fanout_features !== undefined) {
+      if (body.fanout_features === 'off') {
+        adaptiveEnabled = false;
+      } else if (body.fanout_features.startsWith('+')) {
+        // Validate feature list format
+        const features = body.fanout_features.substring(1).split(',');
+        const validFeatures = ['rare_terms', 'fuzzy_edits', 'id_entropy', 'path_var', 'cand_slope'];
+        
+        for (const feature of features) {
+          const cleanFeature = feature.replace(/^[+-]/, '');
+          if (!validFeatures.includes(cleanFeature)) {
+            reply.status(400);
+            return {
+              success: false,
+              error: `Invalid fanout feature: ${cleanFeature}. Valid features: ${validFeatures.join(', ')}`
+            };
+          }
+        }
+        adaptiveEnabled = true;
+      } else {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'fanout_features must be "off" or "+feature1,+feature2,..." format'
+        };
+      }
+    }
+
+    // Enable/disable adaptive fanout based on configuration
+    globalAdaptiveFanout.setEnabled(adaptiveEnabled);
+
+    // Apply configuration to search engine (filter out undefined values)
+    const stageAConfig: any = {};
+    if (body.rare_term_fuzzy !== undefined) stageAConfig.rare_term_fuzzy = body.rare_term_fuzzy;
+    if (body.synonyms_when_identifier_density_below !== undefined) stageAConfig.synonyms_when_identifier_density_below = body.synonyms_when_identifier_density_below;
+    if (body.prefilter?.enabled !== undefined) stageAConfig.prefilter_enabled = body.prefilter.enabled;
+    if (body.prefilter?.type !== undefined) stageAConfig.prefilter_type = body.prefilter.type;
+    if (body.wand?.enabled !== undefined) stageAConfig.wand_enabled = body.wand.enabled;
+    if (body.wand?.block_max !== undefined) stageAConfig.wand_block_max = body.wand.block_max;
+    if (body.per_file_span_cap !== undefined) stageAConfig.per_file_span_cap = body.per_file_span_cap;
+    if (body.native_scanner !== undefined) stageAConfig.native_scanner = body.native_scanner;
+    if (body.k_candidates !== undefined) stageAConfig.k_candidates = body.k_candidates;
+    if (body.fanout_features !== undefined) stageAConfig.fanout_features = body.fanout_features;
+    stageAConfig.adaptive_enabled = adaptiveEnabled;
+    
+    await searchEngine.updateStageAConfig(stageAConfig);
 
     const latency = Date.now() - startTime;
 
@@ -1300,38 +1398,159 @@ fastify.patch('/policy/stageC', async (request, reply) => {
 
   try {
     const body = request.body as {
-      gate?: { nl_threshold?: number; min_candidates?: number };
-      ann?: { efSearch?: number; k?: number };
+      gate?: { 
+        nl_threshold?: number | string; // number or "adaptive(0.55→0.30)" 
+        min_candidates?: number | string; // number or "adaptive(8→14)"
+      };
+      ann?: { 
+        efSearch?: number | string; // number or "dynamic(...)" 
+        k?: number;
+        early_exit?: {
+          after_probes?: number;
+          margin_tau?: number;
+          guards?: {
+            require_symbol_or_struct?: boolean;
+            min_top1_top5_margin?: number;
+          };
+        };
+      };
       confidence_cutoff?: number;
     };
     
     // Validate configuration parameters
+    let adaptiveGatesEnabled = false;
+    
     if (body.gate?.nl_threshold !== undefined) {
-      if (typeof body.gate.nl_threshold !== 'number' || body.gate.nl_threshold < 0 || body.gate.nl_threshold > 1) {
-        reply.status(400);
-        return {
-          success: false,
-          error: 'nl_threshold must be a number between 0 and 1'
-        };
+      if (typeof body.gate.nl_threshold === 'string') {
+        const adaptiveMatch = body.gate.nl_threshold.match(/^adaptive\(([\d.]+)→([\d.]+)\)$/);
+        if (adaptiveMatch) {
+          const [, max, min] = adaptiveMatch;
+          const maxVal = parseFloat(max);
+          const minVal = parseFloat(min);
+          
+          if (maxVal < 0 || maxVal > 1 || minVal < 0 || minVal > 1 || minVal >= maxVal) {
+            reply.status(400);
+            return {
+              success: false,
+              error: 'adaptive nl_threshold must be in format "adaptive(max→min)" with 0 <= min < max <= 1'
+            };
+          }
+          
+          globalAdaptiveFanout.updateConfig({
+            gate: {
+              ...globalAdaptiveFanout['config'].gate,
+              nl_threshold: { min: minVal, max: maxVal }
+            }
+          });
+          adaptiveGatesEnabled = true;
+        } else {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'nl_threshold string must be in format "adaptive(max→min)"'
+          };
+        }
+      } else if (typeof body.gate.nl_threshold === 'number') {
+        if (body.gate.nl_threshold < 0 || body.gate.nl_threshold > 1) {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'nl_threshold must be a number between 0 and 1'
+          };
+        }
       }
     }
 
     if (body.gate?.min_candidates !== undefined) {
-      if (typeof body.gate.min_candidates !== 'number' || body.gate.min_candidates < 10 || body.gate.min_candidates > 500) {
-        reply.status(400);
-        return {
-          success: false,
-          error: 'min_candidates must be a number between 10 and 500'
-        };
+      if (typeof body.gate.min_candidates === 'string') {
+        const adaptiveMatch = body.gate.min_candidates.match(/^adaptive\((\d+)→(\d+)\)$/);
+        if (adaptiveMatch) {
+          const [, min, max] = adaptiveMatch;
+          const minVal = parseInt(min!, 10);
+          const maxVal = parseInt(max!, 10);
+          
+          if (minVal < 5 || maxVal > 50 || minVal >= maxVal) {
+            reply.status(400);
+            return {
+              success: false,
+              error: 'adaptive min_candidates must be in format "adaptive(min→max)" with 5 <= min < max <= 50'
+            };
+          }
+          
+          globalAdaptiveFanout.updateConfig({
+            gate: {
+              ...globalAdaptiveFanout['config'].gate,
+              min_candidates: { min: minVal, max: maxVal }
+            }
+          });
+          adaptiveGatesEnabled = true;
+        } else {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'min_candidates string must be in format "adaptive(min→max)"'
+          };
+        }
+      } else if (typeof body.gate.min_candidates === 'number') {
+        if (body.gate.min_candidates < 10 || body.gate.min_candidates > 500) {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'min_candidates must be a number between 10 and 500'
+          };
+        }
       }
     }
 
     if (body.ann?.efSearch !== undefined) {
-      if (typeof body.ann.efSearch !== 'number' || body.ann.efSearch < 16 || body.ann.efSearch > 512) {
+      if (typeof body.ann.efSearch === 'string') {
+        // Validate dynamic efSearch formula: "dynamic(48 + 24*log2(1 + |candidates|/150))"
+        const dynamicMatch = body.ann.efSearch.match(/^dynamic\((.+)\)$/);
+        if (!dynamicMatch) {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'efSearch string must be in format "dynamic(formula)"'
+          };
+        }
+        // Formula validation is deferred to runtime
+      } else if (typeof body.ann.efSearch === 'number') {
+        if (body.ann.efSearch < 16 || body.ann.efSearch > 512) {
+          reply.status(400);
+          return {
+            success: false,
+            error: 'efSearch must be a number between 16 and 512'
+          };
+        }
+      }
+    }
+
+    // Validate early exit parameters
+    if (body.ann?.early_exit) {
+      const earlyExit = body.ann.early_exit;
+      
+      if (earlyExit.after_probes !== undefined && (earlyExit.after_probes < 16 || earlyExit.after_probes > 256)) {
         reply.status(400);
         return {
           success: false,
-          error: 'efSearch must be a number between 16 and 512'
+          error: 'early_exit.after_probes must be between 16 and 256'
+        };
+      }
+      
+      if (earlyExit.margin_tau !== undefined && (earlyExit.margin_tau < 0.01 || earlyExit.margin_tau > 0.5)) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'early_exit.margin_tau must be between 0.01 and 0.5'
+        };
+      }
+
+      if (earlyExit.guards?.min_top1_top5_margin !== undefined && 
+          (earlyExit.guards.min_top1_top5_margin < 0.05 || earlyExit.guards.min_top1_top5_margin > 0.5)) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'early_exit.guards.min_top1_top5_margin must be between 0.05 and 0.5'
         };
       }
     }
@@ -1342,6 +1561,9 @@ fastify.patch('/policy/stageC', async (request, reply) => {
       min_candidates: body.gate?.min_candidates || body.ann?.k,
       efSearch: body.ann?.efSearch,
       confidence_cutoff: body.confidence_cutoff,
+      ann_k: body.ann?.k,
+      early_exit: body.ann?.early_exit,
+      adaptive_gates_enabled: adaptiveGatesEnabled,
     });
 
     const latency = Date.now() - startTime;
@@ -1463,20 +1685,1042 @@ fastify.get('/policy/dump', async (request, reply) => {
   }
 });
 
-// Start server
-export async function startServer(port: number = 3000, host: string = '0.0.0.0') {
+// Phase 2 Enhancement: Recall Pack Orchestration
+fastify.post('/phase2/execute', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase2_execute');
+  const startTime = Date.now();
+
   try {
+    // Import Phase 2 orchestrator
+    const { Phase2RecallPack } = await import('../core/phase2-recall-pack.js');
+    
+    const body = request.body as {
+      index_root?: string;
+      output_dir?: string;
+      api_base_url?: string;
+    };
+    
+    const phase2 = new Phase2RecallPack(
+      body.index_root || './indexed-content',
+      body.output_dir || './phase2-results',
+      body.api_base_url || 'http://localhost:3001'
+    );
+    
+    console.log('🎯 Starting Phase 2 Recall Pack execution via API...');
+    
+    const results = await phase2.executePhase2();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      recall_improvement_pct: results.recall_improvement_pct,
+      promotion_ready: results.promotion_ready,
+    });
+
+    return {
+      success: true,
+      message: 'Phase 2 Recall Pack execution completed',
+      results,
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Phase 2 execution failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 2 Enhancement: Mine Synonyms
+fastify.post('/phase2/synonyms/mine', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase2_mine_synonyms');
+  const startTime = Date.now();
+
+  try {
+    const { Phase2SynonymMiner } = await import('../core/phase2-synonym-miner.js');
+    
+    const body = request.body as {
+      tau_pmi?: number;
+      min_freq?: number;
+      k_synonyms?: number;
+      index_root?: string;
+      output_dir?: string;
+    };
+    
+    const synonymMiner = new Phase2SynonymMiner(
+      body.index_root || './indexed-content',
+      body.output_dir || './synonyms'
+    );
+    
+    const synonymTable = await synonymMiner.mineSynonyms({
+      tau_pmi: body.tau_pmi || 3.0,
+      min_freq: body.min_freq || 20,
+      k_synonyms: body.k_synonyms || 8,
+    });
+    
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      synonym_entries: synonymTable.entries.length,
+    });
+
+    return {
+      success: true,
+      message: 'Synonym mining completed',
+      synonym_table: synonymTable,
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Synonym mining failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 2 Enhancement: Refit Path Prior
+fastify.post('/phase2/pathprior/refit', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase2_refit_pathprior');
+  const startTime = Date.now();
+
+  try {
+    const { Phase2PathPrior } = await import('../core/phase2-path-prior.js');
+    
+    const body = request.body as {
+      l2_regularization?: number;
+      debias_low_priority_paths?: boolean;
+      max_deboost?: number;
+      index_root?: string;
+      output_dir?: string;
+    };
+    
+    const pathPrior = new Phase2PathPrior(
+      body.index_root || './indexed-content',
+      body.output_dir || './path-priors'
+    );
+    
+    const model = await pathPrior.refitPathPrior({
+      l2_regularization: body.l2_regularization || 1.0,
+      debias_low_priority_paths: body.debias_low_priority_paths !== false,
+      max_deboost: body.max_deboost || 0.6,
+    });
+    
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      model_version: model.version,
+      auc_roc: model.performance.auc_roc,
+    });
+
+    return {
+      success: true,
+      message: 'Path prior refitting completed',
+      model,
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Path prior refitting failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+//
+// ==== Phase 3 - Precision/Semantic Pack Endpoints ====
+//
+
+// Phase 3 Main Execution
+fastify.post('/phase3/execute', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase3_execute');
+  const startTime = Date.now();
+
+  try {
+    // Import Phase 3 orchestrator
+    const { Phase3PrecisionPack } = await import('../core/phase3-precision-pack.js');
+    
+    const body = request.body as {
+      index_root?: string;
+      output_dir?: string;
+      api_base_url?: string;
+      config?: any;
+    };
+    
+    const phase3 = new Phase3PrecisionPack(
+      body.index_root || './indexed-content',
+      body.output_dir || './phase3-results',
+      body.api_base_url || 'http://localhost:3001'
+    );
+    
+    console.log('🎯 Starting Phase 3 Precision/Semantic Pack execution via API...');
+    
+    const results = await phase3.execute(body.config);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      ndcg_improvement_points: results.ndcg_improvement_points,
+      promotion_ready: results.promotion_ready,
+    });
+
+    return {
+      success: true,
+      message: 'Phase 3 Precision/Semantic Pack execution completed',
+      results,
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Phase 3 execution failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 3 Pattern Pack Management
+fastify.post('/phase3/patterns/find', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase3_find_patterns');
+  const startTime = Date.now();
+
+  try {
+    const { Phase3PatternPackEngine } = await import('../core/phase3-pattern-packs.js');
+    
+    const body = request.body as {
+      source_code: string;
+      file_path: string;
+      language: string;
+      pattern_names?: string[];
+    };
+    
+    if (!body.source_code || !body.file_path || !body.language) {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'Missing required fields: source_code, file_path, language',
+        timestamp: new Date().toISOString()
+      };
+    }
+    
+    const engine = new Phase3PatternPackEngine();
+    const patterns = await engine.findPatterns(
+      body.source_code,
+      body.file_path,
+      body.language,
+      body.pattern_names
+    );
+    
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      patterns_found: patterns.length,
+      file_path: body.file_path,
+      language: body.language,
+    });
+
+    return {
+      success: true,
+      message: 'Pattern matching completed',
+      patterns,
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Pattern matching failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 3 Configuration and Status
+fastify.get('/phase3/config', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase3_get_config');
+
+  try {
+    const { Phase3PrecisionPack } = await import('../core/phase3-precision-pack.js');
+    const { Phase3PatternPackEngine } = await import('../core/phase3-pattern-packs.js');
+    
+    const phase3 = new Phase3PrecisionPack();
+    const engine = new Phase3PatternPackEngine();
+    
+    const config = phase3.getDefaultConfig();
+    const acceptanceGates = phase3.getAcceptanceGates();
+    const tripwireChecks = phase3.getTripwireChecks();
+    const patternStats = engine.getStatistics();
+
+    span.setAttributes({
+      success: true,
+      pattern_packs_count: patternStats.total_packs,
+      total_patterns: patternStats.total_patterns,
+      languages_supported: patternStats.languages_supported.length,
+    });
+
+    return {
+      success: true,
+      config,
+      acceptance_gates: acceptanceGates,
+      tripwire_checks: tripwireChecks,
+      pattern_statistics: patternStats,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to retrieve Phase 3 configuration',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+// Phase 3 Rollback 
+fastify.post('/phase3/rollback', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_phase3_rollback');
+  const startTime = Date.now();
+
+  try {
+    const { Phase3PrecisionPack } = await import('../core/phase3-precision-pack.js');
+    
+    const phase3 = new Phase3PrecisionPack();
+    
+    console.log('🔄 Performing Phase 3 rollback via API...');
+    
+    await phase3.performRollback();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+    });
+
+    return {
+      success: true,
+      message: 'Phase 3 rollback completed successfully',
+      duration_ms: latency,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Phase 3 rollback failed',
+      message: errorMsg,
+      timestamp: new Date().toISOString()
+    };
+    
+  } finally {
+    span.end();
+  }
+});
+
+//
+// ==== Precision Optimization Pipeline Endpoints ====
+//
+
+// Apply Block A: Early-exit optimization patch
+fastify.patch('/policy/stageC', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_precision_block_a');
+  const startTime = Date.now();
+
+  try {
+    const body = request.body as {
+      early_exit?: {
+        enabled: boolean;
+        margin: number;
+        min_probes: number;
+      };
+      ann?: {
+        k: number;
+        efSearch: number;
+      };
+      gate?: {
+        nl_threshold: number;
+        min_candidates: number;
+        confidence_cutoff: number;
+      };
+    };
+
+    // Validate Block A configuration
+    if (body.early_exit) {
+      if (body.early_exit.margin < 0 || body.early_exit.margin > 1) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'early_exit.margin must be between 0 and 1'
+        };
+      }
+      if (body.early_exit.min_probes < 16 || body.early_exit.min_probes > 512) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'early_exit.min_probes must be between 16 and 512'
+        };
+      }
+    }
+
+    if (body.ann) {
+      if (body.ann.k < 100 || body.ann.k > 500) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'ann.k must be between 100 and 500'
+        };
+      }
+      if (body.ann.efSearch < 16 || body.ann.efSearch > 512) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'ann.efSearch must be between 16 and 512'
+        };
+      }
+    }
+
+    // Enable Block A and apply configuration
+    searchEngine.setPrecisionOptimizationEnabled('A', true);
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      block_a_enabled: true,
+      early_exit_enabled: body.early_exit?.enabled || false
+    });
+
+    return {
+      success: true,
+      message: 'Block A early-exit optimization applied',
+      config: body,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to apply Block A configuration',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Apply Block B: Calibrated dynamic_topn
+fastify.patch('/policy/output', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_precision_block_b');
+  const startTime = Date.now();
+
+  try {
+    const body = request.body as {
+      dynamic_topn?: {
+        enabled: boolean;
+        score_threshold: number;
+        hard_cap: number;
+      };
+    };
+
+    // Validate Block B configuration
+    if (body.dynamic_topn) {
+      if (body.dynamic_topn.score_threshold < 0 || body.dynamic_topn.score_threshold > 1) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'dynamic_topn.score_threshold must be between 0 and 1'
+        };
+      }
+      if (body.dynamic_topn.hard_cap < 5 || body.dynamic_topn.hard_cap > 50) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'dynamic_topn.hard_cap must be between 5 and 50'
+        };
+      }
+    }
+
+    // Enable Block B and apply configuration
+    searchEngine.setPrecisionOptimizationEnabled('B', true);
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      block_b_enabled: true,
+      dynamic_topn_enabled: body.dynamic_topn?.enabled || false
+    });
+
+    return {
+      success: true,
+      message: 'Block B calibrated dynamic_topn applied',
+      config: body,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to apply Block B configuration',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Apply Block C: Gentle deduplication
+fastify.patch('/policy/precision', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_precision_block_c');
+  const startTime = Date.now();
+
+  try {
+    const body = request.body as {
+      dedup?: {
+        in_file?: {
+          simhash?: {
+            k: number;
+            hamming_max: number;
+          };
+          keep: number;
+        };
+        cross_file?: {
+          vendor_deboost: number;
+        };
+      };
+    };
+
+    // Validate Block C configuration
+    if (body.dedup?.in_file?.simhash) {
+      if (body.dedup.in_file.simhash.k < 3 || body.dedup.in_file.simhash.k > 10) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'dedup.in_file.simhash.k must be between 3 and 10'
+        };
+      }
+      if (body.dedup.in_file.simhash.hamming_max < 1 || body.dedup.in_file.simhash.hamming_max > 5) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'dedup.in_file.simhash.hamming_max must be between 1 and 5'
+        };
+      }
+    }
+
+    if (body.dedup?.in_file?.keep) {
+      if (body.dedup.in_file.keep < 1 || body.dedup.in_file.keep > 10) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'dedup.in_file.keep must be between 1 and 10'
+        };
+      }
+    }
+
+    if (body.dedup?.cross_file?.vendor_deboost) {
+      if (body.dedup.cross_file.vendor_deboost < 0 || body.dedup.cross_file.vendor_deboost > 1) {
+        reply.status(400);
+        return {
+          success: false,
+          error: 'dedup.cross_file.vendor_deboost must be between 0 and 1'
+        };
+      }
+    }
+
+    // Enable Block C and apply configuration
+    searchEngine.setPrecisionOptimizationEnabled('C', true);
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      block_c_enabled: true,
+      simhash_k: body.dedup?.in_file?.simhash?.k || 5
+    });
+
+    return {
+      success: true,
+      message: 'Block C gentle deduplication applied',
+      config: body,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to apply Block C configuration',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// A/B Experiment Management Endpoints
+
+// Create a new precision optimization experiment
+fastify.post('/experiments/precision', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_create_precision_experiment');
+  const startTime = Date.now();
+
+  try {
+    const body = request.body as {
+      experiment_id: string;
+      name: string;
+      description?: string;
+      traffic_percentage: number;
+      treatment_config: any;
+      promotion_gates: {
+        min_ndcg_improvement_pct: number;
+        min_recall_at_50: number;
+        min_span_coverage_pct: number;
+        max_latency_multiplier: number;
+      };
+    };
+
+    // Validate experiment configuration
+    if (!body.experiment_id || !body.name) {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'experiment_id and name are required'
+      };
+    }
+
+    if (body.traffic_percentage < 0 || body.traffic_percentage > 100) {
+      reply.status(400);
+      return {
+        success: false,
+        error: 'traffic_percentage must be between 0 and 100'
+      };
+    }
+
+    // Create experiment configuration
+    const experimentConfig = {
+      experiment_id: body.experiment_id,
+      name: body.name,
+      description: body.description,
+      traffic_percentage: body.traffic_percentage,
+      treatment_config: body.treatment_config,
+      promotion_gates: body.promotion_gates,
+      anchor_validation_required: true,
+      ladder_validation_required: true
+    };
+
+    await globalExperimentFramework.createExperiment(experimentConfig);
+
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      experiment_id: body.experiment_id,
+      traffic_percentage: body.traffic_percentage
+    });
+
+    return {
+      success: true,
+      message: 'Precision optimization experiment created',
+      experiment_id: body.experiment_id,
+      config: experimentConfig,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to create precision experiment',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Run Anchor validation for an experiment
+fastify.post('/experiments/precision/:experimentId/validate/anchor', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_anchor_validation');
+  const startTime = Date.now();
+
+  try {
+    const { experimentId } = request.params as { experimentId: string };
+
+    const validationResult = await globalExperimentFramework.runAnchorValidation(experimentId);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      experiment_id: experimentId,
+      validation_passed: validationResult.passed
+    });
+
+    return {
+      success: true,
+      message: 'Anchor validation completed',
+      experiment_id: experimentId,
+      validation_result: validationResult,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Anchor validation failed',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Run Ladder validation for an experiment
+fastify.post('/experiments/precision/:experimentId/validate/ladder', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_ladder_validation');
+  const startTime = Date.now();
+
+  try {
+    const { experimentId } = request.params as { experimentId: string };
+
+    const validationResult = await globalExperimentFramework.runLadderValidation(experimentId);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      experiment_id: experimentId,
+      validation_passed: validationResult.passed
+    });
+
+    return {
+      success: true,
+      message: 'Ladder validation completed',
+      experiment_id: experimentId,
+      validation_result: validationResult,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Ladder validation failed',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Check experiment promotion readiness
+fastify.get('/experiments/precision/:experimentId/promotion', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_check_promotion');
+  const startTime = Date.now();
+
+  try {
+    const { experimentId } = request.params as { experimentId: string };
+
+    const promotionStatus = await globalExperimentFramework.checkPromotionReadiness(experimentId);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      experiment_id: experimentId,
+      promotion_ready: promotionStatus.ready
+    });
+
+    return {
+      success: true,
+      message: 'Promotion readiness checked',
+      experiment_id: experimentId,
+      promotion_status: promotionStatus,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to check promotion readiness',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Rollback an experiment
+fastify.post('/experiments/precision/:experimentId/rollback', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_experiment_rollback');
+  const startTime = Date.now();
+
+  try {
+    const { experimentId } = request.params as { experimentId: string };
+
+    await globalExperimentFramework.rollbackExperiment(experimentId);
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      experiment_id: experimentId
+    });
+
+    return {
+      success: true,
+      message: 'Experiment rolled back successfully',
+      experiment_id: experimentId,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to rollback experiment',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Get experiment status and results
+fastify.get('/experiments/precision/:experimentId', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_get_experiment_status');
+  const startTime = Date.now();
+
+  try {
+    const { experimentId } = request.params as { experimentId: string };
+
+    const status = globalExperimentFramework.getExperimentStatus(experimentId);
+    const latency = Date.now() - startTime;
+
+    if (!status.config) {
+      reply.status(404);
+      return {
+        success: false,
+        error: 'Experiment not found',
+        experiment_id: experimentId
+      };
+    }
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      experiment_id: experimentId,
+      results_count: status.results.length
+    });
+
+    return {
+      success: true,
+      message: 'Experiment status retrieved',
+      experiment_id: experimentId,
+      status,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to get experiment status',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Get precision optimization status
+fastify.get('/policy/precision/status', async (request, reply) => {
+  const span = LensTracer.createChildSpan('api_precision_status');
+  const startTime = Date.now();
+
+  try {
+    const status = searchEngine.getPrecisionOptimizationStatus();
+    const latency = Date.now() - startTime;
+
+    span.setAttributes({
+      success: true,
+      latency_ms: latency,
+      block_a_enabled: status.block_a_enabled,
+      block_b_enabled: status.block_b_enabled,
+      block_c_enabled: status.block_c_enabled
+    });
+
+    return {
+      success: true,
+      message: 'Precision optimization status retrieved',
+      status,
+      timestamp: new Date().toISOString()
+    };
+
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    span.recordException(error as Error);
+    span.setAttributes({ success: false, error: errorMsg });
+    
+    reply.status(500);
+    return {
+      success: false,
+      error: 'Failed to get precision optimization status',
+      message: errorMsg
+    };
+  } finally {
+    span.end();
+  }
+});
+
+// Start server with dynamic port allocation
+export async function startServer(port?: number, host: string = '0.0.0.0') {
+  try {
+    const { portManager, getServerPort, getMetricsPort } = await import('../config/ports.js');
+    
+    // Use provided port or get dynamically allocated port
+    const serverPort = port || await getServerPort();
+    const metricsPort = await getMetricsPort();
+    
     // Initialize search engine
     await searchEngine.initialize();
     
     // Register benchmark endpoints
     await registerBenchmarkEndpoints(fastify);
+    await registerPrecisionMonitoringEndpoints(fastify);
     
-    await fastify.listen({ port, host });
-    console.log(`🚀 Lens server running on http://${host}:${port}`);
-    console.log(`📊 Metrics available at http://${host}:9464/metrics`);
-    console.log(`🔍 Health check at http://${host}:${port}/health`);
-    console.log(`🧪 Benchmark endpoints at http://${host}:${port}/bench/`);
+    await fastify.listen({ port: serverPort, host });
+    
+    // Extend reservation to keep ports reserved while server is running
+    await portManager.extendReservation();
+    
+    console.log(`🚀 Lens server running on http://${host}:${serverPort}`);
+    console.log(`📊 Metrics available at http://${host}:${metricsPort}/metrics`);
+    console.log(`🔍 Health check at http://${host}:${serverPort}/health`);
+    console.log(`🧪 Benchmark endpoints at http://${host}:${serverPort}/bench/`);
+    console.log(`📋 Port configuration written to .port-config.json`);
     
   } catch (err) {
     fastify.log.error(err);
@@ -1492,6 +2736,11 @@ export async function startServer(port: number = 3000, host: string = '0.0.0.0')
     try {
       await searchEngine.shutdown();
       await fastify.close();
+      
+      // Release port reservations on shutdown
+      const { portManager } = await import('../config/ports.js');
+      await portManager.releaseReservations();
+      
       console.log('Server shut down successfully');
       process.exit(0);
     } catch (err) {

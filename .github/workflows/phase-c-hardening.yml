@@ -1,0 +1,436 @@
+name: Phase C Hardening
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  schedule:
+    # Nightly hardening at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  NODE_VERSION: '18'
+  NATS_VERSION: '2.9.0'
+
+jobs:
+  # PR-level hardening checks
+  pr-hardening:
+    name: PR Hardening Gates
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    services:
+      nats:
+        image: nats:${{ env.NATS_VERSION }}
+        ports:
+          - 4222:4222
+        options: >-
+          --health-cmd="nats server check"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build
+          
+      - name: Setup test data
+        run: |
+          mkdir -p benchmark-results
+          npm run setup:test-data || true
+          
+      - name: Run Phase C Hardening (PR Mode)
+        id: phase-c-pr
+        run: |
+          npx tsx src/benchmark/cli-phase-c.ts phase-c \
+            --mode pr \
+            --ci \
+            --output ./benchmark-results \
+            --nats-url nats://localhost:4222 \
+            --timeout 15 \
+            --min-score 65 \
+            --max-degradation 20 \
+            --fail-fast
+        continue-on-error: true
+        
+      - name: Upload PR hardening artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-hardening-artifacts
+          path: |
+            benchmark-results/phase-c-hardening-report.json
+            benchmark-results/hardening-plots/
+            benchmark-results/lens-hardening-report-*.md
+            benchmark-results/ci-hardening-result.json
+          retention-days: 7
+          
+      - name: Comment on PR with results
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './benchmark-results/ci-hardening-result.json';
+            
+            if (!fs.existsSync(path)) {
+              console.log('No hardening results found');
+              return;
+            }
+            
+            const results = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const emoji = results.success ? '✅' : '❌';
+            const status = results.success ? 'PASSED' : 'FAILED';
+            
+            const comment = `
+            ## ${emoji} Phase C Hardening Results (PR Mode)
+            
+            **Status**: ${status}
+            **Hardening Score**: ${results.hardening_score}/100
+            **Execution Time**: ${(results.execution_time_ms / 1000).toFixed(1)}s
+            
+            ### Quality Gates
+            - **Tripwires**: ${results.quality_gate_results.tripwires_passed}/${results.quality_gate_results.tripwires_total}
+            - **Slice Gates**: ${results.quality_gate_results.slice_gates_passed}/${results.quality_gate_results.slice_gates_total}
+            
+            ${results.failure_summary ? `
+            ### Issues Found
+            ${results.failure_summary.recommendations.slice(0, 3).map(r => `- ${r}`).join('\n')}
+            ` : ''}
+            
+            <details>
+            <summary>View detailed results</summary>
+            
+            \`\`\`json
+            ${JSON.stringify(results, null, 2)}
+            \`\`\`
+            </details>
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+            
+      - name: Set PR status check
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './benchmark-results/ci-hardening-result.json';
+            
+            let state = 'failure';
+            let description = 'Phase C hardening failed';
+            
+            if (fs.existsSync(path)) {
+              const results = JSON.parse(fs.readFileSync(path, 'utf8'));
+              state = results.success ? 'success' : 'failure';
+              description = `Hardening score: ${results.hardening_score}/100`;
+            }
+            
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: state,
+              description: description,
+              context: 'Phase C Hardening (PR)'
+            });
+
+  # Nightly comprehensive hardening
+  nightly-hardening:
+    name: Nightly Comprehensive Hardening
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'push'
+    
+    services:
+      nats:
+        image: nats:${{ env.NATS_VERSION }}
+        ports:
+          - 4222:4222
+        options: >-
+          --health-cmd="nats server check"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build
+          
+      - name: Setup comprehensive test data
+        run: |
+          mkdir -p benchmark-results
+          npm run setup:comprehensive-data || true
+          
+      - name: Run Phase C Hardening (Nightly Mode)
+        id: phase-c-nightly
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          npx tsx src/benchmark/cli-phase-c.ts phase-c \
+            --mode nightly \
+            --ci \
+            --output ./benchmark-results \
+            --nats-url nats://localhost:4222 \
+            --timeout 45 \
+            --min-score 80 \
+            --max-degradation 10 \
+            --slice-gates \
+            --slack-webhook "$SLACK_WEBHOOK_URL"
+        continue-on-error: true
+        
+      - name: Upload nightly hardening artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-hardening-artifacts-${{ github.run_id }}
+          path: |
+            benchmark-results/
+          retention-days: 30
+          
+      - name: Upload to S3 (if configured)
+        if: always() && env.AWS_ACCESS_KEY_ID
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          aws s3 sync benchmark-results/ s3://lens-benchmark-artifacts/nightly/$(date +%Y-%m-%d)/ \
+            --exclude "*.tmp" --exclude "*.log"
+            
+      - name: Create GitHub release on failure
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './benchmark-results/ci-hardening-result.json';
+            
+            if (fs.existsSync(path)) {
+              const results = JSON.parse(fs.readFileSync(path, 'utf8'));
+              
+              if (!results.success) {
+                const tag = `hardening-failure-${Date.now()}`;
+                const release = await github.rest.repos.createRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag_name: tag,
+                  name: `Nightly Hardening Failure - ${new Date().toISOString().split('T')[0]}`,
+                  body: `
+                  ## ❌ Nightly Phase C Hardening Failed
+                  
+                  **Hardening Score**: ${results.hardening_score}/100
+                  **Failed Tripwires**: ${results.quality_gate_results.tripwires_total - results.quality_gate_results.tripwires_passed}
+                  **Failed Slices**: ${results.quality_gate_results.slice_gates_total - results.quality_gate_results.slice_gates_passed}
+                  
+                  ### Key Issues:
+                  ${results.failure_summary?.recommendations.slice(0, 5).map(r => `- ${r}`).join('\n') || 'See artifacts for details'}
+                  
+                  **Artifacts**: Download from this release or check the Actions run.
+                  `,
+                  draft: false,
+                  prerelease: true
+                });
+                
+                console.log('Created failure release:', release.data.html_url);
+              }
+            }
+
+  # Release hardening validation
+  release-hardening:
+    name: Release Hardening Validation
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    services:
+      nats:
+        image: nats:${{ env.NATS_VERSION }}
+        ports:
+          - 4222:4222
+        options: >-
+          --health-cmd="nats server check"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build
+          
+      - name: Setup release test data
+        run: |
+          mkdir -p benchmark-results
+          npm run setup:release-data || npm run setup:comprehensive-data || true
+          
+      - name: Run Phase C Hardening (Release Mode)
+        id: phase-c-release
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          npx tsx src/benchmark/cli-phase-c.ts phase-c \
+            --mode release \
+            --ci \
+            --output ./benchmark-results \
+            --nats-url nats://localhost:4222 \
+            --timeout 60 \
+            --min-score 90 \
+            --max-degradation 5 \
+            --slice-gates \
+            --fail-fast \
+            --slack-webhook "$SLACK_WEBHOOK_URL"
+            
+      - name: Upload release hardening artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-hardening-${{ github.ref_name }}
+          path: |
+            benchmark-results/
+          retention-days: 90
+          
+      - name: Attach artifacts to release
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Get release
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: context.ref.replace('refs/tags/', '')
+            });
+            
+            // Read hardening results
+            const resultsPath = './benchmark-results/ci-hardening-result.json';
+            if (fs.existsSync(resultsPath)) {
+              const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+              
+              // Update release body with hardening results
+              const hardeningSection = `
+              ## ✅ Phase C Hardening Validation
+              
+              **Status**: PASSED
+              **Hardening Score**: ${results.hardening_score}/100
+              **Tripwires**: ${results.quality_gate_results.tripwires_passed}/${results.quality_gate_results.tripwires_total} passed
+              **Slice Gates**: ${results.quality_gate_results.slice_gates_passed}/${results.quality_gate_results.slice_gates_total} passed
+              
+              This release has passed comprehensive quality assurance including:
+              - 🎯 Hard negative adversarial testing
+              - 📊 Per-repository and per-language performance gates
+              - ⚡ Automated tripwire validation
+              - 📈 Enhanced performance visualization
+              `;
+              
+              await github.rest.repos.updateRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.data.id,
+                body: release.data.body + hardeningSection
+              });
+            }
+
+  # Matrix testing for different configurations
+  configuration-matrix:
+    name: Configuration Matrix Testing
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "minimal"
+            hard_negatives: false
+            slice_gates: false
+            min_score: 60
+          - name: "standard"
+            hard_negatives: true
+            slice_gates: false
+            min_score: 75
+          - name: "strict"
+            hard_negatives: true
+            slice_gates: true
+            min_score: 85
+    
+    services:
+      nats:
+        image: nats:${{ env.NATS_VERSION }}
+        ports:
+          - 4222:4222
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build
+          
+      - name: Run Phase C Hardening (${{ matrix.config.name }})
+        run: |
+          npx tsx src/benchmark/cli-phase-c.ts phase-c \
+            --mode nightly \
+            --ci \
+            --output ./benchmark-results-${{ matrix.config.name }} \
+            --nats-url nats://localhost:4222 \
+            --timeout 20 \
+            --min-score ${{ matrix.config.min_score }} \
+            ${{ matrix.config.hard_negatives && '--hard-negatives' || '--no-hard-negatives' }} \
+            ${{ matrix.config.slice_gates && '--slice-gates' || '' }}
+        continue-on-error: true
+        
+      - name: Upload matrix results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrix-results-${{ matrix.config.name }}
+          path: benchmark-results-${{ matrix.config.name }}/
+          retention-days: 7

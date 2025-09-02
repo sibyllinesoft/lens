@@ -1,0 +1,8 @@
+{
+  "suite": ["codesearch", "structural"],
+  "systems": ["lex", "+symbols", "+symbols+semantic"],
+  "slices": "SMOKE_DEFAULT",
+  "seeds": 1,
+  "cache_mode": "warm",
+  "trace_id": "phase1-smoke-1756707745"
+}

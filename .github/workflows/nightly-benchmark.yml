@@ -1,0 +1,253 @@
+name: Nightly Benchmark Suite
+
+on:
+  schedule:
+    # Run nightly at 2 AM UTC (off-peak hours)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      suite_type:
+        description: 'Benchmark suite type'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - 'full'
+          - 'smoke'
+      notify_on_success:
+        description: 'Notify on successful runs (not just failures)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+  NATS_URL: 'nats://localhost:4222'
+  BENCHMARK_TIMEOUT_MINUTES: 180  # 3 hours for full suite
+  NOTIFICATION_SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  nightly-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240  # 4 hours total timeout
+    
+    services:
+      nats:
+        image: nats:2.10-alpine
+        ports:
+          - 4222:4222
+        options: >
+          --health-cmd "nats-server --healthcheck"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit for comparison
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm run build
+      
+      - name: Prepare benchmark environment
+        run: |
+          # Create benchmark output directory with timestamp
+          export BENCHMARK_RUN_ID="nightly-$(date +%Y%m%d-%H%M%S)"
+          echo "BENCHMARK_RUN_ID=$BENCHMARK_RUN_ID" >> $GITHUB_ENV
+          
+          mkdir -p benchmark-results/$BENCHMARK_RUN_ID
+          mkdir -p benchmark-results/history
+          
+          # Ensure NATS is ready
+          timeout 30s bash -c 'until nc -z localhost 4222; do sleep 1; done'
+          echo "✅ NATS server ready"
+      
+      - name: Start Lens search server
+        run: |
+          # Start the search server in background
+          npm run start &
+          export SERVER_PID=$!
+          echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
+          
+          # Wait for server to be ready (with timeout)
+          timeout 60s bash -c 'until curl -f http://localhost:4000/health; do sleep 2; done'
+          echo "✅ Lens search server ready (PID: $SERVER_PID)"
+      
+      - name: Run corpus-golden consistency check
+        run: |
+          echo "🔍 Running corpus-golden consistency validation..."
+          node scripts/nightly-benchmark.js validate-consistency
+          
+          if [ $? -ne 0 ]; then
+            echo "❌ Corpus-golden consistency check failed - cannot proceed with benchmark"
+            exit 1
+          fi
+          echo "✅ Corpus-golden consistency validated"
+      
+      - name: Execute benchmark suite
+        run: |
+          export SUITE_TYPE="${{ github.event.inputs.suite_type || 'full' }}"
+          export OUTPUT_DIR="benchmark-results/$BENCHMARK_RUN_ID"
+          
+          echo "🚀 Starting $SUITE_TYPE benchmark suite (Run ID: $BENCHMARK_RUN_ID)..."
+          
+          # Run the benchmark with timeout
+          timeout ${BENCHMARK_TIMEOUT_MINUTES}m node scripts/nightly-benchmark.js run-suite \
+            --suite-type "$SUITE_TYPE" \
+            --output-dir "$OUTPUT_DIR" \
+            --run-id "$BENCHMARK_RUN_ID" || {
+              echo "❌ Benchmark execution failed or timed out"
+              exit 1
+          }
+          
+          echo "✅ Benchmark suite completed successfully"
+      
+      - name: Generate comprehensive report
+        if: always()  # Generate report even if benchmark failed
+        run: |
+          echo "📊 Generating comprehensive benchmark report..."
+          
+          node scripts/generate-report.js \
+            --input-dir "benchmark-results/$BENCHMARK_RUN_ID" \
+            --run-id "$BENCHMARK_RUN_ID" \
+            --compare-with-history \
+            --output-formats "json,markdown,html" || {
+              echo "⚠️ Report generation had issues, but continuing..."
+          }
+      
+      - name: Analyze performance regressions
+        id: regression_check
+        if: always()
+        run: |
+          echo "🔍 Analyzing performance regressions..."
+          
+          # Run regression analysis and capture results
+          REGRESSION_RESULT=$(node scripts/analyze-regressions.js \
+            --current-run "benchmark-results/$BENCHMARK_RUN_ID" \
+            --history-dir "benchmark-results/history" \
+            --threshold 0.10 \
+            --output-format "github-actions" || echo "ANALYSIS_FAILED")
+          
+          echo "regression_status=$REGRESSION_RESULT" >> $GITHUB_OUTPUT
+          
+          # Set regression flags for notification logic
+          if echo "$REGRESSION_RESULT" | grep -q "REGRESSION_DETECTED"; then
+            echo "has_regressions=true" >> $GITHUB_OUTPUT
+            echo "❌ Performance regressions detected!"
+          else
+            echo "has_regressions=false" >> $GITHUB_OUTPUT
+            echo "✅ No significant regressions detected"
+          fi
+      
+      - name: Archive benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ env.BENCHMARK_RUN_ID }}
+          path: |
+            benchmark-results/${{ env.BENCHMARK_RUN_ID }}/
+            !benchmark-results/**/*.tmp
+          retention-days: 30
+          compression-level: 6
+      
+      - name: Update historical data
+        if: success()
+        run: |
+          # Move current results to history for future comparisons
+          cp -r "benchmark-results/$BENCHMARK_RUN_ID" "benchmark-results/history/"
+          
+          # Keep only last 30 historical runs to manage disk space
+          cd benchmark-results/history
+          ls -t | tail -n +31 | xargs -r rm -rf
+          
+          echo "📦 Historical data updated (keeping last 30 runs)"
+      
+      - name: Generate performance badge
+        if: success()
+        run: |
+          # Generate badge with current Recall@10 performance
+          node scripts/generate-badge.js \
+            --input "benchmark-results/$BENCHMARK_RUN_ID/summary.json" \
+            --output "benchmark-badge.svg" \
+            --metric "recall_at_10" \
+            --format "percentage"
+      
+      - name: Cleanup
+        if: always()
+        run: |
+          # Gracefully stop the search server
+          if [ ! -z "$SERVER_PID" ]; then
+            kill $SERVER_PID || echo "Server already stopped"
+            wait $SERVER_PID 2>/dev/null || echo "Server cleanup complete"
+          fi
+          
+          # Clean up temporary files
+          find benchmark-results/ -name "*.tmp" -delete || true
+          
+          echo "🧹 Cleanup completed"
+      
+      - name: Notify on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: '#lens-alerts'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          fields: repo,commit,author,took,workflow
+          text: |
+            🚨 **Nightly Benchmark Failed**
+            
+            Run ID: `${{ env.BENCHMARK_RUN_ID }}`
+            Suite: `${{ github.event.inputs.suite_type || 'full' }}`
+            Branch: `${{ github.ref_name }}`
+            
+            Please check the workflow logs for details.
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      
+      - name: Notify on regressions
+        if: steps.regression_check.outputs.has_regressions == 'true'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#lens-performance'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          fields: repo,commit,author,took
+          text: |
+            ⚠️ **Performance Regression Detected**
+            
+            Run ID: `${{ env.BENCHMARK_RUN_ID }}`
+            Suite: `${{ github.event.inputs.suite_type || 'full' }}`
+            Regression Status: `${{ steps.regression_check.outputs.regression_status }}`
+            
+            📊 [View detailed report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      
+      - name: Notify on success (optional)
+        if: success() && github.event.inputs.notify_on_success == 'true'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          channel: '#lens-performance'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          fields: repo,commit,author,took
+          text: |
+            ✅ **Nightly Benchmark Completed Successfully**
+            
+            Run ID: `${{ env.BENCHMARK_RUN_ID }}`
+            Suite: `${{ github.event.inputs.suite_type || 'full' }}`
+            
+            📊 [View results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

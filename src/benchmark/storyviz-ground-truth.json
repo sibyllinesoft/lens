@@ -1,0 +1,5672 @@
+{
+  "goldenItems": [
+    {
+      "id": "01473450-7ac7-474d-a350-d62fa692eed9",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 13,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "dc24bc7d-d3c5-4d06-89e0-44349d69be29",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 22,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "098f3fc6-247a-4879-80b6-82581abf8433",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 23,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9d4b7bb2-9c91-4907-b419-d2c1ec9aa406",
+      "query": "def analyze_text_sample",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 26,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "57eaaf67-44dd-4080-99d5-6b249b96cb3b",
+      "query": "def demonstrate_functional_composition",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 87,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2c4428ef-34e4-41a6-adc6-bdb5650daec8",
+      "query": "def compare_writing_styles",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 114,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d4e7c691-4cd2-4e3e-9daf-8a21ec3bb383",
+      "query": "def main",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_analysis_demo.py",
+          "line": 147,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "163a0cf3-22d0-48d5-8f8d-a3786d5ef8ef",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 17,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "02450d71-b4c3-4666-b94d-0823205587fb",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 18,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "74216a58-e12c-44a3-a402-57e443178b26",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 19,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0d8d473b-e897-49d1-99f8-dfeb45ed58db",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 20,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "dfc3ce1d-97d2-4901-9c1d-792d5d37f50a",
+      "query": "def analyze_text_samples",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 23,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "fdf31479-f6f8-4441-89ba-9934755bee87",
+      "query": "def demonstrate_api_integration",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 117,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "818a86bc-0e2c-406b-a9bd-4795ea9b4a2e",
+      "query": "def main",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_linguistic_api_demo.py",
+          "line": 192,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b36609d3-d01f-4d7d-81aa-3c3670db5957",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_llm_adapter_demo.py",
+          "line": 15,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3ad03579-0dec-4f31-b835-25634057fece",
+      "query": "def demo_adapter_usage",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_llm_adapter_demo.py",
+          "line": 21,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "60f349d1-3c2a-427d-810c-93d73b47c4c8",
+      "query": "def demo_backward_compatibility",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_llm_adapter_demo.py",
+          "line": 102,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3b913496-bae3-4883-b2b0-b5bf283d1bee",
+      "query": "def demo_provider_switching",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_llm_adapter_demo.py",
+          "line": 137,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "25c418cf-a5ba-44bb-ac6a-5beea50015db",
+      "query": "def demo_configuration_options",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_llm_adapter_demo.py",
+          "line": 168,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c0f687c7-c14f-4ee8-908a-11ad51193213",
+      "query": "def main",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_llm_adapter_demo.py",
+          "line": 206,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6694d734-8a26-4d71-b433-34c3bf23b53c",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8c427ac8-32ea-4d5c-a783-5d8f77d1c649",
+      "query": "from openai",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 13,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b8a9e85d-7d7e-4cc0-8fc0-1fb9c8959fde",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d8cee348-e755-475b-975d-7cc0f9bc8c35",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 17,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3878a1d7-8e5a-435b-a4b9-5fc4704b4433",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 20,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "87052cf1-950a-4120-bbaf-2651bf6e0feb",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 21,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b71904d5-ec16-4c95-a6ad-f66a12ea050f",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 22,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "39e8faaa-cd7f-4b2e-86b4-83f6080517cb",
+      "query": "class MonitoredOpenAIAdapter",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 28,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "72399ac6-35c0-4dcb-825d-cb9bf014354c",
+      "query": "monitoredopenaiadapter",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 28,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "92674bea-32c5-4168-bc86-6cf8f9450474",
+      "query": "def get_cost_per_token",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 73,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cbf9f5eb-0623-4376-a3ff-4afa107da799",
+      "query": "class MonitoredAnalysisPipeline",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 225,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "201a1003-9ddd-463a-80d4-7ebfe1920682",
+      "query": "monitoredanalysispipeline",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 225,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6046d60c-7115-4d4e-a059-14bedcabb29e",
+      "query": "def demonstrate_monitoring_integration",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_monitoring_integration_example.py",
+          "line": 379,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "034500ad-e1ae-4c2d-9fba-c6c99a6507c2",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6e4367a9-b7d4-4214-89b4-d070b57c3314",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 18,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "1dcd9853-363e-4442-9803-f0c3f8368da6",
+      "query": "def demo_basic_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 30,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3eac8119-c717-4560-a773-975616375326",
+      "query": "def demo_function_with_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 48,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9ebd74d9-0758-4337-82e1-81aa6af0bc0f",
+      "query": "def demo_function_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 55,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2205d4ca-7ba5-4578-875a-07fcf3d95e05",
+      "query": "def demo_memory_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 72,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7f90357b-ce1f-403a-81cf-8af7d43cc996",
+      "query": "def demo_batch_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 102,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "af1dd2ac-11de-4ac5-9121-45c647e835b5",
+      "query": "def demo_analysis_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 125,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0ac4cbf9-271e-4bf2-a372-aa6f0c28c7d2",
+      "query": "def demo_embedding_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 172,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a1eef19d-db1c-45d1-b360-19ada66b51b9",
+      "query": "def demo_clustering_profiling",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 203,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "20986ec1-ea2d-4153-afbe-d4c071068363",
+      "query": "def main",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "examples_profiling_demo.py",
+          "line": 244,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5cf00793-6a95-48f5-a9d1-1a5aeb7074af",
+      "query": "def test_raw_api",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "quick_adapter_test.py",
+          "line": 9,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "72aea210-239c-4790-a340-a0ece69d5907",
+      "query": "def test_adapter",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "quick_adapter_test.py",
+          "line": 37,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "34420293-eebc-451a-a19b-fe929750937c",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 13,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7bd865e4-f8b3-4dd0-88a7-3a435c66fe96",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 14,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9e59092f-d00e-4fc9-8af4-a4b509d44a63",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 20,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "02ef1ad0-d588-4373-b237-872de081b535",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 21,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "971baa6e-26c9-4fe7-9f1c-49eec389742c",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 22,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b24defa5-2b62-440b-9f67-3d206d037851",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 26,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "527ace6b-f44c-481a-b9d3-43815ae042f7",
+      "query": "def migration_status",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 142,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8771345a-7c9c-4548-819c-a7b183dabf19",
+      "query": "def create_migration",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 183,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f63f935d-38dd-45b3-a5a8-4903c00f52c7",
+      "query": "def upgrade_database",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 206,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d3b864fe-353a-4ab4-8421-f28589c24710",
+      "query": "def main",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_database_management.py",
+          "line": 328,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e32a2db5-4789-43f7-8e9e-798b8756b5be",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 8,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f22b14ed-74aa-4086-9be4-2fd8fe9ef5bb",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 9,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2a09665d-9f7f-48fd-a98d-84767aea7ac2",
+      "query": "from dataclasses",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "81ea8f6e-5d34-4883-977c-de323c52c769",
+      "query": "class TestResult",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 14,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "64de6e25-9b1e-42d2-b83a-6773a954c34c",
+      "query": "testresult",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 14,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cc188007-1364-4f6e-adcb-9dd4843ed208",
+      "query": "class TestRunner",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 25,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5acb544b-b940-48c3-bc05-b520bc730db5",
+      "query": "testrunner",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 25,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "510cf86d-5ad5-499f-8ec9-db94300690b8",
+      "query": "def run_smoke_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 33,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9a87108c-7092-4a4c-8dd3-0af530e61472",
+      "query": "def run_unit_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 50,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2a2dc714-016c-43d2-aff3-f731f5dc1091",
+      "query": "def run_integration_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 74,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "523b49a0-e887-440b-884c-8b7bf4098f58",
+      "query": "def run_security_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 95,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f9fc937f-9184-49e1-8dea-fdf080986394",
+      "query": "def run_cache_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 112,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2777b7eb-55da-4e93-b1a7-a21da21604e5",
+      "query": "def run_performance_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 129,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "daa2d195-bf58-437f-ae09-dc9e2e8fd222",
+      "query": "def run_all_tests",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 147,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0e201a29-18b5-4750-b20a-55d533fbdeee",
+      "query": "def generate_report",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 271,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0c2d060c-e2fc-40d2-a47a-3d2abeef1057",
+      "query": "def print_summary",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 348,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e752db5c-5de0-45ee-8af2-70c5da7e6b52",
+      "query": "def save_report",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 378,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a1e39bcc-eaad-474c-aa9b-b8c8b3004989",
+      "query": "def main",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 387,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d1588686-3e54-41f5-8593-8ddcacf89ce4",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api___init__.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "207ca17b-389c-4306-bee1-2cca8f30aa2e",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "1db02d3b-ebc9-4778-94d6-7cfae9cde2cf",
+      "query": "from datetime",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 7,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9f19ffda-ed56-4325-bcb8-a6ea94fbeb57",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 8,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c0d7c91a-ba89-41d3-ad41-f16596135c21",
+      "query": "from concurrent",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 9,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7a87a341-6335-4021-ac6b-fe78fe9bfd1e",
+      "query": "from dataclasses",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3f36bd19-bae6-4781-b1d1-a7359609777e",
+      "query": "from enum",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 12,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cf541a5c-e384-4f60-8395-5dbb898b1bb3",
+      "query": "from fastapi",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 15,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6be355bf-eaef-4a44-a4e9-7b503a9294f7",
+      "query": "from fastapi",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ffd89bc3-ffa6-4884-afed-d38b56039729",
+      "query": "from fastapi",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 17,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5972b09e-5cbd-4527-b7ae-461b465bc790",
+      "query": "from pydantic",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 18,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9d6b8f8d-356b-40bc-a5ca-1b2065b232a9",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 21,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "598ef525-a948-4ba8-ac8f-b639f66dae6d",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 29,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e3dd5900-f303-4ee4-b93f-157ebac00124",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 34,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8bc079d4-8056-4e13-a8ec-0af128a06d01",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 45,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "fa52fd98-e99e-4558-840d-9b1f2966dec5",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 46,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2f99d845-ed1c-4b5d-9ccb-765ea39d9a4e",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 47,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f723d0dd-180a-46d4-9d3c-83d57575d165",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 48,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e694aa46-5a6f-4815-aac4-04218082441f",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 49,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b2330f8e-84de-4dd9-883f-ed5df950958c",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 54,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c9b7b938-6ff1-47e7-8bd0-7d8b1cc34fb3",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 56,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "60977038-64ad-4e8e-b272-8c07a11e927c",
+      "query": "def parse_bool",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 71,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "1e905b64-0e17-456f-a966-eeb45a1b7651",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 83,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a0b64023-6e76-4ca7-8a3c-942ec3ddd272",
+      "query": "def datetime_serializer",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 100,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4901ee62-48b0-483b-becb-289447d8e6ed",
+      "query": "def save_job_to_disk",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 107,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "def210a0-cd4a-425e-bca1-6b9f6fb4c92c",
+      "query": "def parse_date",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 118,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "52964855-85da-4440-849c-34d057026952",
+      "query": "def load_job_from_disk",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 140,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7cb79d77-f1e8-4ae3-92a2-a3974ac5ac07",
+      "query": "def load_all_jobs_from_disk",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 165,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7edc122f-5e1f-4a59-bdd3-74c58cacb070",
+      "query": "def cleanup_completed_jobs",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 181,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ef8c0957-5ac9-48dc-b10d-74d4a29af89d",
+      "query": "def get_fast_analyzer",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 233,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b1e44760-1725-499f-a7e3-26b4bef2fad0",
+      "query": "def get_llm_analyzer",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 250,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "13b44830-2d60-44bb-b80b-ff1c463c6c7e",
+      "query": "class StepStatus",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 275,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d3699f21-18e3-479b-9c48-85f306195035",
+      "query": "stepstatus",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 275,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "10eb9263-4bb2-4500-a407-e95b14ff3d28",
+      "query": "class AnalysisStep",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 284,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2f3b02fa-7f7f-4cae-94c6-e3fbcb9931e7",
+      "query": "analysisstep",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 284,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b0a34b17-a918-419e-8f20-87f01945a0c1",
+      "query": "class WorkflowDefinition",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 295,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4d3d624d-2eb1-40d1-b360-8645081108db",
+      "query": "workflowdefinition",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 295,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ec648fe6-02a9-46a1-9272-0d573a8a2ff2",
+      "query": "def get_execution_order",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 351,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "dacbe33d-43db-4e26-a8fb-fa61c2c7a6f7",
+      "query": "class WorkflowStepState",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 387,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "edff39e9-feac-4ab0-954e-6170ebf22eab",
+      "query": "workflowstepstate",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 387,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "625eb3a2-4144-48e8-82a3-0fd15fb47f2e",
+      "query": "class AnalysisWorkflow",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 400,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4c8ad8a2-df0d-43c8-81d4-11592be5dd83",
+      "query": "analysisworkflow",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 400,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "61a26a75-bf44-4edd-82cc-47c9194af808",
+      "query": "def overall_progress",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 426,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e52efd99-a700-4554-b97f-f59253835670",
+      "query": "def is_complete",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 435,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f9e271b9-40e4-40b2-8253-9f50fd5f8ebf",
+      "query": "def has_failed",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 443,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d2954e36-3a07-4723-9ba5-89c1dda603c6",
+      "query": "def update_step",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 447,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7b14f75f-5e27-4a75-94a0-505fd7c7ce83",
+      "query": "def get_next_step",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 494,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a25c0a84-76df-4ec1-94de-ad7709df58f4",
+      "query": "def to_dict",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 511,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "dc98b0ff-f55e-4cfb-8a4c-7749cfd7ee32",
+      "query": "def from_dict",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 547,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ddda5a6d-5ce9-44df-a0bf-8e31e2836d1f",
+      "query": "def save_workflow_to_disk",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 598,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "bc3ca746-45f5-4769-ba07-d17bc2fe8755",
+      "query": "def load_workflow_from_disk",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 608,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0d906542-0494-405d-a483-2a6de196ca4a",
+      "query": "def load_all_workflows_from_disk",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 621,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "db929def-0b6a-4b6b-8940-d6edd351970e",
+      "query": "class WorkflowStepExecutor",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 640,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0fdbae21-a6da-4382-af4e-ee65ecf6f4f0",
+      "query": "workflowstepexecutor",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 640,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4c482ceb-55f7-4319-a707-ddc0092e6d6b",
+      "query": "def progress_callback",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 707,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "56b4773f-97c8-4124-a254-957ef4d405f4",
+      "query": "def word_cloud_progress_callback",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 742,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b13cac55-61a4-4c11-aa31-f6b0732c6a4a",
+      "query": "def chunking_progress_callback",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 989,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b9007cc4-e64b-476c-95ad-990cd4adf693",
+      "query": "def progress_callback",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1155,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "14fa45cb-8490-4558-a4e2-7226dbd12f31",
+      "query": "def progress_callback",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1246,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8b59b668-6eef-44a9-86d8-bc96fe6ef236",
+      "query": "class WorkflowExecutor",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1335,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "10b41d78-4ae1-4517-96ea-903cc1012042",
+      "query": "workflowexecutor",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1335,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9d459548-fa44-4e8b-8bc1-4c87570e1381",
+      "query": "class WorkflowRequest",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1457,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "17897093-d7a7-4484-b1f3-a2ca44fe142f",
+      "query": "workflowrequest",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1457,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "05222902-fa35-4197-95c5-d4a226c0c469",
+      "query": "class WorkflowResponse",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1477,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "afe091b1-4b6c-44d7-b3f5-effcb095c232",
+      "query": "workflowresponse",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1477,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "58c50f35-0cfd-4063-a18e-71482c26d066",
+      "query": "class WorkflowStatusResponse",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1488,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "868296ce-b863-4735-a661-6c8272148389",
+      "query": "workflowstatusresponse",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1488,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4f6ab7e6-2f91-404b-965f-e99fee6479da",
+      "query": "def get_workflow_status",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1619,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d9afbda6-7a89-4386-81a1-2bb3b0d8e5c1",
+      "query": "def list_workflows",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1665,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d5d23424-1eaa-4d09-bb8a-1735d609937d",
+      "query": "def delete_workflow",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1775,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7f997c16-24d5-4923-8fd3-b6396f668794",
+      "query": "def get_workflow_definitions",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1796,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d758f276-2091-40b0-9f4f-a2d4d3589db9",
+      "query": "def get_workflow_results",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 1834,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4296b9c1-1dab-4c73-8a3f-e7467a4203aa",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2215,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a76da2cc-7d3f-44fc-a923-12a173d98f41",
+      "query": "from storyviz",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2282,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3b92dd00-9d4a-4d1e-94bf-080440e55476",
+      "query": "def summarize_with_caching",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2357,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "bd3b1e67-cac6-4353-9e8c-01c14d53a221",
+      "query": "def convert_numpy_types",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2669,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "782fd09a-395e-450b-bc5b-062e0a698224",
+      "query": "def process_analysis_job",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2686,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "77bc207e-5404-468f-bbfc-3a46284347aa",
+      "query": "def update_progress",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2733,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "316238f0-995a-456f-8d17-538beb295829",
+      "query": "class AnalysisStep",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2954,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e6897370-8016-4a64-90e1-28318803acfd",
+      "query": "analysisstep",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2954,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "01e3dce3-448b-41af-8f9f-702de21ddd90",
+      "query": "class AnalysisRequest",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2965,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "46aa688c-6698-4aa3-b7a3-fd02adfbc448",
+      "query": "analysisrequest",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_app.py",
+          "line": 2965,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4dcc3c94-e8f0-4cf9-9636-c2215686e1f2",
+      "query": "from datetime",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5a9bd2bf-0ddf-496a-b38c-707262dc7aa1",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 12,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9415963f-516a-40e8-98c3-5dd71f123bab",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 13,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d2252c93-6c99-4712-8cb3-d4dab7907037",
+      "query": "from contextlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 14,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "553dd6bf-a193-43ea-a3ad-7b61564aebbd",
+      "query": "from dataclasses",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 15,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c02fd0b9-6428-4c0c-ab91-1c961982daea",
+      "query": "from uuid",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "068bbf80-ca36-4bef-89cc-8eabc34bf858",
+      "query": "class Document",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 22,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b03d1a3b-cae8-422c-86fe-efb85f2ff442",
+      "query": "document",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 22,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e2202637-4976-4751-ae70-ade447bba039",
+      "query": "class Chapter",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 43,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "19a8ac5d-b7c7-4356-b938-dd190d8f6251",
+      "query": "chapter",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 43,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f8974283-9558-4aa9-a8c0-994df76e65f8",
+      "query": "class Sentence",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 60,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "72be47d8-be08-4584-bcdc-011915219130",
+      "query": "sentence",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 60,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5d1eb32a-49f8-43bd-8717-838375df3193",
+      "query": "class SentenceMetric",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 79,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c7810e3d-805b-4ae0-9615-a334d6933780",
+      "query": "sentencemetric",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 79,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "1111348d-d8a6-4f0f-aaae-2b3c0a43f0f7",
+      "query": "class StoryVizDatabase",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 96,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "045bfea9-8b68-4806-976e-1f572879de4d",
+      "query": "storyvizdatabase",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 96,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0e1e0281-dfde-4db3-b603-43f20514b424",
+      "query": "def create_document",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 220,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9cdc917e-c0d3-48bd-bc45-34ccf51c6754",
+      "query": "def create_chapter",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 246,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d3446868-7ac0-44d7-a6c3-cdb92ca36215",
+      "query": "def create_sentence",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 271,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "987ddea1-aa77-468b-be29-accade0bb926",
+      "query": "def create_sentence_metric",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 298,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c2eba30f-57e8-40fa-ab35-1b5d9b1bb29f",
+      "query": "def get_document",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 322,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9e72da3f-cdab-424f-8e71-27a6f75e31dc",
+      "query": "def get_document_chapters",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 340,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b629ee90-7274-4b39-bba0-31005d5d745c",
+      "query": "def get_document_sentences",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 363,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "48d7c37b-ef62-4e62-a060-c9294b848a53",
+      "query": "def get_chapter_sentences",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 388,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9ca19d6e-37c6-49f4-930e-7b6475aa2ab6",
+      "query": "def get_sentence_metrics",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 413,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "eecc93b4-e75c-468a-a6db-e7cedc1117e2",
+      "query": "def create_analysis_run",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 445,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f0d9fc71-fd6e-4215-9304-0f5b55e12764",
+      "query": "def update_analysis_run_status",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 462,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ab8eba47-0c32-42fb-8d37-92cc6ef3ca38",
+      "query": "def get_analysis_runs",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 491,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "351c56ca-7777-48fe-a738-ada879522ca9",
+      "query": "def delete_document",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 515,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "30bc9d83-2707-4757-b9d5-c9417e06fd0c",
+      "query": "def get_database_stats",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 522,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c41ecfb2-8861-4ff2-9d69-1b37e245dd4a",
+      "query": "def get_default_database",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database.py",
+          "line": 560,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "05914be8-8c01-476c-bacd-2b6fab96df0e",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "06171797-1db7-4c2d-b0df-b6662f4b949f",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a6545cfe-6ce8-4a2e-a953-da791cbae7b3",
+      "query": "from contextlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 12,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "aaeb04a2-01f6-40eb-89ae-e855f6190332",
+      "query": "from dataclasses",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 13,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9f55eae2-6323-4137-a943-2b3b6edc7991",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6476327b-2ee5-45b4-ae20-c45a66261c15",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 17,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "38f1b4a2-5da9-4530-9ec5-9519684798dc",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 24,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ac49430f-09e6-45a2-a5b4-091bf1d5237e",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 25,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "318ee541-b4ba-4500-9050-443613e4afcd",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 26,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5b794f47-643c-481e-9c02-b16e02aa0fc9",
+      "query": "class DatabaseConfig",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 32,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2996b8e6-4fb7-4961-89c9-a717273efb42",
+      "query": "databaseconfig",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 32,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "dd2baf25-70d9-42a4-891a-e5506204b730",
+      "query": "def from_env",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 67,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f1afab78-ae09-4d38-972f-797d28df48b0",
+      "query": "def is_sqlite",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 91,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7ac061f2-d37b-4cf8-b629-6d5bf0958f40",
+      "query": "def get_sync_url",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 95,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4446bbf5-9743-4ca1-91c3-3e0fff3a420b",
+      "query": "class DatabaseManager",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 102,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cc969f45-0681-4636-acc3-fe048ead429e",
+      "query": "databasemanager",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 102,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e35b9bf3-a624-4c52-813b-0db3c57ec620",
+      "query": "def receive_before_cursor_execute",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 234,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5637dd35-18f6-4741-9fb7-8801deb42cb9",
+      "query": "def receive_after_cursor_execute",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 240,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d5d5862f-4ef6-4bc7-a0d2-ba8d0bc93f06",
+      "query": "def receive_connect",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 248,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a55009ce-f977-4cb4-b57c-71e90740675a",
+      "query": "def receive_close",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 253,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3e5750d2-1659-40df-95f0-4882e54590cc",
+      "query": "def async_engine",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 345,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cc3f45df-4146-4ac7-bae4-67355ae4d17f",
+      "query": "def sync_engine",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 352,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "18819de9-f491-4753-b7f8-1bd815067973",
+      "query": "class Base",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_config.py",
+          "line": 403,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "bf0a6b79-f301-49e1-a957-35cb59a4a82e",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "fa70e296-01f9-42ea-afd6-fa78142045dd",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "86a0d67f-56ab-49d6-be4a-0182f9955fb0",
+      "query": "from datetime",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 12,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cf511572-7833-4bd9-8ffa-8c2e0212e075",
+      "query": "from alembic",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 14,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "4f49c5ff-f9fd-4fd4-87bc-674353c3958c",
+      "query": "from alembic",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 15,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "975d2396-5785-41a7-a543-60f05eda0529",
+      "query": "from alembic",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6e29f522-97b6-4606-b3c9-e590f57c0bd4",
+      "query": "from alembic",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 17,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0d5a47a1-0071-4d4d-b0c5-ba48ae7c16cf",
+      "query": "from alembic",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 18,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3e218002-bf2c-41aa-9fb7-4d24727fac1d",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 19,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d8c03a74-e98e-41c9-a199-c3d6eb7fba8c",
+      "query": "class DatabaseMigrationManager",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 27,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f9554d74-0481-44e3-b1cf-f64062222a8e",
+      "query": "databasemigrationmanager",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 27,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "93bf7bb2-80ad-4110-a9e1-b97ed1b63250",
+      "query": "def init_migrations",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 60,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "1b744ff6-4755-4af0-babc-ab33a11cee2a",
+      "query": "def create_migration",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 74,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9890c6cc-d1fe-4794-a820-cb079cf64c30",
+      "query": "def upgrade_database",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 122,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c7d63ab0-b872-4a0f-ba23-14f4482a97fd",
+      "query": "def downgrade_database",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 151,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8125abf2-187d-4c72-9eaf-6ad0c459ad11",
+      "query": "def get_current_revision",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 180,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ef7fb0b6-0bd3-4be2-8ded-6d251a08f651",
+      "query": "def get_migration_history",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 192,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e71c3da0-373a-4ef8-8d98-6cfae36c00d4",
+      "query": "def get_pending_migrations",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 214,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b880d60e-f41c-4427-b3bb-42ed297f7fce",
+      "query": "def validate_database_schema",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 232,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7b03dadb-8fdf-4d12-9b5f-cc9bb888aac9",
+      "query": "def create_initial_migration",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 290,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f241fa31-c36b-4ddc-9aed-8c78ce675fd9",
+      "query": "def reset_database",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 316,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "522374f9-e281-49a1-af7e-3c13a7c1ced4",
+      "query": "def get_database_info",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 378,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "f1d32130-2692-44d9-8635-58501a70e943",
+      "query": "def get_migration_manager",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 429,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "604bb1ea-7bc0-4932-bc49-1dcc1cd321de",
+      "query": "def create_initial_migration",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 439,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5e3e4536-96af-40b0-be81-44483e038cc9",
+      "query": "def upgrade_to_latest",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 445,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5c739248-58ff-4427-93bb-c0c7487859ca",
+      "query": "def validate_schema",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 451,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "84ec2289-41ff-46d1-ad91-d8f530d6ecd0",
+      "query": "def get_database_status",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_migration.py",
+          "line": 457,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "fb3847b6-f234-4289-a1be-aa73c8c16824",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "067739b5-2083-4b1b-8893-f4c16b886a9d",
+      "query": "from datetime",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6df57385-c866-4d6c-9893-471ea3e04b6b",
+      "query": "from dataclasses",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 12,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "413a90c6-2cea-4d1e-8a8f-855068f1aaad",
+      "query": "from enum",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 13,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "fe41bd7f-f28d-42f4-9a0f-d0928e14eadc",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 15,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "42c7bf19-453e-4c5a-9505-913005ad361f",
+      "query": "from sqlalchemy",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "858031e3-6a93-4b2a-84b5-ac6a13f72c65",
+      "query": "class OptimizationLevel",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 24,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "90acdb16-285b-4c5c-8a48-79b9ca835b6a",
+      "query": "optimizationlevel",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 24,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "393e4c8a-06f2-45c5-8497-45ff5033abae",
+      "query": "class QueryPerformanceMetrics",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 33,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "68e8c222-6fb4-497d-ba4f-6c3f507dd4a3",
+      "query": "queryperformancemetrics",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 33,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "22c5b9e3-e409-4d41-b681-d5ee0f6215bf",
+      "query": "class DatabaseHealthReport",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 45,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6e76cf0a-3e06-4519-bb99-ebdda8be4bd0",
+      "query": "databasehealthreport",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 45,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "41872a05-3b8e-41c7-b194-5d415c63ea28",
+      "query": "class DatabaseOptimizer",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 56,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b8f91f50-39f1-4fbb-93db-7871e4cf169b",
+      "query": "databaseoptimizer",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_database_optimization.py",
+          "line": 56,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "cad520c3-46aa-45a0-b536-fdcab3bbb5a1",
+      "query": "from pathlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 8,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e1fbaefe-9cfa-4297-b7d7-8b2cbd9653fb",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 9,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "0ee8ee25-3ddc-465d-9692-b4f6d3aa11e9",
+      "query": "from fastapi",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 11,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a107a619-1046-4520-b0e9-03ca673a94c2",
+      "query": "def setup_debugging_systems",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7905230b-624e-4a00-a790-50ede6cf26d7",
+      "query": "def get_debug_status",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 66,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "aaa98c8b-9ccc-45dd-8363-15fc397edb0e",
+      "query": "def enable_debugging",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 89,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5dca6e23-84b8-4b12-8778-511710db390e",
+      "query": "def debug_enabled",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 118,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "956478f5-332a-4ef9-a608-b9f1829ccb28",
+      "query": "class debug_operation",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 145,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "855c07e8-5f85-4bd4-bca8-6e40af8e3077",
+      "query": "debug_operation",
+      "language": "python",
+      "query_class": "identifier",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 145,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_name"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "ffc55941-b890-43a7-a3c2-1a5ccfba2e94",
+      "query": "def report_error",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 179,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "69ecee42-39e2-4910-8445-f01dac40158d",
+      "query": "def get_agent_insights",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_debug_setup.py",
+          "line": 205,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "function_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "62c7c4b1-53ac-4ab7-96c4-40118a89207f",
+      "query": "from contextlib",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_lifespan.py",
+          "line": 9,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "bec6167c-2fe1-4915-914e-b801f8fa29fa",
+      "query": "from typing",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_lifespan.py",
+          "line": 10,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5a35c969-0370-4147-ad2a-23e9f50dbe2a",
+      "query": "from fastapi",
+      "language": "python",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_lifespan.py",
+          "line": 12,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "import_statement"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5433c783-2c83-46ff-8a3b-13c27c05e0d2",
+      "query": "class TestResult",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 14,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3a7c5076-b57e-4d82-b3f7-2c8098d0cb8c",
+      "query": "class TestRunner",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "scripts_run-tests.py",
+          "line": 25,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3f76dfd5-4a9a-4c3c-b06c-a28dcabdd393",
+      "query": "class SecurityMetrics",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_middleware_security_enhancements.py",
+          "line": 26,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c96bae86-d1d1-4bc0-8853-01a68ef6481f",
+      "query": "class AdvancedRateLimitingMiddleware",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_middleware_security_enhancements.py",
+          "line": 86,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d6890925-48fc-4cec-89a5-77c862b97ffa",
+      "query": "class RequestValidationMiddleware",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_middleware_security_enhancements.py",
+          "line": 279,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "fe7aaa99-1338-4cec-889f-dfaba131c470",
+      "query": "class AnalysisConfig",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 16,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d8c0994e-5569-4e88-92db-cc289f6f455c",
+      "query": "class AnalysisRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 181,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "305d932e-21d1-4d10-8083-47571f275c5d",
+      "query": "class CacheRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 279,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "c48ff4ae-8557-4621-bd54-1ffe72fac5bd",
+      "query": "class JobCancelRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 287,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "7921c6c9-7698-497f-8291-f6734fbee94a",
+      "query": "class BulkOperationRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 296,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "a4832db8-3d8a-4a47-9bc6-42f1dd834247",
+      "query": "class WorkflowRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 344,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d3d55884-0c43-4d1d-bcf0-7930b5753097",
+      "query": "class SummarizeRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 363,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "3366d49f-0a76-4a63-b811-8764bfac77ae",
+      "query": "class UploadRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 519,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8a7e4dfd-8d42-4800-a7bf-d832a58c6fe4",
+      "query": "class PostprocessRunRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 580,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "6e88d5c4-c64f-4861-b363-737e35dfbba2",
+      "query": "class ChapterEditRequest",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_models_requests.py",
+          "line": 591,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "5131ebc2-bc33-4758-91f1-748d98d35565",
+      "query": "class DocumentMetadata",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_routes_documents.py",
+          "line": 43,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "26c64256-7437-48e4-8d77-d8a35aba33a7",
+      "query": "class DocumentListResponse",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_routes_documents.py",
+          "line": 58,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e06f9778-d3ec-46f6-844d-af1b28742658",
+      "query": "class DocumentDetailResponse",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_routes_documents.py",
+          "line": 65,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "2fa7c274-dee2-4bea-aa43-7d74d01f913d",
+      "query": "class DocumentAnalysisResponse",
+      "language": "typescript",
+      "query_class": "exact_match",
+      "expected_results": [
+        {
+          "file": "storyviz_api_routes_documents.py",
+          "line": 73,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "class_definition"
+        }
+      ],
+      "metadata": {
+        "validation_type": "exact_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "450386d6-7d4d-45e4-b808-979fd4c0e6a2",
+      "query": "class * extends",
+      "language": "multi",
+      "query_class": "structural",
+      "expected_results": [
+        {
+          "file": "synthetic",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "structural_pattern"
+        }
+      ],
+      "metadata": {
+        "description": "Class inheritance patterns",
+        "validation_type": "pattern_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e0c108d3-1dc9-4fd0-8122-b2bb5e95b953",
+      "query": "function * async",
+      "language": "multi",
+      "query_class": "structural",
+      "expected_results": [
+        {
+          "file": "synthetic",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "structural_pattern"
+        }
+      ],
+      "metadata": {
+        "description": "Async function patterns",
+        "validation_type": "pattern_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "81365cb0-671a-4e73-9966-c3201aabe522",
+      "query": "import * from",
+      "language": "multi",
+      "query_class": "structural",
+      "expected_results": [
+        {
+          "file": "synthetic",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "structural_pattern"
+        }
+      ],
+      "metadata": {
+        "description": "Import statement patterns",
+        "validation_type": "pattern_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "8515c648-b22b-4ac4-8823-4e81f00f7757",
+      "query": "*.map(*)",
+      "language": "multi",
+      "query_class": "structural",
+      "expected_results": [
+        {
+          "file": "synthetic",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "structural_pattern"
+        }
+      ],
+      "metadata": {
+        "description": "Array map operations",
+        "validation_type": "pattern_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "d92d2db9-4dfe-41b1-9dcf-2e5886102a1a",
+      "query": "async def *",
+      "language": "multi",
+      "query_class": "structural",
+      "expected_results": [
+        {
+          "file": "synthetic",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "structural_pattern"
+        }
+      ],
+      "metadata": {
+        "description": "Python async functions",
+        "validation_type": "pattern_match"
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "e0c3aaa5-d227-4673-b92b-a03c35cfc4d1",
+      "query": "cache implementation",
+      "language": "multi",
+      "query_class": "semantic",
+      "expected_results": [
+        {
+          "file": "semantic_match",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "semantic_search"
+        }
+      ],
+      "metadata": {
+        "description": "Find caching related code",
+        "validation_type": "semantic_relevance",
+        "expected_patterns": [
+          "*cache*.py",
+          "*cache*.ts"
+        ]
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "b8d4f135-ab99-40a7-87b0-4f1c661cb914",
+      "query": "database connection",
+      "language": "multi",
+      "query_class": "semantic",
+      "expected_results": [
+        {
+          "file": "semantic_match",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "semantic_search"
+        }
+      ],
+      "metadata": {
+        "description": "Find database related code",
+        "validation_type": "semantic_relevance",
+        "expected_patterns": [
+          "*db*.py",
+          "*model*.py"
+        ]
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "1a59c5d8-b9c2-484c-8fe7-394a2f52eb41",
+      "query": "error handling",
+      "language": "multi",
+      "query_class": "semantic",
+      "expected_results": [
+        {
+          "file": "semantic_match",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "semantic_search"
+        }
+      ],
+      "metadata": {
+        "description": "Find error handling patterns",
+        "validation_type": "semantic_relevance",
+        "expected_patterns": [
+          "*exception*.py",
+          "*error*.py"
+        ]
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "15e7c73d-acbf-4715-8403-2ccfff6722ff",
+      "query": "api endpoint",
+      "language": "multi",
+      "query_class": "semantic",
+      "expected_results": [
+        {
+          "file": "semantic_match",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "semantic_search"
+        }
+      ],
+      "metadata": {
+        "description": "Find API endpoint definitions",
+        "validation_type": "semantic_relevance",
+        "expected_patterns": [
+          "*api*.py",
+          "*route*.py",
+          "*endpoint*.ts"
+        ]
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    },
+    {
+      "id": "9eb247c8-2dac-4666-b43f-c3e897855f52",
+      "query": "text processing",
+      "language": "multi",
+      "query_class": "semantic",
+      "expected_results": [
+        {
+          "file": "semantic_match",
+          "line": 1,
+          "col": 1,
+          "relevance_score": 1,
+          "match_type": "semantic_search"
+        }
+      ],
+      "metadata": {
+        "description": "Find text processing logic",
+        "validation_type": "semantic_relevance",
+        "expected_patterns": [
+          "*nlp*.py",
+          "*text*.py",
+          "*process*.py"
+        ]
+      },
+      "snapshot_sha": "storyviz-corpus-v1"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2025-09-01T21:15:41.059Z",
+    "corpus_summary": {
+      "total_files": 539,
+      "total_lines": 2339022,
+      "total_size": 82397374,
+      "languages": {
+        "markdown": {
+          "count": 37,
+          "lines": 19691,
+          "size": 932567
+        },
+        "yaml": {
+          "count": 26,
+          "lines": 2055,
+          "size": 45738
+        },
+        "json": {
+          "count": 54,
+          "lines": 2153915,
+          "size": 75839011
+        },
+        "python": {
+          "count": 250,
+          "lines": 112305,
+          "size": 3883211
+        },
+        "typescript": {
+          "count": 163,
+          "lines": 48808,
+          "size": 1631766
+        },
+        "javascript": {
+          "count": 9,
+          "lines": 2248,
+          "size": 65081
+        }
+      },
+      "timestamp": "2025-09-01T21:14:23.931Z",
+      "storyviz_path": "/media/nathan/Seagate Hub/Projects/storyviz",
+      "indexed_content_path": "/media/nathan/Seagate Hub/Projects/lens/indexed-content"
+    },
+    "total_queries": 294,
+    "query_types": {
+      "exact_match": 255,
+      "identifier": 29,
+      "structural": 5,
+      "semantic": 5
+    }
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "timestamp": "2025-09-01T04:06:04.469Z",
+  "trace_id": "phase1-analytics-baseline",
+  "phase": "Phase 1 - Analytics Pass",
+  "summary": {
+    "total_queries": 11,
+    "successful_queries": 8,
+    "hit_rate": 0.7272727272727273,
+    "avg_latency_ms": 106,
+    "decision_focus": "precision"
+  },
+  "performance_metrics": {
+    "total_queries": 11,
+    "successful_queries": 8,
+    "zero_result_queries": 3,
+    "avg_latency": {
+      "stage_a": 105.63636363636364,
+      "stage_b": 0.18181818181818182,
+      "stage_c": 0.09090909090909091,
+      "total": 106.45454545454545
+    },
+    "latency_percentiles": {
+      "p50": {
+        "stage_a": 95,
+        "total": 96
+      },
+      "p95": {
+        "stage_a": 204,
+        "total": 205
+      },
+      "p99": {
+        "stage_a": 204,
+        "total": 205
+      }
+    },
+    "why_attribution_summary": {
+      "exact": 262,
+      "semantic": 16
+    },
+    "recall_proxy_metrics": {
+      "lexical_hit_rate": 1,
+      "structural_hit_rate": 0.8,
+      "hybrid_hit_rate": 0.5,
+      "avg_results_per_query": 11.909090909090908
+    }
+  },
+  "decision_analysis": {
+    "focus": "precision",
+    "reasoning": [
+      "High latency (p95: 205ms) suggests too many candidates, focus on precision"
+    ],
+    "confidence": "high",
+    "key_findings": [
+      "Overall hit rate: 72.7%",
+      "Average results per query: 11.9",
+      "Stage A latency p95: 204ms"
+    ]
+  },
+  "individual_query_results": [
+    {
+      "query": "async",
+      "mode": "lex",
+      "expected_type": "common_keyword",
+      "total_hits": 50,
+      "returned_hits": 50,
+      "latency_ms": {
+        "stage_a": 204,
+        "stage_b": 0,
+        "total": 205
+      },
+      "has_results": true,
+      "why_counts": {
+        "exact": 100
+      },
+      "score_distribution": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stage_performance": {
+        "stage_a_ms": 204,
+        "stage_b_ms": 0,
+        "stage_c_ms": 0,
+        "total_ms": 205
+      }
+    },
+    {
+      "query": "interface",
+      "mode": "lex",
+      "expected_type": "typescript_keyword",
+      "total_hits": 50,
+      "returned_hits": 50,
+      "latency_ms": {
+        "stage_a": 55,
+        "stage_b": 0,
+        "total": 55
+      },
+      "has_results": true,
+      "why_counts": {
+        "exact": 100
+      },
+      "score_distribution": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stage_performance": {
+        "stage_a_ms": 55,
+        "stage_b_ms": 0,
+        "stage_c_ms": 0,
+        "total_ms": 55
+      }
+    },
+    {
+      "query": "class definition",
+      "mode": "struct",
+      "expected_type": "structural",
+      "total_hits": 4,
+      "returned_hits": 4,
+      "latency_ms": {
+        "stage_a": 92,
+        "stage_b": 1,
+        "total": 93
+      },
+      "has_results": true,
+      "why_counts": {
+        "exact": 8
+      },
+      "score_distribution": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "stage_performance": {
+        "stage_a_ms": 92,
+        "stage_b_ms": 1,
+        "stage_c_ms": 0,
+        "total_ms": 93
+      }
+    },
+    {
+      "query": "function implementation",
+      "mode": "struct",
+      "expected_type": "structural",
+      "total_hits": 0,
+      "returned_hits": 0,
+      "latency_ms": {
+        "stage_a": 142,
+        "stage_b": 0,
+        "total": 143
+      },
+      "has_results": false,
+      "why_counts": {},
+      "score_distribution": [],
+      "stage_performance": {
+        "stage_a_ms": 142,
+        "stage_b_ms": 0,
+        "stage_c_ms": 0,
+        "total_ms": 143
+      }
+    },
+    {
+      "query": "type definition",
+      "mode": "struct",
+      "expected_type": "structural",
+      "total_hits": 1,
+      "returned_hits": 1,
+      "latency_ms": {
+        "stage_a": 111,
+        "stage_b": 0,
+        "total": 112
+      },
+      "has_results": true,
+      "why_counts": {
+        "exact": 2
+      },
+      "score_distribution": [
+        1
+      ],
+      "stage_performance": {
+        "stage_a_ms": 111,
+        "stage_b_ms": 0,
+        "stage_c_ms": 0,
+        "total_ms": 112
+      }
+    }
+  ],
+  "next_steps": [
+    "Focus on Stage B/C precision improvements",
+    "Analyze ranking algorithm effectiveness",
+    "Consider semantic scoring improvements",
+    "Review result filtering and ranking"
+  ]
+}

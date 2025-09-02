@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { SemanticRerankEngine } from '../../src/indexer/semantic.js';
+import { EnhancedSemanticRerankEngine } from '../../src/indexer/enhanced-semantic.js';
 import { SegmentStorage } from '../../src/storage/segments.js';
 import type { SearchContext, Candidate } from '../../src/types/core.js';
 
@@ -435,6 +436,193 @@ const mathUtils = {
       expect(stats.vectors).toBe(0);
       expect(stats.avg_dim).toBe(0);
       expect(stats.hnsw_layers).toBe(0);
+    });
+  });
+
+  describe('EnhancedSemanticRerankEngine - B3 Optimizations', () => {
+    let enhancedEngine: EnhancedSemanticRerankEngine;
+    let enhancedSegmentStorage: SegmentStorage;
+
+    beforeEach(async () => {
+      enhancedSegmentStorage = new SegmentStorage('./test-segments-enhanced');
+      enhancedEngine = new EnhancedSemanticRerankEngine(enhancedSegmentStorage, {
+        enableIsotonicCalibration: true,
+        enableConfidenceGating: true,
+        enableOptimizedHNSW: true,
+        maxLatencyMs: 10,
+        featureFlags: {
+          stageCOptimizations: true,
+          advancedCalibration: true,
+          experimentalHNSW: false
+        }
+      });
+      await enhancedEngine.initialize();
+    });
+
+    afterEach(async () => {
+      await enhancedEngine.shutdown();
+      await enhancedSegmentStorage.shutdown();
+    });
+
+    describe('B3 Optimization Integration', () => {
+      it('should maintain compatibility with baseline engine', async () => {
+        const content = `
+function calculateSum(a, b) {
+  return a + b;
+}
+        `;
+
+        await enhancedEngine.indexDocument('enhanced-doc1', content, '/test/enhanced-math.js');
+        
+        const stats = enhancedEngine.getStats();
+        expect(stats.vectors).toBe(1);
+        expect(stats.config.enableIsotonicCalibration).toBe(true);
+        expect(stats.config.enableOptimizedHNSW).toBe(true);
+      });
+
+      it('should apply B3 optimizations in reranking', async () => {
+        // Index test documents
+        await enhancedEngine.indexDocument('opt1', 'function add(a, b) { return a + b; }', '/math.js');
+        await enhancedEngine.indexDocument('opt2', 'class Calculator { multiply(x, y) { return x * y; } }', '/calc.js');
+
+        const candidates: Candidate[] = [
+          {
+            doc_id: 'opt1:1:1',
+            file_path: '/math.js',
+            line: 1,
+            col: 1,
+            score: 0.8,
+            match_reasons: ['exact'],
+            context: 'function add(a, b) { return a + b; }'
+          },
+          {
+            doc_id: 'opt2:1:1',
+            file_path: '/calc.js',
+            line: 1,
+            col: 1,
+            score: 0.6,
+            match_reasons: ['symbol'],
+            context: 'class Calculator { multiply(x, y) { return x * y; } }'
+          }
+        ];
+
+        const searchContext: SearchContext = {
+          trace_id: 'enhanced-test-rerank',
+          query: 'calculate addition function',
+          mode: 'hybrid',
+          k: 10,
+          fuzzy_distance: 0,
+          started_at: new Date(),
+          stages: []
+        };
+
+        const startTime = Date.now();
+        const reranked = await enhancedEngine.rerankCandidates(candidates, searchContext, 10);
+        const latency = Date.now() - startTime;
+
+        // Performance validation
+        expect(latency).toBeLessThan(15); // Should meet enhanced performance targets
+        
+        // Quality validation
+        expect(reranked.length).toBe(candidates.length);
+        reranked.forEach(candidate => {
+          expect(candidate.score).toBeGreaterThan(0);
+          expect(candidate.score).toBeLessThanOrEqual(1);
+        });
+      });
+
+      it('should support feature flag configuration', async () => {
+        // Test with optimizations disabled
+        await enhancedEngine.updateConfig({
+          featureFlags: {
+            stageCOptimizations: false,
+            advancedCalibration: false,
+            experimentalHNSW: false
+          }
+        });
+
+        const stats1 = enhancedEngine.getStats();
+        expect(stats1.config.featureFlags.stageCOptimizations).toBe(false);
+
+        // Test with optimizations enabled
+        await enhancedEngine.updateConfig({
+          featureFlags: {
+            stageCOptimizations: true,
+            advancedCalibration: true,
+            experimentalHNSW: true
+          }
+        });
+
+        const stats2 = enhancedEngine.getStats();
+        expect(stats2.config.featureFlags.stageCOptimizations).toBe(true);
+      });
+
+      it('should handle performance monitoring', async () => {
+        await enhancedEngine.indexDocument('perf1', 'function test() { return "test"; }', '/perf.js');
+
+        const candidates: Candidate[] = Array.from({ length: 20 }, (_, i) => ({
+          doc_id: `perf1:${i}:1`,
+          file_path: '/perf.js',
+          line: i + 1,
+          col: 1,
+          score: Math.random() * 0.8 + 0.1,
+          match_reasons: ['symbol'],
+          context: `function test${i}() { return "test${i}"; }`
+        }));
+
+        const context: SearchContext = {
+          trace_id: 'performance-test',
+          query: 'test function implementation',
+          mode: 'hybrid',
+          k: 10,
+          fuzzy_distance: 0,
+          started_at: new Date(),
+          stages: []
+        };
+
+        const startTime = Date.now();
+        const results = await enhancedEngine.rerankCandidates(candidates, context, 10);
+        const latency = Date.now() - startTime;
+
+        expect(results.length).toBeLessThanOrEqual(10);
+        expect(latency).toBeLessThan(20); // Should be fast even with more candidates
+
+        const stats = enhancedEngine.getStats();
+        expect(stats.performance.avgLatencyMs).toBeGreaterThanOrEqual(0);
+      });
+    });
+
+    describe('Enhanced Configuration', () => {
+      it('should validate configuration parameters', () => {
+        const stats = enhancedEngine.getStats();
+        
+        expect(stats.config).toHaveProperty('enableIsotonicCalibration');
+        expect(stats.config).toHaveProperty('enableConfidenceGating');
+        expect(stats.config).toHaveProperty('enableOptimizedHNSW');
+        expect(stats.config).toHaveProperty('maxLatencyMs');
+        expect(stats.config).toHaveProperty('featureFlags');
+        
+        expect(stats.config.maxLatencyMs).toBe(10);
+        expect(stats.config.featureFlags.stageCOptimizations).toBe(true);
+      });
+
+      it('should support dynamic configuration updates', async () => {
+        const originalConfig = enhancedEngine.getStats().config;
+        
+        await enhancedEngine.updateConfig({
+          maxLatencyMs: 15,
+          calibrationConfig: {
+            enabled: true,
+            minCalibrationData: 100,
+            confidenceCutoff: 0.15,
+            updateFreq: 200
+          }
+        });
+
+        const updatedConfig = enhancedEngine.getStats().config;
+        expect(updatedConfig.maxLatencyMs).toBe(15);
+        expect(updatedConfig.calibrationConfig.minCalibrationData).toBe(100);
+      });
     });
   });
 });
