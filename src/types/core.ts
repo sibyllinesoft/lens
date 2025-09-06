@@ -3,6 +3,12 @@
  * Three-layer processing pipeline: Lexical+Fuzzy → Symbol/AST → Semantic Rerank
  */
 
+import type { SearchHit } from '../core/span_resolver/index.js';
+import type { SupportedLanguage } from './api.js';
+
+// Re-export SearchHit for use by other modules
+export type { SearchHit };
+
 // Shard and segment types
 export interface Shard {
   id: string;
@@ -139,6 +145,7 @@ export interface SearchContext {
   mode: SearchMode;
   k: number;
   fuzzy_distance: number;
+  fuzzy?: boolean | undefined; // Alternative fuzzy flag used in some modules
   started_at: Date;
   stages: StageResult[];
 }
@@ -155,10 +162,13 @@ export interface StageResult {
 export interface Candidate {
   doc_id: string;
   file_path: string;
+  file?: string; // Alternative field name used in some modules
   line: number;
   col: number;
   score: number;
   match_reasons: MatchReason[];
+  why?: string[] | undefined; // Human-readable match reasons  
+  lang?: string | undefined;
   ast_path?: string | undefined;
   symbol_kind?: SymbolKind | undefined;
   // Extended fields for span-accurate resolution
@@ -170,8 +180,8 @@ export interface Candidate {
   context?: string | undefined; // Keep for backward compatibility
 }
 
-export type SearchMode = 'lex' | 'struct' | 'hybrid';
-export type MatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'semantic';
+export type SearchMode = 'lex' | 'lexical' | 'struct' | 'hybrid';
+export type MatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'semantic' | 'lsp_hint' | 'unicode_normalized' | 'raptor_diversity' | 'structural' | 'exact_name' | 'semantic_type';
 
 // Work units for NATS/JetStream
 export interface WorkUnit {
@@ -191,7 +201,9 @@ export type WorkType =
   | 'build_symbols'
   | 'build_ast'
   | 'build_semantic'
-  | 'health_check';
+  | 'health_check'
+  | 'lsp_harvest'
+  | 'lsp_sync';
 
 // File-based segment interface (simulated memory mapping for extFAT compatibility)
 export interface MMapSegment {
@@ -239,3 +251,129 @@ export interface SystemHealth {
 }
 
 export type HealthStatus = 'ok' | 'degraded' | 'down';
+
+// LSP-assist system types
+export interface LSPHint {
+  symbol_id: string;
+  name: string;
+  kind: SymbolKind;
+  file_path: string;
+  line: number;
+  col: number;
+  definition_uri?: string;
+  signature?: string;
+  type_info?: string;
+  aliases: string[];
+  resolved_imports: string[];
+  references_count: number;
+}
+
+export interface LSPSidecarConfig {
+  language: SupportedLanguage;
+  lsp_server: string;
+  capabilities: LSPCapabilities;
+  workspace_config: WorkspaceConfig;
+  harvest_ttl_hours: number;
+  pressure_threshold: number;
+}
+
+export interface LSPCapabilities {
+  definition: boolean;
+  references: boolean;
+  hover: boolean;
+  completion: boolean;
+  rename: boolean;
+  workspace_symbols: boolean;
+}
+
+export interface WorkspaceConfig {
+  root_path?: string | undefined; // Make optional to allow partial configs
+  include_patterns: string[];
+  exclude_patterns: string[];
+  path_mappings?: Map<string, string> | undefined; // Make optional
+  config_files?: string[] | undefined; // Make optional
+}
+
+export interface LSPFeatures {
+  lsp_def_hit: 0 | 1;
+  lsp_ref_count: number;
+  type_match: number;
+  alias_resolved: 0 | 1;
+}
+
+export type QueryIntent = 'def' | 'refs' | 'symbol' | 'struct' | 'lexical' | 'NL';
+
+export interface IntentClassification {
+  intent: QueryIntent;
+  confidence: number;
+  features: {
+    has_definition_pattern: boolean;
+    has_reference_pattern: boolean;
+    has_symbol_prefix: boolean;
+    has_structural_chars: boolean;
+    is_natural_language: boolean;
+  };
+}
+
+export interface LSPBenchmarkResult {
+  mode: 'baseline' | 'lsp_assist' | 'competitor_lsp';
+  task_type: QueryIntent;
+  success_at_1: number;
+  success_at_5: number;
+  ndcg_at_10: number;
+  recall_at_50: number;
+  zero_result_rate: number;
+  timeout_rate: number;
+  p95_latency_ms: number;
+  loss_taxonomy: LossTaxonomy;
+}
+
+export interface LossTaxonomy {
+  NO_SYM_COVERAGE: number;
+  WRONG_ALIAS: number;
+  PATH_MAP: number;
+  USABILITY_INTENT: number;
+  RANKING_ONLY: number;
+}
+
+// Search result interface
+export interface SearchResult {
+  hits: SearchHit[];
+  stage_a_latency?: number;
+  stage_b_latency?: number;
+  stage_c_latency?: number;
+  stage_a_skipped?: boolean;
+  stage_b_skipped?: boolean;
+  stage_c_skipped?: boolean;
+}
+
+// Additional interfaces needed by various modules
+export interface TestFailure {
+  test_name: string;
+  error_message: string;
+  file_path: string;
+  line_number: number;
+  timestamp: Date;
+  stack_trace?: string;
+}
+
+export interface ChangeEvent {
+  event_type: 'file_added' | 'file_modified' | 'file_deleted' | 'file_renamed';
+  file_path: string;
+  old_file_path?: string; // For rename events
+  timestamp: Date;
+  change_id: string;
+  metadata?: any;
+}
+
+export interface CodeOwner {
+  email: string;
+  username: string;
+  file_patterns: string[];
+  team?: string;
+  role?: string;
+  last_updated: Date;
+}
+
+// SupportedLanguage export (referenced by lsp-sidecar)
+export type SupportedLanguage = 'typescript' | 'javascript' | 'python' | 'rust' | 'go' | 'java' | 'cpp' | 'c' | 'csharp' | 'php' | 'ruby' | 'scala' | 'kotlin' | 'swift' | 'dart' | 'lua' | 'r' | 'shell' | 'yaml' | 'json' | 'markdown' | 'html' | 'css' | 'sql';

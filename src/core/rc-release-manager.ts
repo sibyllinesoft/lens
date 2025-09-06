@@ -525,7 +525,7 @@ export class RCReleaseManager {
     const provenance = {
       version: this.config.version,
       build_time: result.build_time,
-      git_sha: process.env.GIT_SHA || execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim(),
+      git_sha: process.env['GIT_SHA'] || execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim(),
       build_environment: {
         node_version: process.version,
         npm_version: execSync('npm --version', { encoding: 'utf8' }).trim(),
@@ -629,7 +629,7 @@ export class RCReleaseManager {
   private countConsecutivePasses(results: NightlyValidationResult[]): number {
     let consecutive = 0;
     for (let i = results.length - 1; i >= 0; i--) {
-      if (results[i].success) {
+      if (results[i]?.success) {
         consecutive++;
       } else {
         break;

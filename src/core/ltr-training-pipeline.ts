@@ -78,9 +78,11 @@ export class PairwiseLTRTrainingPipeline {
 
     if (config.isotonic_calibration) {
       this.isotonicCalibrator = new IsotonicCalibratedReranker({
+        enabled: true,
+        minCalibrationData: 50,
         confidenceCutoff: 0.1,
-        enableConfidenceGating: true,
-        calibrationStrategy: 'pava'
+        maxLatencyMs: 200,
+        calibrationUpdateFreq: 100
       });
     }
 
@@ -382,12 +384,15 @@ export class PairwiseLTRTrainingPipeline {
         await this.trainIsotonicCalibration();
       }
 
-      const result = {
+      const result: any = {
         final_weights: { ...this.weights },
         convergence_iterations: this.convergenceHistory.length,
         final_loss: this.convergenceHistory[this.convergenceHistory.length - 1] || 0,
-        validation_accuracy: validationAccuracy
       };
+      
+      if (validationAccuracy !== undefined) {
+        result.validation_accuracy = validationAccuracy;
+      }
 
       span.setAttributes({
         training_examples: this.trainingData.length,
@@ -439,7 +444,19 @@ export class PairwiseLTRTrainingPipeline {
       // Apply isotonic calibration if available
       let finalHits = rerankedHits;
       if (this.isotonicCalibrator) {
-        finalHits = await this.isotonicCalibrator.rerank(rerankedHits, context);
+        // Cast to SearchHit[] for isotonic calibrator, which expects standard hits
+        const standardHits = rerankedHits.map(hit => {
+          const { ltr_score, ltr_features, ...standardHit } = hit as any;
+          return standardHit as SearchHit;
+        });
+        const recalibratedHits = await this.isotonicCalibrator.rerank(standardHits, context);
+        
+        // Re-add the LTR fields to the recalibrated hits
+        finalHits = recalibratedHits.map((hit, index) => ({
+          ...hit,
+          ltr_score: (rerankedHits[index] as any).ltr_score,
+          ltr_features: (rerankedHits[index] as any).ltr_features
+        }));
       }
 
       // Remove temporary fields
@@ -594,7 +611,7 @@ export class PairwiseLTRTrainingPipeline {
   /**
    * Train isotonic calibration on validation data
    */
-  private async trainIsotonicCalibration(): void {
+  private async trainIsotonicCalibration(): Promise<void> {
     if (!this.isotonicCalibrator || this.validationData.length === 0) return;
     
     console.log('🎯 Training isotonic calibration...');

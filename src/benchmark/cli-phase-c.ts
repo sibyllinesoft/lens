@@ -47,7 +47,7 @@ async function runPhaseCHardening(options: any) {
 
     // Initialize components
     const outputDir = path.resolve(options.output);
-    const groundTruthBuilder = new GroundTruthBuilder(outputDir);
+    const groundTruthBuilder = new GroundTruthBuilder(process.cwd(), outputDir);
     const suiteRunner = new BenchmarkSuiteRunner(groundTruthBuilder, outputDir, options.natsUrl);
 
     if (options.ci) {

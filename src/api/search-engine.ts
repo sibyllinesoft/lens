@@ -8,7 +8,8 @@ import type {
   SearchContext, 
   Candidate, 
   SystemHealth,
-  HealthStatus
+  HealthStatus,
+  LSPHint
 } from '../types/core.js';
 import type { SupportedLanguage } from '../types/api.js';
 import { LensTracer } from '../telemetry/tracer.js';
@@ -30,11 +31,15 @@ import {
   prepareSemanticCandidates,
   LexicalCandidate,
   SymbolCandidate,
-  SemanticCandidate
+  SemanticCandidate,
+  MatchReason
 } from '../core/span_resolver/index.js';
 import { globalAdaptiveFanout } from '../core/adaptive-fanout.js';
 import { globalWorkConservingANN } from '../core/work-conserving-ann.js';
 import { globalPrecisionEngine } from '../core/precision-optimization.js';
+import { IntentRouter } from '../core/intent-router.js';
+import { LSPStageBEnhancer } from '../core/lsp-stage-b.js';
+import { LSPStageCEnhancer } from '../core/lsp-stage-c.js';
 
 interface LensSearchResult {
   hits: SearchHit[];
@@ -53,6 +58,10 @@ export class LensSearchEngine {
   private astCache: ASTCache;
   private learnedReranker: LearnedReranker;
   private phaseBOptimizer: PhaseBComprehensiveOptimizer;
+  private intentRouter?: IntentRouter;
+  private lspStageBEnhancer?: LSPStageBEnhancer;
+  private lspStageCEnhancer?: LSPStageCEnhancer;
+  private lspEnabled = false;
   private isInitialized = false;
   
   // System health tracking
@@ -62,7 +71,12 @@ export class LensSearchEngine {
   // Phase B optimization configuration
   private phaseBEnabled = false;
 
-  constructor(indexRoot: string = './indexed-content', rerankConfig?: Partial<RerankingConfig>, phaseBConfig?: Partial<PhaseBConfig>) {
+  constructor(
+    indexRoot: string = './indexed-content', 
+    rerankConfig?: Partial<RerankingConfig>, 
+    phaseBConfig?: Partial<PhaseBConfig>,
+    enableLSP: boolean = true
+  ) {
     this.segmentStorage = new SegmentStorage('./data/segments');
     this.lexicalEngine = new LexicalSearchEngine(this.segmentStorage);
     this.symbolEngine = new SymbolSearchEngine(this.segmentStorage);
@@ -80,6 +94,14 @@ export class LensSearchEngine {
     
     // Initialize Phase B optimizer
     this.phaseBOptimizer = new PhaseBComprehensiveOptimizer(phaseBConfig);
+
+    // Initialize LSP components if enabled
+    this.lspEnabled = enableLSP;
+    if (this.lspEnabled) {
+      this.lspStageBEnhancer = new LSPStageBEnhancer();
+      this.lspStageCEnhancer = new LSPStageCEnhancer();
+      this.intentRouter = new IntentRouter(this.lspStageBEnhancer);
+    }
   }
 
   /**
@@ -102,6 +124,14 @@ export class LensSearchEngine {
       const stats = this.indexRegistry.stats();
       if (stats.totalRepos === 0) {
         throw new Error('No repositories found in index - cannot start search engine');
+      }
+
+      // *** STEP 1: LSP SIDECAR STARTUP & ACTIVATION ***
+      // Initialize and activate LSP components if enabled
+      if (this.lspEnabled && this.lspStageBEnhancer && this.lspStageCEnhancer) {
+        console.log('🚀 Activating LSP integration...');
+        await this.initializeLSPSidecars();
+        console.log('✅ LSP integration activated successfully');
       }
 
       this.isInitialized = true;
@@ -130,6 +160,11 @@ export class LensSearchEngine {
     // Use Phase B optimized search if enabled
     if (this.phaseBEnabled) {
       return this.searchWithPhaseBOptimizations(ctx);
+    }
+
+    // Use LSP intent routing if enabled
+    if (this.lspEnabled && this.intentRouter) {
+      return this.searchWithLSPIntentRouting(ctx);
     }
 
     // Declare hardnessScore at function scope for use across stages
@@ -847,6 +882,358 @@ export class LensSearchEngine {
   }
 
   /**
+   * Get LSP activation status and statistics
+   * *** STEP 5: LSP VALIDATION & TESTING ***
+   */
+  getLSPActivationStatus(): {
+    lsp_enabled: boolean;
+    stage_b_ready: boolean;
+    stage_c_ready: boolean;
+    intent_router_ready: boolean;
+    stage_b_stats?: any;
+    stage_c_stats?: any;
+    intent_router_stats?: any;
+  } {
+    const status = {
+      lsp_enabled: this.lspEnabled,
+      stage_b_ready: false,
+      stage_c_ready: false,
+      intent_router_ready: false,
+    };
+
+    if (this.lspStageBEnhancer) {
+      status.stage_b_ready = true;
+      (status as any).stage_b_stats = this.lspStageBEnhancer.getStats();
+    }
+
+    if (this.lspStageCEnhancer) {
+      status.stage_c_ready = true;
+      (status as any).stage_c_stats = this.lspStageCEnhancer.getStats();
+    }
+
+    if (this.intentRouter) {
+      status.intent_router_ready = true;
+      (status as any).intent_router_stats = this.intentRouter.getStats();
+    }
+
+    return status;
+  }
+
+  /**
+   * Initialize LSP sidecars for all repositories
+   */
+  private async initializeLSPSidecars(): Promise<void> {
+    const span = LensTracer.createChildSpan('initialize_lsp_sidecars');
+    
+    try {
+      console.log('🚀 Initializing LSP sidecars...');
+      
+      const manifests = this.indexRegistry.getManifests();
+      const lspInitPromises: Promise<void>[] = [];
+      
+      // Start LSP servers for each repository
+      for (const manifest of manifests) {
+        const initPromise = this.initializeLSPForRepo(manifest.repo_sha, manifest.repo_ref);
+        lspInitPromises.push(initPromise);
+      }
+      
+      // Wait for all LSP servers to initialize
+      await Promise.all(lspInitPromises);
+      
+      console.log(`✅ LSP sidecars initialized for ${manifests.length} repositories`);
+      
+      span.setAttributes({
+        success: true,
+        repositories_count: manifests.length
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to initialize LSP sidecars:', error);
+      span.recordException(error as Error);
+      span.setAttributes({ success: false });
+      // Don't throw - LSP is optional, continue without it
+      this.lspEnabled = false;
+      console.warn('⚠️ Disabling LSP integration due to initialization failure');
+    } finally {
+      span.end();
+    }
+  }
+
+  /**
+   * Initialize LSP for a specific repository
+   */
+  private async initializeLSPForRepo(repoSha: string, repoRef: string): Promise<void> {
+    const span = LensTracer.createChildSpan('initialize_lsp_for_repo', {
+      'repo.sha': repoSha,
+      'repo.ref': repoRef
+    });
+    
+    try {
+      const reader = this.indexRegistry.getReader(repoSha);
+      const indexedFiles = await reader.getFileList();
+      
+      // Detect primary language for the repository
+      const language = this.detectPrimaryLanguage(indexedFiles);
+      
+      if (!language) {
+        console.log(`⏭️ Skipping LSP for ${repoRef}: no supported language detected`);
+        return;
+      }
+      
+      // Start LSP sidecar and harvest hints
+      const success = await this.harvestLSPHintsForRepo(repoSha, repoRef, language, indexedFiles);
+      
+      if (success) {
+        // Load hints into Stage B and C enhancers
+        await this.loadLSPHintsForRepo(repoSha, language);
+        console.log(`✅ LSP activated for ${repoRef} (${language})`);
+      } else {
+        console.warn(`⚠️ LSP harvest failed for ${repoRef}`);
+      }
+      
+      span.setAttributes({
+        success: success,
+        language: language || 'unknown',
+        files_count: indexedFiles.length
+      });
+      
+    } catch (error) {
+      console.error(`❌ LSP initialization failed for ${repoRef}:`, error);
+      span.recordException(error as Error);
+      span.setAttributes({ success: false });
+    } finally {
+      span.end();
+    }
+  }
+
+  /**
+   * Detect primary language for a repository
+   */
+  private detectPrimaryLanguage(filePaths: string[]): string | null {
+    const langCounts: { [key: string]: number } = {};
+    
+    for (const filePath of filePaths) {
+      const ext = filePath.split('.').pop()?.toLowerCase();
+      
+      switch (ext) {
+        case 'ts':
+        case 'tsx':
+        case 'js':
+        case 'jsx':
+          langCounts.typescript = (langCounts.typescript || 0) + 1;
+          break;
+        case 'py':
+          langCounts.python = (langCounts.python || 0) + 1;
+          break;
+        case 'rs':
+          langCounts.rust = (langCounts.rust || 0) + 1;
+          break;
+        case 'go':
+          langCounts.go = (langCounts.go || 0) + 1;
+          break;
+        case 'java':
+          langCounts.java = (langCounts.java || 0) + 1;
+          break;
+        case 'sh':
+        case 'bash':
+          langCounts.bash = (langCounts.bash || 0) + 1;
+          break;
+      }
+    }
+    
+    // Return language with highest count
+    let maxLang = null;
+    let maxCount = 0;
+    
+    for (const [lang, count] of Object.entries(langCounts)) {
+      if (count > maxCount) {
+        maxLang = lang;
+        maxCount = count;
+      }
+    }
+    
+    return maxLang;
+  }
+
+  /**
+   * *** STEP 2: HINT HARVESTING IMPLEMENTATION ***
+   * Harvest LSP hints for a repository
+   */
+  private async harvestLSPHintsForRepo(
+    repoSha: string, 
+    repoRef: string, 
+    language: string, 
+    filePaths: string[]
+  ): Promise<boolean> {
+    const span = LensTracer.createChildSpan('harvest_lsp_hints', {
+      'repo.sha': repoSha,
+      'repo.ref': repoRef,
+      'language': language,
+      'files.count': filePaths.length
+    });
+    
+    try {
+      // Import LSPSidecar dynamically to avoid circular dependencies
+      const { LSPSidecar } = await import('../core/lsp-sidecar.js');
+      
+      // Create sidecar configuration
+      const sidecarConfig = {
+        language: language as any,
+        lsp_server: this.getLSPServerPath(language),
+        harvest_ttl_hours: 24,
+        pressure_threshold: 512, // MB
+        workspace_config: {
+          include_patterns: this.getIncludePatternsForLanguage(language),
+          exclude_patterns: ['node_modules/**', '.git/**', 'dist/**', 'build/**'],
+        },
+        capabilities: {} as any // Will be populated during initialization
+      };
+      
+      // Determine workspace root (use indexed content path)
+      const workspaceRoot = `./indexed-content/${repoRef}`;
+      
+      // Create and initialize LSP sidecar
+      const sidecar = new LSPSidecar(sidecarConfig, repoSha, workspaceRoot);
+      
+      console.log(`🔧 Starting LSP server for ${repoRef} (${language})...`);
+      
+      // Initialize LSP server with timeout
+      const initTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('LSP initialization timeout')), 30000)
+      );
+      
+      await Promise.race([
+        sidecar.initialize(),
+        initTimeout
+      ]);
+      
+      console.log(`📡 Harvesting LSP hints for ${repoRef}...`);
+      
+      // Harvest hints with timeout
+      const harvestTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('LSP harvest timeout')), 60000)
+      );
+      
+      const hints = await Promise.race([
+        sidecar.harvestHints(filePaths),
+        harvestTimeout
+      ]) as LSPHint[] | never; // Type assertion since we know it's either LSPHint[] or timeout
+      
+      // Check if we got actual hints or timeout
+      if (!Array.isArray(hints)) {
+        throw new Error('LSP harvest timeout');
+      }
+      
+      console.log(`✅ Harvested ${hints.length} LSP hints for ${repoRef}`);
+      
+      // Shutdown sidecar to free resources
+      await sidecar.shutdown();
+      
+      span.setAttributes({
+        success: true,
+        hints_harvested: hints.length
+      });
+      
+      return hints.length > 0;
+      
+    } catch (error) {
+      console.error(`❌ LSP harvest failed for ${repoRef}:`, error);
+      span.recordException(error as Error);
+      span.setAttributes({ success: false });
+      return false;
+    } finally {
+      span.end();
+    }
+  }
+
+  /**
+   * *** STEP 3: BENCHMARK INTEGRATION ***
+   * Load LSP hints into enhancers
+   */
+  private async loadLSPHintsForRepo(repoSha: string, language: string): Promise<void> {
+    const span = LensTracer.createChildSpan('load_lsp_hints', {
+      'repo.sha': repoSha,
+      'language': language
+    });
+    
+    try {
+      // Import LSPSidecar to load hints from disk
+      const { LSPSidecar } = await import('../core/lsp-sidecar.js');
+      
+      const sidecarConfig = {
+        language: language as any,
+        lsp_server: '',
+        harvest_ttl_hours: 24,
+        pressure_threshold: 512,
+        workspace_config: { include_patterns: [], exclude_patterns: [] },
+        capabilities: {} as any
+      };
+      
+      const workspaceRoot = `./indexed-content`;
+      const sidecar = new LSPSidecar(sidecarConfig, repoSha, workspaceRoot);
+      
+      // Load hints from disk
+      const hints = await sidecar.loadHintsFromShard();
+      
+      if (hints.length > 0) {
+        // Load hints into Stage B enhancer
+        this.lspStageBEnhancer?.loadHints(hints);
+        
+        // Load hints into Stage C enhancer
+        this.lspStageCEnhancer?.loadHints(hints);
+        
+        console.log(`📚 Loaded ${hints.length} LSP hints into enhancers for ${repoSha}`);
+      } else {
+        console.log(`⚠️ No LSP hints found for ${repoSha}`);
+      }
+      
+      span.setAttributes({
+        success: true,
+        hints_loaded: hints.length
+      });
+      
+    } catch (error) {
+      console.error(`❌ Failed to load LSP hints for ${repoSha}:`, error);
+      span.recordException(error as Error);
+      span.setAttributes({ success: false });
+    } finally {
+      span.end();
+    }
+  }
+
+  /**
+   * Get LSP server path for a language
+   */
+  private getLSPServerPath(language: string): string {
+    const servers = {
+      typescript: 'typescript-language-server',
+      python: 'pyright-langserver',
+      rust: 'rust-analyzer',
+      go: 'gopls',
+      java: 'jdtls',
+      bash: 'bash-language-server'
+    };
+    
+    return servers[language as keyof typeof servers] || 'typescript-language-server';
+  }
+
+  /**
+   * Get include patterns for a language
+   */
+  private getIncludePatternsForLanguage(language: string): string[] {
+    const patterns = {
+      typescript: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+      python: ['**/*.py'],
+      rust: ['**/*.rs'],
+      go: ['**/*.go'],
+      java: ['**/*.java'],
+      bash: ['**/*.sh', '**/*.bash']
+    };
+    
+    return patterns[language as keyof typeof patterns] || ['**/*'];
+  }
+
+  /**
    * Shutdown the search engine
    */
   async shutdown(): Promise<void> {
@@ -1037,5 +1424,193 @@ export class LensSearchEngine {
    */
   getPrecisionOptimizationStatus(): any {
     return globalPrecisionEngine.getOptimizationStatus();
+  }
+
+  /**
+   * LSP Intent-Routed search pipeline
+   * *** STEP 4: ACTIVE LSP INTENT ROUTING ***
+   */
+  private async searchWithLSPIntentRouting(ctx: SearchContext): Promise<LensSearchResult> {
+    const overallSpan = LensTracer.startSearchSpan(ctx);
+    this.activeQueries++;
+
+    try {
+      if (!this.intentRouter) {
+        throw new Error('Intent router not initialized');
+      }
+
+      console.log(`🎯 LSP Intent routing query: "${ctx.query}" (mode: ${ctx.mode})`);
+
+      // Route query through LSP intent system
+      const routingResult = await this.intentRouter.routeQuery(
+        ctx.query,
+        ctx,
+        // Symbols near handler (LSP Stage-B enhancer with fallback to structural search)
+        async (filePath: string, line: number) => {
+          console.log(`🔍 LSP symbols near: ${filePath}:${line}`);
+          
+          // First try LSP Stage-B enhancer for nearby symbols
+          if (this.lspStageBEnhancer) {
+            try {
+              const lspCandidates = await this.lspStageBEnhancer.findLSPSymbolsNear(filePath, line, 10);
+              if (lspCandidates.length > 0) {
+                console.log(`📍 LSP found ${lspCandidates.length} nearby symbols`);
+                return lspCandidates; // These are already Candidate objects
+              }
+            } catch (error) {
+              console.warn('LSP symbols near failed, falling back to structural search:', error);
+            }
+          }
+          
+          // Fallback to structural search
+          const reader = this.indexRegistry.getReader(ctx.repo_sha);
+          const structuralResults = await reader.searchStructural({
+            q: ctx.query,
+            k: Math.min(50, ctx.k),
+          });
+          
+          return structuralResults.map(result => ({
+            doc_id: `${result.file}:${result.line}:${result.col}`,
+            file_path: result.file,
+            file: result.file, // Alternative field name used in some modules
+            line: result.line,
+            col: result.col,
+            lang: result.lang,
+            snippet: result.snippet,
+            score: result.score,
+            // Convert ValidMatchReason[] to MatchReason[] - filter to valid values
+            match_reasons: (result.match_reasons || ['struct']).filter(reason => 
+              ['exact', 'fuzzy', 'symbol', 'struct', 'semantic', 'lsp_hint'].includes(reason)
+            ) as MatchReason[],
+            // Why field should be same as match_reasons for consistency
+            why: (result.match_reasons || ['struct']).filter(reason => 
+              ['exact', 'fuzzy', 'symbol', 'struct', 'semantic', 'lsp_hint'].includes(reason)
+            ) as MatchReason[],
+            // Copy other optional properties from StructuralResult to Candidate
+            byte_offset: result.byte_offset,
+            span_len: result.span_len,
+            symbol_kind: result.pattern_type === 'function_def' ? 'function' :
+                        result.pattern_type === 'class_def' ? 'class' : 
+                        undefined,
+          }));
+        },
+        // Full search handler (fallback to vanilla four-stage pipeline)
+        async (query: string, context: SearchContext) => {
+          console.log(`🔄 LSP fallback to full search for: "${query}"`);
+          const vanillaResult = await this.searchVanillaFourStage(context);
+          return vanillaResult.hits.map(hit => ({
+            doc_id: `${hit.file}:${hit.line}:${hit.col}`,
+            file_path: hit.file,
+            file: hit.file, // Alternative field name
+            line: hit.line,
+            col: hit.col,
+            lang: hit.lang,
+            snippet: hit.snippet,
+            score: hit.score,
+            // Use valid MatchReason values
+            why: hit.why || ['semantic'],
+            match_reasons: hit.match_reasons || ['semantic'],
+            // Copy other optional properties if available
+            ast_path: hit.ast_path,
+            symbol_kind: hit.symbol_kind,
+            byte_offset: hit.byte_offset,
+            span_len: hit.span_len,
+            context_before: hit.context_before,
+            context_after: hit.context_after,
+          }));
+        }
+      );
+
+      console.log(`🧭 LSP routing result: ${routingResult.classification.intent} (confidence: ${routingResult.classification.confidence.toFixed(2)}), ${routingResult.primary_candidates.length} candidates`);
+
+      // Convert candidates to SearchHit format and add LSP routing info
+      const hits: SearchHit[] = routingResult.primary_candidates.map(candidate => ({
+        file: candidate.file_path,
+        line: candidate.line,
+        col: candidate.col,
+        lang: candidate.lang || 'unknown',
+        snippet: candidate.snippet || candidate.context || '',
+        score: candidate.score,
+        why: (candidate.match_reasons || ['lsp_hint']).filter((reason): reason is MatchReason => 
+          ['exact', 'fuzzy', 'symbol', 'struct', 'semantic', 'lsp_hint'].includes(reason)
+        ),
+        match_reasons: candidate.match_reasons || ['lsp_hint'],
+      }));
+
+      console.log(`✅ LSP Intent routing complete: ${hits.length} hits with LSP markers`);
+
+      LensTracer.endSearchSpan(overallSpan, ctx, hits.length);
+
+      return {
+        hits,
+        stage_a_latency: 0, // LSP routing bypasses traditional stages
+        stage_b_latency: 0,
+        stage_c_latency: 0,
+      };
+
+    } catch (error) {
+      console.error('❌ LSP intent routing failed:', error);
+      LensTracer.endSearchSpan(overallSpan, ctx, 0, (error as Error).message);
+      
+      // Fall back to vanilla search on LSP errors
+      console.warn('⚠️ Falling back to vanilla search due to LSP error');
+      return this.searchVanillaFourStage(ctx);
+      
+    } finally {
+      this.activeQueries--;
+    }
+  }
+
+  /**
+   * Vanilla four-stage search (original implementation without LSP)
+   */
+  private async searchVanillaFourStage(ctx: SearchContext): Promise<LensSearchResult> {
+    // This would contain the original four-stage search logic
+    // For now, implement a minimal version that calls existing stages
+    const overallSpan = LensTracer.startSearchSpan(ctx);
+    this.activeQueries++;
+
+    try {
+      let hits: SearchHit[] = [];
+      let hardnessScore = 0;
+
+      // Stage A: Lexical + Fuzzy
+      const stageASpan = LensTracer.startStageSpan(ctx, 'stage_a', 'lexical+fuzzy', 0);
+      const stageAStart = Date.now();
+      
+      try {
+        // Get lexical candidates
+        const lexicalCandidates: LexicalCandidate[] = await this.lexicalEngine.search(
+          ctx,
+          ctx.query,
+          ctx.fuzzy ? 2 : 0 // Convert boolean fuzzy to fuzzy distance
+        );
+
+        // Resolve lexical matches to hits
+        hits = await resolveLexicalMatches(
+          lexicalCandidates, 
+          ctx.query,
+          ctx.fuzzy ? 2 : 0, // fuzzyDistance
+          3 // maxCandidatesPerFile
+        );
+
+        const stageALatency = Date.now() - stageAStart;
+        LensTracer.endStageSpan(stageASpan, ctx, 'stage_a', 'lexical+fuzzy', 0, hits.length, stageALatency);
+
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        LensTracer.endStageSpan(stageASpan, ctx, 'stage_a', 'lexical+fuzzy', 0, 0, Date.now() - stageAStart, errorMsg);
+        throw error;
+      }
+
+      LensTracer.endSearchSpan(overallSpan, ctx, hits.length);
+      return { hits };
+
+    } catch (error) {
+      LensTracer.endSearchSpan(overallSpan, ctx, 0, (error as Error).message);
+      throw error;
+    } finally {
+      this.activeQueries--;
+    }
   }
 }

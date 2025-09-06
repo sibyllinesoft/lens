@@ -112,7 +112,7 @@ export class StoryVizGroundTruthAdapter {
       stats.by_language[item.language] = (stats.by_language[item.language] || 0) + 1;
       
       // Count by match type (from first expected result)
-      if (item.expected_results.length > 0) {
+      if (item.expected_results.length > 0 && item.expected_results[0]) {
         const matchType = item.expected_results[0].match_type || 'unknown';
         stats.by_match_type[matchType] = (stats.by_match_type[matchType] || 0) + 1;
       }

@@ -144,7 +144,7 @@ export class Phase2SynonymMiner {
       this.docstringCache.set(filePath, docstrings);
       
       for (let lineNum = 0; lineNum < lines.length; lineNum++) {
-        const line = lines[lineNum];
+        const line = lines[lineNum]!;
         const tokens = this.tokenizeLine(line);
         
         // Process subtokens from each token
@@ -183,7 +183,7 @@ export class Phase2SynonymMiner {
       const pythonDocRegex = /(?:"""([^"]*?)"""|'''([^']*?)''')/gs;
       let match;
       while ((match = pythonDocRegex.exec(content)) !== null) {
-        const docstring = (match[1] || match[2]).trim();
+        const docstring = (match[1] || match[2] || '').trim();
         if (docstring.length > 10) {
           docstrings.push(docstring);
         }
@@ -249,8 +249,8 @@ export class Phase2SynonymMiner {
   private updateCooccurrence(subtokens: string[]): void {
     for (let i = 0; i < subtokens.length; i++) {
       for (let j = i + 1; j < subtokens.length; j++) {
-        const token1 = subtokens[i];
-        const token2 = subtokens[j];
+        const token1 = subtokens[i]!;
+        const token2 = subtokens[j]!;
         
         // Ensure consistent ordering for co-occurrence counting
         const [first, second] = token1 < token2 ? [token1, token2] : [token2, token1];

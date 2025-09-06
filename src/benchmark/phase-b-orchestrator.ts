@@ -352,9 +352,9 @@ export class PhaseBOrchestrator {
       },
       phase_b_config: {
         optimizations: {
-          roaring_bitmap: { enabled: true },
-          ast_cache: { enabled: true },
-          isotonic_calibration: { enabled: true }
+          roaring_bitmap: { enabled: true, prefilter_candidate_files: true, roaring_compression: true },
+          ast_cache: { enabled: true, max_files: 200, ttl_minutes: 60, batch_processing: true, stale_while_revalidate: false },
+          isotonic_calibration: { enabled: true, confidence_cutoff: 0.7, ann_k: 50, ann_ef_search: 100 }
         },
         performance_targets: {
           stage_a_p95_ms: 5,
@@ -406,9 +406,9 @@ export class PhaseBOrchestrator {
 
     const performanceConfig: PhaseBConfig = {
       optimizations: {
-        roaring_bitmap: { enabled: true },
-        ast_cache: { enabled: true },
-        isotonic_calibration: { enabled: true }
+        roaring_bitmap: { enabled: true, prefilter_candidate_files: true, roaring_compression: true },
+        ast_cache: { enabled: true, max_files: 200, ttl_minutes: 60, batch_processing: true, stale_while_revalidate: false },
+        isotonic_calibration: { enabled: true, confidence_cutoff: 0.7, ann_k: 50, ann_ef_search: 100 }
       },
       performance_targets: {
         stage_a_p95_ms: 5,

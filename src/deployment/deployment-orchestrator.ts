@@ -212,7 +212,7 @@ export class DeploymentOrchestrator extends EventEmitter {
       this.currentPipeline.overall_status = 'failed';
       await this.handlePipelineFailure(error);
       
-      this.emit('pipeline_failed', { version, error: error.message });
+      this.emit('pipeline_failed', { version, error: error instanceof Error ? error.message : String(error) });
       throw error;
     } finally {
       this.savePipelineState();
@@ -291,14 +291,15 @@ export class DeploymentOrchestrator extends EventEmitter {
       p95_latency_ms: 150,
       p99_latency_ms: 280,
       span_coverage: 1.0,
-      results_per_query_mean: 5.2
+      results_per_query_mean: 5.2,
+      results_per_query_std: 2.1
     };
     
     // Mock reliability curve
     const reliabilityCurve = [
-      { predicted_score: 0.1, actual_precision: 0.12, sample_size: 100, confidence_interval: [0.08, 0.16], collection_date: new Date().toISOString() },
-      { predicted_score: 0.5, actual_precision: 0.52, sample_size: 200, confidence_interval: [0.48, 0.56], collection_date: new Date().toISOString() },
-      { predicted_score: 0.9, actual_precision: 0.88, sample_size: 150, confidence_interval: [0.84, 0.92], collection_date: new Date().toISOString() }
+      { predicted_score: 0.1, actual_precision: 0.12, sample_size: 100, confidence_interval: [0.08, 0.16] as [number, number] },
+      { predicted_score: 0.5, actual_precision: 0.52, sample_size: 200, confidence_interval: [0.48, 0.56] as [number, number] },
+      { predicted_score: 0.9, actual_precision: 0.88, sample_size: 150, confidence_interval: [0.84, 0.92] as [number, number] }
     ];
     
     // Create version with fingerprint

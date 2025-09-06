@@ -207,8 +207,8 @@ program
           lsif_coverage_drop_threshold: 0.1,
           p99_p95_ratio_threshold: 3.0
         },
-        per_slice_gates: { enabled: false },
-        plots: { enabled: false }
+        per_slice_gates: { enabled: false, min_recall_at_10: 0.8, min_ndcg_at_10: 0.75, max_p95_latency_ms: 1000 },
+        plots: { enabled: false, output_dir: './plots', formats: ['png'] }
       });
       
       spinner.succeed('Hard negative testing completed');
@@ -265,9 +265,9 @@ program
           lsif_coverage_drop_threshold: parseFloat(options.lsifDrop),
           p99_p95_ratio_threshold: parseFloat(options.p99P95Ratio)
         },
-        hard_negatives: { enabled: false },
-        per_slice_gates: { enabled: false },
-        plots: { enabled: false }
+        hard_negatives: { enabled: false, per_query_count: 5, shared_subtoken_min: 2 },
+        per_slice_gates: { enabled: false, min_recall_at_10: 0.8, min_ndcg_at_10: 0.75, max_p95_latency_ms: 1000 },
+        plots: { enabled: false, output_dir: './plots', formats: ['png'] }
       }, [baseResult]);
       
       spinner.succeed('Tripwire validation completed');
@@ -364,14 +364,14 @@ program
           output_dir: path.resolve(options.plotDir),
           formats: options.formats
         },
-        hard_negatives: { enabled: false },
+        hard_negatives: { enabled: false, per_query_count: 5, shared_subtoken_min: 2 },
         tripwires: {
           min_span_coverage: 0.95,
           recall_convergence_threshold: 0.01,
           lsif_coverage_drop_threshold: 0.1,
           p99_p95_ratio_threshold: 3.0
         },
-        per_slice_gates: { enabled: false }
+        per_slice_gates: { enabled: false, min_recall_at_10: 0.8, min_ndcg_at_10: 0.75, max_p95_latency_ms: 1000 }
       });
       
       spinner.succeed('Plots generated successfully');
@@ -444,8 +444,7 @@ async function initializeBenchmarkRunner(globalOpts: any) {
   const outputDir = path.resolve(globalOpts.output);
   await fs.mkdir(outputDir, { recursive: true });
   
-  const groundTruthBuilder = new GroundTruthBuilder();
-  await groundTruthBuilder.initialize();
+  const groundTruthBuilder = new GroundTruthBuilder('./', outputDir);
   
   const runner = new BenchmarkSuiteRunner(
     groundTruthBuilder,

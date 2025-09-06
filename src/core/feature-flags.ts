@@ -255,10 +255,17 @@ export class FeatureFlagManager {
       flagName,
       value,
       reason,
-      expiresAt: options?.expiresAt,
-      userId: options?.userId,
-      experimentId: options?.experimentId
     };
+    
+    if (options?.expiresAt !== undefined) {
+      override.expiresAt = options.expiresAt;
+    }
+    if (options?.userId !== undefined) {
+      override.userId = options.userId;
+    }
+    if (options?.experimentId !== undefined) {
+      override.experimentId = options.experimentId;
+    }
 
     this.overrides.set(flagName, override);
     

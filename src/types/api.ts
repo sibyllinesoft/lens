@@ -233,5 +233,394 @@ export const ValidationResultSchema = z.object({
 
 export type ValidationResult = z.infer<typeof ValidationResultSchema>;
 
+// Search SPI schemas (Phase 0)
+export const SpiSearchRequestSchema = SearchRequestSchema.extend({
+  scopes: z.array(z.string()).optional(),                    // Repository scopes/path globs
+  constraints: z.object({
+    lang: z.string().optional(),                             // Language filter
+    symbol_kind: z.enum(['function', 'class', 'variable', 'type', 'interface', 'constant', 'enum', 'method', 'property']).optional(),
+  }).optional(),
+  budget_ms: z.number().int().min(50).max(5000).optional(),  // Budget in milliseconds
+  token_budget: z.number().int().min(100).max(10000).optional().default(10000), // Token budget for results (default 10k)
+  page: z.number().int().min(0).optional().default(0),       // Page number for pagination (0-indexed)
+  return: z.object({
+    ast_path: z.boolean().optional(),                        // Return AST path
+    neighbors: z.boolean().optional(),                       // Return neighboring symbols
+    why: z.boolean().optional(),                             // Return match reasoning
+  }).optional(),
+});
+
+export type SpiSearchRequest = z.infer<typeof SpiSearchRequestSchema>;
+
+// Extended search hit with SPI features (Phase 1)
+export const SpiSearchHitSchema = SearchHitSchema.extend({
+  ref: z.string().optional(),                                // Stable reference: lens://{repo_sha}/{file}@{source_hash}#L{start}:{end}|B{byte_start}:{byte_end}|AST:{path}
+  source_hash: z.string().optional(),                        // File content hash for integrity
+  byte_start: z.number().int().min(0).optional(),            // Byte start position
+  byte_end: z.number().int().min(0).optional(),              // Byte end position
+});
+
+export type SpiSearchHit = z.infer<typeof SpiSearchHitSchema>;
+
+export const SpiSearchResponseSchema = SearchResponseSchema.extend({
+  hits: z.array(SpiSearchHitSchema),
+  timed_out: z.boolean().optional(),                         // Budget timeout occurred
+  token_usage: z.object({
+    used_tokens: z.number().int().min(0),                    // Tokens used in this response
+    budget_tokens: z.number().int().min(0),                  // Total token budget
+    budget_exceeded: z.boolean(),                            // True if budget was hit and results truncated
+    estimated_total_tokens: z.number().int().min(0).optional(), // Estimated tokens if all results were included
+  }),
+  pagination: z.object({
+    page: z.number().int().min(0),                           // Current page (0-indexed)
+    results_in_page: z.number().int().min(0),                // Results returned in this page
+    total_results: z.number().int().min(0),                  // Total available results (if known)
+    has_next_page: z.boolean(),                              // True if more pages available
+    next_page: z.number().int().min(0).optional(),           // Next page number if available
+    budget_per_page: z.number().int().min(0),                // Token budget used for page sizing
+  }),
+});
+
+export type SpiSearchResponse = z.infer<typeof SpiSearchResponseSchema>;
+
+// SPI Health response with extended SLA fields
+export const SpiHealthResponseSchema = HealthResponseSchema.extend({
+  sla: z.object({
+    p95_latency_ms: z.number().min(0),
+    p99_latency_ms: z.number().min(0),
+    availability_pct: z.number().min(0).max(100),
+    error_rate_pct: z.number().min(0).max(100),
+  }).optional(),
+  version_info: z.object({
+    api_version: ApiVersionSchema,
+    index_version: IndexVersionSchema,
+    policy_version: PolicyVersionSchema,
+  }).optional(),
+});
+
+export type SpiHealthResponse = z.infer<typeof SpiHealthResponseSchema>;
+
+// Resolve endpoint schemas (Phase 1)
+export const ResolveRequestSchema = z.object({
+  ref: z.string().min(1),                                    // Lens reference to resolve
+});
+
+export const ResolveResponseSchema = z.object({
+  ref: z.string(),
+  file_path: z.string(),
+  content: z.string(),                                       // Exact slice content
+  source_hash: z.string(),                                   // File hash for integrity
+  line_start: z.number().int().min(1),
+  line_end: z.number().int().min(1),
+  byte_start: z.number().int().min(0),
+  byte_end: z.number().int().min(0),
+  ast_path: z.string().optional(),
+  surrounding_lines: z.object({
+    before: z.array(z.string()),
+    after: z.array(z.string()),
+  }).optional(),
+  metadata: z.object({
+    lang: z.string().optional(),
+    symbol_kind: z.enum(['function', 'class', 'variable', 'type', 'interface', 'constant', 'enum', 'method', 'property']).optional(),
+    symbol_name: z.string().optional(),
+  }).optional(),
+});
+
+export type ResolveRequest = z.infer<typeof ResolveRequestSchema>;
+export type ResolveResponse = z.infer<typeof ResolveResponseSchema>;
+
+// Context endpoint schemas (Phase 2)
+export const ContextRequestSchema = z.object({
+  refs: z.array(z.string()).min(1),                          // List of refs to resolve
+  token_budget: z.number().int().min(100).max(10000).optional().default(10000), // Token budget (default 10k)
+  page: z.number().int().min(0).optional().default(0),       // Page number for pagination (0-indexed)
+  dedupe: z.boolean().optional().default(true),              // Deduplicate overlapping content
+});
+
+export const ContextResponseSchema = z.object({
+  contexts: z.array(z.object({
+    ref: z.string(),
+    content: z.string(),
+    token_count: z.number().int().min(0),
+    truncated: z.boolean(),
+  })),
+  total_tokens: z.number().int().min(0),
+  deduped_count: z.number().int().min(0).optional(),
+});
+
+export type ContextRequest = z.infer<typeof ContextRequestSchema>;
+export type ContextResponse = z.infer<typeof ContextResponseSchema>;
+
+// Cross-reference endpoint schemas (Phase 2) 
+export const XrefRequestSchema = z.object({
+  ref: z.string().optional(),                                // Ref to find xrefs for
+  symbol_id: z.string().optional(),                          // Or symbol ID
+  types: z.array(z.enum(['definitions', 'references', 'implementations'])).optional().default(['definitions', 'references']),
+});
+
+export const XrefResponseSchema = z.object({
+  symbol_id: z.string().optional(),
+  symbol_name: z.string().optional(),
+  definitions: z.array(SpiSearchHitSchema),
+  references: z.array(SpiSearchHitSchema),
+  implementations: z.array(SpiSearchHitSchema).optional(),
+  total: z.number().int().min(0),
+});
+
+export type XrefRequest = z.infer<typeof XrefRequestSchema>;
+export type XrefResponse = z.infer<typeof XrefResponseSchema>;
+
+// Symbols listing endpoint (Phase 2)
+export const SymbolsListRequestSchema = z.object({
+  repo_sha: z.string().min(1).max(64),
+  page: z.number().int().min(0).optional().default(0),
+  page_size: z.number().int().min(10).max(1000).optional().default(100),
+  kind_filter: z.enum(['function', 'class', 'variable', 'type', 'interface', 'constant', 'enum', 'method', 'property']).optional(),
+  lang_filter: z.string().optional(),
+});
+
+export const SymbolsListResponseSchema = z.object({
+  symbols: z.array(z.object({
+    symbol_id: z.string(),
+    name: z.string(),
+    kind: z.enum(['function', 'class', 'variable', 'type', 'interface', 'constant', 'enum', 'method', 'property']),
+    file_path: z.string(),
+    line: z.number().int().min(1),
+    ref: z.string(),
+    lang: z.string().optional(),
+  })),
+  total: z.number().int().min(0),
+  page: z.number().int().min(0),
+  page_size: z.number().int().min(10).max(1000),
+  has_next: z.boolean(),
+});
+
+export type SymbolsListRequest = z.infer<typeof SymbolsListRequestSchema>;
+export type SymbolsListResponse = z.infer<typeof SymbolsListResponseSchema>;
+
+/*** LSP SPI SCHEMAS (NEW) ***/
+
+// LSP Capabilities Schema
+export const LSPCapabilitiesResponseSchema = z.object({
+  languages: z.array(z.object({
+    lang: z.string(),
+    features: z.array(z.enum([
+      'diagnostics', 'format', 'selectionRanges', 'foldingRanges', 
+      'prepareRename', 'rename', 'codeActions', 'callHierarchy', 'typeHierarchy'
+    ]))
+  }))
+});
+
+export type LSPCapabilitiesResponse = z.infer<typeof LSPCapabilitiesResponseSchema>;
+
+// Base LSP request with budget enforcement
+export const LSPBaseRequestSchema = z.object({
+  budget_ms: z.number().int().min(100).max(30000).optional(),
+});
+
+// LSP Diagnostics Schema
+export const LSPDiagnosticsRequestSchema = LSPBaseRequestSchema.extend({
+  files: z.array(z.object({
+    path: z.string().min(1),
+    source_hash: z.string().min(1)
+  }))
+});
+
+export const LSPDiagnosticsResponseSchema = z.object({
+  diags: z.array(z.object({
+    path: z.string().min(1),
+    source_hash: z.string().min(1),
+    items: z.array(z.object({
+      range: z.object({
+        b0: z.number().int().min(0),
+        b1: z.number().int().min(0)
+      }),
+      severity: z.enum(['hint', 'info', 'warning', 'error']),
+      code: z.string().optional(),
+      message: z.string()
+    }))
+  })),
+  duration_ms: z.number().int().min(0),
+  timed_out: z.boolean().optional()
+});
+
+// LSP Format Schema
+export const LSPFormatRequestSchema = LSPBaseRequestSchema.extend({
+  ref: z.string().optional(), // lens:// ref format
+  path: z.string().optional(),
+  range: z.object({
+    b0: z.number().int().min(0),
+    b1: z.number().int().min(0)
+  }).optional(),
+  options: z.record(z.any()).optional() // Formatting options
+});
+
+export const LSPFormatResponseSchema = z.object({
+  edits: z.array(z.object({
+    path: z.string().min(1),
+    range: z.object({
+      b0: z.number().int().min(0),
+      b1: z.number().int().min(0)
+    }),
+    new_text: z.string()
+  })),
+  idempotent: z.boolean(),
+  duration_ms: z.number().int().min(0)
+});
+
+// LSP Selection Ranges Schema
+export const LSPSelectionRangesRequestSchema = LSPBaseRequestSchema.extend({
+  refs: z.array(z.string()) // Array of lens:// refs
+});
+
+export const LSPSelectionRangesResponseSchema = z.object({
+  chains: z.array(z.array(z.object({
+    range: z.object({
+      b0: z.number().int().min(0),
+      b1: z.number().int().min(0)
+    }),
+    parent_ix: z.number().int().min(0).optional()
+  }))),
+  duration_ms: z.number().int().min(0)
+});
+
+// LSP Folding Ranges Schema
+export const LSPFoldingRangesRequestSchema = LSPBaseRequestSchema.extend({
+  files: z.array(z.object({
+    path: z.string().min(1),
+    source_hash: z.string().min(1)
+  }))
+});
+
+export const LSPFoldingRangesResponseSchema = z.object({
+  folds: z.array(z.object({
+    path: z.string().min(1),
+    ranges: z.array(z.object({
+      b0: z.number().int().min(0),
+      b1: z.number().int().min(0),
+      kind: z.enum(['comment', 'imports', 'region']).optional()
+    }))
+  })),
+  duration_ms: z.number().int().min(0)
+});
+
+// LSP Prepare Rename Schema
+export const LSPPrepareRenameRequestSchema = LSPBaseRequestSchema.extend({
+  ref: z.string() // lens:// ref
+});
+
+export const LSPPrepareRenameResponseSchema = z.object({
+  allowed: z.boolean(),
+  placeholder: z.string().optional(),
+  range: z.object({
+    b0: z.number().int().min(0),
+    b1: z.number().int().min(0)
+  }).optional(),
+  reason: z.string().optional(),
+  duration_ms: z.number().int().min(0)
+});
+
+// LSP Rename Schema
+export const LSPRenameRequestSchema = LSPBaseRequestSchema.extend({
+  ref: z.string(), // lens:// ref
+  new_name: z.string().min(1)
+});
+
+export const LSPRenameResponseSchema = z.object({
+  workspaceEdit: z.object({
+    changes: z.array(z.object({
+      path: z.string().min(1),
+      source_hash: z.string().min(1),
+      edits: z.array(z.object({
+        b0: z.number().int().min(0),
+        b1: z.number().int().min(0),
+        new_text: z.string()
+      }))
+    }))
+  }),
+  duration_ms: z.number().int().min(0)
+});
+
+// LSP Code Actions Schema
+export const LSPCodeActionsRequestSchema = LSPBaseRequestSchema.extend({
+  ref: z.string(), // lens:// ref
+  kinds: z.array(z.string()).optional(), // ["quickfix", "refactor", "source.organizeImports", ...]
+  diagnostics: z.array(z.any()).optional() // Related diagnostics
+});
+
+export const LSPCodeActionsResponseSchema = z.object({
+  actions: z.array(z.object({
+    title: z.string(),
+    kind: z.string(),
+    workspaceEdit: z.object({
+      changes: z.array(z.object({
+        path: z.string().min(1),
+        source_hash: z.string().min(1),
+        edits: z.array(z.object({
+          b0: z.number().int().min(0),
+          b1: z.number().int().min(0),
+          new_text: z.string()
+        }))
+      }))
+    }).optional(),
+    data: z.any().optional()
+  })),
+  duration_ms: z.number().int().min(0)
+});
+
+// LSP Hierarchy Schema
+export const LSPHierarchyRequestSchema = LSPBaseRequestSchema.extend({
+  ref: z.string(), // lens:// ref
+  kind: z.enum(['call', 'type']),
+  dir: z.enum(['incoming', 'outgoing']),
+  depth: z.number().int().min(1).max(5).optional(),
+  fanout_cap: z.number().int().min(10).max(1000).optional()
+});
+
+export const LSPHierarchyResponseSchema = z.object({
+  nodes: z.array(z.object({
+    symbol_id: z.string(),
+    name: z.string(),
+    kind: z.string(),
+    def_ref: z.string().optional() // lens:// ref to definition
+  })),
+  edges: z.array(z.object({
+    src: z.string(), // symbol_id
+    dst: z.string(), // symbol_id
+    role: z.string()
+  })),
+  truncated: z.boolean(),
+  duration_ms: z.number().int().min(0)
+});
+
+// LensSymbol Schema
+export const LensSymbolSchema = z.object({
+  symbol_id: z.string(),
+  lang: z.string(),
+  name: z.string(),
+  kind: z.string(),
+  def_ref: z.string().optional(), // lens:// ref to definition
+  container: z.array(z.string()), // Container hierarchy
+  moniker: z.string().optional() // Stable cross-repo identifier
+});
+
+export type LSPDiagnosticsRequest = z.infer<typeof LSPDiagnosticsRequestSchema>;
+export type LSPDiagnosticsResponse = z.infer<typeof LSPDiagnosticsResponseSchema>;
+export type LSPFormatRequest = z.infer<typeof LSPFormatRequestSchema>;
+export type LSPFormatResponse = z.infer<typeof LSPFormatResponseSchema>;
+export type LSPSelectionRangesRequest = z.infer<typeof LSPSelectionRangesRequestSchema>;
+export type LSPSelectionRangesResponse = z.infer<typeof LSPSelectionRangesResponseSchema>;
+export type LSPFoldingRangesRequest = z.infer<typeof LSPFoldingRangesRequestSchema>;
+export type LSPFoldingRangesResponse = z.infer<typeof LSPFoldingRangesResponseSchema>;
+export type LSPPrepareRenameRequest = z.infer<typeof LSPPrepareRenameRequestSchema>;
+export type LSPPrepareRenameResponse = z.infer<typeof LSPPrepareRenameResponseSchema>;
+export type LSPRenameRequest = z.infer<typeof LSPRenameRequestSchema>;
+export type LSPRenameResponse = z.infer<typeof LSPRenameResponseSchema>;
+export type LSPCodeActionsRequest = z.infer<typeof LSPCodeActionsRequestSchema>;
+export type LSPCodeActionsResponse = z.infer<typeof LSPCodeActionsResponseSchema>;
+export type LSPHierarchyRequest = z.infer<typeof LSPHierarchyRequestSchema>;
+export type LSPHierarchyResponse = z.infer<typeof LSPHierarchyResponseSchema>;
+export type LensSymbol = z.infer<typeof LensSymbolSchema>;
+
 // Re-export from core for convenience
 export type { SymbolKind, MatchReason } from './core.js';

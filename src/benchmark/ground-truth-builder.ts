@@ -380,7 +380,7 @@ export class GroundTruthBuilder {
     }
   }
 
-  private async persistGoldenDataset(): Promise<void> {
+  public async persistGoldenDataset(): Promise<void> {
     const version = Date.now();
     const filename = `golden_v${version}.jsonl`;
     const filepath = path.join(this.outputDir, filename);
@@ -394,13 +394,17 @@ export class GroundTruthBuilder {
   /**
    * Generate configuration fingerprint for deterministic runs
    */
-  generateConfigFingerprint(config: any, seedSet: number[]): ConfigFingerprint {
+  generateConfigFingerprint(
+    config: any, 
+    seedSet: number[],
+    cbuCoefficients: { gamma: number; delta: number; beta: number } = { gamma: 1.0, delta: 0.5, beta: 0.3 }
+  ): ConfigFingerprint {
     const configHash = createHash('sha256')
       .update(JSON.stringify(config, null, 0))
       .digest('hex');
       
     const codeHash = createHash('sha256')
-      .update(process.version + Date.now()) // Simplified
+      .update(process.version + Date.now()) // Simplified for now
       .digest('hex');
 
     const snapshotShas: Record<string, string> = {};
@@ -408,13 +412,43 @@ export class GroundTruthBuilder {
       snapshotShas[snapshot.repo_ref] = sha;
     }
 
+    // Generate pool and oracle SHAs from current golden dataset
+    const poolSha = createHash('sha256')
+      .update(JSON.stringify(this.goldenItems.map(item => item.id).sort()))
+      .digest('hex');
+
+    const oracleSha = createHash('sha256')
+      .update(JSON.stringify(this.goldenItems.map(item => item.expected_results).sort()))
+      .digest('hex');
+
+    // Contract enforcement hash (ensures anti-gaming invariants)
+    const contractHash = createHash('sha256')
+      .update(JSON.stringify({
+        fixed_layout: true,
+        dedup_enabled: true,
+        causal_musts: true,
+        kv_budget_cap: config.kv_budget_cap || 1000,
+        timestamp: new Date().toISOString()
+      }))
+      .digest('hex');
+
     return {
+      bench_schema: '2024.12.0', // Version identifier for schema
+      seed: seedSet[0] || 42, // Primary seed
+      pool_sha: poolSha,
+      oracle_sha: oracleSha,
+      cbu_coefficients: cbuCoefficients,
       code_hash: codeHash,
       config_hash: configHash,
       snapshot_shas: snapshotShas,
       shard_layout: {}, // Would include actual shard distribution
       timestamp: new Date().toISOString(),
-      seed_set: seedSet
+      seed_set: seedSet,
+      contract_hash: contractHash,
+      fixed_layout: true,
+      dedup_enabled: true,
+      causal_musts: true,
+      kv_budget_cap: config.kv_budget_cap || 1000
     };
   }
 

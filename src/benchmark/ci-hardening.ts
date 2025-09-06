@@ -67,7 +67,7 @@ export class CIHardeningOrchestrator {
     private readonly outputDir: string,
     private readonly natsUrl: string = 'nats://localhost:4222'
   ) {
-    const groundTruthBuilder = new GroundTruthBuilder(outputDir);
+    const groundTruthBuilder = new GroundTruthBuilder(process.cwd(), outputDir);
     this.suiteRunner = new BenchmarkSuiteRunner(groundTruthBuilder, outputDir, natsUrl);
   }
 
@@ -200,7 +200,32 @@ export class CIHardeningOrchestrator {
     benchmarkConfig: Partial<BenchmarkConfig>
   ): HardeningConfig {
     
-    const baseConfig = createDefaultHardeningConfig(benchmarkConfig);
+    // Create a complete BenchmarkConfig with defaults
+    const fullBenchmarkConfig: BenchmarkConfig = {
+      trace_id: benchmarkConfig.trace_id ?? crypto.randomUUID(),
+      suite: benchmarkConfig.suite ?? ['codesearch'],
+      systems: benchmarkConfig.systems ?? ['lex'],
+      slices: benchmarkConfig.slices ?? 'SMOKE_DEFAULT',
+      seeds: benchmarkConfig.seeds ?? 1,
+      cache_mode: benchmarkConfig.cache_mode ?? 'warm',
+      robustness: benchmarkConfig.robustness ?? false,
+      metamorphic: benchmarkConfig.metamorphic ?? false,
+      k_candidates: benchmarkConfig.k_candidates ?? 200,
+      top_n: benchmarkConfig.top_n ?? 50,
+      fuzzy: benchmarkConfig.fuzzy ?? 2,
+      subtokens: benchmarkConfig.subtokens ?? true,
+      semantic_gating: benchmarkConfig.semantic_gating ?? {
+        nl_likelihood_threshold: 0.5,
+        min_candidates: 10
+      },
+      latency_budgets: benchmarkConfig.latency_budgets ?? {
+        stage_a_ms: 50,
+        stage_b_ms: 200,
+        stage_c_ms: 500
+      }
+    };
+    
+    const baseConfig = createDefaultHardeningConfig(fullBenchmarkConfig);
     
     // CI mode specific configurations
     const ciModeConfigs = {
@@ -392,7 +417,7 @@ export class CIHardeningOrchestrator {
     }
     
     // GitHub Actions output
-    if (process.env.GITHUB_ACTIONS) {
+    if (process.env['GITHUB_ACTIONS']) {
       await this.setGitHubActionsOutput(result, ciConfig);
     }
     
@@ -439,7 +464,7 @@ export class CIHardeningOrchestrator {
     };
     
     if (!result.success && result.failure_summary) {
-      message.attachments[0].fields.push({
+      message.attachments[0]?.fields.push({
         title: 'Key Issues',
         value: result.failure_summary.recommendations.slice(0, 3).join('\n'),
         short: false
@@ -472,7 +497,7 @@ export class CIHardeningOrchestrator {
     }
     
     // Set job summary
-    const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+    const summaryPath = process.env['GITHUB_STEP_SUMMARY'];
     if (summaryPath) {
       const summary = this.generateGitHubSummary(result, ciConfig);
       await fs.writeFile(summaryPath, summary, { flag: 'a' });

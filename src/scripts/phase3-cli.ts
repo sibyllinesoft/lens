@@ -416,7 +416,7 @@ process.on('unhandledRejection', (reason) => {
 });
 
 // Execute main function if running directly
-if (import.meta.main) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 

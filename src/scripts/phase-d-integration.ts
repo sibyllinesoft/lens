@@ -318,6 +318,13 @@ class PhaseDOrchestrator {
     console.log('🧹 Phase D resources cleaned up');
   }
 
+  /**
+   * Get the tail latency monitor for external access
+   */
+  public getTailLatencyMonitor(): TailLatencyMonitor {
+    return this.tailLatencyMonitor;
+  }
+
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -375,7 +382,7 @@ async function main() {
         
         // Monitor indefinitely
         while (true) {
-          const report = orchestrator.tailLatencyMonitor.generateReport();
+          const report = orchestrator.getTailLatencyMonitor().generateReport();
           console.log(`📊 ${new Date().toISOString()}: System Health = ${report.system_health.healthy ? 'Healthy' : 'Issues'}`);
           await new Promise(resolve => setTimeout(resolve, 30000)); // 30 seconds
         }

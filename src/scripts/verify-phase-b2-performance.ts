@@ -548,7 +548,7 @@ class PhaseB2PerformanceVerifier {
     const baselineTime = performance.now() - baselineStart;
 
     // Optimized: Batch indexing
-    const engine = new EnhancedSymbolSearchEngine(this.mockSegmentStorage, {
+    const engine = new EnhancedSymbolSearchEngine(this.mockSegmentStorage as any, {
       batchProcessingEnabled: true,
       cacheConfig: PERFORMANCE_PRESETS.performance,
     });
@@ -580,7 +580,7 @@ class PhaseB2PerformanceVerifier {
     console.log('🔍 Testing Symbol Search Performance...');
 
     // Set up test data
-    const engine = new EnhancedSymbolSearchEngine(this.mockSegmentStorage, {
+    const engine = new EnhancedSymbolSearchEngine(this.mockSegmentStorage as any, {
       enableStructuralPatterns: true,
       cacheConfig: PERFORMANCE_PRESETS.performance,
     });
@@ -594,7 +594,15 @@ class PhaseB2PerformanceVerifier {
     const baselineTime = performance.now() - baselineStart;
 
     // Optimized: Enhanced search
-    const context = { workspace_root: '/test', language: 'typescript' as const };
+    const context = { 
+      workspace_root: '/test', 
+      language: 'typescript',
+      trace_id: 'test-trace',
+      repo_sha: 'test-sha',
+      query: 'AdvancedApiService',
+      mode: 'hybrid',
+      // Add any other required fields...
+    } as any;
     
     const optimizedStart = performance.now();
     const results = await engine.searchSymbols('AdvancedApiService', context);
@@ -660,7 +668,7 @@ class PhaseB2PerformanceVerifier {
     console.log('⚡ Testing Overall Stage-B Performance (KEY METRIC)...');
 
     // This is the most important test - overall Stage-B pipeline
-    const engine = new EnhancedSymbolSearchEngine(this.mockSegmentStorage, {
+    const engine = new EnhancedSymbolSearchEngine(this.mockSegmentStorage as any, {
       enableStructuralPatterns: true,
       enableCoverageTracking: true,
       batchProcessingEnabled: true,
@@ -681,7 +689,14 @@ class PhaseB2PerformanceVerifier {
     await engine.indexFile('/test/stageb.ts', this.testFiles.large, 'typescript');
     
     // Search for symbols (part of Stage-B) 
-    const context = { workspace_root: '/test', language: 'typescript' as const };
+    const context = { 
+      workspace_root: '/test', 
+      language: 'typescript',
+      trace_id: 'test-trace',
+      repo_sha: 'test-sha',
+      query: 'AdvancedApiService',
+      mode: 'hybrid'
+    } as any;
     await engine.searchSymbols('AdvancedApiService', context);
     
     const optimizedTime = performance.now() - optimizedStart;

@@ -57,12 +57,12 @@ export class PinnedGroundTruthLoader {
       const content = await fs.readFile(datasetPath, 'utf-8');
       this.pinnedDataset = JSON.parse(content);
       
-      console.log(`✅ Loaded pinned dataset version: ${this.pinnedDataset.version}`);
-      console.log(`   Total items: ${this.pinnedDataset.total_items}`);
-      console.log(`   Pinned at: ${this.pinnedDataset.pinned_at}`);
-      console.log(`   Git SHA: ${this.pinnedDataset.git_sha}`);
+      console.log(`✅ Loaded pinned dataset version: ${this.pinnedDataset!.version}`);
+      console.log(`   Total items: ${this.pinnedDataset!.total_items}`);
+      console.log(`   Pinned at: ${this.pinnedDataset!.pinned_at}`);
+      console.log(`   Git SHA: ${this.pinnedDataset!.git_sha}`);
 
-      return this.pinnedDataset;
+      return this.pinnedDataset!
     } catch (error) {
       throw new Error(`Failed to load pinned dataset from ${datasetPath}: ${(error as Error).message}`);
     }
@@ -163,7 +163,22 @@ export class PinnedGroundTruthLoader {
         total_items: this.pinnedDataset.total_items
       },
       timestamp: new Date().toISOString(),
-      seed_set: seedSet
+      seed_set: seedSet,
+      // Required ConfigFingerprint properties
+      bench_schema: 'lens-pinned-v2.0',
+      seed: seedSet[0] || 42,
+      pool_sha: this.pinnedDataset.git_sha,
+      oracle_sha: this.pinnedDataset.git_sha,
+      contract_hash: this.pinnedDataset.git_sha,
+      fixed_layout: false,
+      dedup_enabled: true,
+      causal_musts: true,
+      kv_budget_cap: 1000,
+      cbu_coefficients: {
+        gamma: 1.0,
+        delta: 0.1,
+        beta: 0.05
+      }
     };
   }
 

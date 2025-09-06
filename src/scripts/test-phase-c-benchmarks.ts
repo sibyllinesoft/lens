@@ -26,7 +26,7 @@ class PhaseCBenchmarkTester {
 
   constructor() {
     this.outputDir = path.join(process.cwd(), 'test-benchmark-results');
-    this.groundTruthBuilder = new GroundTruthBuilder();
+    this.groundTruthBuilder = new GroundTruthBuilder('./', this.outputDir);
     this.benchmarkRunner = new BenchmarkSuiteRunner(
       this.groundTruthBuilder,
       this.outputDir,
@@ -36,7 +36,6 @@ class PhaseCBenchmarkTester {
 
   async initialize() {
     await fs.mkdir(this.outputDir, { recursive: true });
-    await this.groundTruthBuilder.initialize();
     console.log('🔧 Phase C benchmark tester initialized');
   }
 
@@ -214,7 +213,10 @@ class PhaseCBenchmarkTester {
           p99_p95_ratio_threshold: 3.0
         },
         per_slice_gates: {
-          enabled: false // Disabled for testing
+          enabled: false, // Disabled for testing
+          min_recall_at_10: 0.8,
+          min_ndcg_at_10: 0.7,
+          max_p95_latency_ms: 200
         },
         plots: {
           enabled: true,
@@ -282,9 +284,9 @@ class PhaseCBenchmarkTester {
           lsif_coverage_drop_threshold: 0.2,
           p99_p95_ratio_threshold: 4.0
         },
-        hard_negatives: { enabled: false },
-        per_slice_gates: { enabled: false },
-        plots: { enabled: false }
+        hard_negatives: { enabled: false, per_query_count: 5, shared_subtoken_min: 2 },
+        per_slice_gates: { enabled: false, min_recall_at_10: 0.8, min_ndcg_at_10: 0.75, max_p95_latency_ms: 1000 },
+        plots: { enabled: false, output_dir: './plots', formats: ['png'] }
       }, [smokeResult]);
 
       const duration = Date.now() - startTime;
@@ -339,14 +341,14 @@ class PhaseCBenchmarkTester {
           min_ndcg_at_10: 0.4,
           max_p95_latency_ms: 1000
         },
-        hard_negatives: { enabled: false },
+        hard_negatives: { enabled: false, per_query_count: 5, shared_subtoken_min: 2 },
         tripwires: {
           min_span_coverage: 0.8,
           recall_convergence_threshold: 0.05,
           lsif_coverage_drop_threshold: 0.3,
           p99_p95_ratio_threshold: 5.0
         },
-        plots: { enabled: false }
+        plots: { enabled: false, output_dir: './plots', formats: ['png'] }
       });
 
       const duration = Date.now() - startTime;
@@ -402,14 +404,14 @@ class PhaseCBenchmarkTester {
           output_dir: path.join(this.outputDir, 'test-plots'),
           formats: ['svg', 'png']
         },
-        hard_negatives: { enabled: false },
+        hard_negatives: { enabled: false, per_query_count: 5, shared_subtoken_min: 2 },
         tripwires: {
           min_span_coverage: 0.8,
           recall_convergence_threshold: 0.05,
           lsif_coverage_drop_threshold: 0.3,
           p99_p95_ratio_threshold: 5.0
         },
-        per_slice_gates: { enabled: false }
+        per_slice_gates: { enabled: false, min_recall_at_10: 0.8, min_ndcg_at_10: 0.75, max_p95_latency_ms: 1000 }
       });
 
       const duration = Date.now() - startTime;
@@ -801,7 +803,7 @@ async function main() {
   }
 }
 
-if (import.meta.main) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(console.error);
 }
 

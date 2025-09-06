@@ -366,24 +366,24 @@ export class Phase2PathPrior {
           const y = targets[i];
           
           // Forward pass
-          const logits = x.reduce((sum, xi, j) => sum + xi * weights[j], 0);
+          const logits = x.reduce((sum, xi, j) => sum + xi * (weights[j] || 0), 0);
           const prediction = 1 / (1 + Math.exp(-logits));
           
           // Loss
-          const loss = -y * Math.log(Math.max(prediction, 1e-15)) - (1 - y) * Math.log(Math.max(1 - prediction, 1e-15));
+          const loss = -y! * Math.log(Math.max(prediction, 1e-15)) - (1 - y!) * Math.log(Math.max(1 - prediction, 1e-15));
           totalLoss += loss;
           
           // Backward pass
-          const error = prediction - y;
+          const error = prediction - y!;
           for (let j = 0; j < weights.length; j++) {
-            gradients[j] += error * x[j];
+            gradients[j] = (gradients[j] || 0) + error * (x[j] || 0);
           }
         }
         
         // Update weights with L2 regularization
         for (let j = 0; j < weights.length; j++) {
-          const regularization = j < weights.length - 1 ? params.l2_regularization * weights[j] : 0; // No regularization on intercept
-          weights[j] -= learningRate * (gradients[j] / features.length + regularization);
+          const regularization = j < weights.length - 1 ? params.l2_regularization * weights[j]! : 0; // No regularization on intercept
+          weights[j]! -= learningRate * (gradients[j]! / features.length + regularization);
         }
         
         if (epoch % 100 === 0) {
@@ -394,8 +394,8 @@ export class Phase2PathPrior {
       // Apply gentler de-boost constraints
       if (params.debias_low_priority_paths) {
         // Clamp negative weights to prevent excessive penalties
-        weights[0] = Math.max(weights[0], -Math.log(1 / params.max_deboost - 1)); // is_test_dir
-        weights[1] = Math.max(weights[1], -Math.log(1 / params.max_deboost - 1)); // is_vendor
+        weights[0] = Math.max(weights[0] || 0, -Math.log(1 / params.max_deboost - 1)); // is_test_dir
+        weights[1] = Math.max(weights[1] || 0, -Math.log(1 / params.max_deboost - 1)); // is_vendor
       }
 
       const model: PathPriorModel = {
@@ -403,13 +403,13 @@ export class Phase2PathPrior {
         generated_at: new Date().toISOString(),
         parameters: params,
         coefficients: {
-          is_test_dir: weights[0],
-          is_vendor: weights[1],
-          depth: weights[2],
-          recently_touched: weights[3],
-          file_ext_score: weights[4],
-          path_unigram_lm: weights[5],
-          intercept: weights[6],
+          is_test_dir: weights[0]!,
+          is_vendor: weights[1]!,
+          depth: weights[2]!,
+          recently_touched: weights[3]!,
+          file_ext_score: weights[4]!,
+          path_unigram_lm: weights[5]!,
+          intercept: weights[6]!,
         },
         performance: {
           training_accuracy: 0, // Will be filled by evaluateModel
@@ -479,7 +479,7 @@ export class Phase2PathPrior {
     // Sort by prediction scores
     const sorted = targets
       .map((target, i) => ({ target, prediction: predictions[i] }))
-      .sort((a, b) => b.prediction - a.prediction);
+      .sort((a, b) => (b.prediction || 0) - (a.prediction || 0));
     
     let auc = 0;
     let positives = 0;

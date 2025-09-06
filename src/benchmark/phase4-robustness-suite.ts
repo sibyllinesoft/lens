@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type {
   BenchmarkConfig,
   RepoSnapshot,
-  RobustnessTestResult
+  RobustnessTest
 } from '../types/benchmark.js';
 
 export interface Phase4TestConfig {
@@ -599,7 +599,7 @@ export class Phase4RobustnessTestSuite {
 
   private calculatePercentile(sortedArray: number[], percentile: number): number {
     const index = Math.floor(sortedArray.length * percentile);
-    return sortedArray[Math.min(index, sortedArray.length - 1)];
+    return sortedArray[Math.min(index, sortedArray.length - 1)]!;
   }
 
   private async identifyWorstCaseScenarios(stage: string, latencySamples: number[]): Promise<Array<{

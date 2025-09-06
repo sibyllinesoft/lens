@@ -26,7 +26,7 @@ export class CLIIntegration {
     await fs.mkdir(outputDir, { recursive: true });
     
     // Initialize ground truth builder
-    const groundTruthBuilder = new GroundTruthBuilder();
+    const groundTruthBuilder = new GroundTruthBuilder(process.cwd(), outputDir);
     await groundTruthBuilder.loadGoldenDataset();
     
     // Initialize test orchestrator
@@ -54,9 +54,9 @@ export class CLIIntegration {
       generate_dashboard_data: true,
       pr_context: options.pr ? {
         pr_number: options.pr,
-        branch_name: process.env.GITHUB_HEAD_REF || 'unknown',
-        commit_sha: process.env.GITHUB_SHA || 'unknown',
-        base_branch: process.env.GITHUB_BASE_REF || 'main'
+        branch_name: process.env['GITHUB_HEAD_REF'] || 'unknown',
+        commit_sha: process.env['GITHUB_SHA'] || 'unknown',
+        base_branch: process.env['GITHUB_BASE_REF'] || 'main'
       } : undefined
     };
 

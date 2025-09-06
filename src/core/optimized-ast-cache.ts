@@ -302,7 +302,8 @@ export class OptimizedASTCache {
       });
 
       const requests = (await Promise.all(readPromises))
-        .filter((req): req is BatchParseRequest => req !== null);
+        .filter((req): req is NonNullable<typeof req> => req !== null)
+        .map(req => req as BatchParseRequest);
 
       if (requests.length > 0) {
         await this.batchGetAST(requests);
@@ -471,14 +472,20 @@ export class OptimizedASTCache {
       const lineNum = this.getLineNumber(content, match.index || 0);
       const colNum = (match.index || 0) - content.lastIndexOf('\n', match.index || 0) - 1;
       
-      ast.classes.push({
+      const classData: any = {
         name: match[2] || '',
         line: lineNum,
         col: colNum,
-        extends: match[4]?.includes('extends') ? match[4]?.replace('extends', '').trim() : undefined,
-        implements: match[4]?.includes('implements') ? 
-          match[4]?.replace('implements', '').split(',').map(s => s.trim()) : undefined,
-      });
+      };
+      
+      const extendsStr = match[4]?.includes('extends') ? match[4]?.replace('extends', '').trim() : undefined;
+      if (extendsStr) classData.extends = extendsStr;
+      
+      const implementsArray = match[4]?.includes('implements') ? 
+        match[4]?.replace('implements', '').split(',').map(s => s.trim()) : undefined;
+      if (implementsArray) classData.implements = implementsArray;
+      
+      ast.classes.push(classData);
     }
 
     // Process interfaces
@@ -487,12 +494,17 @@ export class OptimizedASTCache {
       const lineNum = this.getLineNumber(content, match.index || 0);
       const colNum = (match.index || 0) - content.lastIndexOf('\n', match.index || 0) - 1;
       
-      ast.interfaces.push({
+      const interfaceData: any = {
         name: match[2] || '',
         line: lineNum,
         col: colNum,
-        extends: match[3] ? match[3].split(',').map(s => s.trim()) : undefined,
-      });
+      };
+      
+      if (match[3]) {
+        interfaceData.extends = match[3].split(',').map(s => s.trim());
+      }
+      
+      ast.interfaces.push(interfaceData);
     }
 
     // Process types

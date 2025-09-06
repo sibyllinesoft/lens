@@ -150,8 +150,14 @@ export class EnhancedSymbolSearchEngine {
     const stageBStart = Date.now();
 
     try {
-      // Get optimized AST with caching
-      const cachedAST = await this.optimizedCache.getAST(filePath, content, language);
+      // Filter for supported AST languages
+      if (!['typescript', 'python', 'javascript'].includes(language)) {
+        console.warn(`Language ${language} not supported for AST parsing, skipping AST optimization`);
+        return;
+      }
+      
+      // Get optimized AST with caching  
+      const cachedAST = await this.optimizedCache.getAST(filePath, content, language as 'typescript' | 'python' | 'javascript');
       
       // Extract symbols using enhanced patterns if enabled
       const symbols = this.config.enableStructuralPatterns 
@@ -253,13 +259,15 @@ export class EnhancedSymbolSearchEngine {
         }
       }
 
-      // Convert to batch parse requests
-      const batchRequests: BatchParseRequest[] = requests.map(req => ({
-        filePath: req.filePath,
-        content: req.content,
-        language: req.language,
-        priority: 'normal'
-      }));
+      // Convert to batch parse requests (filter supported languages)
+      const batchRequests: BatchParseRequest[] = requests
+        .filter(req => ['typescript', 'python', 'javascript'].includes(req.language))
+        .map(req => ({
+          filePath: req.filePath,
+          content: req.content,
+          language: req.language as 'typescript' | 'python' | 'javascript',
+          priority: 'normal'
+        }));
 
       // Batch process AST parsing
       const batchStart = Date.now();

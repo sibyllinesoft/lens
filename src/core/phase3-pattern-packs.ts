@@ -363,7 +363,7 @@ export class Phase3PatternPackEngine {
               col: columnNumber,
               match_text: match[0],
               symbol_kind: symbolKind,
-              ast_context: astContext,
+              ast_context: astContext || '',
               confidence: Math.min(1.0, confidence),
             });
           }
@@ -458,21 +458,21 @@ export class Phase3PatternPackEngine {
     
     // Validate individual patterns
     for (let i = 0; i < (pack.patterns?.length || 0); i++) {
-      const pattern = pack.patterns[i];
+      const pattern = pack.patterns![i];
       
-      if (!pattern.name || typeof pattern.name !== 'string') {
+      if (!pattern || !pattern.name || typeof pattern.name !== 'string') {
         errors.push(`Pattern ${i}: name is required and must be a string`);
       }
       
-      if (!pattern.regex || !(pattern.regex instanceof RegExp)) {
+      if (!pattern || !pattern.regex || !(pattern.regex instanceof RegExp)) {
         errors.push(`Pattern ${i}: regex is required and must be a RegExp`);
       }
       
-      if (!pattern.symbolKinds || !Array.isArray(pattern.symbolKinds) || pattern.symbolKinds.length === 0) {
+      if (!pattern || !pattern.symbolKinds || !Array.isArray(pattern.symbolKinds) || pattern.symbolKinds.length === 0) {
         errors.push(`Pattern ${i}: must have at least one symbol kind`);
       }
       
-      if (!pattern.examples || !Array.isArray(pattern.examples) || pattern.examples.length === 0) {
+      if (!pattern || !pattern.examples || !Array.isArray(pattern.examples) || pattern.examples.length === 0) {
         errors.push(`Pattern ${i}: must have at least one example`);
       }
     }

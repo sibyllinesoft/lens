@@ -164,7 +164,7 @@ export class TestOrchestrator {
       if (dashboardData) {
         const dashboardPath = path.join(this.outputDir, `smoke_dashboard_${executionId}.json`);
         await fs.writeFile(dashboardPath, JSON.stringify(dashboardData, null, 2));
-        artifacts.dashboard_json = dashboardPath;
+        (artifacts as any).dashboard_json = dashboardPath;
       }
       
       const duration = Date.now() - startTime;
@@ -278,7 +278,7 @@ export class TestOrchestrator {
       if (dashboardData) {
         const dashboardPath = path.join(this.outputDir, `nightly_dashboard_${executionId}.json`);
         await fs.writeFile(dashboardPath, JSON.stringify(dashboardData, null, 2));
-        artifacts.dashboard_json = dashboardPath;
+        (artifacts as any).dashboard_json = dashboardPath;
       }
       
       const duration = Date.now() - startTime;

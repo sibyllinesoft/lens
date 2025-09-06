@@ -12,6 +12,10 @@ export const BenchmarkConfigSchema = z.object({
   systems: z.array(z.string()), // ["lex", "+symbols", "+symbols+semantic"]
   slices: z.union([z.literal('SMOKE_DEFAULT'), z.literal('ALL'), z.array(z.string())]),
   seeds: z.number().int().min(1).max(5).default(1),
+  api_base_url: z.string().url().optional(), // API base URL for benchmark testing
+  k: z.number().int().min(1).max(200).optional(), // Top-K results for benchmarking
+  include_cold_start: z.boolean().optional(), // Include cold start measurements
+  batch_size: z.number().int().min(1).max(100).optional(), // Batch processing size
   cache_mode: z.union([
     z.enum(['warm', 'cold']),
     z.array(z.enum(['warm', 'cold']))
@@ -108,7 +112,11 @@ export const BenchmarkRunSchema = z.object({
       stage_b: z.number().int().min(0),
       stage_c: z.number().int().min(0).optional()
     }),
-    why_attributions: z.record(z.string(), z.number().int().min(0))
+    why_attributions: z.record(z.string(), z.number().int().min(0)),
+    // TODO.md specified metrics
+    cbu_score: z.number().min(0).max(1), // Composite Benchmark Utility
+    ece_score: z.number().min(0).max(1), // Expected Calibration Error
+    kv_reuse_rate: z.number().min(0).max(1).optional() // KV cache reuse rate
   }),
   errors: z.array(z.object({
     query_id: z.string(),
@@ -211,21 +219,52 @@ export type BenchmarkResultMessage = z.infer<typeof BenchmarkResultMessageSchema
 
 // Configuration fingerprint for deterministic runs
 export interface ConfigFingerprint {
+  bench_schema: string;
+  seed: number;
+  pool_sha: string;
+  oracle_sha: string;
+  cbu_coefficients: {
+    gamma: number;  // γ - recall weight
+    delta: number;  // δ - latency penalty
+    beta: number;   // β - verbosity penalty
+  };
   code_hash: string;
   config_hash: string;  
   snapshot_shas: Record<string, string>;
   shard_layout: Record<string, any>;
   timestamp: string;
   seed_set: number[];
+  // Anti-gaming contract enforcement
+  contract_hash: string;
+  fixed_layout: boolean;
+  dedup_enabled: boolean;
+  causal_musts: boolean;
+  kv_budget_cap: number;
 }
 
 // Promotion gate criteria (from TODO.md)
 export const PROMOTION_GATE_CRITERIA = {
+  // Core quality gates from TODO.md
+  cbu_improvement_min: 0.05, // CBU ≥ +5% (p<0.05)
+  ece_max: 0.05, // ECE ≤ 0.05 (Expected Calibration Error)
+  cpu_p95_max_ms: 150, // CPU p95 ≤ 150ms
+  kv_reuse_improvement_min: 0.10, // KV-reuse ≥ +10pp (percentage points)
+  
+  // Legacy criteria (maintained for compatibility)
   ndcg_improvement_min: 0.02, // +2%
   recall_50_non_degrading: true,
   latency_p95_max_increase: 0.10, // +10%
-  significance_level: 0.05
-} as const;
+  
+  // Statistical significance
+  significance_level: 0.05, // p < 0.05
+  
+  // Slice regression limits
+  max_slice_regression_pp: 2, // No slice regression > -2pp on Recall@n
+  
+  // Bootstrap confidence requirements
+  bootstrap_samples: 1000, // B=1,000 for stratified bootstrap
+  ci_level: 0.95 // 95% confidence intervals
+} as const;;
 
 // Additional types needed for the orchestrator
 export interface BenchmarkOrchestrationConfig {

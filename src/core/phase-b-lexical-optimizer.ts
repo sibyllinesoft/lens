@@ -53,8 +53,8 @@ export class PhaseBLexicalOptimizer {
   };
   
   // Prefilter bitmaps: lang -> file bitmap, path -> file bitmap
-  private languageBitmaps: Map<string, RoaringBitmap32> = new Map();
-  private pathBitmaps: Map<string, RoaringBitmap32> = new Map();
+  private languageBitmaps: Map<string, InstanceType<typeof RoaringBitmap32>> = new Map();
+  private pathBitmaps: Map<string, InstanceType<typeof RoaringBitmap32>> = new Map();
   private fileToIndex: Map<string, number> = new Map();
   private indexToFile: Map<number, string> = new Map();
   private nextFileIndex: number = 0;
@@ -147,7 +147,7 @@ export class PhaseBLexicalOptimizer {
     const span = LensTracer.createChildSpan('phase_b1_roaring_prefilter');
     
     try {
-      let filteredBitmap: RoaringBitmap32 | null = null;
+      let filteredBitmap: InstanceType<typeof RoaringBitmap32> | null = null;
       
       // Apply language filter
       if (languageFilter && languageFilter.length > 0) {
@@ -165,7 +165,7 @@ export class PhaseBLexicalOptimizer {
       
       // Apply path filter
       if (pathFilter && pathFilter.length > 0) {
-        let pathBitmap: RoaringBitmap32 | null = null;
+        let pathBitmap: InstanceType<typeof RoaringBitmap32> | null = null;
         
         for (const pathPattern of pathFilter) {
           for (const [path, bitmap] of this.pathBitmaps) {

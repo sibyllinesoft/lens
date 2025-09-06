@@ -351,16 +351,16 @@ export class FinalBenchSystem {
     const reasons = [];
     
     if (topResult.features) {
-      if (topResult.features.has_exact_match > 0.5) {
+      if (topResult.features['has_exact_match'] > 0.5) {
         reasons.push('exact match found');
       }
-      if (topResult.features.symbol_match_score > 0.7) {
+      if (topResult.features['symbol_match_score'] > 0.7) {
         reasons.push('strong symbol similarity');
       }
-      if (topResult.features.semantic_similarity > 0.6) {
+      if (topResult.features['semantic_similarity'] > 0.6) {
         reasons.push('semantic relevance');
       }
-      if (topResult.features.file_popularity > 0.8) {
+      if (topResult.features['file_popularity'] > 0.8) {
         reasons.push('popular file');
       }
     }
@@ -443,34 +443,34 @@ export class FinalBenchSystem {
     
     // NDCG gate
     const ndcgDelta = metrics.mean_ndcg_at_10 - baseline.ndcg_at_10;
-    gateResults.ndcg_gate = ndcgDelta >= gates.min_ndcg_delta;
-    if (!gateResults.ndcg_gate) {
+    gateResults['ndcg_gate'] = ndcgDelta >= gates.min_ndcg_delta;
+    if (!gateResults['ndcg_gate']) {
       issues.push(`NDCG@10 delta ${ndcgDelta.toFixed(3)} below threshold ${gates.min_ndcg_delta}`);
     }
     
     // Recall gate
     const recallDelta = metrics.mean_recall_at_50 - baseline.recall_at_50;
-    gateResults.recall_gate = recallDelta >= gates.min_recall_delta;
-    if (!gateResults.recall_gate) {
+    gateResults['recall_gate'] = recallDelta >= gates.min_recall_delta;
+    if (!gateResults['recall_gate']) {
       issues.push(`Recall@50 delta ${recallDelta.toFixed(3)} below threshold ${gates.min_recall_delta}`);
     }
     
     // Latency gates
     const p95Increase = (performance.p95_latency_ms - baseline.p95_latency_ms) / baseline.p95_latency_ms;
-    gateResults.p95_latency_gate = p95Increase <= gates.max_latency_p95_increase;
-    if (!gateResults.p95_latency_gate) {
+    gateResults['p95_latency_gate'] = p95Increase <= gates.max_latency_p95_increase;
+    if (!gateResults['p95_latency_gate']) {
       issues.push(`P95 latency increase ${p95Increase.toFixed(1)}% exceeds ${gates.max_latency_p95_increase * 100}%`);
     }
     
     const p99Ratio = performance.p99_latency_ms / performance.p95_latency_ms;
-    gateResults.p99_ratio_gate = p99Ratio <= gates.max_latency_p99_ratio;
-    if (!gateResults.p99_ratio_gate) {
+    gateResults['p99_ratio_gate'] = p99Ratio <= gates.max_latency_p99_ratio;
+    if (!gateResults['p99_ratio_gate']) {
       issues.push(`P99/P95 ratio ${p99Ratio.toFixed(1)} exceeds ${gates.max_latency_p99_ratio}`);
     }
     
     // Span coverage gate
-    gateResults.span_coverage_gate = metrics.span_coverage_rate >= gates.required_span_coverage;
-    if (!gateResults.span_coverage_gate) {
+    gateResults['span_coverage_gate'] = metrics.span_coverage_rate >= gates.required_span_coverage;
+    if (!gateResults['span_coverage_gate']) {
       issues.push(`Span coverage ${metrics.span_coverage_rate.toFixed(3)} below ${gates.required_span_coverage}`);
     }
     

@@ -1,4 +1,4 @@
-import { SpanResolver } from './span_resolver';
+import { SpanResolver } from './span_resolver.js';
 
 export interface SpanResolverAdapter {
   createResolver(content: string): SpanResolver;

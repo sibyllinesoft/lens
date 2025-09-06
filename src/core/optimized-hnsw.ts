@@ -692,7 +692,17 @@ export class OptimizedHNSWIndex {
       }
     }
 
-    return bestNode || layer.nodes.values().next().value;
+    if (bestNode) {
+      return bestNode;
+    }
+    
+    // Fallback to first node if no best node found
+    const firstNode = layer.nodes.values().next().value;
+    if (!firstNode) {
+      throw new Error('Cannot find entry point: layer has no nodes');
+    }
+    
+    return firstNode;
   }
 
   private calculateAverageConnections(): number {
