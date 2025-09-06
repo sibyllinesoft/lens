@@ -731,7 +731,16 @@ export class AbuseResistantSpendGovernor {
       };
 
       const decision = await this.checkSpendAllowed(
-        { query: query.text, mode: 'semantic' } as SearchContext,
+        { 
+          query: query.text, 
+          mode: 'hybrid',
+          trace_id: `test_${Date.now()}`,
+          repo_sha: 'test_repo',
+          k: 50,
+          fuzzy_distance: 2,
+          started_at: new Date(),
+          stages: []
+        } as SearchContext,
         `attacker_${query.id}`,
         '10.0.0.1',
         query.cost_ms,

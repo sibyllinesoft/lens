@@ -514,7 +514,7 @@ export class RAPTORSemanticRolloutScheduler extends EventEmitter {
           break;
           
         case 'starting':
-          await this.managePhaseStartup(currentPhase, phaseExecution);
+          await this.managePhaseRampUp(currentPhase, phaseExecution);
           break;
           
         case 'ramping_up':

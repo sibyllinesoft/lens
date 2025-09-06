@@ -333,7 +333,7 @@ export class MetricsTelemetry extends EventEmitter {
     const pressureValues = Object.values(pressure);
     const avg_pressure = pressureValues.reduce((sum, val) => sum + val, 0) / pressureValues.length;
     const max_pressure = Math.max(...pressureValues);
-    const high_pressure_topics = pressureValues.filter(p => p > 0.8).length;
+    const high_pressure_count = pressureValues.filter(p => p > 0.8).length;
     
     // Component-wise analysis
     let totalSizePressure = 0;
@@ -390,7 +390,7 @@ export class MetricsTelemetry extends EventEmitter {
       pressure_summary: {
         avg_pressure,
         max_pressure,
-        high_pressure_topics,
+        high_pressure_topics: high_pressure_topics.length,
         total_topics: pressureValues.length
       },
       pressure_components: {

@@ -186,7 +186,10 @@ export class BenchmarkComparison {
    */
   async loadAnchorSmokeDataset(datasetPath: string): Promise<AnchorSmokeSlice[]> {
     try {
-      const dataset = JSON.parse(await Bun.file(datasetPath).text());
+      const fileContent = typeof globalThis.Bun !== 'undefined' 
+        ? await globalThis.Bun.file(datasetPath).text() 
+        : await (await import('fs/promises')).readFile(datasetPath, 'utf8');
+      const dataset = JSON.parse(fileContent);
       
       // Validate dataset structure
       if (!Array.isArray(dataset)) {
@@ -521,10 +524,13 @@ export class BenchmarkComparison {
     lspResults: BenchmarkResult[],
     raptorResults: BenchmarkResult[]
   ): ComparisonReport {
-    const byIntent: Record<QueryIntent, IntentMetrics> = {
-      'NL': this.calculateIntentMetrics('NL', dataset, lspResults, raptorResults),
+    const byIntent = {
+      'def': this.calculateIntentMetrics('def', dataset, lspResults, raptorResults),
+      'refs': this.calculateIntentMetrics('refs', dataset, lspResults, raptorResults),
       'symbol': this.calculateIntentMetrics('symbol', dataset, lspResults, raptorResults),
-      'structural': this.calculateIntentMetrics('structural', dataset, lspResults, raptorResults)
+      'struct': this.calculateIntentMetrics('struct', dataset, lspResults, raptorResults),
+      'lexical': this.calculateIntentMetrics('lexical', dataset, lspResults, raptorResults),
+      'NL': this.calculateIntentMetrics('NL', dataset, lspResults, raptorResults)
     };
 
     const overallImprovement = this.calculateOverallImprovement(lspResults, raptorResults);
@@ -741,7 +747,12 @@ export class BenchmarkComparison {
       results: report
     };
 
-    await Bun.write(outputPath, JSON.stringify(output, null, 2));
+    if (typeof globalThis.Bun !== 'undefined') {
+      await globalThis.Bun.write(outputPath, JSON.stringify(output, null, 2));
+    } else {
+      const fs = await import('fs/promises');
+      await fs.writeFile(outputPath, JSON.stringify(output, null, 2));
+    }
     console.log(`Benchmark results exported to ${outputPath}`);
   }
 }

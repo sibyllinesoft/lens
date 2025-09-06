@@ -72,11 +72,11 @@ class V11Deployer {
     
     // Enhanced reliability curve with tighter calibration
     const reliabilityCurve = [
-      { predicted_score: 0.9, actual_precision: 0.85, sample_size: 1000, confidence_interval: [0.82, 0.88] },
-      { predicted_score: 0.7, actual_precision: 0.72, sample_size: 2000, confidence_interval: [0.70, 0.74] },
-      { predicted_score: 0.5, actual_precision: 0.53, sample_size: 3000, confidence_interval: [0.51, 0.55] },
-      { predicted_score: 0.3, actual_precision: 0.31, sample_size: 2000, confidence_interval: [0.29, 0.33] },
-      { predicted_score: 0.1, actual_precision: 0.12, sample_size: 1000, confidence_interval: [0.10, 0.14] }
+      { predicted_score: 0.9, actual_precision: 0.85, sample_size: 1000, confidence_interval: [0.82, 0.88] as [number, number] },
+      { predicted_score: 0.7, actual_precision: 0.72, sample_size: 2000, confidence_interval: [0.70, 0.74] as [number, number] },
+      { predicted_score: 0.5, actual_precision: 0.53, sample_size: 3000, confidence_interval: [0.51, 0.55] as [number, number] },
+      { predicted_score: 0.3, actual_precision: 0.31, sample_size: 2000, confidence_interval: [0.29, 0.33] as [number, number] },
+      { predicted_score: 0.1, actual_precision: 0.12, sample_size: 1000, confidence_interval: [0.10, 0.14] as [number, number] }
     ];
     
     const version = await versionManager.createVersion(

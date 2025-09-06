@@ -176,7 +176,7 @@ export class HeroSLICollector {
       success,
       recall_at_50: recallAt50,
       upshifted,
-      qps_bucket
+      qps_bucket: qpsBucket
     });
     
     // Keep bounded to last hour of data

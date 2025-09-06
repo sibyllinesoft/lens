@@ -82,9 +82,9 @@ export class ArtifactMetricsValidator {
           
           // Extract key metrics with system prefix
           for (const [metricName, metricData] of Object.entries(systemMetrics)) {
-            if (typeof metricData === 'object' && metricData.mean !== undefined) {
+            if (typeof metricData === 'object' && metricData !== null && 'mean' in metricData) {
               const key = `${system}_${metricName}`;
-              metrics.set(key, metricData.mean);
+              metrics.set(key, (metricData as any).mean);
             }
           }
         }
@@ -132,7 +132,7 @@ export class ArtifactMetricsValidator {
         // nDCG@10: 0.815 vs 0.780 (+3.5pp)
         /nDCG@10.*?(\d+\.?\d*)\s*(?:vs|compared to).*?(\d+\.?\d*)\s*\(([+-]?\d+\.?\d*)pp?\)/gi,
         // Success rate: 45.2% → 52.7% (+7.5pp)
-        /success.*?(\d+\.?\d*)%?\s*[→->]\s*(\d+\.?\d*)%?\s*\(([+-]?\d+\.?\d*)pp?\)/gi,
+        /success.*?(\d+\.?\d*)%?\s*(?:→|->)\s*(\d+\.?\d*)%?\s*\(([+-]?\d+\.?\d*)pp?\)/gi,
         // P@1: +5.0pp improvement
         /P@1.*?([+-]?\d+\.?\d*)pp?\s*improvement/gi,
         // p95 latency: 142ms (10ms under target)

@@ -476,7 +476,7 @@ export class ProductionRolloutOrchestrator extends EventEmitter {
     });
   }
 
-  private async emergencyRollback(): Promise<void> {
+  public async emergencyRollback(): Promise<void> {
     if (!this.rollbackEnabled) {
       return;
     }

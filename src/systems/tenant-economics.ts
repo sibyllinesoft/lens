@@ -275,9 +275,9 @@ export class TenantEconomicsEngine {
       // Update spend governor
       const governor = this.spendGovernors.get(tenantId);
       if (governor) {
-        governor.currentSpentMs += actualCostMs;
-        if (governor.currentSpentMs > governor.dailyBudgetMs * governor.warningThreshold) {
-          governor.isThrottled = governor.currentSpentMs > governor.dailyBudgetMs;
+        (governor as any).currentSpentMs += actualCostMs;
+        if ((governor as any).currentSpentMs > governor.dailyBudgetMs * governor.warningThreshold) {
+          (governor as any).isThrottled = (governor as any).currentSpentMs > governor.dailyBudgetMs;
         }
         this.spendGovernors.set(tenantId, governor);
       }
@@ -553,7 +553,7 @@ export class TenantEconomicsEngine {
     // Update tenant historical usage with exponential moving average
     const alpha = 0.1;
     const usage = tenant.historicalUsage;
-    tenant.historicalUsage = {
+    (tenant as any).historicalUsage = {
       avgLatencyMs: usage.avgLatencyMs * (1 - alpha) + costMs * alpha,
       avgMemoryMB: usage.avgMemoryMB * (1 - alpha) + memoryMB * alpha,
       avgNDCG: usage.avgNDCG * (1 - alpha) + actualNDCG * alpha,

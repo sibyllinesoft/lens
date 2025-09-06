@@ -14,7 +14,7 @@ import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { EventEmitter } from 'events';
 
-interface ClickImpressionData {
+export interface ClickImpressionData {
   query: string;
   results: SearchResult[];
   clicks: number[];  // indices of clicked results
@@ -33,7 +33,7 @@ interface SearchResult {
   click_position?: number;
 }
 
-interface ReliabilityPoint {
+export interface ReliabilityPoint {
   predicted_score: number;
   actual_precision: number;
   sample_size: number;

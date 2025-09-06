@@ -74,7 +74,6 @@ export class SearchTelemetryIntegration {
     const queryEvent: QueryEvent = {
       query: queryInfo.query,
       intent: intent.intent,
-      language: intent.language,
       results: results.map(result => ({
         file_path: result.file_path,
         score: result.score,

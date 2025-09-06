@@ -15,7 +15,8 @@
 
 import { z } from 'zod';
 import { LensTracer, tracer, meter } from '../telemetry/tracer.js';
-import { SliceKey, QueryIntent, LanguageType, EntropyBin } from './conformal-auditing.js';
+import { SliceKeySchema, SliceKey, QueryIntent, LanguageType } from './conformal-auditing.js';
+import { EntropyBin } from './risk-budget-ledger.js';
 import type { SearchContext, SearchHit } from '../types/core.js';
 
 // Calibration bin for ECE calculation
@@ -34,7 +35,7 @@ export type CalibrationBin = z.infer<typeof CalibrationBinSchema>;
 export const CalibrationRecordSchema = z.object({
   trace_id: z.string(),
   timestamp: z.date(),
-  slice_key: SliceKey,
+  slice_key: SliceKeySchema,
   predicted_probability: z.number().min(0).max(1),
   actual_outcome: z.boolean(),
   confidence_score: z.number().min(0).max(1),
@@ -50,7 +51,7 @@ export type CalibrationRecord = z.infer<typeof CalibrationRecordSchema>;
 
 // Calibration statistics per slice
 export const CalibrationStatsSchema = z.object({
-  slice_key: SliceKey,
+  slice_key: SliceKeySchema,
   total_samples: z.number().int().min(0),
   ece_score: z.number().min(0).max(1), // Expected Calibration Error
   mce_score: z.number().min(0).max(1), // Maximum Calibration Error
@@ -131,22 +132,22 @@ const DEFAULT_CALIBRATION_CONFIG: CalibrationConfig = {
 
 // Metrics for calibration monitoring
 const calibrationMetrics = {
-  ece_score: meter.createObservableGauge('lens_calibration_ece_score', {
+  ece_score: meter.createHistogram('lens_calibration_ece_score', {
     description: 'Expected Calibration Error per slice',
   }),
-  slope_deviation: meter.createObservableGauge('lens_calibration_slope_deviation', {
+  slope_deviation: meter.createHistogram('lens_calibration_slope_deviation', {
     description: 'Deviation from ideal calibration slope (1.0)',
   }),
   tripwire_violations: meter.createCounter('lens_calibration_tripwire_violations_total', {
     description: 'Calibration tripwire violations by type',
   }),
-  drift_velocity: meter.createObservableGauge('lens_calibration_drift_velocity', {
+  drift_velocity: meter.createHistogram('lens_calibration_drift_velocity', {
     description: 'Rate of calibration drift per slice',
   }),
   recalibration_events: meter.createCounter('lens_calibration_recalibration_total', {
     description: 'Automated recalibration events triggered',
   }),
-  brier_score: meter.createObservableGauge('lens_calibration_brier_score', {
+  brier_score: meter.createHistogram('lens_calibration_brier_score', {
     description: 'Brier score per slice',
   }),
 };

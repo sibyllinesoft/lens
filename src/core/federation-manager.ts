@@ -223,7 +223,7 @@ export class FederationManager {
    * Perform federated search across multiple repositories
    */
   async federatedSearch(context: SearchContext): Promise<FederatedSearchResult> {
-    const span = LensTracer.createSearchSpan(context);
+    const span = LensTracer.startSearchSpan(context);
     const startTime = performance.now();
     this.searchStats.totalSearches++;
     
@@ -275,12 +275,7 @@ export class FederationManager {
           // Add repository context to hits
           const enhancedHits = repoResult.hits.map((hit: SearchHit) => ({
             ...hit,
-            repository: {
-              id: repo.id,
-              name: repo.name,
-              priority: repo.priority,
-              weight: repo.weight
-            }
+            repository: repo.id // Use repository ID as string
           }));
           
           allHits.push(...enhancedHits);
@@ -420,7 +415,7 @@ export class FederationManager {
       10000 // 10 second timeout
     );
     
-    return result.hits || [];
+    return (result as { hits?: SearchHit[] }).hits || [];
   }
   
   /**
@@ -452,7 +447,7 @@ export class FederationManager {
     }
     
     const data = await response.json();
-    return data.hits || [];
+    return (data as { hits?: SearchHit[] }).hits || [];
   }
   
   /**
@@ -641,8 +636,10 @@ export class FederationManager {
     
     // Sort by adjusted score
     return hits.sort((a, b) => {
-      const aScore = (a.score || 0) * (a.repository?.weight || 1);
-      const bScore = (b.score || 0) * (b.repository?.weight || 1);
+      const aRepo = typeof a.repository === 'string' ? this.repositories.get(a.repository) : null;
+      const bRepo = typeof b.repository === 'string' ? this.repositories.get(b.repository) : null;
+      const aScore = (a.score || 0) * (aRepo?.weight || 1);
+      const bScore = (b.score || 0) * (bRepo?.weight || 1);
       return bScore - aScore;
     });
   }
@@ -652,8 +649,10 @@ export class FederationManager {
    */
   private mergeByPriority(hits: SearchHit[]): SearchHit[] {
     return hits.sort((a, b) => {
-      const aPriority = a.repository?.priority || 999;
-      const bPriority = b.repository?.priority || 999;
+      const aRepo = typeof a.repository === 'string' ? this.repositories.get(a.repository) : null;
+      const bRepo = typeof b.repository === 'string' ? this.repositories.get(b.repository) : null;
+      const aPriority = aRepo?.priority || 999;
+      const bPriority = bRepo?.priority || 999;
       
       if (aPriority !== bPriority) {
         return aPriority - bPriority;
@@ -671,7 +670,7 @@ export class FederationManager {
     
     // Group hits by repository
     for (const hit of hits) {
-      const repoId = hit.repository?.id || 'unknown';
+      const repoId = typeof hit.repository === 'string' ? hit.repository : 'unknown';
       if (!repoGroups.has(repoId)) {
         repoGroups.set(repoId, []);
       }
@@ -706,7 +705,7 @@ export class FederationManager {
     
     // Group by repository
     for (const hit of hits) {
-      const repoId = hit.repository?.id || 'unknown';
+      const repoId = typeof hit.repository === 'string' ? hit.repository : 'unknown';
       if (!repoGroups.has(repoId)) {
         repoGroups.set(repoId, []);
       }

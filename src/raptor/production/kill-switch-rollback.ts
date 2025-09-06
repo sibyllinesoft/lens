@@ -381,8 +381,10 @@ export class KillSwitchRollbackManager extends EventEmitter {
         const stepExecution = {
           step,
           start_time: new Date(),
+          end_time: undefined as Date | undefined,
           success: false,
-          validation_result: false
+          validation_result: false,
+          error_message: undefined as string | undefined
         };
 
         try {

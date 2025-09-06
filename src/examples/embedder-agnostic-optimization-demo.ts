@@ -215,8 +215,14 @@ async function demonstrateOptimization() {
     console.log(`\n${i + 1}. Query: "${query}" (${type})`);
     
     const context: SearchContext = {
+      trace_id: `demo-${Date.now()}-${i}`,
+      repo_sha: 'demo-sha',
       query,
-      language: 'typescript'
+      mode: 'hybrid' as any,
+      k: 10,
+      fuzzy_distance: 2,
+      started_at: new Date(),
+      stages: []
     };
     
     const originalHits = createDemoSearchHits();

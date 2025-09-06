@@ -704,7 +704,10 @@ export class CrossLanguageResolver {
       
       const matches: SearchHit[] = [];
       
-      for (const match of fuzzyResults) {
+      // Type assert fuzzyResults as an array
+      const fuzzyMatches = Array.isArray(fuzzyResults) ? fuzzyResults : [];
+      
+      for (const match of fuzzyMatches) {
         if (match.score > 0.7) {
           const symbolIds = this.nameToSymbols.get(match.text) || new Set();
           
@@ -769,8 +772,7 @@ export class CrossLanguageResolver {
       symbol_kind: symbol.type as any,
       symbol_name: symbol.name,
       signature: symbol.signature,
-      language: symbol.language,
-      cross_language_match: true
+      language: symbol.language
     };
   }
   

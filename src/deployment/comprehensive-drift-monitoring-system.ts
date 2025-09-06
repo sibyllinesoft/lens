@@ -137,6 +137,11 @@ export class ComprehensiveDriftMonitoringSystem extends EventEmitter {
   private driftState: ComprehensiveDriftState;
   private monitoringInterval?: NodeJS.Timeout;
   private isRunning: boolean = false;
+
+  // Public getter for isRunning
+  public getIsRunning(): boolean {
+    return this.isRunning;
+  }
   
   constructor(driftDir: string = './deployment-artifacts/drift-monitoring') {
     super();

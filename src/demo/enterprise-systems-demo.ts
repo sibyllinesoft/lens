@@ -115,11 +115,14 @@ async function main() {
       
       const searchRequest: SearchRequest = {
         context: {
+          trace_id: `demo_${Date.now()}_${Math.random().toString(36).slice(2)}`,
           query: scenario.query,
           repo_sha: 'demo_repo',
           k: 10,
           mode: 'hybrid',
           fuzzy_distance: 0.2,
+          started_at: new Date(),
+          stages: [],
         },
         tenantId: scenario.tenantId,
         expectedWitnessSet: scenario.expectedWitnessSet,

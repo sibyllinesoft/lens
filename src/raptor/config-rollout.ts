@@ -139,7 +139,7 @@ export class ConfigRolloutManager extends EventEmitter {
   private config: RaptorConfig;
   private policies: PolicyRule[] = [];
   private rolloutState: RolloutState;
-  private healthCheckInterval?: Timer;
+  private healthCheckInterval?: NodeJS.Timeout;
 
   constructor(initialConfig?: Partial<RaptorConfig>) {
     super();

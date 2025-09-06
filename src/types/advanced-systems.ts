@@ -4,23 +4,18 @@
  * query compilation, and regression bisection capabilities
  */
 
+import type { SearchHit } from './core.js';
+
 export * from '../core/moniker-linking.js';
-export * from '../core/evolution-mapping.js';
+// Export evolution-mapping types except conflicting SymbolLocation
 export * from '../core/query-compiler.js';
 export * from '../core/regression-bisection.js';
 export * from '../core/advanced-systems-integration.js';
 
-// Re-export with aliases for backwards compatibility
-export type {
-  MonikerLinkingSystem as CrossRepoLinkingSystem,
-  EvolutionMappingSystem as APIEvolutionSystem,
-  QueryCompiler as CostBasedOptimizer,
-  RegressionBisectionHarness as FactorialDebugger,
-  AdvancedSystemsIntegration as EnhancedLensCore,
-} from '../core/advanced-systems-integration.js';
+// Note: Re-export aliases commented out due to missing exports in advanced-systems-integration.js
 
 // Extended search hit with advanced system metadata
-export interface EnhancedSearchHit extends import('./core.js').SearchHit {
+export interface EnhancedSearchHit extends SearchHit {
   // Moniker linking metadata
   moniker_cluster_id?: string;
   cross_repo_source?: string;

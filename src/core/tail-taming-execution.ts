@@ -106,12 +106,13 @@ export class TailTamingExecutor {
       });
 
       // Initialize shard requests
-      const shardRequests = shardIds.map(shardId => ({
+      const shardRequests: ShardRequest[] = shardIds.map(shardId => ({
         shardId,
         requestId: `${requestId}_${shardId}`,
         startTime: Date.now(),
         isHedged: false,
         cancelled: false,
+        error: undefined,
       }));
       
       this.activeRequests.set(requestId, shardRequests);

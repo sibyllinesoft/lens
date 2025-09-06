@@ -174,8 +174,8 @@ export class QueryDAGPlanner {
       const cachedPlan = this.planCache.get(cacheKey);
       
       if (cachedPlan) {
-        cachedPlan.hitCount++;
-        cachedPlan.lastAccess = new Date();
+        (cachedPlan as any).hitCount++;
+        (cachedPlan as any).lastAccess = new Date();
         this.planCache.set(cacheKey, cachedPlan);
         
         span.setAttributes({ cached: true, plan_id: cachedPlan.plan.id });

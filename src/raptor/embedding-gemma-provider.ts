@@ -119,7 +119,7 @@ export class EmbeddingGemmaProvider implements EmbeddingProvider {
           throw new Error(`TEI API error: ${response.status} ${response.statusText}`);
         }
 
-        const data: TEIEmbeddingResponse = await response.json();
+        const data = await response.json() as TEIEmbeddingResponse;
         
         // Extract embeddings from response
         const embeddings = data.data
@@ -293,7 +293,7 @@ export class EmbeddingGemmaProvider implements EmbeddingProvider {
       throw new Error(`Failed to get server info: ${response.statusText}`);
     }
 
-    const info = await response.json();
+    const info = await response.json() as any;
     return {
       model: info.model_id || this.config.model,
       maxInputLength: info.max_input_length || 2048,

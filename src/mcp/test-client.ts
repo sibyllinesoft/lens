@@ -7,11 +7,9 @@
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { spawn } from 'child_process';
 
 class LensMCPTestClient {
   private client: Client;
-  private serverProcess: any;
 
   constructor() {
     this.client = new Client(
@@ -26,16 +24,10 @@ class LensMCPTestClient {
   }
 
   async connect() {
-    // Start the MCP server process
-    this.serverProcess = spawn('tsx', ['src/mcp/server.ts'], {
-      stdio: ['pipe', 'pipe', 'inherit'],
-      cwd: process.cwd(),
-    });
-
-    // Connect client to server
+    // Connect to MCP server
     const transport = new StdioClientTransport({
-      reader: this.serverProcess.stdout,
-      writer: this.serverProcess.stdin,
+      command: 'tsx',
+      args: ['src/mcp/server.ts'],
     });
 
     await this.client.connect(transport);
@@ -45,23 +37,23 @@ class LensMCPTestClient {
   async testListTools() {
     console.log('\n🔧 Testing tool listing...');
     
-    const response = await this.client.request(
+    const response = await (this.client.request as any)(
       { method: 'tools/list' },
       {}
     );
 
-    console.log(`Found ${response.tools.length} tools:`);
-    response.tools.forEach((tool: any) => {
+    console.log(`Found ${(response as any).tools.length} tools:`);
+    (response as any).tools.forEach((tool: any) => {
       console.log(`  • ${tool.name}: ${tool.description}`);
     });
 
-    return response.tools;
+    return (response as any).tools;
   }
 
   async testSearch() {
     console.log('\n🔍 Testing lens_search tool...');
     
-    const response = await this.client.request(
+    const response = await (this.client.request as any)(
       { method: 'tools/call' },
       {
         name: 'lens_search',
@@ -75,7 +67,7 @@ class LensMCPTestClient {
       }
     );
 
-    const result = JSON.parse(response.content[0].text);
+    const result = JSON.parse((response as any).content[0].text);
     console.log(`Search found ${result.total_found} results, returned ${result.returned}`);
     console.log(`Token usage: ${result.token_usage.used}/${result.token_usage.budget}`);
     
@@ -99,7 +91,7 @@ class LensMCPTestClient {
       'lens://test-repo/src/utils.ts@def456#L25:30|B500:550',
     ];
 
-    const response = await this.client.request(
+    const response = await (this.client.request as any)(
       { method: 'tools/call' },
       {
         name: 'lens_context',
@@ -110,7 +102,7 @@ class LensMCPTestClient {
       }
     );
 
-    const result = JSON.parse(response.content[0].text);
+    const result = JSON.parse((response as any).content[0].text);
     console.log(`Resolved ${result.contexts.length}/${testRefs.length} references`);
     console.log(`Total tokens: ${result.total_tokens}`);
     console.log(`Budget exceeded: ${result.budget_exceeded}`);
@@ -129,7 +121,7 @@ class LensMCPTestClient {
   async testResolve() {
     console.log('\n🎯 Testing lens_resolve tool...');
     
-    const response = await this.client.request(
+    const response = await (this.client.request as any)(
       { method: 'tools/call' },
       {
         name: 'lens_resolve',
@@ -140,7 +132,7 @@ class LensMCPTestClient {
       }
     );
 
-    const result = JSON.parse(response.content[0].text);
+    const result = JSON.parse((response as any).content[0].text);
     console.log(`Resolved reference for ${result.file_path}`);
     console.log(`Lines: ${result.line_start}-${result.line_end}`);
     console.log(`Language: ${result.metadata.language}`);
@@ -152,7 +144,7 @@ class LensMCPTestClient {
   async testSymbols() {
     console.log('\n🏗️  Testing lens_symbols tool...');
     
-    const response = await this.client.request(
+    const response = await (this.client.request as any)(
       { method: 'tools/call' },
       {
         name: 'lens_symbols',
@@ -167,7 +159,7 @@ class LensMCPTestClient {
       }
     );
 
-    const result = JSON.parse(response.content[0].text);
+    const result = JSON.parse((response as any).content[0].text);
     console.log(`Found ${result.total_found} symbols, returned ${result.returned}`);
     console.log(`Token usage: ${result.token_usage.used}/${result.token_usage.budget}`);
 
@@ -228,9 +220,7 @@ class LensMCPTestClient {
       console.error('Error closing client:', error);
     }
 
-    if (this.serverProcess) {
-      this.serverProcess.kill();
-    }
+    // Client cleanup is handled by the SDK
   }
 }
 

@@ -16,6 +16,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 import { LensSearchEngine } from '../api/search-engine.js';
+import { SearchMode } from '../types/core.js';
 
 // Schema definitions for MCP tool arguments
 const SearchArgsSchema = z.object({
@@ -163,7 +164,7 @@ class LensMCPServer {
       trace_id: `mcp-${Date.now()}`,
       repo_sha: parsed.repo_sha,
       query: parsed.query,
-      mode: parsed.mode,
+      mode: (parsed.mode === 'semantic' ? 'hybrid' : parsed.mode) as SearchMode,
       k: parsed.k,
       fuzzy_distance: parsed.fuzzy,
       started_at: new Date(),
@@ -225,7 +226,7 @@ class LensMCPServer {
             },
             search_info: {
               query: parsed.query,
-              mode: parsed.mode,
+              mode: (parsed.mode === 'semantic' ? 'hybrid' : parsed.mode) as SearchMode,
               repo_sha: parsed.repo_sha,
               latency_ms: result.stage_a_latency + result.stage_b_latency + (result.stage_c_latency || 0),
             },

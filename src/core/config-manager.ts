@@ -175,7 +175,10 @@ export class ConfigManager extends EventEmitter {
    * Get a specific configuration section
    */
   getSection<T extends ConfigSection>(section: T): LensConfig[T] {
-    return { ...this.config[section] };
+    const sectionConfig = this.config[section];
+    return typeof sectionConfig === 'object' && sectionConfig !== null 
+      ? { ...sectionConfig } as LensConfig[T]
+      : sectionConfig;
   }
 
   /**

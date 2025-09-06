@@ -315,7 +315,7 @@ export class AdversarialDurabilityEngine {
       };
 
       // Calculate overall health score
-      current.overallHealthScore = this.calculateHealthScore(current);
+      (current as any).overallHealthScore = this.calculateHealthScore(current);
 
       // Check tripwires
       await this.checkTripwires(current);
@@ -439,7 +439,7 @@ export class AdversarialDurabilityEngine {
   acknowledgeTripwire(alertId: string): boolean {
     const alert = this.tripwireAlerts.find(a => a.id === alertId);
     if (alert) {
-      alert.acknowledged = true;
+      (alert as any).acknowledged = true;
       return true;
     }
     return false;
@@ -497,7 +497,7 @@ export class AdversarialDurabilityEngine {
     if (codeMatches > 0) confidence += 0.2;
     
     // Check for binary content (reduces confidence)
-    const binaryMatches = content.match(patterns.binary.binary);
+    const binaryMatches = content.match(patterns.binary[0]);
     if (binaryMatches && binaryMatches.length > content.length * 0.05) {
       confidence *= 0.3; // Significant penalty for binary content
     }
@@ -705,8 +705,11 @@ export class AdversarialDurabilityEngine {
     
     // Simulate experiment duration
     setTimeout(() => {
-      experiment.status = 'completed';
-      this.chaosExperiments.set(experiment.id, experiment);
+      const completedExperiment: ChaosExperiment = {
+        ...experiment,
+        status: 'completed'
+      };
+      this.chaosExperiments.set(experiment.id, completedExperiment);
     }, experiment.duration);
   }
 

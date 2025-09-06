@@ -130,7 +130,7 @@ export class FrozenPoolReplayHarness {
         sources: Object.keys(sources).join(','),
       });
 
-      console.log(`✅ Loaded frozen query pool: ${this.queryPool.size} queries`);
+      console.log(`✅ Loaded frozen query pool: ${this.queryPool.length} queries`);
 
     } catch (error) {
       span.recordException(error as Error);

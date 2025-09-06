@@ -135,6 +135,11 @@ export class ProductionMonitoringSystem extends EventEmitter {
   private metricsInterval?: NodeJS.Timeout;
   private alertsInterval?: NodeJS.Timeout;
   private isRunning: boolean = false;
+
+  // Public getter for isRunning
+  public getIsRunning(): boolean {
+    return this.isRunning;
+  }
   
   constructor(monitoringDir: string = './deployment-artifacts/monitoring') {
     super();

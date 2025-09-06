@@ -234,7 +234,7 @@ class CircuitBreaker extends EventEmitter {
  */
 class Bulkhead {
   private activeRequests: number = 0;
-  private queue: Array<{ resolve: Function; reject: Function; operation: Function; timeout: NodeJS.Timeout }> = [];
+  private queue: Array<{ resolve: (value: any) => void; reject: (reason: any) => void; operation: () => Promise<any>; timeout: NodeJS.Timeout }> = [];
 
   constructor(private config: BulkheadConfig) {}
 
@@ -262,8 +262,8 @@ class Bulkhead {
 
   private async executeImmediately<T>(
     operation: () => Promise<T>,
-    resolve: Function,
-    reject: Function
+    resolve: (value: T) => void,
+    reject: (reason: any) => void
   ): Promise<void> {
     this.activeRequests++;
     
@@ -278,7 +278,7 @@ class Bulkhead {
     }
   }
 
-  private enqueue<T>(operation: () => Promise<T>, resolve: Function, reject: Function): void {
+  private enqueue<T>(operation: () => Promise<T>, resolve: (value: T) => void, reject: (reason: any) => void): void {
     const timeout = setTimeout(() => {
       const index = this.queue.findIndex(item => item.resolve === resolve);
       if (index !== -1) {
@@ -437,7 +437,7 @@ export class ResilienceManager extends EventEmitter {
         }
 
         // Execute with retry logic
-        const result = await this.executeWithRetry(
+        const result: T = await this.executeWithRetry(
           () => this.executeWithProtection(operation, options),
           options.retry || this.getDefaultRetryConfig(),
           (attempt, error) => {
@@ -465,11 +465,11 @@ export class ResilienceManager extends EventEmitter {
 
         return {
           success: true,
-          data: result,
+          data: result as T,
           retryCount,
           duration,
           fallbackUsed
-        };
+        } as OperationResult<T>;
 
       } catch (error) {
         const lensError = this.classifyError(error as Error, operationName);
@@ -500,11 +500,11 @@ export class ResilienceManager extends EventEmitter {
 
             return {
               success: true,
-              data: fallbackResult,
+              data: fallbackResult as T,
               retryCount,
               duration,
               fallbackUsed
-            };
+            } as OperationResult<T>;
 
           } catch (fallbackError) {
             // Fallback failed, try cached fallback
@@ -523,11 +523,11 @@ export class ResilienceManager extends EventEmitter {
 
                 return {
                   success: true,
-                  data: cached,
+                  data: cached as T,
                   retryCount,
                   duration,
                   fallbackUsed
-                };
+                } as OperationResult<T>;
               }
             }
           }
@@ -550,7 +550,7 @@ export class ResilienceManager extends EventEmitter {
           retryCount,
           duration,
           fallbackUsed
-        };
+        } as OperationResult<T>;
 
       } finally {
         span.end();

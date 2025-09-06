@@ -28,6 +28,8 @@ interface CanaryGate {
   threshold: number;
   pValue?: number;
   description: string;
+  critical?: boolean;
+  category: 'quality' | 'ops' | 'drift';
 }
 
 interface CentralityHardeningConfig {
@@ -57,11 +59,11 @@ export class CompressedCentralityCanary extends EventEmitter {
       durationMinutes: 60,
       validationIntervalMinutes: 10,
       gates: [
-        { metric: 'nDCG@10_delta', operator: 'gte', threshold: 1.0, pValue: 0.05, description: 'nDCG@10 improvement ≥+1.0pt (p<0.05)' },
-        { metric: 'recall@50', operator: 'gte', threshold: 88.9, description: 'Maintain baseline recall@50 ≥88.9%' },
-        { metric: 'diversity@10_delta', operator: 'gte', threshold: 10, description: 'Diversity@10 improvement ≥+10%' },
-        { metric: 'stageA_p95_delta', operator: 'lte', threshold: 1.0, description: 'Stage-A p95 latency ≤+1ms' },
-        { metric: 'stageC_p95_delta_pct', operator: 'lte', threshold: 5.0, description: 'Stage-C p95 latency ≤+5%' },
+        { metric: 'nDCG@10_delta', operator: 'gte', threshold: 1.0, pValue: 0.05, description: 'nDCG@10 improvement ≥+1.0pt (p<0.05)', category: 'quality' },
+        { metric: 'recall@50', operator: 'gte', threshold: 88.9, description: 'Maintain baseline recall@50 ≥88.9%', category: 'quality' },
+        { metric: 'diversity@10_delta', operator: 'gte', threshold: 10, description: 'Diversity@10 improvement ≥+10%', category: 'quality' },
+        { metric: 'stageA_p95_delta', operator: 'lte', threshold: 1.0, description: 'Stage-A p95 latency ≤+1ms', category: 'ops' },
+        { metric: 'stageC_p95_delta_pct', operator: 'lte', threshold: 5.0, description: 'Stage-C p95 latency ≤+5%', category: 'ops' },
       ]
     },
     {
@@ -70,11 +72,11 @@ export class CompressedCentralityCanary extends EventEmitter {
       durationMinutes: 60,
       validationIntervalMinutes: 10,
       gates: [
-        { metric: 'core@10_delta', operator: 'gte', threshold: 10, description: 'Core@10 improvement ≥+10pp' },
-        { metric: 'p99_p95_ratio', operator: 'lte', threshold: 2.0, description: 'p99/p95 ratio ≤2.0 for SLA compliance' },
-        { metric: 'span_coverage', operator: 'gte', threshold: 100, description: 'Complete span coverage' },
-        { metric: 'semantic_share_delta', operator: 'lte', threshold: 15, description: 'Semantic share increase ≤+15pp unless nDCG rises' },
-        { metric: 'router_upshift_rate', operator: 'lte', threshold: 7, description: 'Router upshift rate ≤5%+2pp' },
+        { metric: 'core@10_delta', operator: 'gte', threshold: 10, description: 'Core@10 improvement ≥+10pp', category: 'quality' },
+        { metric: 'p99_p95_ratio', operator: 'lte', threshold: 2.0, description: 'p99/p95 ratio ≤2.0 for SLA compliance', category: 'ops' },
+        { metric: 'span_coverage', operator: 'gte', threshold: 100, description: 'Complete span coverage', category: 'ops' },
+        { metric: 'semantic_share_delta', operator: 'lte', threshold: 15, description: 'Semantic share increase ≤+15pp unless nDCG rises', category: 'drift' },
+        { metric: 'router_upshift_rate', operator: 'lte', threshold: 7, description: 'Router upshift rate ≤5%+2pp', category: 'drift' },
       ]
     }
   ];
@@ -164,7 +166,7 @@ export class CompressedCentralityCanary extends EventEmitter {
     }
   }
 
-  private async applyHardeningMeasures(): void {
+  private async applyHardeningMeasures(): Promise<void> {
     console.log('🔒 Applying hardening measures...');
     
     const centralityConfig = new CentralityConfig();
@@ -193,7 +195,7 @@ export class CompressedCentralityCanary extends EventEmitter {
     this.emit('hardeningApplied', this.config);
   }
 
-  private async startMonitoring(): void {
+  private async startMonitoring(): Promise<void> {
     console.log('📈 Starting monitoring components...');
     
     // Start real-time statistical validation
@@ -372,13 +374,17 @@ export class CompressedCentralityCanary extends EventEmitter {
     
     // Validate against all quality gates
     const qualityGates: CanaryGate[] = [
-      { metric: 'nDCG@10_delta', operator: 'gte', threshold: 1.0, pValue: 0.05, description: 'Final nDCG@10 validation' },
-      { metric: 'diversity@10_delta', operator: 'gte', threshold: 10, description: 'Final diversity validation' },
-      { metric: 'core@10_delta', operator: 'gte', threshold: 10, description: 'Final Core@10 validation' },
-      { metric: 'recall@50', operator: 'gte', threshold: 88.9, description: 'Final recall validation' }
+      { metric: 'nDCG@10_delta', operator: 'gte', threshold: 1.0, pValue: 0.05, description: 'Final nDCG@10 validation', category: 'quality' },
+      { metric: 'diversity@10_delta', operator: 'gte', threshold: 10, description: 'Final diversity validation', category: 'quality' },
+      { metric: 'core@10_delta', operator: 'gte', threshold: 10, description: 'Final Core@10 validation', category: 'quality' },
+      { metric: 'recall@50', operator: 'gte', threshold: 88.9, description: 'Final recall validation', category: 'quality' }
     ];
     
-    const finalValidation = await this.gatesValidator.validateGates(qualityGates, finalMetrics);
+    // Extract only numeric properties for gate validation
+    const numericMetrics: Record<string, number> = Object.fromEntries(
+      Object.entries(finalMetrics).filter(([_, value]) => typeof value === 'number')
+    );
+    const finalValidation = await this.gatesValidator.validateGates(qualityGates, numericMetrics);
     
     if (finalValidation.passed) {
       console.log('🎉 All gates passed! Recommending promotion to 100%');
@@ -417,12 +423,12 @@ export class CompressedCentralityCanary extends EventEmitter {
     }
   }
 
-  private async handleGateFailure(failure: any): void {
+  private async handleGateFailure(failure: any): Promise<void> {
     console.error(`❌ Gate failure detected: ${failure.gate} - ${failure.reason}`);
     await this.initiateRollback(`Gate failure: ${failure.gate}`);
   }
 
-  private async handleAnomalyDetected(anomaly: any): void {
+  private async handleAnomalyDetected(anomaly: any): Promise<void> {
     console.warn(`⚠️ Anomaly detected: ${anomaly.type} - ${anomaly.description}`);
     
     if (anomaly.severity === 'critical') {
@@ -432,12 +438,12 @@ export class CompressedCentralityCanary extends EventEmitter {
     }
   }
 
-  private async handleSpuriousLift(lift: any): void {
+  private async handleSpuriousLift(lift: any): Promise<void> {
     console.error(`❌ Spurious lift detected in A/A shadow test: ${lift.description}`);
     await this.initiateRollback('Spurious lift detection');
   }
 
-  private async handleRouterViolation(violation: any): void {
+  private async handleRouterViolation(violation: any): Promise<void> {
     console.warn(`⚠️ Router upshift rate violation: ${violation.currentRate}%`);
     
     // Attempt automatic correction first
@@ -474,7 +480,7 @@ export class CompressedCentralityCanary extends EventEmitter {
     }
   }
 
-  private async handleRollbackComplete(): void {
+  private async handleRollbackComplete(): Promise<void> {
     console.log('✅ Automatic rollback completed');
     this.emit('rollbackCompleted');
   }

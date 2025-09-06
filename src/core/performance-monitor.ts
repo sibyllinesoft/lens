@@ -494,7 +494,7 @@ export class PerformanceMonitor extends EventEmitter {
     // Monitor garbage collection if available
     if (global.gc && process.env.NODE_ENV === 'development') {
       const originalGC = global.gc;
-      global.gc = () => {
+      global.gc = async () => {
         const start = performance.now();
         originalGC();
         const duration = performance.now() - start;

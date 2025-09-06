@@ -18,7 +18,8 @@ import type {
   QueryIntent,
   Candidate,
   SearchContext,
-  LSPHint
+  LSPHint,
+  MatchReason
 } from '../types/core.js';
 import { LensTracer } from '../telemetry/tracer.js';
 import { LensSearchEngine } from '../api/search-engine.js';
@@ -556,7 +557,9 @@ export class LSPSerenaComparisonTest {
         line: hit.line,
         col: hit.col,
         score: hit.score,
-        match_reasons: hit.why || [],
+        match_reasons: (hit.why || []).filter((reason): reason is MatchReason => 
+          ['exact', 'fuzzy', 'symbol', 'struct', 'structural', 'semantic', 'lsp_hint', 'unicode_normalized', 'raptor_diversity', 'exact_name', 'semantic_type', 'subtoken'].includes(reason)
+        ),
         lang: hit.lang,
         snippet: hit.snippet
       }));

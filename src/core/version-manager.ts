@@ -113,6 +113,11 @@ export class VersionManager {
   private currentVersion: string = '1.0.0';
   private defaultVersion: string = '1.0.0';
   
+  // Public getter for currentVersion
+  public getCurrentVersion(): string {
+    return this.currentVersion;
+  }
+  
   // Migration chains and transformers
   private migrations = new Map<string, VersionMigration[]>();
   private requestTransformers = new Map<string, RequestTransformer>();
@@ -787,7 +792,7 @@ export function checkCompatibility(
   index_version: "v1";
   policy_version: "v1";
 } {
-  const currentApiVersion = versionManager.currentVersion;
+  const currentApiVersion = versionManager.getCurrentVersion();
   const warnings: string[] = [];
   const errors: string[] = [];
   let compatible = true;

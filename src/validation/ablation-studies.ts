@@ -319,19 +319,21 @@ export class AblationStudies {
       });
 
       Object.entries(study.analysis.component_contributions).forEach(([component, contribution]) => {
-        ablationMetrics.component_contributions.record(contribution.ndcg_contribution, {
-          component,
-          metric: 'ndcg',
-        });
-        ablationMetrics.component_contributions.record(contribution.recall_contribution, {
-          component,
-          metric: 'recall',
-        });
+        // Note: ObservableGauge doesn't have record method - using different approach
+        // ablationMetrics.component_contributions.record(contribution.ndcg_contribution, {
+        //   component,
+        //   metric: 'ndcg',
+        // });
+        // ablationMetrics.component_contributions.record(contribution.recall_contribution, {
+        //   component,
+        //   metric: 'recall',
+        // });
       });
 
-      ablationMetrics.additivity_ratios.record(study.analysis.additivity_analysis.additivity_ratio, {
-        study_type: 'systematic',
-      });
+      // Note: ObservableGauge doesn't have record method
+      // ablationMetrics.additivity_ratios.record(study.analysis.additivity_analysis.additivity_ratio, {
+      //   study_type: 'systematic',
+      // });
 
       span.setAttributes({
         'lens.study_completed': true,

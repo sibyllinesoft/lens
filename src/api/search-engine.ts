@@ -48,6 +48,17 @@ interface LensSearchResult {
   stage_c_latency?: number;
 }
 
+// Helper function to convert ValidMatchReason[] to MatchReason[]
+function convertToMatchReasons(reasons: any, fallback: MatchReason[]): MatchReason[] {
+  if (!reasons) return fallback;
+  const arrayReasons = Array.isArray(reasons) ? reasons : [reasons];
+  const filtered = arrayReasons.filter((reason: any) => 
+    typeof reason === 'string' && ['exact', 'fuzzy', 'symbol', 'struct', 'structural', 'semantic', 'lsp_hint', 'unicode_normalized', 'raptor_diversity', 'exact_name', 'semantic_type', 'subtoken'].includes(reason)
+  );
+  // Explicitly map to MatchReason type
+  return filtered.map((reason: string) => reason as MatchReason);
+}
+
 export class LensSearchEngine {
   private segmentStorage: SegmentStorage;
   private lexicalEngine: LexicalSearchEngine;
@@ -1446,7 +1457,7 @@ export class LensSearchEngine {
         ctx.query,
         ctx,
         // Symbols near handler (LSP Stage-B enhancer with fallback to structural search)
-        async (filePath: string, line: number) => {
+        async (filePath: string, line: number): Promise<Candidate[]> => {
           console.log(`🔍 LSP symbols near: ${filePath}:${line}`);
           
           // First try LSP Stage-B enhancer for nearby symbols
@@ -1469,55 +1480,61 @@ export class LensSearchEngine {
             k: Math.min(50, ctx.k),
           });
           
-          return structuralResults.map(result => ({
-            doc_id: `${result.file}:${result.line}:${result.col}`,
-            file_path: result.file,
-            file: result.file, // Alternative field name used in some modules
-            line: result.line,
-            col: result.col,
-            lang: result.lang,
-            snippet: result.snippet,
-            score: result.score,
-            // Convert ValidMatchReason[] to MatchReason[] - filter to valid values
-            match_reasons: (result.match_reasons || ['struct']).filter(reason => 
-              ['exact', 'fuzzy', 'symbol', 'struct', 'semantic', 'lsp_hint'].includes(reason)
-            ) as MatchReason[],
-            // Why field should be same as match_reasons for consistency
-            why: (result.match_reasons || ['struct']).filter(reason => 
-              ['exact', 'fuzzy', 'symbol', 'struct', 'semantic', 'lsp_hint'].includes(reason)
-            ) as MatchReason[],
-            // Copy other optional properties from StructuralResult to Candidate
-            byte_offset: result.byte_offset,
-            span_len: result.span_len,
-            symbol_kind: result.pattern_type === 'function_def' ? 'function' :
-                        result.pattern_type === 'class_def' ? 'class' : 
-                        undefined,
-          }));
+          return structuralResults.map(result => {
+            const candidate: Candidate = {
+              doc_id: `${result.file}:${result.line}:${result.col}`,
+              file_path: result.file,
+              file: result.file, // Alternative field name used in some modules
+              line: result.line,
+              col: result.col,
+              lang: result.lang,
+              snippet: result.snippet,
+              score: result.score,
+              // Convert from ValidMatchReason[] to MatchReason[] (ValidMatchReason is a subset) 
+              match_reasons: ['struct'],
+              // Convert why from string[] to MatchReason[] by filtering valid values
+              why: result.why.filter((reason: any) => 
+                typeof reason === 'string' && ['exact', 'fuzzy', 'symbol', 'struct', 'structural', 'semantic', 'lsp_hint', 'unicode_normalized', 'raptor_diversity', 'exact_name', 'semantic_type', 'subtoken'].includes(reason)
+              ).map((reason: string) => reason as MatchReason),
+              // Copy other optional properties from StructuralResult to Candidate
+              byte_offset: result.byte_offset,
+              span_len: result.span_len,
+              symbol_kind: result.pattern_type === 'function_def' ? 'function' :
+                          result.pattern_type === 'class_def' ? 'class' : 
+                          undefined,
+            };
+            return candidate;
+          });
         },
         // Full search handler (fallback to vanilla four-stage pipeline)
-        async (query: string, context: SearchContext) => {
+        async (query: string, context: SearchContext): Promise<Candidate[]> => {
           console.log(`🔄 LSP fallback to full search for: "${query}"`);
           const vanillaResult = await this.searchVanillaFourStage(context);
-          return vanillaResult.hits.map(hit => ({
-            doc_id: `${hit.file}:${hit.line}:${hit.col}`,
-            file_path: hit.file,
-            file: hit.file, // Alternative field name
-            line: hit.line,
-            col: hit.col,
-            lang: hit.lang,
-            snippet: hit.snippet,
-            score: hit.score,
-            // Use valid MatchReason values
-            why: hit.why || ['semantic'],
-            match_reasons: hit.match_reasons || ['semantic'],
-            // Copy other optional properties if available
-            ast_path: hit.ast_path,
-            symbol_kind: hit.symbol_kind,
-            byte_offset: hit.byte_offset,
-            span_len: hit.span_len,
-            context_before: hit.context_before,
-            context_after: hit.context_after,
-          }));
+          return vanillaResult.hits.map(hit => {
+            const candidate: Candidate = {
+              doc_id: `${hit.file}:${hit.line}:${hit.col}`,
+              file_path: hit.file,
+              file: hit.file, // Alternative field name
+              line: hit.line,
+              col: hit.col,
+              lang: hit.lang,
+              snippet: hit.snippet,
+              score: hit.score,
+              // Use valid MatchReason values - convert from string[] to MatchReason[]
+              why: (hit.why || ['semantic']).filter((reason: any) => 
+                typeof reason === 'string' && ['exact', 'fuzzy', 'symbol', 'struct', 'structural', 'semantic', 'lsp_hint', 'unicode_normalized', 'raptor_diversity', 'exact_name', 'semantic_type', 'subtoken'].includes(reason)
+              ).map((reason: string) => reason as MatchReason),
+              match_reasons: ['semantic'],
+              // Copy other optional properties if available
+              ast_path: hit.ast_path,
+              symbol_kind: hit.symbol_kind,
+              byte_offset: hit.byte_offset,
+              span_len: hit.span_len,
+              context_before: hit.context_before,
+              context_after: hit.context_after,
+            };
+            return candidate;
+          });
         }
       );
 
@@ -1531,10 +1548,8 @@ export class LensSearchEngine {
         lang: candidate.lang || 'unknown',
         snippet: candidate.snippet || candidate.context || '',
         score: candidate.score,
-        why: (candidate.match_reasons || ['lsp_hint']).filter((reason): reason is MatchReason => 
-          ['exact', 'fuzzy', 'symbol', 'struct', 'semantic', 'lsp_hint'].includes(reason)
-        ),
-        match_reasons: candidate.match_reasons || ['lsp_hint'],
+        why: candidate.match_reasons || (['lsp_hint'] as MatchReason[]),
+        match_reasons: candidate.match_reasons || (['lsp_hint'] as MatchReason[]),
       }));
 
       console.log(`✅ LSP Intent routing complete: ${hits.length} hits with LSP markers`);

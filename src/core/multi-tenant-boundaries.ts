@@ -256,7 +256,7 @@ export class MultiTenantBoundariesSystem extends EventEmitter {
       // Check quotas before processing
       const quotaCheck = await this.quotaEnforcer.checkQuotas(tenant_id, context);
       if (!quotaCheck.allowed) {
-        return this.handleQuotaExceeded(quotaCheck, query, tenant_id);
+        return await this.handleQuotaExceeded(quotaCheck, query, tenant_id);
       }
 
       // Apply privacy enforcement
@@ -445,23 +445,23 @@ export class MultiTenantBoundariesSystem extends EventEmitter {
     }
   }
 
-  private handleQuotaExceeded(
+  private async handleQuotaExceeded(
     quotaCheck: QuotaCheckResult,
     query: string,
     tenant_id: string
-  ): QueryResult {
+  ): Promise<QueryResult> {
     const action = quotaCheck.violation!.action_taken;
     
     switch (action) {
       case 'throttled':
         // Apply throttling by adding delay
-        return this.processQueryWithThrottling(query, tenant_id);
+        return await this.processQueryWithThrottling(query, tenant_id);
       case 'queued':
         // Queue the query for later processing
-        return this.queueQueryForLater(query, tenant_id);
+        return await this.queueQueryForLater(query, tenant_id);
       case 'degraded_mode':
         // Process with degraded quality
-        return this.processQueryDegraded(query, tenant_id);
+        return await this.processQueryDegraded(query, tenant_id);
       case 'rejected':
       default:
         throw new Error(`Quota exceeded: ${quotaCheck.violation!.type}`);

@@ -216,11 +216,11 @@ export class ComprehensiveProductionDashboard extends EventEmitter {
     await this.loadActiveAlerts();
     
     // Start monitoring systems if not already running
-    if (!this.productionMonitoring.isRunning) {
+    if (!this.productionMonitoring.getIsRunning()) {
       await this.productionMonitoring.startMonitoring();
     }
     
-    if (!this.driftMonitoring.isRunning) {
+    if (!this.driftMonitoring.getIsRunning()) {
       await this.driftMonitoring.startDriftMonitoring();
     }
     

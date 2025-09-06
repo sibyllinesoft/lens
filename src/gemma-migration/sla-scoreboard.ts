@@ -498,7 +498,7 @@ export class SLAScoreboard {
       const pValue = Math.max(bootstrapResult.pValue, wilcoxonResult.pValue);
       pValues.push(pValue);
       
-      const significant = pValue < this.config.statistical.maxPValue;
+      const significant = pValue < ((this.config.statistical as any).maxPValue || 0.05);
       const improvement = metric.name === 'p95LatencyMs' ? 
         bootstrapResult.delta < 0 : // Lower latency is better
         bootstrapResult.delta > 0;   // Higher quality metrics are better
@@ -519,7 +519,7 @@ export class SLAScoreboard {
     let metricIndex = 0;
     for (const metricName of Object.keys(comparison.metrics)) {
       comparison.metrics[metricName].pValue = correctedPValues[metricIndex++];
-      comparison.metrics[metricName].significant = correctedPValues[metricIndex - 1] < this.config.statistical.maxPValue;
+      comparison.metrics[metricName].significant = correctedPValues[metricIndex - 1] < ((this.config.statistical as any).maxPValue || 0.05);
     }
 
     // Overall significance (Fisher's combined probability)

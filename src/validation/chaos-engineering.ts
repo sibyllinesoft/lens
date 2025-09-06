@@ -306,8 +306,8 @@ export class ChaosEngineering {
       await this.sleep(config.duration_minutes * 60 * 1000);
 
       // Phase 4: Stop monitoring and measure
-      const chaosMetrics = await monitoringPromise;
-      result.metrics.during_chaos_measurements = chaosMetrics;
+      const chaosMonitoringData = await monitoringPromise;
+      result.metrics.during_chaos_measurements = chaosMonitoringData;
 
       // Phase 5: Remove failure injection
       console.log(`Removing failure injection for experiment ${experimentId}`);
@@ -345,7 +345,7 @@ export class ChaosEngineering {
         });
       }
 
-      chaosMetrics.degradation_factor.record(chaosMetrics.degradation_factor, {
+      chaosMetrics.degradation_factor.record(result.metrics.during_chaos_measurements?.degradation_factor || 0, {
         type: config.experiment_type,
       });
 

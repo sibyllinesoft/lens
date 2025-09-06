@@ -21,6 +21,7 @@ export interface ConfigFingerprint {
   api_version: string;
   index_version: string;
   policy_version: string;
+  api_config?: any;
   
   // Optimization parameters
   tau_value: number;
@@ -80,6 +81,10 @@ interface BaselineMetrics {
   span_coverage: number;
   results_per_query_mean: number;
   results_per_query_std: number;
+  lsif_coverage?: number;
+  tree_sitter_coverage?: number;
+  ladder_positives?: number;
+  ladder_total?: number;
 }
 
 interface PromotionGates {
@@ -253,9 +258,7 @@ export class VersionManager {
       api_config: {
         version: "1.0.1",
         endpoints: ["search", "index", "benchmark"],
-        features: ["lexical", "symbols", "semantic"]
-      },
-      index_config: {
+        features: ["lexical", "symbols", "semantic"],
         lexical_enabled: true,
         symbols_enabled: true,
         semantic_enabled: true,

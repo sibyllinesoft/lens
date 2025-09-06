@@ -98,7 +98,7 @@ export class ParallelProcessor {
   // Task management
   private taskQueue: Map<TaskPriority, ParallelTask<any, any>[]> = new Map();
   private activeTasks: Map<string, ParallelTask<any, any>> = new Map();
-  private completedTasks: Map<string, any> = new Map();
+  private completedTasksMap: Map<string, any> = new Map();
   private batchQueue: Map<TaskType, ParallelTask<any, any>[]> = new Map();
   
   // Performance tracking
@@ -250,6 +250,19 @@ export class ParallelProcessor {
   ): Promise<R> {
     const span = LensTracer.createChildSpan('submit_parallel_task');
     
+    // Check cache first
+    if (context) {
+      const cacheKey = this.generateCacheKey(type, payload, context);
+      try {
+        const cached = await globalCacheManager.get<R>(cacheKey, context);
+        if (cached) {
+          return cached;
+        }
+      } catch (e) {
+        // Cache error, continue with task execution
+      }
+    }
+
     return new Promise((resolve, reject) => {
       try {
         const taskId = this.generateTaskId();
@@ -271,16 +284,6 @@ export class ParallelProcessor {
             }
           }
         };
-        
-        // Check cache first
-        if (context) {
-          const cacheKey = this.generateCacheKey(type, payload, context);
-          const cached = await globalCacheManager.get<R>(cacheKey, context);
-          if (cached) {
-            resolve(cached);
-            return;
-          }
-        }
         
         // Check if batching is beneficial
         if (this.shouldBatch(task)) {
@@ -656,7 +659,7 @@ export class ParallelProcessor {
       
       // Clean up
       this.activeTasks.delete(taskId);
-      this.completedTasks.set(taskId, result);
+      this.completedTasksMap.set(taskId, result);
       this.completedTasks++;
       this.taskDurations.push(duration);
       
@@ -1032,9 +1035,9 @@ export class ParallelProcessor {
     // Cleanup old completed task results every 60 seconds
     this.cleanupTimer = setInterval(() => {
       const cutoff = Date.now() - 300000; // 5 minutes ago
-      for (const [taskId, result] of this.completedTasks.entries()) {
+      for (const [taskId, result] of this.completedTasksMap.entries()) {
         if (typeof result === 'object' && result.completedAt && result.completedAt < cutoff) {
-          this.completedTasks.delete(taskId);
+          this.completedTasksMap.delete(taskId);
         }
       }
     }, 60000);
@@ -1117,7 +1120,7 @@ export class ParallelProcessor {
       this.workerTasks.clear();
       this.taskQueue.clear();
       this.activeTasks.clear();
-      this.completedTasks.clear();
+      this.completedTasksMap.clear();
       this.batchQueue.clear();
       
       console.log('✅ Parallel Processor shutdown complete');

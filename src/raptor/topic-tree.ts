@@ -402,8 +402,14 @@ export class TopicTree {
   private generateTopicSummary(cards: EnhancedSemanticCard[]): string {
     // Aggregate the most common themes
     const allRoles = cards.flatMap(card => card.roles);
-    const allResources = cards.flatMap(card => card.resources);
-    const allDomainTokens = cards.flatMap(card => card.domain_tokens);
+    const allResources = cards.flatMap(card => [
+      ...card.resources.routes,
+      ...card.resources.sql,
+      ...card.resources.topics,
+      ...card.resources.buckets,
+      ...card.resources.featureFlags
+    ]);
+    const allDomainTokens = cards.flatMap(card => card.domainTokens);
     
     const roleFreq = this.getTopFrequent(allRoles, 3);
     const resourceFreq = this.getTopFrequent(allResources, 3);
@@ -424,13 +430,19 @@ export class TopicTree {
     }
     
     // Facet 2: Resource usage
-    const topResources = this.getTopFrequent(cards.flatMap(c => c.resources), 3);
+    const topResources = this.getTopFrequent(cards.flatMap(c => [
+      ...c.resources.routes,
+      ...c.resources.sql,
+      ...c.resources.topics,
+      ...c.resources.buckets,
+      ...c.resources.featureFlags
+    ]), 3);
     if (topResources.length > 0) {
       facets.push(`• Key resources: ${topResources.join(', ')}`);
     }
     
     // Facet 3: Technical characteristics
-    const topShapes = this.getTopFrequent(cards.flatMap(c => c.shapes), 3);
+    const topShapes = this.getTopFrequent(cards.flatMap(c => [...c.shapes.typeNames, ...c.shapes.jsonKeys]), 3);
     if (topShapes.length > 0) {
       facets.push(`• Technical patterns: ${topShapes.join(', ')}`);
     }
@@ -447,8 +459,14 @@ export class TopicTree {
   private generateTopicKeywords(cards: EnhancedSemanticCard[]): string[] {
     const allTerms = [
       ...cards.flatMap(c => c.roles),
-      ...cards.flatMap(c => c.resources),
-      ...cards.flatMap(c => c.domain_tokens)
+      ...cards.flatMap(c => [
+        ...c.resources.routes,
+        ...c.resources.sql,
+        ...c.resources.topics,
+        ...c.resources.buckets,
+        ...c.resources.featureFlags
+      ]),
+      ...cards.flatMap(c => c.domainTokens)
     ];
     
     return this.getTopFrequent(allTerms, 10);
@@ -469,7 +487,7 @@ export class TopicTree {
       .map(([term]) => term);
   }
 
-  private assembleTree(repoSha: string, topics: Map<string, any>): TopicTree {
+  private assembleTree(repoSha: string, topics: Map<string, any>): any {
     const nodes = new Map<string, TopicNode>();
     const levelIndex = new Map<number, string[]>();
     

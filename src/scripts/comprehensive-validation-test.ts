@@ -165,7 +165,7 @@ class ComprehensiveValidationTest {
       const versionManager = new VersionManager.VersionManager();
       const fingerprint = versionManager.generateConfigFingerprint();
       
-      const hasRequiredFields = fingerprint.policy_version && fingerprint.api_config && fingerprint.index_config;
+      const hasRequiredFields = fingerprint.policy_version && fingerprint.api_config && fingerprint.index_version;
       suite.results.push({
         component: 'Configuration Fingerprinting',
         status: hasRequiredFields ? 'PASS' : 'FAIL',

@@ -8,8 +8,8 @@
  * - Adversarial/Durability Drills
  */
 
-// Re-export all types from the systems
-export type {
+// Import and re-export all types from the systems
+import type {
   // Witness Set Mining Types
   WitnessSet,
   WitnessSetMiningConfig,
@@ -18,34 +18,16 @@ export type {
   
   // Query DAG Planner Types
   LexScanOp,
-  StructOp,
-  SliceOp,
-  ANNOp,
-  RerankOp,
-  PlanOperator,
   QueryPlan,
-  SLOConstraints,
-  OperatorCostModel,
   PlanExecution,
-  PlanCache,
   
   // Tenant Economics Types
   TenantProfile,
-  TenantUsageHistory,
-  ResourceAllocation,
-  SystemResources,
-  UtilityFunction,
   SLAUtilityMetrics,
-  SpendGovernor,
-  ShardCredit,
   
   // Adversarial Durability Types
   AdversarialContent,
-  QuarantinePolicy,
-  AdversarialMetrics,
-  ChaosExperiment,
   SystemResilience,
-  TripwireAlert,
   
   // Coordinator Types
   EnterpriseSystemsConfig,
@@ -53,6 +35,94 @@ export type {
   SearchRequest,
   EnhancedSearchResult,
 } from '../systems/index.js';
+
+// Re-export the imported types
+export type {
+  WitnessSet,
+  WitnessSetMiningConfig,
+  TaskSuccess,
+  SuccessAtK,
+  LexScanOp,
+  QueryPlan,
+  PlanExecution,
+  TenantProfile,
+  SLAUtilityMetrics,
+  AdversarialContent,
+  SystemResilience,
+  EnterpriseSystemsConfig,
+  SystemHealthReport,
+  SearchRequest,
+  EnhancedSearchResult,
+};
+
+// Local type definitions for missing types from systems
+export interface TenantUsageHistory {
+  readonly tenantId: string;
+  readonly date: Date;
+  readonly totalCpuMs: number;
+  readonly totalMemoryMB: number;
+  readonly totalQueries: number;
+  readonly avgUtilityScore: number;
+}
+
+export interface ResourceAllocation {
+  readonly cpuTimeMs: number;
+  readonly memoryMB: number;
+  readonly priority: number;
+}
+
+export interface SystemResources {
+  readonly totalCpuMs: number;
+  readonly totalMemoryMB: number;
+  readonly availableCpuMs: number;
+  readonly availableMemoryMB: number;
+}
+
+export interface UtilityFunction {
+  readonly a: number;
+  readonly b: number;
+  readonly c: number;
+}
+
+export interface SpendGovernor {
+  readonly dailyBudgetMs: number;
+  readonly currentSpendMs: number;
+  readonly budgetUtilization: number;
+}
+
+export interface ShardCredit {
+  readonly creditMs: number;
+  readonly expirationDate: Date;
+}
+
+export interface QuarantinePolicy {
+  readonly maxFileSize: number;
+  readonly maxEntropy: number;
+  readonly quarantineDurationMs: number;
+}
+
+export interface AdversarialMetrics {
+  readonly quarantinedFiles: number;
+  readonly detectionAccuracy: number;
+  readonly falsePositiveRate: number;
+}
+
+export interface ChaosExperiment {
+  readonly id: string;
+  readonly name: string;
+  readonly type: string;
+  readonly status: 'running' | 'completed' | 'failed';
+  readonly startTime: Date;
+  readonly endTime?: Date;
+}
+
+export interface TripwireAlert {
+  readonly id: string;
+  readonly severity: 'low' | 'medium' | 'high' | 'critical';
+  readonly message: string;
+  readonly timestamp: Date;
+  readonly acknowledged: boolean;
+}
 
 // Additional enterprise-specific interfaces
 

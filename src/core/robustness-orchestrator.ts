@@ -170,7 +170,7 @@ export class RobustnessTestOrchestrator extends EventEmitter {
    * Execute comprehensive robustness test suite
    */
   async executeRobustnessTestSuite(testConfig: RobustnessTestConfig): Promise<RobustnessTestResult> {
-    return await this.tracer.startActiveSpan('execute-robustness-test-suite', async (span) => {
+    return await this.lensTracer.startActiveSpan('execute-robustness-test-suite', async (span) => {
       const testId = uuidv4();
       const startTime = new Date();
       
@@ -494,7 +494,7 @@ export class RobustnessTestOrchestrator extends EventEmitter {
       ...scenario.config
     };
     
-    return await this.robustnessRunner.runConcurrencyTests(benchmarkConfig);
+    return await this.robustnessRunner.runRobustnessTests(benchmarkConfig);
   }
   
   /**

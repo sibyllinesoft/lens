@@ -545,9 +545,10 @@ export class QuantizationOptimizer {
     
     let converged = false;
     let iteration = 0;
+    let assignments: number[] = [];
     
     while (!converged && iteration < maxIterations) {
-      const assignments: number[] = [];
+      assignments = [];
       const clusterSums: Float32Array[] = centroids.map(() => new Float32Array(dimension));
       const clusterCounts: number[] = new Array(k).fill(0);
       

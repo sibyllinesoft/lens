@@ -196,7 +196,7 @@ export class Gemma256HybridRouter {
     this.intentClassifier = new IntentClassifier();
     
     // Default RAPTOR entropy calculator if none provided
-    this.entropyCalculator = entropyCalculator || new RAPTOREntropyCalculator();
+    this.entropyCalculator = entropyCalculator || new RAPTOREntropyCalculatorImpl();
     
     console.log(`🚀 Gemma-256 Hybrid Router initialized`);
     console.log(`   Upshift cap: ${config.upshift_cap_fraction * 100}%`);

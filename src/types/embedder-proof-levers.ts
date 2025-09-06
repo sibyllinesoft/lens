@@ -362,8 +362,20 @@ export interface SearchHit {
   session_boost?: number;
   // Additional optional fields for span_resolver compatibility
   lang?: string;
+  language?: string;
   ast_path?: string;
   byte_offset?: number;
   span_len?: number;
   context_before?: string;
+  context_after?: string;
+  // Fields used by result-ranker and other modules
+  metadata?: any;
+  name?: string;
+  content?: string;
+  symbolType?: string;
+  filePath?: string;
+  id?: string;
+  repository?: string;
+  cluster_node_id?: string;
+  cluster_level?: number;
 }

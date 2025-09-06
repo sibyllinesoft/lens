@@ -139,7 +139,7 @@ const conformalMetrics = {
   coverage_violations: meter.createCounter('lens_conformal_coverage_violations_total', {
     description: 'Total coverage violations detected per slice',
   }),
-  empirical_coverage: meter.createObservableGauge('lens_conformal_empirical_coverage', {
+  empirical_coverage: meter.createHistogram('lens_conformal_empirical_coverage', {
     description: 'Empirical coverage rate per slice',
   }),
   miscoverage_rate: meter.createHistogram('lens_conformal_miscoverage_rate', {

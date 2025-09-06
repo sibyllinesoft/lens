@@ -47,6 +47,8 @@ export interface SearchHit {
   symbolType?: string | undefined;    // Symbol type classification
   filePath?: string | undefined;      // CamelCase file path alternative
   id?: string | undefined;            // Unique identifier
+  cluster_node_id?: string | undefined; // Cluster node identifier for distributed processing
+  cluster_level?: number | undefined;   // Cluster hierarchy level
 }
 
 export type MatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'semantic' | 'lsp_hint' | 'unicode_normalized' | 'raptor_diversity' | 'structural' | 'exact_name' | 'semantic_type' | 'nl_bridge' | 'raptor_hierarchical' | string;

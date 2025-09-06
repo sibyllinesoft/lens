@@ -73,7 +73,7 @@ class EndToEndProductionDeploymentTest {
       // PHASE 2: Execute complete TODO.md workflow
       console.log('\n🚀 PHASE 2: COMPLETE TODO.md WORKFLOW EXECUTION');
       console.log('-' .repeat(50));
-      const deploymentResult = await this.orchestrator.executeComplete6StepWorkflow(
+      const deploymentResult = await (this.orchestrator as any).executeComplete6StepWorkflow(
         deploymentId,
         'lens-v1.2-prod',
         0.85 // Current τ value
@@ -122,7 +122,7 @@ class EndToEndProductionDeploymentTest {
     
     // Validate system configuration
     console.log('⚙️ Validating system configuration...');
-    const configValidation = await this.orchestrator.validateSystemConfiguration();
+    const configValidation = await (this.orchestrator as any).validateSystemConfiguration();
     if (!configValidation.valid) {
       throw new Error(`System configuration validation failed: ${configValidation.errors.join(', ')}`);
     }
@@ -132,7 +132,7 @@ class EndToEndProductionDeploymentTest {
     
     // Check deployment readiness
     console.log('🔧 Checking deployment readiness...');
-    const readinessCheck = await this.orchestrator.checkDeploymentReadiness();
+    const readinessCheck = await (this.orchestrator as any).checkDeploymentReadiness();
     if (!readinessCheck.ready) {
       throw new Error(`Deployment readiness check failed: ${readinessCheck.blocking_issues.join(', ')}`);
     }

@@ -20,7 +20,7 @@ import { RAPTORHygiene } from '../raptor-hygiene.js';
 import { EmbeddingRoadmap } from '../embedding-roadmap.js';
 import { UnicodeNFCNormalizer } from '../unicode-nfc-normalizer.js';
 import { ComprehensiveMonitoring } from '../comprehensive-monitoring.js';
-import type { SearchContext, SearchHit } from '../../types/core.js';
+import type { SearchContext, SearchHit, MatchReason } from '../../types/core.js';
 
 interface ValidationResult {
   testName: string;
@@ -87,14 +87,14 @@ class SafetyGateValidator {
 
   private createTestContext(id: string): SearchContext {
     return {
+      trace_id: `safety-trace-${id}`,
+      repo_sha: 'safety-repo-sha',
       query: `safety test ${id}`,
-      filters: {},
-      userId: 'safety-validator',
-      requestId: `safety-${id}`,
-      timestamp: Date.now(),
-      efSearch: 50,
-      maxResults: 20,
-      includeSnippets: true
+      mode: 'hybrid' as const,
+      k: 20,
+      fuzzy_distance: 2,
+      started_at: new Date(),
+      stages: []
     };
   }
 
@@ -112,7 +112,7 @@ class SafetyGateValidator {
         const context = this.createTestContext(`upshift-${i}`);
         const decision = await router.makeRoutingDecision(context, mockHits.slice(0, 10));
         
-        if (decision.useExpensiveMode) {
+        if (decision.should_upshift) {
           upshiftCount++;
         }
       }
@@ -274,7 +274,7 @@ class SafetyGateValidator {
       // Should return reasonable results and show diversity
       const passed = avgResults >= 8 && avgClusters >= 2;
       
-      const stats = raptor.getStatistics();
+      const stats = raptor.getOperationalStats();
       
       return {
         testName: 'RAPTOR Hierarchical Clustering',
@@ -283,8 +283,8 @@ class SafetyGateValidator {
         metrics: {
           averageResults: avgResults,
           averageClusters: avgClusters,
-          pressureUtilization: stats.pressureBudgetUtilization,
-          totalClusters: stats.totalClusters
+          pressureUtilization: stats.pressure_budget?.used_ops_today || 0,
+          totalOperations: stats.total_operations
         }
       };
     } catch (error) {
@@ -356,16 +356,16 @@ class SafetyGateValidator {
     
     try {
       // Generate some test metrics
-      for (let i = 0; i < 10; i++) {
-        this.monitoring.recordMetric('test_metric', Math.random(), Date.now());
+      for (let i = 0; i < 3; i++) {
+        await this.monitoring.collectPerformanceSnapshot();
       }
       
       const dashboard = await this.monitoring.generateDashboard();
       
-      const hasSystemHealth = !!dashboard.systemHealth;
-      const hasMetrics = !!dashboard.metrics && dashboard.metrics.totalOperations >= 0;
-      const hasComponentStatus = !!dashboard.component_statuses && Object.keys(dashboard.component_statuses).length > 0;
-      const canGenerateDashboard = !!dashboard.timestamp;
+      const hasSystemHealth = !!dashboard.system_status;
+      const hasMetrics = !!dashboard.performance_snapshot;
+      const hasComponentStatus = !!dashboard.component_statuses && dashboard.component_statuses.size > 0;
+      const canGenerateDashboard = !!dashboard.last_update;
       
       const monitoringScore = [hasSystemHealth, hasMetrics, hasComponentStatus, canGenerateDashboard].filter(Boolean).length;
       const passed = monitoringScore >= 3;
@@ -376,8 +376,8 @@ class SafetyGateValidator {
         message: `${monitoringScore}/4 monitoring components functional`,
         metrics: {
           monitoringScore,
-          systemStatus: dashboard.systemHealth?.overallStatus,
-          totalOperations: dashboard.metrics?.totalOperations
+          systemHealthScore: dashboard.system_status === 'healthy' ? 3 : dashboard.system_status === 'degraded' ? 2 : 1,
+          cpuUsage: dashboard.performance_snapshot?.cpu_usage_percent || 0
         }
       };
     } catch (error) {

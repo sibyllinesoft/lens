@@ -218,7 +218,7 @@ export class PlanPredictor {
         plan_id: planId,
         confidence,
         expected_latency_ms: expectedLatency,
-        expected_recall,
+        expected_recall: expectedRecall,
         features_used: usedFeatures,
       });
     }

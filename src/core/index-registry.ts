@@ -11,7 +11,7 @@ import { LensTracer } from '../telemetry/tracer.js';
 /**
  * Valid enum values for match reasons according to the API schema
  */
-type ValidMatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'structural' | 'semantic' | 'subtoken';
+export type ValidMatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'structural' | 'semantic' | 'subtoken';
 
 /**
  * Map any reason string to a valid enum value
@@ -1260,5 +1260,12 @@ class FileBasedIndexReader implements IndexReader {
    */
   private getLineNumber(content: string, index: number): number {
     return content.substring(0, index).split('\n').length;
+  }
+
+  /**
+   * Get list of files in the index
+   */
+  async getFileList(): Promise<string[]> {
+    return this.shardPaths;
   }
 }

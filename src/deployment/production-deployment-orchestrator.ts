@@ -111,6 +111,7 @@ interface DeploymentStatus {
   phase: 'initialization' | 'rollout' | 'bakeoff' | 'health_monitoring' | 'capacity_unlock' | 'complete' | 'failed';
   start_time: number;
   current_operation: string;
+  current_duration_hours?: number;
   progress: {
     rollout_complete: boolean;
     bakeoff_complete: boolean;

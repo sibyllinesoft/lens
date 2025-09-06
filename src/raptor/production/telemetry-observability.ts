@@ -662,12 +662,12 @@ export class TelemetryObservabilityLayer extends EventEmitter {
 
   private aggregateWhyMix(metrics: MetricPoint[]): WhyBreakdown {
     const components = ['exact_fuzzy', 'symbol_struct', 'semantic'];
-    const breakdown = { exact_fuzzy: 0, symbol_struct: 0, semantic: 0, total_results: 0, dominant_mode: 'exact' as const };
+    const breakdown: WhyBreakdown = { exact_fuzzy: 0, symbol_struct: 0, semantic: 0, total_results: 0, dominant_mode: 'exact' };
 
     for (const component of components) {
       const componentMetrics = metrics.filter(m => m.tags.component === component);
       if (componentMetrics.length > 0) {
-        breakdown[component as keyof typeof breakdown] = componentMetrics.reduce((sum, m) => sum + m.value, 0) / componentMetrics.length;
+        (breakdown as any)[component] = componentMetrics.reduce((sum, m) => sum + m.value, 0) / componentMetrics.length;
       }
     }
 

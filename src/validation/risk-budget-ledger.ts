@@ -101,10 +101,10 @@ const riskSpendMetrics = {
   spend_by_source: meter.createHistogram('lens_risk_spend_by_source', {
     description: 'Risk spend breakdown by source',
   }),
-  budget_utilization: meter.createObservableGauge('lens_risk_budget_utilization', {
+  budget_utilization: meter.createHistogram('lens_risk_budget_utilization', {
     description: 'Current risk budget utilization ratio',
   }),
-  upshift_rate: meter.createObservableGauge('lens_upshift_rate', {
+  upshift_rate: meter.createHistogram('lens_upshift_rate', {
     description: 'Current query upshift rate',
   }),
   headroom_tracking: meter.createHistogram('lens_headroom_usage', {

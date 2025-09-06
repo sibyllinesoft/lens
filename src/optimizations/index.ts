@@ -10,6 +10,10 @@
  * All systems implement SLA compliance validation per TODO.md requirements.
  */
 
+// Import types for local use
+import type { OptimizationConfig } from './optimization-engine.js';
+import type { MonitoringConfig } from './performance-monitor.js';
+
 // Core optimization systems
 export { CloneAwareRecallSystem } from './clone-aware-recall.js';
 export { LearningToStopSystem } from './learning-to-stop.js';
@@ -132,8 +136,9 @@ export const MONITORING_PRESETS = {
  */
 export async function createOptimizationEngine(
   preset: keyof typeof OPTIMIZATION_PRESETS = 'PRODUCTION'
-): Promise<OptimizationEngine> {
+): Promise<import('./optimization-engine.js').OptimizationEngine> {
   const config = OPTIMIZATION_PRESETS[preset];
+  const { OptimizationEngine } = await import('./optimization-engine.js');
   const engine = new OptimizationEngine(config);
   await engine.initialize();
   return engine;
@@ -143,10 +148,11 @@ export async function createOptimizationEngine(
  * Initialize performance monitor with preset configuration
  */
 export function createPerformanceMonitor(
-  engine: OptimizationEngine,
+  engine: import('./optimization-engine.js').OptimizationEngine,
   preset: keyof typeof MONITORING_PRESETS = 'PRODUCTION'
-): PerformanceMonitor {
+): import('./performance-monitor.js').PerformanceMonitor {
   const config = MONITORING_PRESETS[preset];
+  const { PerformanceMonitor } = require('./performance-monitor.js');
   return new PerformanceMonitor(engine, config);
 }
 
@@ -154,7 +160,7 @@ export function createPerformanceMonitor(
  * Validate SLA compliance for a pipeline result
  * Utility function for external SLA monitoring
  */
-export function validatePipelineSLA(pipeline: OptimizationPipeline): {
+export function validatePipelineSLA(pipeline: import('./optimization-engine.js').OptimizationPipeline): {
   compliant: boolean;
   violations: string[];
 } {
@@ -191,7 +197,7 @@ export function validatePipelineSLA(pipeline: OptimizationPipeline): {
 /**
  * System health check utility
  */
-export function checkSystemHealth(engine: OptimizationEngine): {
+export function checkSystemHealth(engine: import('./optimization-engine.js').OptimizationEngine): {
   healthy: boolean;
   issues: string[];
   degraded_systems: string[];
@@ -226,7 +232,7 @@ export async function setupOptimizedSearch(environment: 'production' | 'developm
   
   const engine = await createOptimizationEngine(presetMap[environment]);
   
-  let monitor: PerformanceMonitor | undefined;
+  let monitor: import('./performance-monitor.js').PerformanceMonitor | undefined;
   if (environment !== 'development') {
     monitor = createPerformanceMonitor(engine, presetMap[environment]);
     await monitor.startMonitoring();

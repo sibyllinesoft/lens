@@ -22,7 +22,7 @@ interface PostDeployCalibrationConfig {
   monitoring_interval_hours: number;
 }
 
-interface CalibrationSession {
+export interface CalibrationSession {
   session_id: string;
   canary_completion_time: string;
   holdout_end_time: string;

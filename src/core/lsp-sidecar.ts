@@ -526,7 +526,7 @@ export class LSPSidecar {
       }
     };
 
-    symbols.forEach(processSymbol);
+    symbols.forEach(symbol => processSymbol(symbol));
     return hints;
   }
 

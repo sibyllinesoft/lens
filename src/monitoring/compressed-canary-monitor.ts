@@ -179,7 +179,7 @@ export class CompressedCanaryMonitor {
     return {
       metrics,
       emergency_triggers: emergencyTriggers,
-      rollback_required
+      rollback_required: rollbackRequired
     };
   }
 
@@ -468,4 +468,4 @@ class StatisticalValidator {
   }
 }
 
-export { CompressedCanaryMonitor, StatisticalValidator };
+export { StatisticalValidator };

@@ -269,7 +269,7 @@ export class RealTimeMonitor extends EventEmitter {
     }
   }
 
-  private async collectComprehensiveMetrics(baseline: boolean): Promise<ComprehensiveMetrics> {
+  public async collectComprehensiveMetrics(baseline: boolean = false): Promise<ComprehensiveMetrics> {
     // Implementation would collect real metrics from search system
     // For now, simulate comprehensive metrics with realistic behavior
     
@@ -519,9 +519,6 @@ export class RealTimeMonitor extends EventEmitter {
     return result;
   }
 
-  public async collectComprehensiveMetrics(): Promise<ComprehensiveMetrics> {
-    return await this.collectComprehensiveMetrics(false);
-  }
 
   public getCurrentWindow(): StatisticalWindow | null {
     return this.currentWindow;

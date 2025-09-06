@@ -253,8 +253,7 @@ export class EconomicsSLOController extends EventEmitter {
       sla_utility: utility.utility_score, // New metric alongside traditional SLA metrics
       cost_per_query_ms: rawMetrics.avg_latency_ms,
       headroom_utilization: spendState.budget_utilization,
-      quality_sacrifice_rate: await this.calculateQualitySacrificeRate(),
-      arm_performance: this.getBanditArmsPerformance()
+      quality_sacrifice_rate: await this.calculateQualitySacrificeRate()
     };
   }
 

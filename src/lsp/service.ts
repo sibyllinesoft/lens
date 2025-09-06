@@ -338,7 +338,7 @@ export class LSPSPIService {
                   'codeActions',
                   'callHierarchy',
                   'typeHierarchy'
-                ] as const
+                ] as ('diagnostics' | 'format' | 'selectionRanges' | 'foldingRanges' | 'prepareRename' | 'rename' | 'codeActions' | 'callHierarchy' | 'typeHierarchy')[]
               };
             }
             return null;
@@ -389,7 +389,7 @@ export class LSPSPIService {
           return {
             path: fileReq.path,
             source_hash: fileReq.source_hash,
-            items: cached.map(diag => this.convertDiagnostic(diag, fileReq.content || ''))
+            items: cached.map(diag => this.convertDiagnostic(diag, ''))
           };
         }
 
@@ -425,7 +425,7 @@ export class LSPSPIService {
         const diagnostics = await client.diagnostics(uri);
         
         // Convert and cache
-        const convertedDiags = diagnostics.map(diag => this.convertDiagnostic(diag, fileReq.content || ''));
+        const convertedDiags = diagnostics.map(diag => this.convertDiagnostic(diag, ''));
         await globalLSPCache.set(cacheKey, diagnostics, Date.now() - startTime);
 
         return {
@@ -566,8 +566,8 @@ export class LSPSPIService {
       let edits: LSPTextEdit[];
       const options = request.options || this.getDefaultFormatOptions(language);
       
-      if (request.range) {
-        const lspRange = this.convertToLSPRange(request.range, content);
+      if (request.range && request.range.b0 !== undefined && request.range.b1 !== undefined) {
+        const lspRange = this.convertToLSPRange({ b0: request.range.b0, b1: request.range.b1 }, content);
         edits = await client.formatRange(uri, lspRange, options);
       } else {
         edits = await client.formatDocument(uri, options);
@@ -586,8 +586,8 @@ export class LSPSPIService {
         const editedContent = this.applyEdits(content, edits);
         client.didChange(uri, 2, [{ text: editedContent }]);
         
-        const secondEdits = request.range 
-          ? await client.formatRange(uri, this.convertToLSPRange(request.range, editedContent), options)
+        const secondEdits = (request.range && request.range.b0 !== undefined && request.range.b1 !== undefined)
+          ? await client.formatRange(uri, this.convertToLSPRange({ b0: request.range.b0, b1: request.range.b1 }, editedContent), options)
           : await client.formatDocument(uri, options);
           
         isIdempotent = secondEdits.length === 0;
@@ -948,7 +948,7 @@ export class LSPSPIService {
         // Read actual file content for accurate byte offset conversion
         let fileContent = content; // Default to current file content
         try {
-          if (path !== request.path) {
+          if (path !== parsed.path) {
             fileContent = await readFile(path, 'utf-8');
           }
         } catch (error) {

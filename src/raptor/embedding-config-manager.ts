@@ -106,7 +106,7 @@ export class EmbeddingConfigManager {
   private config: GlobalEmbeddingConfig;
   private providers: Map<EmbeddingModelType, EmbeddingProvider> = new Map();
   private configFilePath: string;
-  private configWatcher?: fs.FileSystemWatcher;
+  private configWatcher?: any; // FileSystemWatcher type not available in fs/promises
   
   // Runtime state
   private activeProvider: EmbeddingProvider | null = null;

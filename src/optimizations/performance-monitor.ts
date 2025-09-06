@@ -261,14 +261,34 @@ export class PerformanceMonitor {
           createHit('utils/helper.ts', 10, 95, 'function', ['exact']),
           createHit('lib/utils.ts', 20, 85, 'function', ['lexical']),
         ],
-        context: { query: 'helper utility function', repo_sha: 'main', k: 20, timeout_ms: 1000, include_tests: false, languages: ['typescript'] },
+        context: { 
+          trace_id: 'bench-trace-1',
+          query: 'helper utility function', 
+          repo_sha: 'main', 
+          k: 20, 
+          mode: 'hybrid' as const,
+          fuzzy_distance: 0.8,
+          started_at: new Date(),
+          stages: [],
+          filters: { language: ['typescript'] }
+        },
       },
       {
         name: 'diversity_overview_scenario',
         hits: Array.from({ length: 15 }, (_, i) =>
           createHit(`module${i % 3}/file${i}.ts`, i * 5, 90 - i, 'function')
         ),
-        context: { query: 'overview of system functionality', repo_sha: 'main', k: 20, timeout_ms: 1000, include_tests: false, languages: ['typescript'] },
+        context: { 
+          trace_id: 'bench-trace-2',
+          query: 'overview of system functionality', 
+          repo_sha: 'main', 
+          k: 20, 
+          mode: 'hybrid' as const,
+          fuzzy_distance: 0.8,
+          started_at: new Date(),
+          stages: [],
+          filters: { language: ['typescript'] }
+        },
         features: {
           query_type: 'NL_overview',
           topic_entropy: 0.85,
@@ -285,7 +305,17 @@ export class PerformanceMonitor {
           createHit('auth/verify.ts', 8, 88, 'function', ['ast']),
           createHit('types/auth.ts', 1, 80, 'interface', ['lexical']),
         ],
-        context: { query: 'authentication login function', repo_sha: 'main', k: 10, timeout_ms: 1000, include_tests: false, languages: ['typescript'] },
+        context: { 
+          trace_id: 'bench-trace-3',
+          query: 'authentication login function', 
+          repo_sha: 'main', 
+          k: 10, 
+          mode: 'hybrid' as const,
+          fuzzy_distance: 0.8,
+          started_at: new Date(),
+          stages: [],
+          filters: { language: ['typescript'] }
+        },
         features: {
           query_type: 'targeted_search',
           topic_entropy: 0.4,
@@ -302,7 +332,17 @@ export class PerformanceMonitor {
             i < 5 ? ['exact'] : i < 15 ? ['ast'] : ['lexical']
           )
         ),
-        context: { query: 'component system high volume', repo_sha: 'main', k: 50, timeout_ms: 2000, include_tests: false, languages: ['typescript'] },
+        context: { 
+          trace_id: 'bench-trace-5',
+          query: 'component system high volume', 
+          repo_sha: 'main', 
+          k: 50, 
+          mode: 'hybrid' as const,
+          fuzzy_distance: 0.8,
+          started_at: new Date(),
+          stages: [],
+          filters: { language: ['typescript'] }
+        },
         features: {
           query_type: 'NL_overview',
           topic_entropy: 0.92,
@@ -317,7 +357,17 @@ export class PerformanceMonitor {
         hits: Array.from({ length: 10 }, (_, i) =>
           createHit(`cache/item${i}.ts`, i * 2, 85 - i, 'function')
         ),
-        context: { query: 'cached data operations', repo_sha: 'cache-test', k: 15, timeout_ms: 1000, include_tests: false, languages: ['typescript'] },
+        context: { 
+          trace_id: 'bench-trace-4',
+          query: 'cached data operations', 
+          repo_sha: 'cache-test', 
+          k: 15, 
+          mode: 'hybrid' as const,
+          fuzzy_distance: 0.8,
+          started_at: new Date(),
+          stages: [],
+          filters: { language: ['typescript'] }
+        },
       },
     ];
   }
@@ -544,8 +594,9 @@ export class PerformanceMonitor {
    * Log benchmark result with appropriate level
    */
   private logBenchmarkResult(result: BenchmarkResult): void {
-    const level = result.alerts.some(a => a.startsWith('CRITICAL')) ? 'error' :
-                 result.alerts.some(a => a.startsWith('WARNING')) ? 'warn' : 'info';
+    const level: 'debug' | 'info' | 'warn' | 'error' = result.alerts.some(a => a.startsWith('CRITICAL')) ? 'error' :
+                 result.alerts.some(a => a.startsWith('WARNING')) ? 'warn' : 
+                 result.alerts.length > 0 ? 'debug' : 'info';
     
     if (this.config.log_level === 'debug' || 
         (this.config.log_level === 'info' && level !== 'debug') ||

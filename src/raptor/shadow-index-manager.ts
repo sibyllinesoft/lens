@@ -211,7 +211,7 @@ class ShadowIndex {
     const segmentData = JSON.stringify(indexData);
     const buffer = Buffer.from(segmentData, 'utf8');
     
-    await this.storage.createSegment(segmentId, buffer.length);
+    await this.storage.createSegment(segmentId, 'semantic', buffer.length);
     await this.storage.writeToSegment(segmentId, 0, buffer);
     
     console.log(`✅ Persisted ${this.modelType} index: ${this.embeddings.size} embeddings`);

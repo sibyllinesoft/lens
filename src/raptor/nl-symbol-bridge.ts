@@ -526,16 +526,24 @@ export class NLSymbolBridge {
     const searchTerms = new Set<string>();
     
     // Add original query terms
-    searchTerms.add(...queryAnalysis.query_terms);
+    for (const term of queryAnalysis.query_terms || []) {
+      searchTerms.add(term);
+    }
     
     // Add subtokens and synonyms
-    for (const expansion of queryAnalysis.expanded_terms) {
-      searchTerms.add(...expansion.subtokens);
-      searchTerms.add(...expansion.synonyms);
+    for (const expansion of queryAnalysis.expanded_terms || []) {
+      for (const subtoken of expansion.subtokens || []) {
+        searchTerms.add(subtoken);
+      }
+      for (const synonym of expansion.synonyms || []) {
+        searchTerms.add(synonym);
+      }
     }
     
     // Add domain keywords with higher weight
-    searchTerms.add(...queryAnalysis.domain_keywords);
+    for (const keyword of queryAnalysis.domain_keywords || []) {
+      searchTerms.add(keyword);
+    }
     
     const searchQuery = Array.from(searchTerms);
     return this.bm25Engine.search(searchQuery, this.config.top_m_topics * 2); // Get extra for filtering
@@ -690,11 +698,17 @@ export class NLSymbolBridge {
     
     // Get all query terms (including expanded)
     const allQueryTerms = new Set<string>();
-    allQueryTerms.add(...queryAnalysis.query_terms);
+    for (const term of queryAnalysis.query_terms || []) {
+      allQueryTerms.add(term);
+    }
     
-    for (const expansion of queryAnalysis.expanded_terms) {
-      allQueryTerms.add(...expansion.subtokens);
-      allQueryTerms.add(...expansion.synonyms);
+    for (const expansion of queryAnalysis.expanded_terms || []) {
+      for (const subtoken of expansion.subtokens || []) {
+        allQueryTerms.add(subtoken);
+      }
+      for (const synonym of expansion.synonyms || []) {
+        allQueryTerms.add(synonym);
+      }
     }
     
     // Check for overlaps with symbol names

@@ -219,7 +219,7 @@ export class ChaosEngineeringFramework extends EventEmitter {
    * Execute a chaos experiment with full safety monitoring
    */
   async executeExperiment(experimentId: string): Promise<ChaosExperimentResult> {
-    return await this.tracer.startActiveSpan('execute-chaos-experiment', async (span) => {
+    return await this.lensTracer.startActiveSpan('execute-chaos-experiment', async (span) => {
       const experiment = this.experiments.get(experimentId);
       if (!experiment) {
         throw new Error(`Experiment ${experimentId} not found`);

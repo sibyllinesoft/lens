@@ -34,14 +34,14 @@ interface EarlyExitConfig {
 
 interface DeduplicationConfig {
   in_file: {
-    simhash: {
-      k: number;
-      hamming_max: number;
+    simhash?: {
+      k?: number;
+      hamming_max?: number;
     };
-    keep: number;
+    keep?: number;
   };
   cross_file: {
-    vendor_deboost: number;
+    vendor_deboost?: number;
   };
 }
 

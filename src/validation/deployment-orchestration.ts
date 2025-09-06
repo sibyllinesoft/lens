@@ -20,7 +20,7 @@ import { globalReplaySystem, CounterfactualReplay } from './counterfactual-repla
 import { globalConformalAuditing, ConformalAuditing } from './conformal-auditing.js';
 import { globalCalibrationMonitoring, CalibrationMonitoring } from './calibration-monitoring.js';
 import { globalOperationalGates, OperationalGates } from './operational-gates.js';
-import { globalChaosEngineering, ChaosEngineering } from './chaos-engineering.js';
+import { globalChaosEngineering, ChaosEngineering, ChaosExperimentType } from './chaos-engineering.js';
 import { globalAblationStudies, AblationStudies } from './ablation-studies.js';
 
 // Deployment phase
@@ -286,7 +286,7 @@ const deploymentMetrics = {
   activity_durations: meter.createHistogram('lens_deployment_activity_duration_hours', {
     description: 'Activity durations by activity type',
   }),
-  validation_scores: meter.createObservableGauge('lens_deployment_validation_score', {
+  validation_scores: meter.createHistogram('lens_deployment_validation_score', {
     description: 'Current deployment validation score',
   }),
   rollback_events: meter.createCounter('lens_deployment_rollback_events_total', {
@@ -640,19 +640,19 @@ export class DeploymentOrchestration {
     switch (activity.name) {
       case 'LSP kill test (10 min)':
         console.log('Executing LSP kill test...');
-        const lspExperiment = await this.chaosEngineering.executeExperiment('lsp_kill');
+        const lspExperiment = await this.chaosEngineering.executeExperiment(ChaosExperimentType.LSP_KILL);
         session.phase_results[DeploymentPhase.PHASE_2_4].validation_results['lsp_kill'] = lspExperiment;
         break;
 
       case 'RAPTOR cache drop test':
         console.log('Executing RAPTOR cache drop test...');
-        const cacheExperiment = await this.chaosEngineering.executeExperiment('raptor_cache_drop');
+        const cacheExperiment = await this.chaosEngineering.executeExperiment(ChaosExperimentType.RAPTOR_CACHE_DROP);
         session.phase_results[DeploymentPhase.PHASE_2_4].validation_results['cache_drop'] = cacheExperiment;
         break;
 
       case 'Force 256d only test':
         console.log('Executing force 256d only test...');
-        const embeddingExperiment = await this.chaosEngineering.executeExperiment('force_256d_only');
+        const embeddingExperiment = await this.chaosEngineering.executeExperiment(ChaosExperimentType.FORCE_256D_ONLY);
         session.phase_results[DeploymentPhase.PHASE_2_4].validation_results['force_256d'] = embeddingExperiment;
         break;
 

@@ -15,11 +15,23 @@ import path from 'path';
 import { SemanticCard } from './semantic-card.js';
 import { SymbolKind } from '../types/core.js';
 
-export interface EnhancedSemanticCard extends SemanticCard {
+// Helper function to safely access optional properties
+function asEnhanced(card: SemanticCard): any {
+  return card as any;
+}
+
+export interface EnhancedSemanticCard extends Omit<SemanticCard, 'e_sem'> {
   // Vector embeddings
   e_sem: Float32Array; // Semantic embedding (384-dim)
   e_syntax: Float32Array; // Syntax embedding (128-dim)  
   e_context: Float32Array; // Context embedding (256-dim)
+  
+  // Additional properties required by the implementation
+  symbols?: Array<{name: string, kind: SymbolKind, line: number, id?: string}>;
+  summary?: string;
+  imports?: string[];
+  exports?: string[];
+  file_path?: string;
   
   // Businessness scoring components
   businessness: {
@@ -325,10 +337,10 @@ export class CardStore {
     // Combine all semantic content
     const content = [
       ...card.roles,
-      ...card.resources,
-      ...card.shapes,
-      ...card.domain_tokens,
-      card.summary || ''
+      ...Object.values(card.resources).flat(),
+      ...Object.values(card.shapes).flat(),
+      ...card.domainTokens,
+      (card as any).summary || ''
     ].join(' ');
     
     // Mock embedding - in real implementation would call embedding service
@@ -350,9 +362,10 @@ export class CardStore {
 
   private async generateSyntaxEmbedding(card: SemanticCard): Promise<Float32Array> {
     // Focus on syntax patterns, AST structure, language constructs
-    const syntaxFeatures = card.shapes.concat(
-      card.symbols.map(s => `${s.kind}:${s.name}`)
-    );
+    const syntaxFeatures = [
+      ...Object.values(card.shapes).flat(),
+      ...((card as any).symbols?.map((s: any) => `${s.kind}:${s.name}`) || [])
+    ];
     
     const embedding = new Float32Array(this.embeddingDimensions.syntax);
     // Simple hash-based embedding for syntax
@@ -375,9 +388,9 @@ export class CardStore {
   private async generateContextEmbedding(card: SemanticCard): Promise<Float32Array> {
     // Focus on usage context, imports, relationships
     const contextFeatures = [
-      ...card.imports.map(imp => `import:${imp.name}`),
-      ...card.exports.map(exp => `export:${exp.name}`),
-      `file_type:${this.getFileType(card.file_path)}`
+      ...(card as any).imports.map(imp => `import:${imp.name}`),
+      ...(card as any).exports.map(exp => `export:${exp.name}`),
+      `file_type:${this.getFileType((card as any).file_path)}`
     ];
     
     const embedding = new Float32Array(this.embeddingDimensions.context);
@@ -404,13 +417,13 @@ export class CardStore {
       db_interaction_count: this.countDbInteractions(card),
       ui_component_count: this.countUiComponents(card),
       business_logic_keywords: this.extractBusinessLogicKeywords(card),
-      import_diversity: new Set(card.imports.map(i => i.name)).size,
-      method_complexity: card.symbols.map(s => this.estimateComplexity(s))
+      import_diversity: new Set((card as any).imports.map(i => i.name)).size,
+      method_complexity: (card as any).symbols.map(s => this.estimateComplexity(s))
     };
 
     // Compute businessness components
     const components = {
-      domain_term_pmi: this.computeDomainTermPMI(card.domain_tokens),
+      domain_term_pmi: this.computeDomainTermPMI(card.domainTokens),
       resource_counts: Math.log1p(rawFeatures.api_call_count + rawFeatures.db_interaction_count),
       abstraction_level: this.computeAbstractionLevel(card),
       user_facing_score: this.computeUserFacingScore(card),
@@ -435,21 +448,22 @@ export class CardStore {
 
   private countApiCalls(card: SemanticCard): number {
     const apiPatterns = ['fetch', 'axios', 'http', 'api', 'request', 'client'];
-    return card.domain_tokens.filter(token => 
+    return card.domainTokens.filter(token => 
       apiPatterns.some(pattern => token.toLowerCase().includes(pattern))
     ).length;
   }
 
   private countDbInteractions(card: SemanticCard): number {
     const dbPatterns = ['query', 'select', 'insert', 'update', 'delete', 'database', 'db', 'sql'];
-    return card.domain_tokens.filter(token =>
+    return card.domainTokens.filter(token =>
       dbPatterns.some(pattern => token.toLowerCase().includes(pattern))
     ).length;
   }
 
   private countUiComponents(card: SemanticCard): number {
     const uiPatterns = ['component', 'render', 'jsx', 'html', 'css', 'style', 'ui', 'button', 'input'];
-    return card.shapes.filter(shape =>
+    const allShapes = [...card.shapes.typeNames, ...card.shapes.jsonKeys];
+    return allShapes.filter(shape =>
       uiPatterns.some(pattern => shape.toLowerCase().includes(pattern))
     ).length;
   }
@@ -460,7 +474,7 @@ export class CardStore {
       'account', 'user', 'order', 'payment', 'invoice', 'customer', 'product'
     ];
     
-    return card.domain_tokens.filter(token =>
+    return card.domainTokens.filter(token =>
       businessKeywords.some(keyword => token.toLowerCase().includes(keyword))
     );
   }
@@ -483,7 +497,7 @@ export class CardStore {
     ];
     
     let score = 0;
-    for (const symbol of card.symbols) {
+    for (const symbol of (card as any).symbols) {
       if (abstractionIndicators.some(indicator => 
         symbol.name.toLowerCase().includes(indicator)
       )) {
@@ -491,16 +505,17 @@ export class CardStore {
       }
     }
     
-    return Math.min(score / Math.max(1, card.symbols.length), 1);
+    return Math.min(score / Math.max(1, (card as any).symbols.length), 1);
   }
 
   private computeUserFacingScore(card: SemanticCard): number {
     const userFacingTerms = ['ui', 'component', 'page', 'view', 'screen', 'form'];
-    const score = card.shapes.filter(shape =>
+    const allShapes = [...card.shapes.typeNames, ...card.shapes.jsonKeys];
+    const score = allShapes.filter(shape =>
       userFacingTerms.some(term => shape.toLowerCase().includes(term))
     ).length;
     
-    return Math.min(score / Math.max(1, card.shapes.length), 1);
+    return Math.min(score / Math.max(1, allShapes.length), 1);
   }
 
   private estimateComplexity(symbol: any): number {
@@ -525,7 +540,7 @@ export class CardStore {
   ) {
     // Semantic quality based on content richness
     const semantic_quality = Math.min(
-      (card.domain_tokens.length + card.roles.length + card.resources.length) / 20,
+      (card.domainTokens.length + card.roles.length + Object.values(card.resources).flat().length) / 20,
       1.0
     );
     
@@ -550,9 +565,18 @@ export class CardStore {
       file_id: symbol.id,
       symbols: [symbol],
       // Reduce other content to focus on this symbol
-      roles: fileCard.roles.filter(role => role.includes(symbol.name)),
-      resources: fileCard.resources.filter(res => res.includes(symbol.name)),
-      shapes: fileCard.shapes.filter(shape => shape.includes(symbol.name))
+      roles: fileCard.roles.filter((role: string) => role.includes(symbol.name)),
+      resources: {
+        routes: fileCard.resources.routes.filter(res => res.includes(symbol.name)),
+        sql: fileCard.resources.sql.filter(res => res.includes(symbol.name)),
+        topics: fileCard.resources.topics.filter(res => res.includes(symbol.name)),
+        buckets: fileCard.resources.buckets.filter(res => res.includes(symbol.name)),
+        featureFlags: fileCard.resources.featureFlags.filter(res => res.includes(symbol.name))
+      },
+      shapes: {
+        typeNames: fileCard.shapes.typeNames.filter(shape => shape.includes(symbol.name)),
+        jsonKeys: fileCard.shapes.jsonKeys.filter(shape => shape.includes(symbol.name))
+      }
     };
 
     // Adjust businessness for symbol-specific context
@@ -591,7 +615,7 @@ export class CardStore {
     const business_logic_patterns = new Map<string, number>();
     
     for (const card of cards.values()) {
-      for (const token of card.domain_tokens) {
+      for (const token of card.domainTokens) {
         domain_terms.set(token, (domain_terms.get(token) || 0) + 1);
       }
       
@@ -721,7 +745,7 @@ export class CardStore {
     cards: Map<string, EnhancedSemanticCard>,
     symbolCards: Map<string, EnhancedSemanticCard>
   ): CoverageMetrics {
-    const fileSet = new Set(Array.from(cards.values()).map(card => card.file_path));
+    const fileSet = new Set(Array.from(cards.values()).map(card => (card as any).file_path));
     const symbolKinds = new Map<SymbolKind, number>();
     
     let highQualityCards = 0;
@@ -739,7 +763,7 @@ export class CardStore {
       else if (avgConfidence > 0.5) mediumQualityCards++;
       else lowQualityCards++;
 
-      for (const symbol of card.symbols) {
+      for (const symbol of (card as any).symbols) {
         symbolKinds.set(symbol.kind, (symbolKinds.get(symbol.kind) || 0) + 1);
       }
     }
@@ -757,7 +781,7 @@ export class CardStore {
       },
       symbol_coverage: {
         symbols_with_cards: symbolCards.size,
-        total_symbols: Array.from(cards.values()).reduce((sum, card) => sum + card.symbols.length, 0),
+        total_symbols: Array.from(cards.values()).reduce((sum, card) => sum + (card as any).symbols.length, 0),
         coverage_by_kind
       },
       quality_distribution: {
@@ -830,7 +854,7 @@ export class CardStore {
     // Apply file pattern filters
     if (query.file_filters) {
       candidates = candidates.filter(card => {
-        const path = card.file_path;
+        const path = (card as any).file_path;
         
         if (query.file_filters!.include_patterns.length > 0) {
           const included = query.file_filters!.include_patterns.some(pattern => 
@@ -853,7 +877,7 @@ export class CardStore {
     // Apply symbol kind filter
     if (query.symbol_kind_filter) {
       candidates = candidates.filter(card => 
-        card.symbols.some(symbol => 
+        (card as any).symbols.some(symbol => 
           query.symbol_kind_filter!.includes(symbol.kind)
         )
       );
@@ -893,9 +917,9 @@ export class CardStore {
   private countTokens(card: SemanticCard): number {
     return [
       ...card.roles,
-      ...card.resources,
-      ...card.shapes,
-      ...card.domain_tokens
+      ...Object.values(card.resources).flat(),
+      ...Object.values(card.shapes).flat(),
+      ...card.domainTokens
     ].join(' ').split(' ').length;
   }
 

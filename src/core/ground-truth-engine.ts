@@ -155,11 +155,13 @@ export class GroundTruthEngine extends EventEmitter {
     // Classify intents and extract features
     const enrichedQueries = await Promise.all(
       gapAnalysis.map(async (query) => {
-        const intent = await this.intentClassifier.classify(query.text);
+        const intent = await this.intentClassifier.classify(query.query);
         const features = this.extractQueryFeatures(query, intent);
         
         return {
           ...query,
+          id: `gt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          text: query.query,
           intent,
           language: features.language,
           topic: features.topic,

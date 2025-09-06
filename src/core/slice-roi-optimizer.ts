@@ -134,7 +134,7 @@ class ConformalUpliftPredictor {
       lower_bound: Math.max(0, pointEstimate - nonconformityQuantile),
       upper_bound: pointEstimate + nonconformityQuantile,
       confidence_level: confidence,
-      nonconformity_quantile,
+      nonconformity_quantile: nonconformityQuantile,
       sample_size: scores.length,
       is_calibrated: true
     };
@@ -184,7 +184,7 @@ class SliceROIFitter {
         const spendPct = spendIncrease / (prev.spend_ms || 1) * 100;
         const marginalGain = upliftIncrease * 100; // Convert to pp
         
-        marginalGains.push({ spend_pct: spendPct, marginal_gain });
+        marginalGains.push({ spend_pct: spendPct, marginal_gain: marginalGain });
       }
     }
 
@@ -366,7 +366,7 @@ export class SliceROIOptimizer {
     // Intent classification
     let intent: SliceIdentifier['intent'] = 'semantic_search';
     
-    if (ctx.mode === 'exact') intent = 'exact_match';
+    if (ctx.mode === 'lex') intent = 'exact_match';
     else if (ctx.mode === 'struct') intent = 'structural_query';
     else if (ctx.fuzzy) intent = 'fuzzy_match';
     else if (ctx.query.length > 50 && /\b(how|what|why|when|where)\b/i.test(ctx.query)) {

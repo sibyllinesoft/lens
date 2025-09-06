@@ -3,27 +3,27 @@
  * Complete alignment, calibration, and ANN retuning system for Lens search
  */
 
-export { VectorAlignment, ScoreAlignment, AlignmentValidator } from './alignment-system';
-export { CalibrationSystem, BatchCalibrationProcessor } from './calibration-system';
-export { HNSWTuner, QuantizationOptimizer } from './ann-tuning-system';
-export { MatryoshkaRouter, RouterOptimizer } from './matryoshka-router';
-export { SLAScoreboard } from './sla-scoreboard';
-export { MigrationOrchestrator } from './migration-orchestrator';
+export { VectorAlignment, ScoreAlignment, AlignmentValidator } from './alignment-system.js';
+export { CalibrationSystem, BatchCalibrationProcessor } from './calibration-system.js';
+export { HNSWTuner, QuantizationOptimizer } from './ann-tuning-system.js';
+export { MatryoshkaRouter, RouterOptimizer } from './matryoshka-router.js';
+export { SLAScoreboard } from './sla-scoreboard.js';
+export { MigrationOrchestrator } from './migration-orchestrator.js';
 
 // Type exports
-export type { AlignmentConfig } from './alignment-system';
-export type { CalibrationConfig } from './calibration-system';
-export type { ANNConfig } from './ann-tuning-system';
-export type { RouterConfig } from './matryoshka-router';
-export type { ScoreboardConfig } from './sla-scoreboard';
-export type { MigrationConfig } from './migration-orchestrator';
+export type { AlignmentConfig } from './alignment-system.js';
+export type { CalibrationConfig } from './calibration-system.js';
+export type { ANNConfig } from './ann-tuning-system.js';
+export type { RouterConfig } from './matryoshka-router.js';
+export type { ScoreboardConfig } from './sla-scoreboard.js';
+export type { MigrationConfig, MigrationResult } from './migration-orchestrator.js';
 
 /**
  * Quick-start migration execution
  */
-import { MigrationOrchestrator } from './migration-orchestrator';
+import { MigrationOrchestrator, MigrationResult } from './migration-orchestrator.js';
 
-export async function executeGemmaMigration(outputDir?: string) {
+export async function executeGemmaMigration(outputDir?: string): Promise<MigrationResult> {
   console.log('🚀 Starting Gemma Migration System');
   
   const orchestrator = new MigrationOrchestrator({

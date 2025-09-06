@@ -4,7 +4,6 @@
  */
 
 import type { SearchHit } from '../core/span_resolver/index.js';
-import type { SupportedLanguage } from './api.js';
 
 // Re-export SearchHit for use by other modules
 export type { SearchHit };
@@ -75,6 +74,7 @@ export interface SymbolDefinition {
   name: string;
   kind: SymbolKind;
   file_path: string;
+  file?: string; // Alternative field name used in some modules
   line: number;
   col: number;
   scope: string;
@@ -148,6 +148,22 @@ export interface SearchContext {
   fuzzy?: boolean | undefined; // Alternative fuzzy flag used in some modules
   started_at: Date;
   stages: StageResult[];
+  
+  // Additional properties used throughout the codebase
+  searchType?: string | undefined;
+  filters?: {
+    language?: string[];
+    symbolType?: string[];
+    repositories?: string[];
+    [key: string]: any;
+  } | undefined;
+  stageTimings?: {
+    [stageName: string]: number;
+  } | undefined;
+  rankingStrategy?: string | undefined;
+  userId?: string | undefined;
+  repositories?: string[] | undefined;
+  language?: string | undefined;
 }
 
 export interface StageResult {
@@ -181,7 +197,7 @@ export interface Candidate {
 }
 
 export type SearchMode = 'lex' | 'lexical' | 'struct' | 'hybrid';
-export type MatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'semantic' | 'lsp_hint' | 'unicode_normalized' | 'raptor_diversity' | 'structural' | 'exact_name' | 'semantic_type';
+export type MatchReason = 'exact' | 'fuzzy' | 'symbol' | 'struct' | 'semantic' | 'lsp_hint' | 'unicode_normalized' | 'raptor_diversity' | 'structural' | 'exact_name' | 'semantic_type' | 'subtoken';
 
 // Work units for NATS/JetStream
 export interface WorkUnit {
@@ -376,4 +392,4 @@ export interface CodeOwner {
 }
 
 // SupportedLanguage export (referenced by lsp-sidecar)
-export type SupportedLanguage = 'typescript' | 'javascript' | 'python' | 'rust' | 'go' | 'java' | 'cpp' | 'c' | 'csharp' | 'php' | 'ruby' | 'scala' | 'kotlin' | 'swift' | 'dart' | 'lua' | 'r' | 'shell' | 'yaml' | 'json' | 'markdown' | 'html' | 'css' | 'sql';
+export type SupportedLanguage = 'typescript' | 'javascript' | 'python' | 'rust' | 'go' | 'java' | 'bash' | 'cpp' | 'c' | 'csharp' | 'php' | 'ruby' | 'scala' | 'kotlin' | 'swift' | 'dart' | 'lua' | 'r' | 'shell' | 'yaml' | 'json' | 'markdown' | 'html' | 'css' | 'sql';

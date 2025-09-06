@@ -170,7 +170,7 @@ export class EmbedderProofLeversOrchestrator {
       const integrityChecks = await this.performIntegrityChecks(searchResults.hits);
 
       // 6. Update session state
-      this.sessionAware.updateSessionWithResults(sessionId, searchResults.hits);
+      this.sessionAware.updateSessionWithResults(sessionId, searchResults.hits as any);
 
       // 7. Cross-lever optimization
       if (this.config.integration.enable_cross_lever_optimization) {
@@ -248,8 +248,8 @@ export class EmbedderProofLeversOrchestrator {
         deployable_updates: deployableUpdates.length,
         quality_gates_passed: qualityGateResults.overall_passed,
         integrity_health: integrityHealth.overall_status,
-        session_model_improvements: sessionModelUpdates.improvements,
-        slo_optimizations: sloOptimizations.applied_optimizations,
+        session_model_improvements: sessionModelUpdates as any,
+        slo_optimizations: sloOptimizations as any,
         cross_lever_synergies: this.crossLeverOptimizer.getDiscoveredSynergies(),
         recommendations: this.generateOptimizationRecommendations({
           drCandidates,
@@ -336,10 +336,12 @@ export class EmbedderProofLeversOrchestrator {
     // Mock implementation - would integrate with actual search engine
     const mockResults: SearchHit[] = [
       {
+        file: '/src/example.ts',
         file_path: '/src/example.ts',
         line: 42,
         col: 10,
         score: 0.95,
+        why: ['symbol', 'semantic'],
         match_reasons: ['symbol', 'semantic'],
         snippet: 'function example() { return "test"; }',
         context: 'Example function implementation'

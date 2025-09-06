@@ -258,7 +258,7 @@ export class EmbeddingGemmaMigrationCLI {
 
       // Run replay evaluation
       const replayConfig = {
-        models: ['gemma-768', 'gemma-256'] as const,
+        models: ['gemma-768', 'gemma-256'] as ['gemma-768', 'gemma-256'],
         baseline: 'gemma-768' as const,
         iterations: this.config.dryRun ? 1 : 3,
         parallelQueries: 4,

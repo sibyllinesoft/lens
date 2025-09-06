@@ -618,6 +618,75 @@ ${suite.validation_status.passed ?
     const avgSquaredDiff = squaredDiffs.reduce((a, b) => a + b, 0) / squaredDiffs.length;
     return Math.sqrt(avgSquaredDiff);
   }
+
+  /**
+   * Run final pinned benchmark for deployment validation
+   */
+  public async runFinalPinnedBenchmark(): Promise<BenchmarkResult> {
+    console.log('🎯 Running final pinned benchmark for deployment validation...');
+    
+    // Run validation and extract the main benchmark result
+    const suite = await this.runFinalValidation();
+    
+    console.log('✅ Final pinned benchmark completed');
+    return suite.results[0]; // Return the first benchmark result
+  }
+
+  /**
+   * Validate promotion gates for deployment approval
+   */
+  public async validatePromotionGates(): Promise<ValidationStatus> {
+    console.log('🚪 Validating promotion gates for deployment...');
+    
+    // Run validation to get current metrics
+    const suite = await this.runFinalValidation();
+    const benchmark = suite.results[0]; // Get the first benchmark result
+    
+    // Validate against promotion gates
+    const gateResults: Record<string, boolean> = {};
+    const issues: string[] = [];
+    const recommendations: string[] = [];
+
+    // Core quality gates - using metrics object and available properties
+    const metrics = (benchmark as any).metrics || {};
+    gateResults['p_at_1'] = (metrics.p_at_1 || 0) >= 85.0;
+    if (!gateResults['p_at_1']) {
+      issues.push(`P@1 ${(metrics.p_at_1 || 0).toFixed(2)}% below required 85.0%`);
+    }
+
+    gateResults['ndcg_at_10'] = (metrics.ndcg_at_10 || 0) >= 88.0;
+    if (!gateResults['ndcg_at_10']) {
+      issues.push(`nDCG@10 ${(metrics.ndcg_at_10 || 0).toFixed(2)}% below required 88.0%`);
+    }
+
+    gateResults['recall_at_50'] = (metrics.recall_at_50 || 0) >= 88.9;
+    if (!gateResults['recall_at_50']) {
+      issues.push(`Recall@50 ${(metrics.recall_at_50 || 0).toFixed(2)}% below required 88.9%`);
+    }
+
+    // Performance gates
+    gateResults['p95_latency'] = (benchmark.execution_time_ms || 0) <= 150;
+    if (!gateResults['p95_latency']) {
+      issues.push(`Execution time ${(benchmark.execution_time_ms || 0)}ms above required 150ms`);
+    }
+
+    const passed = Object.values(gateResults).every(result => result);
+
+    if (passed) {
+      recommendations.push('All promotion gates passed - ready for deployment');
+    } else {
+      recommendations.push('Address quality/performance issues before deployment');
+    }
+
+    console.log(`🚪 Promotion gates validation: ${passed ? 'PASSED' : 'FAILED'}`);
+
+    return {
+      passed,
+      gate_results: gateResults,
+      issues,
+      recommendations
+    };
+  }
 }
 
 export const finalBenchSystem = new FinalBenchSystem();

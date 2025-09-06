@@ -277,7 +277,7 @@ export class SteadyStateChaosOperations extends EventEmitter {
     // Save comprehensive report
     await this.saveWeeklyReport(weeklyReport, outputDir);
     
-    console.log(`✅ Weekly chaos experiment completed: ${experiment.no_panic_achieved ? 'NO-PANIC ACHIEVED' : 'VIOLATIONS DETECTED'}`);
+    console.log(`✅ Weekly chaos experiment completed: ${experiment.results.no_panic_achieved ? 'NO-PANIC ACHIEVED' : 'VIOLATIONS DETECTED'}`);
     console.log(`   Experiment: ${experimentType}`);
     console.log(`   Recovery Time: ${experiment.results.degradation_duration_seconds}s`);
     console.log(`   ROI Slope: ${this.riskLedger[this.riskLedger.length - 1]?.roi_slope.toFixed(2)}pp/%`);

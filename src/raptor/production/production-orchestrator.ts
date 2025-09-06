@@ -11,15 +11,15 @@ import { writeFile, mkdir, readFile } from 'fs/promises';
 import { join } from 'path';
 
 // Import all production components
-import { ArtifactMetricsValidator, ValidationResult as MetricsValidationResult } from './artifact-metrics-validator.ts';
-import { GapCalculator } from './gap-calculation-fix.ts';
-import { AblationFramework, AblationComparison } from './ablation-framework.ts';
-import { PairedStatisticalValidator, ValidationResult as StatisticalValidationResult } from './paired-statistical-validation.ts';
-import { ProductionGatesValidator, ProductionReadinessAssessment } from './production-gates.ts';
-import { TripwireMonitor, SystemHealth } from './tripwires-monitoring.ts';
-import { CanaryRolloutManager, RolloutStatus } from './canary-rollout.ts';
-import { TelemetryObservabilityLayer, ObservabilityDashboard } from './telemetry-observability.ts';
-import { KillSwitchRollbackManager } from './kill-switch-rollback.ts';
+import { ArtifactMetricsValidator, ValidationResult as MetricsValidationResult } from './artifact-metrics-validator.js';
+import { GapCalculator } from './gap-calculation-fix.js';
+import { AblationFramework, AblationComparison } from './ablation-framework.js';
+import { PairedStatisticalValidator, ValidationResult as StatisticalValidationResult } from './paired-statistical-validation.js';
+import { ProductionGatesValidator, ProductionReadinessAssessment } from './production-gates.js';
+import { TripwireMonitor, SystemHealth } from './tripwires-monitoring.js';
+import { CanaryRolloutManager, RolloutStatus } from './canary-rollout.js';
+import { TelemetryObservabilityLayer, ObservabilityDashboard } from './telemetry-observability.js';
+import { KillSwitchRollbackManager } from './kill-switch-rollback.js';
 
 export interface ProductionConfig {
   artifacts_path: string;

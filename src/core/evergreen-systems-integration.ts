@@ -34,7 +34,10 @@ import {
   BazelParser,
   GradleParser,
   CargoParser,
-  type BuildTarget
+  type BuildTarget,
+  type TestFailure as BuildTestFailure,
+  type ChangeEvent as BuildChangeEvent,
+  type CodeOwner as BuildCodeOwner
 } from './build-test-priors.js';
 import { 
   SpeculativeMultiPlanPlanner,
@@ -400,7 +403,7 @@ export class EvergreenSystemsIntegrator {
   /**
    * Record test failure for build/test priors
    */
-  recordTestFailure(failure: TestFailure): void {
+  recordTestFailure(failure: BuildTestFailure): void {
     if (!this.config.build_test_priors.enabled) return;
     
     this.buildPriors.recordTestFailure(failure);
@@ -409,7 +412,7 @@ export class EvergreenSystemsIntegrator {
   /**
    * Record change event for build/test priors
    */
-  recordChangeEvent(change: ChangeEvent): void {
+  recordChangeEvent(change: BuildChangeEvent): void {
     if (!this.config.build_test_priors.enabled) return;
     
     this.buildPriors.recordChangeEvent(change);
@@ -418,7 +421,7 @@ export class EvergreenSystemsIntegrator {
   /**
    * Update code owners for build/test priors
    */
-  updateCodeOwners(owners: CodeOwner[]): void {
+  updateCodeOwners(owners: BuildCodeOwner[]): void {
     if (!this.config.build_test_priors.enabled) return;
     
     this.buildPriors.updateCodeOwners(owners);
