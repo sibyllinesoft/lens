@@ -355,7 +355,7 @@ export class EnhancedSemanticRerankEngine {
         ...candidate,
         score: combinedScore,
         match_reasons: semanticScore > 0.6 ? 
-          [...candidate.match_reasons, 'semantic'] : 
+          [...candidate.match_reasons, 'semantic' as const] : 
           candidate.match_reasons,
       };
     });
@@ -457,7 +457,7 @@ export class EnhancedSemanticRerankEngine {
         ...candidate,
         score: Math.min(1.0, combinedScore + boost),
         match_reasons: semanticScore > 0.6 ? 
-          [...candidate.match_reasons, 'semantic'] : 
+          [...candidate.match_reasons, 'semantic' as const] : 
           candidate.match_reasons,
       });
       

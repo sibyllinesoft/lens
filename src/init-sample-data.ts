@@ -7,7 +7,7 @@
 
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { codeIndexer } from './indexer';
+import { codeIndexer } from './indexer.js';
 
 async function createSampleFiles() {
   const sampleDir = path.join(process.cwd(), 'sample-code');

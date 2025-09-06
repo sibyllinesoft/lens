@@ -568,7 +568,7 @@ export class ProductionMonitoringSystem extends EventEmitter {
       metric_value: metricValue,
       violation_duration_minutes: violationDurationMinutes,
       timestamp: alertTime,
-      actions_taken: []
+      actions_taken: [] as string[]
     };
     
     // Execute alert actions

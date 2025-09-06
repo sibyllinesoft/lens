@@ -37,7 +37,7 @@ export interface ParameterSweepConfig {
   nl_thresholds: number[];
   candidate_ks: number[];
   ef_search_values: number[];
-  confidence_cutoffs?: number[];
+  confidence_cutoffs?: (number | undefined)[];
   test_queries: TestQuery[];
   baseline_config: SemanticConfig;
   max_latency_increase_ms: number; // p95 latency budget
@@ -144,12 +144,17 @@ export class SemanticParameterSweep {
       for (const candidateK of config.candidate_ks) {
         for (const efSearch of config.ef_search_values) {
           for (const cutoff of cutoffs) {
-            combinations.push({
+            const semanticConfig: SemanticConfig = {
               nl_threshold: nlThreshold,
               min_candidates: candidateK,
               efSearch: efSearch,
-              confidence_cutoff: cutoff,
-            });
+            };
+            
+            if (cutoff !== undefined) {
+              semanticConfig.confidence_cutoff = cutoff;
+            }
+            
+            combinations.push(semanticConfig);
           }
         }
       }
@@ -420,7 +425,6 @@ export const PHASE3_SWEEP_CONFIG: ParameterSweepConfig = {
     nl_threshold: 0.5,
     min_candidates: 10,
     efSearch: 64,
-    confidence_cutoff: undefined,
   },
   max_latency_increase_ms: 3, // 3ms p95 latency budget
 };

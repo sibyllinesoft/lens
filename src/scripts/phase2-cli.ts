@@ -419,7 +419,7 @@ async function main(): Promise<void> {
 }
 
 // Execute CLI if run directly
-if (import.meta.main) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch((error) => {
     console.error('💥 Fatal error:', error);
     process.exit(1);

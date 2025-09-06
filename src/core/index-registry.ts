@@ -77,6 +77,11 @@ export interface IndexReader {
   }): Promise<StructuralResult[]>;
 
   /**
+   * Get list of files in the index
+   */
+  getFileList(): Promise<string[]>;
+
+  /**
    * Close reader and free resources
    */
   close(): Promise<void>;
@@ -90,6 +95,7 @@ export interface StructuralResult {
   snippet: string;
   score: number;
   why: string[];
+  match_reasons?: ValidMatchReason[] | undefined; // Add match_reasons field
   byte_offset?: number;
   span_len?: number;
   pattern_type: 'function_def' | 'class_def' | 'import' | 'async_def' | 'decorator' | 'try_except' | 'for_loop' | 'if_statement';

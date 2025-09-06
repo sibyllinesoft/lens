@@ -913,8 +913,33 @@ export class BenchmarkSuiteRunner {
     
     // Run Phase C hardening analysis
     try {
+      // Create a complete BenchmarkConfig with defaults
+      const fullBenchmarkConfig: BenchmarkConfig = {
+        trace_id: overrides.trace_id ?? crypto.randomUUID(),
+        suite: overrides.suite ?? ['codesearch'],
+        systems: overrides.systems ?? ['lex'],
+        slices: overrides.slices ?? 'SMOKE_DEFAULT',
+        seeds: overrides.seeds ?? 1,
+        cache_mode: overrides.cache_mode ?? 'warm',
+        robustness: overrides.robustness ?? false,
+        metamorphic: overrides.metamorphic ?? false,
+        k_candidates: overrides.k_candidates ?? 200,
+        top_n: overrides.top_n ?? 50,
+        fuzzy: overrides.fuzzy ?? 2,
+        subtokens: overrides.subtokens ?? true,
+        semantic_gating: overrides.semantic_gating ?? {
+          nl_likelihood_threshold: 0.5,
+          min_candidates: 10
+        },
+        latency_budgets: overrides.latency_budgets ?? {
+          stage_a_ms: 50,
+          stage_b_ms: 200,
+          stage_c_ms: 500
+        }
+      };
+      
       const { hardeningReport } = await this.runPhaseCHardening(
-        createDefaultHardeningConfig(overrides),
+        createDefaultHardeningConfig(fullBenchmarkConfig),
         [fullSuiteResult]
       );
       

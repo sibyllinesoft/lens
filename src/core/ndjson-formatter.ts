@@ -112,7 +112,7 @@ export const validateNDJSON = (ndjson: string): boolean => {
   
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (!line.trim()) {
+    if (!line || !line.trim()) {
       throw new Error(`NDJSON validation failed: empty line at index ${i}`);
     }
     

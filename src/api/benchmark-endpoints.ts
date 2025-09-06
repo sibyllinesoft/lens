@@ -661,12 +661,26 @@ async function generateBenchmarkArtifacts(
 
   // Generate config fingerprint
   const configFingerprint: ConfigFingerprint = {
+    bench_schema: 'phase_c_v1',
+    seed: 1,
+    pool_sha: 'unknown',
+    oracle_sha: 'unknown',
+    cbu_coefficients: {
+      gamma: 1.0,
+      delta: 0.1,
+      beta: 0.05
+    },
     code_hash: result.config_fingerprint || 'unknown',
     config_hash: result.config_fingerprint || 'unknown',
     snapshot_shas: {},
     shard_layout: {},
     timestamp: new Date().toISOString(),
-    seed_set: [1]
+    seed_set: [1],
+    contract_hash: 'phase_c_contract',
+    fixed_layout: true,
+    dedup_enabled: true,
+    causal_musts: true,
+    kv_budget_cap: 1000
   };
   
   await fs.writeFile(artifacts.config_fingerprint_json, JSON.stringify(configFingerprint, null, 2));

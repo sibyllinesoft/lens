@@ -48,9 +48,6 @@ export interface PhaseBConfig {
 }
 
 export interface SearchResult extends CoreSearchResult {
-  stage_a_skipped?: boolean;
-  stage_b_skipped?: boolean;
-  stage_c_skipped?: boolean;
   optimization_stats?: {
     stage_a_optimizations?: any;
     stage_b_optimizations?: any;
@@ -515,7 +512,7 @@ export class PhaseBComprehensiveOptimizer {
         line: 15,
         col: 5,
         score: 0.85,
-        match_reasons: ['exact_match', 'fuzzy_match'],
+        match_reasons: ['exact', 'fuzzy'],
       },
       {
         doc_id: `${ctx.trace_id}_lex_2`, 
@@ -523,7 +520,7 @@ export class PhaseBComprehensiveOptimizer {
         line: 42,
         col: 10,
         score: 0.75,
-        match_reasons: ['subtoken_match'],
+        match_reasons: ['symbol'],
       },
     ];
     

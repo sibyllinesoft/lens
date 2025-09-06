@@ -47,6 +47,9 @@ export class CanaryDeploymentOrchestrator {
   private startTime: Date;
   private deploymentLog: DeploymentMetrics[] = [];
   private killSwitchActivated: boolean = false;
+  private trafficPercentage: number = 0;
+  private currentErrorRate: number = 0;
+  private currentStage: string = 'pending';
   
   private readonly phases: CanaryPhase[] = [
     {
@@ -225,6 +228,9 @@ export class CanaryDeploymentOrchestrator {
       updateDashboardMetrics({
         canary: {
           traffic_percentage: phase.traffic_percentage,
+          error_rate_percent: 0, // Success case
+          rollback_events: 0,
+          kill_switch_activations: 0,
           progressive_rollout_stage: `phase_${phase.phase}_complete`
         }
       });
@@ -294,6 +300,9 @@ export class CanaryDeploymentOrchestrator {
     updateDashboardMetrics({
       canary: {
         traffic_percentage: percentage,
+        error_rate_percent: 0,
+        rollback_events: 0,
+        kill_switch_activations: 0,
         progressive_rollout_stage: `traffic_${percentage}pct`
       }
     });
@@ -382,7 +391,11 @@ export class CanaryDeploymentOrchestrator {
       
       updateDashboardMetrics({
         canary: {
-          kill_switch_activations: 1
+          traffic_percentage: this.trafficPercentage,
+          error_rate_percent: this.currentErrorRate || 0,
+          rollback_events: 0,
+          kill_switch_activations: 1,
+          progressive_rollout_stage: this.currentStage
         }
       });
       
@@ -436,7 +449,10 @@ export class CanaryDeploymentOrchestrator {
     
     updateDashboardMetrics({
       canary: {
+        traffic_percentage: 0,
+        error_rate_percent: this.currentErrorRate || 0,
         rollback_events: 1,
+        kill_switch_activations: 0,
         progressive_rollout_stage: 'rollback_in_progress'
       }
     });
@@ -456,6 +472,9 @@ export class CanaryDeploymentOrchestrator {
     updateDashboardMetrics({
       canary: {
         traffic_percentage: 0,
+        error_rate_percent: this.currentErrorRate || 0,
+        rollback_events: 1,
+        kill_switch_activations: 0,
         progressive_rollout_stage: 'rollback_complete'
       }
     });

@@ -18,33 +18,33 @@ import { MetricsCalculator } from './metrics-calculator.js';
 
 export interface HardeningConfig extends BenchmarkConfig {
   // Hard negative injection
-  hard_negatives: {
-    enabled: boolean;
-    per_query_count: number;
-    shared_subtoken_min: number;
+  hard_negatives?: {
+    enabled?: boolean;
+    per_query_count?: number;
+    shared_subtoken_min?: number;
   };
   
   // Per-slice gates
-  per_slice_gates: {
-    enabled: boolean;
-    min_recall_at_10: number;
-    min_ndcg_at_10: number;
-    max_p95_latency_ms: number;
+  per_slice_gates?: {
+    enabled?: boolean;
+    min_recall_at_10?: number;
+    min_ndcg_at_10?: number;
+    max_p95_latency_ms?: number;
   };
   
   // Tripwire configuration
-  tripwires: {
-    min_span_coverage: number;
-    recall_convergence_threshold: number;
-    lsif_coverage_drop_threshold: number;
-    p99_p95_ratio_threshold: number;
+  tripwires?: {
+    min_span_coverage?: number;
+    recall_convergence_threshold?: number;
+    lsif_coverage_drop_threshold?: number;
+    p99_p95_ratio_threshold?: number;
   };
   
   // Visualization configuration
-  plots: {
-    enabled: boolean;
-    output_dir: string;
-    formats: ('png' | 'svg' | 'pdf')[];
+  plots?: {
+    enabled?: boolean;
+    output_dir?: string;
+    formats?: ('png' | 'svg' | 'pdf')[];
   };
 }
 
@@ -694,15 +694,18 @@ export class PhaseCHardening {
 
       const [repo, language] = sliceId.split('|');
       
-      sliceResults.push({
+      const sliceResult: SliceMetrics = {
         slice_id: sliceId,
-        repo,
-        language,
         query_count: sliceQueries.length,
         metrics: sliceMetrics,
         gate_status: failingCriteria.length === 0 ? 'pass' : 'fail',
         failing_criteria: failingCriteria
-      });
+      };
+      
+      if (repo) sliceResult.repo = repo;
+      if (language) sliceResult.language = language;
+      
+      sliceResults.push(sliceResult);
     }
 
     const passedSlices = sliceResults.filter(s => s.gate_status === 'pass').length;
@@ -891,7 +894,7 @@ export class PhaseCHardening {
   private extractRepo(query: string): string {
     // Mock repo extraction - in reality would analyze query or metadata
     const repos = ['storyviz', 'lens', 'core-utils', 'api-gateway'];
-    return repos[Math.floor(Math.random() * repos.length)];
+    return repos[Math.floor(Math.random() * repos.length)] || 'unknown';
   }
 
   private extractLanguage(expectedResults: any[]): string {

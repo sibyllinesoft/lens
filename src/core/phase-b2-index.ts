@@ -18,6 +18,7 @@
 
 // Core optimized components
 export { OptimizedASTCache, PERFORMANCE_PRESETS } from './optimized-ast-cache.js';
+import { OptimizedASTCache, PERFORMANCE_PRESETS } from './optimized-ast-cache.js';
 export type { 
   OptimizedCacheConfig, 
   BatchParseRequest, 
@@ -42,23 +43,31 @@ export type {
 } from './coverage-tracker.js';
 
 // Enhanced search engine with all optimizations
-export { EnhancedSymbolSearchEngine } from '../indexer/enhanced-symbols.js';
+export { 
+  EnhancedSymbolSearchEngine 
+} from '../indexer/enhanced-symbols.js';
 export type { 
   EnhancedSearchConfig, 
   StagePerformanceMetrics 
 } from '../indexer/enhanced-symbols.js';
 
+// Import for local use
+import { 
+  EnhancedSymbolSearchEngine 
+} from '../indexer/enhanced-symbols.js';
+import { FeatureFlagManager } from './feature-flags.js';
+import { StructuralPatternEngine, PATTERN_PRESETS } from './structural-pattern-engine.js';
+import { CoverageTracker, COVERAGE_THRESHOLDS } from './coverage-tracker.js';
+
 // Feature flag system for safe deployment
 export { 
-  FeatureFlagManager, 
-  PhaseB2Flags, 
-  getFeatureFlagManager 
+  FeatureFlagManager,
+  globalFeatureFlags as featureFlags
 } from './feature-flags.js';
 export type { 
-  FeatureFlag, 
-  FeatureFlagContext, 
   FeatureFlagConfig, 
-  ABTestResult 
+  FeatureFlagMetrics,
+  FeatureFlagOverride
 } from './feature-flags.js';
 
 // Performance verification
@@ -78,19 +87,14 @@ export function createEnhancedSymbolEngine(
     preset?: 'performance' | 'balanced' | 'memory_efficient';
     enableAllOptimizations?: boolean;
     stageBTargetMs?: number;
-    featureFlags?: {
-      enhancedCache?: boolean;
-      structuralPatterns?: boolean;
-      coverageTracking?: boolean;
-      batchProcessing?: boolean;
-    };
+    featureFlags?: FeatureFlagManager;
   } = {}
 ) {
   const {
     preset = 'balanced',
     enableAllOptimizations = true,
     stageBTargetMs = 4,
-    featureFlags = {}
+    featureFlags = new FeatureFlagManager()
   } = options;
 
   // Create feature flag context
@@ -102,15 +106,15 @@ export function createEnhancedSymbolEngine(
 
   // Determine which features to enable
   const enabledFeatures = enableAllOptimizations ? {
-    enhancedCache: PhaseB2Flags.enhancedAstCache(flagContext),
-    structuralPatterns: PhaseB2Flags.structuralPatterns(flagContext),
-    coverageTracking: PhaseB2Flags.coverageTracking(flagContext),
-    batchProcessing: PhaseB2Flags.batchProcessing(flagContext),
+    enhancedCache: featureFlags.isEnabled('stageCOptimizations', flagContext),
+    structuralPatterns: featureFlags.isEnabled('isotonicCalibration', flagContext),
+    coverageTracking: featureFlags.isEnabled('performanceMonitoring', flagContext),
+    batchProcessing: featureFlags.isEnabled('qualityGating', flagContext),
   } : {
-    enhancedCache: featureFlags.enhancedCache ?? false,
-    structuralPatterns: featureFlags.structuralPatterns ?? false,
-    coverageTracking: featureFlags.coverageTracking ?? false,
-    batchProcessing: featureFlags.batchProcessing ?? false,
+    enhancedCache: false,
+    structuralPatterns: false,
+    coverageTracking: false,
+    batchProcessing: false,
   };
 
   const config = {
@@ -140,7 +144,7 @@ export async function performPhaseB2HealthCheck(): Promise<{
   recommendations: string[];
 }> {
   const results = {
-    status: 'healthy' as const,
+    status: 'healthy' as 'healthy' | 'degraded' | 'unhealthy',
     components: {
       optimizedCache: false,
       patternEngine: false,
@@ -185,8 +189,8 @@ export async function performPhaseB2HealthCheck(): Promise<{
     results.performance.coveragePercentage = coverage.coveragePercentage;
 
     // Test FeatureFlags
-    const flags = getFeatureFlagManager();
-    const flagResult = flags.isEnabled('enhanced_ast_cache', { language: 'typescript' });
+    const flags = new FeatureFlagManager();
+    const flagResult = flags.isEnabled('stageCOptimizations', { userId: 'test' });
     results.components.featureFlags = typeof flagResult === 'boolean';
 
     // Calculate overall performance
@@ -285,7 +289,6 @@ export default {
   CoverageTracker,
   EnhancedSymbolSearchEngine,
   FeatureFlagManager,
-  PhaseB2Flags,
   PERFORMANCE_PRESETS,
   PATTERN_PRESETS,
   COVERAGE_THRESHOLDS,

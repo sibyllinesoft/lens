@@ -86,7 +86,7 @@ export interface PromotionPlan {
   rc_version: string;
   production_version: string;
   promotion_timestamp: string;
-  rollout_strategy: {
+  rolloutStrategy: {
     type: 'immediate' | 'staged' | 'blue_green';
     stages?: Array<{
       name: string;
@@ -224,7 +224,7 @@ export class SignoffManager {
       rc_version: rcVersion,
       production_version: productionVersion,
       promotion_timestamp: readiness.promotion_timeline.recommended_promotion,
-      rollout_strategy,
+      rolloutStrategy,
       monitoring_plan: {
         duration_hours: riskLevel === 'low' ? 24 : riskLevel === 'medium' ? 48 : 72,
         key_metrics: [
@@ -287,13 +287,13 @@ export class SignoffManager {
       executionLog.push('Pre-promotion validation passed');
       
       // Execute rollout strategy
-      if (promotionPlan.rollout_strategy.type === 'staged') {
-        await this.executeStagedRollout(promotionPlan.rollout_strategy, executionLog);
+      if (promotionPlan.rolloutStrategy.type === 'staged') {
+        await this.executeStagedRollout(promotionPlan.rolloutStrategy, executionLog);
       } else {
         await this.executeImmediatePromotion(promotionPlan, executionLog);
       }
       
-      metrics.promotion_complete = new Date().toISOString();
+      (metrics as any).promotion_complete = new Date().toISOString();
       executionLog.push('Promotion completed successfully');
       
       // Start monitoring
@@ -310,7 +310,7 @@ export class SignoffManager {
       executionLog.push(`Promotion failed: ${errorMessage}`);
       
       // Initiate rollback
-      metrics.rollback_initiated = new Date().toISOString();
+      (metrics as any).rollback_initiated = new Date().toISOString();
       metrics.final_status = 'rolled_back';
       
       await this.initiateRollback(promotionPlan.rollback_plan, executionLog);
@@ -339,7 +339,7 @@ export class SignoffManager {
       business_impact_assessment: string;
     };
     detailed_analysis: {
-      quality_progression: Array<{
+      qualityProgression: Array<{
         night: number;
         quality_score: number;
         improvement: number;
@@ -378,7 +378,7 @@ export class SignoffManager {
       night: record.night,
       quality_score: record.quality_metrics.quality_score_average,
       improvement: index > 0 ? 
-        record.quality_metrics.quality_score_average - this.signoffRecords[index - 1].quality_metrics.quality_score_average : 0
+        record.quality_metrics.quality_score_average - this.signoffRecords[index - 1]!.quality_metrics.quality_score_average : 0
     }));
     
     return {
@@ -394,7 +394,7 @@ export class SignoffManager {
         business_impact_assessment: this.generateBusinessImpactAssessment(promotionReadiness)
       },
       detailed_analysis: {
-        quality_progression,
+        qualityProgression,
         stakeholder_confidence: this.calculateStakeholderConfidence(),
         risk_factors: this.identifyRiskFactors()
       }
@@ -532,7 +532,7 @@ export class SignoffManager {
     }
     
     const recent = this.signoffRecords.slice(-2);
-    const qualityChange = recent[1].quality_metrics.quality_score_average - recent[0].quality_metrics.quality_score_average;
+    const qualityChange = recent[1]!.quality_metrics.quality_score_average - recent[0]!.quality_metrics.quality_score_average;
     
     let direction: 'improving' | 'stable' | 'degrading' = 'stable';
     if (qualityChange > 0.05) direction = 'improving';

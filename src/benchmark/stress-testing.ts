@@ -597,7 +597,7 @@ export class StressTestingBenchmark {
     // Simple trend detection - consistent upward growth
     let increases = 0;
     for (let i = 1; i < memorySnapshots.length; i++) {
-      if (memorySnapshots[i] > memorySnapshots[i - 1]) {
+      if (memorySnapshots[i]! > memorySnapshots[i - 1]!) {
         increases++;
       }
     }

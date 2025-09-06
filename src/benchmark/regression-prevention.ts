@@ -181,10 +181,13 @@ export class RegressionPreventionSystem {
 
       // 2. Load baseline data
       console.log('📈 Loading baseline data...');
-      const baselineData = await this.loadBaselineData(config.baseline_config);
+      const baselineData = await this.loadBaselineData({
+        lookback_days: config.baseline_config.lookback_days || 30,
+        min_samples: config.baseline_config.min_samples || 10
+      });
 
-      if (baselineData.length < config.baseline_config.min_samples) {
-        console.warn(`⚠️ Insufficient baseline data: ${baselineData.length} < ${config.baseline_config.min_samples}`);
+      if (baselineData.length < (config.baseline_config.min_samples || 10)) {
+        console.warn(`⚠️ Insufficient baseline data: ${baselineData.length} < ${config.baseline_config.min_samples || 10}`);
         return this.createInsufficientDataResult(traceId, commitSha, currentDataPoint);
       }
 

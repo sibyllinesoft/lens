@@ -125,8 +125,8 @@ export class Phase3PrecisionPack {
     private readonly outputDir: string = './phase3-results',
     private readonly apiBaseUrl: string = 'http://localhost:3001'
   ) {
-    this.benchmarkRunner = new BenchmarkSuiteRunner(outputDir);
-    this.groundTruthBuilder = new GroundTruthBuilder(path.join(outputDir, 'ground-truth'));
+    this.groundTruthBuilder = new GroundTruthBuilder(indexRoot, path.join(outputDir, 'ground-truth'));
+    this.benchmarkRunner = new BenchmarkSuiteRunner(this.groundTruthBuilder, outputDir);
   }
 
   /**
@@ -265,8 +265,8 @@ export class Phase3PrecisionPack {
         span.setAttributes({
           success: true,
           source: 'live_benchmark',
-          recall_at_50: benchmarkData.recall_at_50 || 0,
-          ndcg_at_10: benchmarkData.ndcg_at_10 || 0,
+          recall_at_50: (benchmarkData as any).recall_at_50 || 0,
+          ndcg_at_10: (benchmarkData as any).ndcg_at_10 || 0,
         });
         
         return benchmarkData;
@@ -428,8 +428,8 @@ export class Phase3PrecisionPack {
       
       span.setAttributes({
         success: true,
-        smoke_queries: smokeResults.queries_executed || 0,
-        full_queries: fullResults.queries_executed || 0,
+        smoke_queries: (smokeResults as any).queries_executed || 0,
+        full_queries: (fullResults as any).queries_executed || 0,
       });
       
       return {
@@ -568,7 +568,7 @@ export class Phase3PrecisionPack {
           recall_50: results.baseline_recall_50,
           ndcg_10: results.baseline_ndcg_10,
         },
-        git_commit: process.env.GIT_COMMIT || 'unknown',
+        git_commit: process.env['GIT_COMMIT'] || 'unknown',
         system_info: {
           node_version: process.version,
           platform: process.platform,

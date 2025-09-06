@@ -15,7 +15,7 @@ import type { DocumentPosition } from '../types/core.js';
 import { LensTracer } from '../telemetry/tracer.js';
 
 export class OptimizedTrigramIndex {
-  private trigramBitmaps: Map<string, RoaringBitmap32> = new Map();
+  private trigramBitmaps: Map<string, InstanceType<typeof RoaringBitmap32>> = new Map();
   private docIdToIndex: Map<string, number> = new Map();
   private indexToDocId: Map<number, string> = new Map();
   private documentPositions: Map<number, DocumentPosition[]> = new Map();
@@ -296,7 +296,7 @@ export class OptimizedTrigramIndex {
       const newDocIdToIndex = new Map<string, number>();
       const newIndexToDocId = new Map<number, string>();
       const newDocumentPositions = new Map<number, DocumentPosition[]>();
-      const newTrigramBitmaps = new Map<string, RoaringBitmap32>();
+      const newTrigramBitmaps = new Map<string, InstanceType<typeof RoaringBitmap32>>();
 
       let newIndex = 0;
       

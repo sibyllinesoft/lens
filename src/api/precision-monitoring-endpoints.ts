@@ -202,7 +202,11 @@ export async function registerPrecisionMonitoringEndpoints(fastify: FastifyInsta
         lsif_coverage_pct: metricsData.lsif_coverage_pct,
         tree_sitter_coverage_pct: metricsData.tree_sitter_coverage_pct,
         sample_count: metricsData.sample_count,
-        query_complexity_distribution: metricsData.query_complexity_distribution
+        query_complexity_distribution: {
+          simple: metricsData.query_complexity_distribution?.simple || 0.33,
+          medium: metricsData.query_complexity_distribution?.medium || 0.33,
+          complex: metricsData.query_complexity_distribution?.complex || 0.34
+        }
       };
 
       // Validate complexity distribution sums to 1.0
@@ -589,7 +593,7 @@ export async function registerPrecisionMonitoringEndpoints(fastify: FastifyInsta
             status: driftReport.system_health,
             active_alerts: driftReport.active_alerts.length,
             last_metrics_timestamp: driftReport.active_alerts.length > 0 
-              ? driftReport.active_alerts[0].timestamp 
+              ? driftReport.active_alerts[0]?.timestamp ?? new Date().toISOString()
               : new Date().toISOString()
           },
           precision_optimization: {

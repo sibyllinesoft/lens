@@ -312,6 +312,7 @@ describe('LensSearchEngine Integration', () => {
       // Start a search in the background
       const searchPromise = searchEngine.search({
         trace_id: 'test-health-during-search',
+        repo_sha: 'test-repo',
         query: 'background search',
         mode: 'lex',
         k: 10,
@@ -409,6 +410,7 @@ describe('LensSearchEngine Integration', () => {
       for (let i = 0; i < 3; i++) {
         searches.push(searchEngine.search({
           trace_id: `test-perf-${i}`,
+          repo_sha: 'test-repo',
           query: `performance test ${i}`,
           mode: 'lex',
           k: 5,
@@ -442,6 +444,7 @@ describe('LensSearchEngine Integration', () => {
       for (let i = 0; i < 5; i++) {
         searches.push(searchEngine.search({
           trace_id: `test-concurrent-${i}`,
+          repo_sha: 'test-repo',
           query: `concurrent search ${i}`,
           mode: 'lex',
           k: 10,
@@ -464,6 +467,7 @@ describe('LensSearchEngine Integration', () => {
       const operations = [
         searchEngine.search({
           trace_id: 'test-mixed-1',
+          repo_sha: 'test-repo',
           query: 'mixed test',
           mode: 'lex',
           k: 5,

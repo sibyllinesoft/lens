@@ -62,11 +62,13 @@ interface MetricsSnapshot {
   recall_at_50: number;
   p95_latency_ms: number;
   p99_latency_ms: number;
+  p99_p95_ratio: number; // p99/p95 ratio for auto-rollback trigger
   span_coverage: number;
   hard_negative_leakage: number;
   results_per_query_mean: number;
   cusum_alarms_active: string[];
   sentinel_probes_passing: boolean;
+  sentinel_nzc_ratio: number; // Sentinel non-zero coverage ratio
 }
 
 interface DeploymentPlan {
@@ -214,8 +216,10 @@ export class CanaryRolloutSystem extends EventEmitter {
       ],
       global_abort_conditions: [
         { name: 'catastrophic_latency', metric: 'p99_latency_ms', threshold: 5000, applies_to: ['A', 'B', 'C'], action: 'rollback_all' },
+        { name: 'p99_p95_ratio_violation', metric: 'p99_p95_ratio', threshold: 2.0, applies_to: ['A', 'B', 'C'], action: 'rollback_all' },
         { name: 'zero_results', metric: 'results_per_query_mean', threshold: 0.1, applies_to: ['A', 'B', 'C'], action: 'rollback_all' },
-        { name: 'span_collapse', metric: 'span_coverage', threshold: 0.9, applies_to: ['A', 'B', 'C'], action: 'rollback_all' }
+        { name: 'span_collapse', metric: 'span_coverage', threshold: 0.9, applies_to: ['A', 'B', 'C'], action: 'rollback_all' },
+        { name: 'sentinel_nzc_degradation', metric: 'sentinel_nzc_ratio', threshold: 0.99, applies_to: ['A', 'B', 'C'], action: 'rollback_all' }
       ],
       monitoring_config: {
         metrics_collection_interval_seconds: 30,
@@ -411,10 +415,14 @@ export class CanaryRolloutSystem extends EventEmitter {
         if (metricValue !== undefined) {
           if (condition.metric === 'p99_latency_ms' && metricValue > condition.threshold) {
             triggeredConditions.push(`GLOBAL: ${condition.name}`);
+          } else if (condition.metric === 'p99_p95_ratio' && metricValue > condition.threshold) {
+            triggeredConditions.push(`GLOBAL: ${condition.name} (p99/p95=${metricValue.toFixed(2)})`);
           } else if (condition.metric === 'results_per_query_mean' && metricValue < condition.threshold) {
             triggeredConditions.push(`GLOBAL: ${condition.name}`);
           } else if (condition.metric === 'span_coverage' && metricValue < condition.threshold) {
             triggeredConditions.push(`GLOBAL: ${condition.name}`);
+          } else if (condition.metric === 'sentinel_nzc_ratio' && metricValue < condition.threshold) {
+            triggeredConditions.push(`GLOBAL: ${condition.name} (NZC=${(metricValue*100).toFixed(1)}%)`);
           }
         }
       }
@@ -500,17 +508,23 @@ export class CanaryRolloutSystem extends EventEmitter {
    */
   private async collectMetrics(): Promise<MetricsSnapshot> {
     // Mock implementation - in production would query actual metrics APIs
+    const p95 = 150 + Math.random() * 30;
+    const p99 = 280 + Math.random() * 50;
+    const sentinelNzc = 0.99 + Math.random() * 0.005; // Simulate high NZC with small variance
+    
     return {
       timestamp: new Date().toISOString(),
       ndcg_at_10: 0.78 + Math.random() * 0.05,
       recall_at_50: 0.85 + Math.random() * 0.03,
-      p95_latency_ms: 150 + Math.random() * 30,
-      p99_latency_ms: 280 + Math.random() * 50,
+      p95_latency_ms: p95,
+      p99_latency_ms: p99,
+      p99_p95_ratio: p99 / p95, // Calculate ratio for rollback trigger
       span_coverage: 0.99 + Math.random() * 0.01,
       hard_negative_leakage: Math.random() * 0.005,
       results_per_query_mean: 5.2 + Math.random() * 0.8,
       cusum_alarms_active: Math.random() > 0.9 ? ['p95_latency_degradation'] : [],
-      sentinel_probes_passing: Math.random() > 0.02 // 2% failure rate
+      sentinel_probes_passing: Math.random() > 0.02, // 2% failure rate
+      sentinel_nzc_ratio: sentinelNzc
     };
   }
   

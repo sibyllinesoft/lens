@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { StageAAdapter, StageBAdapter, StageCAdapter } from './span_resolver/adapters';
+import { StageAAdapter, StageBAdapter, StageCAdapter } from './span_resolver/adapters.js';
 // Simple SearchResult interface
 interface SearchResult {
   file: string;

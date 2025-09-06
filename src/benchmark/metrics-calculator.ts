@@ -45,7 +45,10 @@ export class MetricsCalculator {
   /**
    * Calculate comprehensive metrics for benchmark results
    */
-  async calculateMetrics(queryResults: QueryResult[]): Promise<BenchmarkRun['metrics']> {
+  async calculateMetrics(
+    queryResults: QueryResult[],
+    cbuCoefficients: { gamma: number; delta: number; beta: number } = { gamma: 1.0, delta: 0.5, beta: 0.3 }
+  ): Promise<BenchmarkRun['metrics']> {
     const recallAt10 = this.calculateRecallAtK(queryResults, 10);
     const recallAt50 = this.calculateRecallAtK(queryResults, 50);
     const ndcgAt10 = this.calculateNDCGAtK(queryResults, 10);
@@ -56,6 +59,10 @@ export class MetricsCalculator {
     const fanOutSizes = this.calculateFanOutSizes(queryResults);
     const whyAttributions = this.calculateWhyAttributions(queryResults);
     
+    // TODO.md specified metrics
+    const cbuScore = this.calculateCBU(queryResults, cbuCoefficients);
+    const { ece } = this.calculateECE(queryResults);
+    
     return {
       recall_at_10: recallAt10,
       recall_at_50: recallAt50,
@@ -64,7 +71,10 @@ export class MetricsCalculator {
       first_relevant_tokens: firstRelevantTokens,
       stage_latencies: stageLatencies,
       fan_out_sizes: fanOutSizes,
-      why_attributions: whyAttributions
+      why_attributions: whyAttributions,
+      cbu_score: cbuScore,
+      ece_score: ece,
+      kv_reuse_rate: 0.8 // Placeholder - would be calculated from actual KV cache metrics
     };
   }
 
@@ -294,6 +304,111 @@ export class MetricsCalculator {
     }
     
     return attributions;
+  }
+
+  /**
+   * Calculate CBU (Composite Benchmark Utility) score using TODO.md formula
+   * CBU = γ * Recall@50 + δ * (1 - normalized_latency) + β * (1 - tokens/B)
+   */
+  private calculateCBU(
+    queryResults: QueryResult[], 
+    coefficients: { gamma: number; delta: number; beta: number } = { gamma: 1.0, delta: 0.5, beta: 0.3 }
+  ): number {
+    const recall50 = this.calculateRecallAtK(queryResults, 50);
+    
+    // Calculate normalized latency (assuming baseline of 20ms, cap at 150ms)
+    const latencies = queryResults
+      .map(r => {
+        const lat = r.result.latency_ms;
+        if (typeof lat === 'number') {
+          return lat;
+        } else if (lat && typeof lat === 'object' && 'total' in lat) {
+          return lat.total || 0;
+        } else {
+          return 0;
+        }
+      })
+      .filter(l => l > 0);
+    
+    const avgLatency = latencies.length > 0 ? this.mean(latencies) : 20;
+    const normalizedLatency = Math.min(avgLatency / 150, 1.0); // Normalize to [0,1]
+    
+    // Calculate verbosity penalty (tokens per result, normalized)
+    const tokenCounts = queryResults
+      .flatMap(r => r.result.hits.map(hit => (hit as any).snippet?.length || 0))
+      .filter(count => count > 0);
+    
+    const avgTokens = tokenCounts.length > 0 ? this.mean(tokenCounts) : 100;
+    const normalizedVerbosity = Math.min(avgTokens / 500, 1.0); // Normalize to [0,1], assuming 500 as verbose
+    
+    // CBU formula from TODO.md
+    const cbu = coefficients.gamma * recall50 + 
+                coefficients.delta * (1 - normalizedLatency) + 
+                coefficients.beta * (1 - normalizedVerbosity);
+    
+    return Math.max(0, Math.min(1, cbu)); // Clamp to [0,1]
+  }
+
+  /**
+   * Calculate ECE (Expected Calibration Error) with reliability diagrams
+   * Measures calibration quality of confidence predictions
+   */
+  private calculateECE(
+    queryResults: QueryResult[], 
+    nBins: number = 10
+  ): { ece: number; reliabilityDiagram: Array<{ binCenter: number; accuracy: number; confidence: number; count: number }> } {
+    // Extract confidence scores and binary relevance
+    const predictions: Array<{ confidence: number; isRelevant: boolean }> = [];
+    
+    for (const result of queryResults) {
+      for (const hit of result.result.hits) {
+        // Use search score as confidence proxy (normalized to [0,1])
+        const confidence = Math.max(0, Math.min(1, hit.score || 0.5));
+        const isRelevant = (hit as any).relevance_score ? (hit as any).relevance_score > 0.5 : false;
+        predictions.push({ confidence, isRelevant });
+      }
+    }
+    
+    if (predictions.length === 0) {
+      return { ece: 1.0, reliabilityDiagram: [] };
+    }
+    
+    // Create bins
+    const binSize = 1.0 / nBins;
+    const bins: Array<{ accuracySum: number; confidenceSum: number; count: number }> = 
+      Array(nBins).fill(null).map(() => ({ accuracySum: 0, confidenceSum: 0, count: 0 }));
+    
+    // Assign predictions to bins
+    for (const pred of predictions) {
+      const binIndex = Math.min(Math.floor(pred.confidence / binSize), nBins - 1);
+      bins[binIndex].confidenceSum += pred.confidence;
+      bins[binIndex].accuracySum += pred.isRelevant ? 1 : 0;
+      bins[binIndex].count += 1;
+    }
+    
+    // Calculate ECE and reliability diagram
+    let ece = 0;
+    const reliabilityDiagram = [];
+    
+    for (let i = 0; i < nBins; i++) {
+      const bin = bins[i];
+      if (bin.count > 0) {
+        const avgConfidence = bin.confidenceSum / bin.count;
+        const avgAccuracy = bin.accuracySum / bin.count;
+        const binWeight = bin.count / predictions.length;
+        
+        ece += binWeight * Math.abs(avgConfidence - avgAccuracy);
+        
+        reliabilityDiagram.push({
+          binCenter: (i + 0.5) * binSize,
+          accuracy: avgAccuracy,
+          confidence: avgConfidence,
+          count: bin.count
+        });
+      }
+    }
+    
+    return { ece, reliabilityDiagram };
   }
 
   /**

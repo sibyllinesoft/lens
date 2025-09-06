@@ -87,7 +87,7 @@ export interface CoverageTrackerConfig {
 export class CoverageTracker {
   private fileStatuses = new Map<string, FileIndexingStatus>();
   private coverageHistory: CoverageReport[] = [];
-  private reportingTimer?: NodeJS.Timer;
+  private reportingTimer?: NodeJS.Timeout | undefined;
   
   private config: CoverageTrackerConfig;
 
@@ -138,16 +138,19 @@ export class CoverageTracker {
         indexed: true,
         lastIndexed: Date.now(),
         symbolCount: symbols.length,
-        indexingTime: indexingTimeMs,
         coverage: {
-          functions: symbolCounts.function || 0,
-          classes: symbolCounts.class || 0,
-          interfaces: symbolCounts.interface || 0,
-          types: symbolCounts.type || 0,
-          variables: symbolCounts.variable || 0,
+          functions: symbolCounts['function'] || 0,
+          classes: symbolCounts['class'] || 0,
+          interfaces: symbolCounts['interface'] || 0,
+          types: symbolCounts['type'] || 0,
+          variables: symbolCounts['variable'] || 0,
           total: symbols.length
         }
       };
+
+      if (indexingTimeMs !== undefined) {
+        status.indexingTime = indexingTimeMs;
+      }
 
       this.fileStatuses.set(filePath, status);
 

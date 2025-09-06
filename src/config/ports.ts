@@ -15,7 +15,7 @@ export interface PortConfig {
 }
 
 const PORT_CONFIG_FILE = path.join(process.cwd(), '.port-config.json');
-const DEFAULT_PORT_RANGE = { min: 3000, max: 9000 };
+const DEFAULT_PORT_RANGE = { min: 5678, max: 9000 };
 const RESERVATION_DURATION = 60000; // 1 minute
 
 class PortManager {
@@ -154,16 +154,16 @@ export const portManager = new PortManager();
  * Environment variable compatibility
  */
 export async function getServerPort(): Promise<number> {
-  if (process.env.PORT) {
-    return parseInt(process.env.PORT, 10);
+  if (process.env['PORT']) {
+    return parseInt(process.env['PORT'], 10);
   }
   const config = await portManager.getConfig();
   return config.api_server;
 }
 
 export async function getMetricsPort(): Promise<number> {
-  if (process.env.METRICS_PORT) {
-    return parseInt(process.env.METRICS_PORT, 10);
+  if (process.env['METRICS_PORT']) {
+    return parseInt(process.env['METRICS_PORT'], 10);
   }
   const config = await portManager.getConfig();
   return config.metrics_server;

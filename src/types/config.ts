@@ -40,7 +40,7 @@ export interface LensConfig {
   tech_stack: {
     languages: ['typescript', 'python', 'rust', 'bash'];
     messaging: 'nats_jetstream';
-    storage: 'memory_mapped_segments';
+    storage: 'memory_mapped_segments' | 'pgvector';
     observability: 'opentelemetry';
     semantic_models: ['colbert_v2', 'splade_v2'];
   };
@@ -80,7 +80,7 @@ export const PRODUCTION_CONFIG: LensConfig = {
   tech_stack: {
     languages: ['typescript', 'python', 'rust', 'bash'],
     messaging: 'nats_jetstream',
-    storage: 'memory_mapped_segments',
+    storage: 'memory_mapped_segments' as const,
     observability: 'opentelemetry',
     semantic_models: ['colbert_v2', 'splade_v2'],
   },

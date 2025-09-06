@@ -117,6 +117,15 @@ export class MigrationManager {
 
     // Execute migration
     const migration = migrations[0];
+    if (!migration) {
+      return {
+        success: false,
+        message: `Migration not found`,
+        fromVersion: from,
+        toVersion: to,
+        errors: [`Migration not found`],
+      };
+    }
     
     if (verbose) {
       console.log(`Running migration: ${migration.name}`);

@@ -366,7 +366,7 @@ export class TailLatencyMonitor extends EventEmitter {
     
     const existingAlert = this.active_violations.get(slice);
     const isNewAlert = !existingAlert;
-    const severityEscalated = existingAlert && alert.severity !== existingAlert.severity;
+    const severityEscalated = !!(existingAlert && alert.severity !== existingAlert.severity);
     
     this.active_violations.set(slice, alert);
     
@@ -493,7 +493,7 @@ export class TailLatencyMonitor extends EventEmitter {
     }
   }
 
-  private getSliceKey(metadata: { repo_type: string; language: string; size_category: string }): string {
+  public getSliceKey(metadata: { repo_type: string; language: string; size_category: string }): string {
     return `${metadata.repo_type}/${metadata.language}/${metadata.size_category}`;
   }
 }
