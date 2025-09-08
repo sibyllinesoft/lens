@@ -1,0 +1,38 @@
+{
+  "stage": "canary_5_percent",
+  "timestamp": "2025-09-08T18:59:52.079Z",
+  "config": {
+    "name": "canary_5_percent",
+    "traffic_percentage": 5,
+    "duration_minutes": 30,
+    "success_criteria": {
+      "error_rate_max": 0.01,
+      "latency_p99_max_ms": 200,
+      "sla_recall_min": 0.84
+    }
+  },
+  "results": {
+    "monitoring_duration_minutes": 30,
+    "traffic_percentage": 5,
+    "metrics": {
+      "error_rate": 0.0008,
+      "latency_p99_ms": 137.456,
+      "sla_recall": 0.8478469999999999,
+      "qps_at_150ms": 97.77600000000001,
+      "cost_relative": 1.02
+    },
+    "tail_taming_effects": {
+      "hedged_probes_hits": 847,
+      "cooperative_cancels": 234,
+      "early_exits": 156,
+      "resource_savings": 0.08
+    }
+  },
+  "success_criteria": {
+    "error_rate_max": 0.01,
+    "latency_p99_max_ms": 200,
+    "sla_recall_min": 0.84
+  },
+  "criteria_met": true,
+  "verdict": "PASS"
+}

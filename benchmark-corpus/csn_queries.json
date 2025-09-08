@@ -1,0 +1,82 @@
+[
+  {
+    "id": "csn_1",
+    "query": "read JSON file",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "easy"
+  },
+  {
+    "id": "csn_2",
+    "query": "validate email address",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "easy"
+  },
+  {
+    "id": "csn_3",
+    "query": "connect to database",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  },
+  {
+    "id": "csn_4",
+    "query": "format date string",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "easy"
+  },
+  {
+    "id": "csn_5",
+    "query": "calculate hash value",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  },
+  {
+    "id": "csn_6",
+    "query": "sort array elements",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "easy"
+  },
+  {
+    "id": "csn_7",
+    "query": "handle HTTP requests",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  },
+  {
+    "id": "csn_8",
+    "query": "parse XML data",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  },
+  {
+    "id": "csn_9",
+    "query": "log error messages",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "easy"
+  },
+  {
+    "id": "csn_10",
+    "query": "compress file data",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  }
+]

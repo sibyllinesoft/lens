@@ -1,0 +1,136 @@
+[package]
+name = "lens-core"
+version = "1.0.0"
+edition = "2021"
+description = "Production search engine with fraud-resistant attestation"
+license = "MIT"
+repository = "https://github.com/your-org/lens"
+
+[workspace]
+members = ["lens-rpc", "lens-indexer"]
+
+[dependencies]
+# Search engine core - simplified for initial build
+# tantivy = "0.21"  # Disabled due to zstd conflicts
+fst = "0.4"
+roaring = "0.10"
+
+# Advanced compression and indexing
+# elias-fano = "0.1"  # Partitioned Elias-Fano docIDs (not available, use custom impl)
+# bp128 = "0.1"       # SIMD-BP128 impacts (not available, use custom impl)
+
+# Async runtime and networking
+tokio = { version = "1.0", features = ["full", "tracing"] }
+# tower = { version = "0.4", features = ["full"] }  # Disabled for initial build
+# tower-http = { version = "0.4", features = ["trace", "cors"] }  # Disabled for initial build
+
+# HTTP only for initial implementation
+axum = "0.7"  # For HTTP endpoints
+hyper = "1.0"
+# tonic = "0.10"  # gRPC disabled for initial build
+# prost = "0.12"  # Protocol buffers disabled
+
+# Tree-sitter for AST parsing
+tree-sitter = "0.20"
+tree-sitter-rust = "0.20"
+tree-sitter-python = "0.20" 
+tree-sitter-typescript = "0.20"
+tree-sitter-javascript = "0.20"
+
+# LSIF/LSP support
+lsp-types = "0.94"
+tower-lsp = { version = "0.20", optional = true }
+
+# Vector search (optional behind feature flag)
+hnsw_rs = { version = "0.2", optional = true }
+ndarray = { version = "0.15", optional = true }
+
+# Serialization and data formats  
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+# parquet = "48.0"  # For benchmark export - disabled due to conflicts
+# arrow = "48.0"    # Disabled due to conflicts
+
+# Error handling and logging
+anyhow = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Metrics and observability
+metrics = "0.22"
+metrics-exporter-prometheus = "0.13"
+
+# Memory management and performance
+memmap2 = "0.7"
+rayon = "1.8"      # Parallel processing
+crossbeam = "0.8"  # Lock-free data structures
+
+# SIMD optimizations
+wide = "0.7"       # SIMD utilities
+
+# Unicode and text processing
+unicode-normalization = "0.1"  # NFC normalization
+unicode-segmentation = "1.10"
+
+# Cryptographic attestation
+sha2 = "0.10"
+ring = "0.17"      # For signing
+
+# Build-time information
+built = { version = "0.7", features = ["git2", "chrono"] }
+
+# CLI parsing
+clap = "4.4"
+
+# Directory walking
+walkdir = "2.4"
+
+# Hostname detection
+hostname = "0.3"
+
+# Date/time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+[build-dependencies]
+built = { version = "0.7", features = ["git2", "chrono"] }
+chrono = "0.4"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+proptest = "1.0"
+tempfile = "3.8"
+wiremock = "0.5"   # For API testing
+axum-test = "14.0" # For testing axum handlers
+
+[features]
+default = ["simd"]
+simd = []
+ann = ["hnsw_rs", "ndarray"]
+lsp = ["tower-lsp"]
+
+[[bench]]
+name = "search_benchmarks"
+harness = false
+
+[[bench]] 
+name = "indexing_benchmarks"
+harness = false
+
+[[bin]]
+name = "lens-core"
+path = "src/main.rs"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+
+[profile.bench]
+debug = true
+inherits = "release"
+
+# Workspace members
+[workspace.dependencies]
+lens-core = { path = "." }

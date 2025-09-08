@@ -1,0 +1,2402 @@
+[
+  {
+    "query_id": "csn-sample-0",
+    "query_text": "Function that performs task 0",
+    "code": "def function_0():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_0.py"
+  },
+  {
+    "query_id": "csn-sample-1",
+    "query_text": "Function that performs task 1",
+    "code": "def function_1():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_1.py"
+  },
+  {
+    "query_id": "csn-sample-2",
+    "query_text": "Function that performs task 2",
+    "code": "def function_2():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_2.py"
+  },
+  {
+    "query_id": "csn-sample-3",
+    "query_text": "Function that performs task 3",
+    "code": "def function_3():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_3.py"
+  },
+  {
+    "query_id": "csn-sample-4",
+    "query_text": "Function that performs task 4",
+    "code": "def function_4():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_4.py"
+  },
+  {
+    "query_id": "csn-sample-5",
+    "query_text": "Function that performs task 5",
+    "code": "def function_5():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_5.py"
+  },
+  {
+    "query_id": "csn-sample-6",
+    "query_text": "Function that performs task 6",
+    "code": "def function_6():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_6.py"
+  },
+  {
+    "query_id": "csn-sample-7",
+    "query_text": "Function that performs task 7",
+    "code": "def function_7():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_7.py"
+  },
+  {
+    "query_id": "csn-sample-8",
+    "query_text": "Function that performs task 8",
+    "code": "def function_8():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_8.py"
+  },
+  {
+    "query_id": "csn-sample-9",
+    "query_text": "Function that performs task 9",
+    "code": "def function_9():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_9.py"
+  },
+  {
+    "query_id": "csn-sample-10",
+    "query_text": "Function that performs task 10",
+    "code": "def function_10():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_10.py"
+  },
+  {
+    "query_id": "csn-sample-11",
+    "query_text": "Function that performs task 11",
+    "code": "def function_11():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_11.py"
+  },
+  {
+    "query_id": "csn-sample-12",
+    "query_text": "Function that performs task 12",
+    "code": "def function_12():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_12.py"
+  },
+  {
+    "query_id": "csn-sample-13",
+    "query_text": "Function that performs task 13",
+    "code": "def function_13():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_13.py"
+  },
+  {
+    "query_id": "csn-sample-14",
+    "query_text": "Function that performs task 14",
+    "code": "def function_14():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_14.py"
+  },
+  {
+    "query_id": "csn-sample-15",
+    "query_text": "Function that performs task 15",
+    "code": "def function_15():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_15.py"
+  },
+  {
+    "query_id": "csn-sample-16",
+    "query_text": "Function that performs task 16",
+    "code": "def function_16():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_16.py"
+  },
+  {
+    "query_id": "csn-sample-17",
+    "query_text": "Function that performs task 17",
+    "code": "def function_17():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_17.py"
+  },
+  {
+    "query_id": "csn-sample-18",
+    "query_text": "Function that performs task 18",
+    "code": "def function_18():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_18.py"
+  },
+  {
+    "query_id": "csn-sample-19",
+    "query_text": "Function that performs task 19",
+    "code": "def function_19():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_19.py"
+  },
+  {
+    "query_id": "csn-sample-20",
+    "query_text": "Function that performs task 20",
+    "code": "def function_20():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_20.py"
+  },
+  {
+    "query_id": "csn-sample-21",
+    "query_text": "Function that performs task 21",
+    "code": "def function_21():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_21.py"
+  },
+  {
+    "query_id": "csn-sample-22",
+    "query_text": "Function that performs task 22",
+    "code": "def function_22():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_22.py"
+  },
+  {
+    "query_id": "csn-sample-23",
+    "query_text": "Function that performs task 23",
+    "code": "def function_23():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_23.py"
+  },
+  {
+    "query_id": "csn-sample-24",
+    "query_text": "Function that performs task 24",
+    "code": "def function_24():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_24.py"
+  },
+  {
+    "query_id": "csn-sample-25",
+    "query_text": "Function that performs task 25",
+    "code": "def function_25():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_25.py"
+  },
+  {
+    "query_id": "csn-sample-26",
+    "query_text": "Function that performs task 26",
+    "code": "def function_26():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_26.py"
+  },
+  {
+    "query_id": "csn-sample-27",
+    "query_text": "Function that performs task 27",
+    "code": "def function_27():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_27.py"
+  },
+  {
+    "query_id": "csn-sample-28",
+    "query_text": "Function that performs task 28",
+    "code": "def function_28():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_28.py"
+  },
+  {
+    "query_id": "csn-sample-29",
+    "query_text": "Function that performs task 29",
+    "code": "def function_29():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_29.py"
+  },
+  {
+    "query_id": "csn-sample-30",
+    "query_text": "Function that performs task 30",
+    "code": "def function_30():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_30.py"
+  },
+  {
+    "query_id": "csn-sample-31",
+    "query_text": "Function that performs task 31",
+    "code": "def function_31():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_31.py"
+  },
+  {
+    "query_id": "csn-sample-32",
+    "query_text": "Function that performs task 32",
+    "code": "def function_32():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_32.py"
+  },
+  {
+    "query_id": "csn-sample-33",
+    "query_text": "Function that performs task 33",
+    "code": "def function_33():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_33.py"
+  },
+  {
+    "query_id": "csn-sample-34",
+    "query_text": "Function that performs task 34",
+    "code": "def function_34():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_34.py"
+  },
+  {
+    "query_id": "csn-sample-35",
+    "query_text": "Function that performs task 35",
+    "code": "def function_35():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_35.py"
+  },
+  {
+    "query_id": "csn-sample-36",
+    "query_text": "Function that performs task 36",
+    "code": "def function_36():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_36.py"
+  },
+  {
+    "query_id": "csn-sample-37",
+    "query_text": "Function that performs task 37",
+    "code": "def function_37():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_37.py"
+  },
+  {
+    "query_id": "csn-sample-38",
+    "query_text": "Function that performs task 38",
+    "code": "def function_38():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_38.py"
+  },
+  {
+    "query_id": "csn-sample-39",
+    "query_text": "Function that performs task 39",
+    "code": "def function_39():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_39.py"
+  },
+  {
+    "query_id": "csn-sample-40",
+    "query_text": "Function that performs task 40",
+    "code": "def function_40():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_40.py"
+  },
+  {
+    "query_id": "csn-sample-41",
+    "query_text": "Function that performs task 41",
+    "code": "def function_41():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_41.py"
+  },
+  {
+    "query_id": "csn-sample-42",
+    "query_text": "Function that performs task 42",
+    "code": "def function_42():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_42.py"
+  },
+  {
+    "query_id": "csn-sample-43",
+    "query_text": "Function that performs task 43",
+    "code": "def function_43():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_43.py"
+  },
+  {
+    "query_id": "csn-sample-44",
+    "query_text": "Function that performs task 44",
+    "code": "def function_44():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_44.py"
+  },
+  {
+    "query_id": "csn-sample-45",
+    "query_text": "Function that performs task 45",
+    "code": "def function_45():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_45.py"
+  },
+  {
+    "query_id": "csn-sample-46",
+    "query_text": "Function that performs task 46",
+    "code": "def function_46():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_46.py"
+  },
+  {
+    "query_id": "csn-sample-47",
+    "query_text": "Function that performs task 47",
+    "code": "def function_47():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_47.py"
+  },
+  {
+    "query_id": "csn-sample-48",
+    "query_text": "Function that performs task 48",
+    "code": "def function_48():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_48.py"
+  },
+  {
+    "query_id": "csn-sample-49",
+    "query_text": "Function that performs task 49",
+    "code": "def function_49():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_49.py"
+  },
+  {
+    "query_id": "csn-sample-50",
+    "query_text": "Function that performs task 50",
+    "code": "def function_50():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_50.py"
+  },
+  {
+    "query_id": "csn-sample-51",
+    "query_text": "Function that performs task 51",
+    "code": "def function_51():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_51.py"
+  },
+  {
+    "query_id": "csn-sample-52",
+    "query_text": "Function that performs task 52",
+    "code": "def function_52():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_52.py"
+  },
+  {
+    "query_id": "csn-sample-53",
+    "query_text": "Function that performs task 53",
+    "code": "def function_53():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_53.py"
+  },
+  {
+    "query_id": "csn-sample-54",
+    "query_text": "Function that performs task 54",
+    "code": "def function_54():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_54.py"
+  },
+  {
+    "query_id": "csn-sample-55",
+    "query_text": "Function that performs task 55",
+    "code": "def function_55():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_55.py"
+  },
+  {
+    "query_id": "csn-sample-56",
+    "query_text": "Function that performs task 56",
+    "code": "def function_56():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_56.py"
+  },
+  {
+    "query_id": "csn-sample-57",
+    "query_text": "Function that performs task 57",
+    "code": "def function_57():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_57.py"
+  },
+  {
+    "query_id": "csn-sample-58",
+    "query_text": "Function that performs task 58",
+    "code": "def function_58():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_58.py"
+  },
+  {
+    "query_id": "csn-sample-59",
+    "query_text": "Function that performs task 59",
+    "code": "def function_59():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_59.py"
+  },
+  {
+    "query_id": "csn-sample-60",
+    "query_text": "Function that performs task 60",
+    "code": "def function_60():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_60.py"
+  },
+  {
+    "query_id": "csn-sample-61",
+    "query_text": "Function that performs task 61",
+    "code": "def function_61():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_61.py"
+  },
+  {
+    "query_id": "csn-sample-62",
+    "query_text": "Function that performs task 62",
+    "code": "def function_62():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_62.py"
+  },
+  {
+    "query_id": "csn-sample-63",
+    "query_text": "Function that performs task 63",
+    "code": "def function_63():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_63.py"
+  },
+  {
+    "query_id": "csn-sample-64",
+    "query_text": "Function that performs task 64",
+    "code": "def function_64():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_64.py"
+  },
+  {
+    "query_id": "csn-sample-65",
+    "query_text": "Function that performs task 65",
+    "code": "def function_65():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_65.py"
+  },
+  {
+    "query_id": "csn-sample-66",
+    "query_text": "Function that performs task 66",
+    "code": "def function_66():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_66.py"
+  },
+  {
+    "query_id": "csn-sample-67",
+    "query_text": "Function that performs task 67",
+    "code": "def function_67():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_67.py"
+  },
+  {
+    "query_id": "csn-sample-68",
+    "query_text": "Function that performs task 68",
+    "code": "def function_68():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_68.py"
+  },
+  {
+    "query_id": "csn-sample-69",
+    "query_text": "Function that performs task 69",
+    "code": "def function_69():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_69.py"
+  },
+  {
+    "query_id": "csn-sample-70",
+    "query_text": "Function that performs task 70",
+    "code": "def function_70():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_70.py"
+  },
+  {
+    "query_id": "csn-sample-71",
+    "query_text": "Function that performs task 71",
+    "code": "def function_71():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_71.py"
+  },
+  {
+    "query_id": "csn-sample-72",
+    "query_text": "Function that performs task 72",
+    "code": "def function_72():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_72.py"
+  },
+  {
+    "query_id": "csn-sample-73",
+    "query_text": "Function that performs task 73",
+    "code": "def function_73():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_73.py"
+  },
+  {
+    "query_id": "csn-sample-74",
+    "query_text": "Function that performs task 74",
+    "code": "def function_74():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_74.py"
+  },
+  {
+    "query_id": "csn-sample-75",
+    "query_text": "Function that performs task 75",
+    "code": "def function_75():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_75.py"
+  },
+  {
+    "query_id": "csn-sample-76",
+    "query_text": "Function that performs task 76",
+    "code": "def function_76():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_76.py"
+  },
+  {
+    "query_id": "csn-sample-77",
+    "query_text": "Function that performs task 77",
+    "code": "def function_77():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_77.py"
+  },
+  {
+    "query_id": "csn-sample-78",
+    "query_text": "Function that performs task 78",
+    "code": "def function_78():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_78.py"
+  },
+  {
+    "query_id": "csn-sample-79",
+    "query_text": "Function that performs task 79",
+    "code": "def function_79():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_79.py"
+  },
+  {
+    "query_id": "csn-sample-80",
+    "query_text": "Function that performs task 80",
+    "code": "def function_80():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_80.py"
+  },
+  {
+    "query_id": "csn-sample-81",
+    "query_text": "Function that performs task 81",
+    "code": "def function_81():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_81.py"
+  },
+  {
+    "query_id": "csn-sample-82",
+    "query_text": "Function that performs task 82",
+    "code": "def function_82():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_82.py"
+  },
+  {
+    "query_id": "csn-sample-83",
+    "query_text": "Function that performs task 83",
+    "code": "def function_83():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_83.py"
+  },
+  {
+    "query_id": "csn-sample-84",
+    "query_text": "Function that performs task 84",
+    "code": "def function_84():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_84.py"
+  },
+  {
+    "query_id": "csn-sample-85",
+    "query_text": "Function that performs task 85",
+    "code": "def function_85():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_85.py"
+  },
+  {
+    "query_id": "csn-sample-86",
+    "query_text": "Function that performs task 86",
+    "code": "def function_86():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_86.py"
+  },
+  {
+    "query_id": "csn-sample-87",
+    "query_text": "Function that performs task 87",
+    "code": "def function_87():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_87.py"
+  },
+  {
+    "query_id": "csn-sample-88",
+    "query_text": "Function that performs task 88",
+    "code": "def function_88():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_88.py"
+  },
+  {
+    "query_id": "csn-sample-89",
+    "query_text": "Function that performs task 89",
+    "code": "def function_89():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_89.py"
+  },
+  {
+    "query_id": "csn-sample-90",
+    "query_text": "Function that performs task 90",
+    "code": "def function_90():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_90.py"
+  },
+  {
+    "query_id": "csn-sample-91",
+    "query_text": "Function that performs task 91",
+    "code": "def function_91():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_91.py"
+  },
+  {
+    "query_id": "csn-sample-92",
+    "query_text": "Function that performs task 92",
+    "code": "def function_92():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_92.py"
+  },
+  {
+    "query_id": "csn-sample-93",
+    "query_text": "Function that performs task 93",
+    "code": "def function_93():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_93.py"
+  },
+  {
+    "query_id": "csn-sample-94",
+    "query_text": "Function that performs task 94",
+    "code": "def function_94():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_94.py"
+  },
+  {
+    "query_id": "csn-sample-95",
+    "query_text": "Function that performs task 95",
+    "code": "def function_95():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_95.py"
+  },
+  {
+    "query_id": "csn-sample-96",
+    "query_text": "Function that performs task 96",
+    "code": "def function_96():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_96.py"
+  },
+  {
+    "query_id": "csn-sample-97",
+    "query_text": "Function that performs task 97",
+    "code": "def function_97():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_97.py"
+  },
+  {
+    "query_id": "csn-sample-98",
+    "query_text": "Function that performs task 98",
+    "code": "def function_98():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_98.py"
+  },
+  {
+    "query_id": "csn-sample-99",
+    "query_text": "Function that performs task 99",
+    "code": "def function_99():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_99.py"
+  },
+  {
+    "query_id": "csn-sample-100",
+    "query_text": "Function that performs task 100",
+    "code": "def function_100():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_100.py"
+  },
+  {
+    "query_id": "csn-sample-101",
+    "query_text": "Function that performs task 101",
+    "code": "def function_101():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_101.py"
+  },
+  {
+    "query_id": "csn-sample-102",
+    "query_text": "Function that performs task 102",
+    "code": "def function_102():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_102.py"
+  },
+  {
+    "query_id": "csn-sample-103",
+    "query_text": "Function that performs task 103",
+    "code": "def function_103():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_103.py"
+  },
+  {
+    "query_id": "csn-sample-104",
+    "query_text": "Function that performs task 104",
+    "code": "def function_104():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_104.py"
+  },
+  {
+    "query_id": "csn-sample-105",
+    "query_text": "Function that performs task 105",
+    "code": "def function_105():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_105.py"
+  },
+  {
+    "query_id": "csn-sample-106",
+    "query_text": "Function that performs task 106",
+    "code": "def function_106():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_106.py"
+  },
+  {
+    "query_id": "csn-sample-107",
+    "query_text": "Function that performs task 107",
+    "code": "def function_107():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_107.py"
+  },
+  {
+    "query_id": "csn-sample-108",
+    "query_text": "Function that performs task 108",
+    "code": "def function_108():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_108.py"
+  },
+  {
+    "query_id": "csn-sample-109",
+    "query_text": "Function that performs task 109",
+    "code": "def function_109():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_109.py"
+  },
+  {
+    "query_id": "csn-sample-110",
+    "query_text": "Function that performs task 110",
+    "code": "def function_110():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_110.py"
+  },
+  {
+    "query_id": "csn-sample-111",
+    "query_text": "Function that performs task 111",
+    "code": "def function_111():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_111.py"
+  },
+  {
+    "query_id": "csn-sample-112",
+    "query_text": "Function that performs task 112",
+    "code": "def function_112():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_112.py"
+  },
+  {
+    "query_id": "csn-sample-113",
+    "query_text": "Function that performs task 113",
+    "code": "def function_113():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_113.py"
+  },
+  {
+    "query_id": "csn-sample-114",
+    "query_text": "Function that performs task 114",
+    "code": "def function_114():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_114.py"
+  },
+  {
+    "query_id": "csn-sample-115",
+    "query_text": "Function that performs task 115",
+    "code": "def function_115():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_115.py"
+  },
+  {
+    "query_id": "csn-sample-116",
+    "query_text": "Function that performs task 116",
+    "code": "def function_116():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_116.py"
+  },
+  {
+    "query_id": "csn-sample-117",
+    "query_text": "Function that performs task 117",
+    "code": "def function_117():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_117.py"
+  },
+  {
+    "query_id": "csn-sample-118",
+    "query_text": "Function that performs task 118",
+    "code": "def function_118():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_118.py"
+  },
+  {
+    "query_id": "csn-sample-119",
+    "query_text": "Function that performs task 119",
+    "code": "def function_119():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_119.py"
+  },
+  {
+    "query_id": "csn-sample-120",
+    "query_text": "Function that performs task 120",
+    "code": "def function_120():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_120.py"
+  },
+  {
+    "query_id": "csn-sample-121",
+    "query_text": "Function that performs task 121",
+    "code": "def function_121():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_121.py"
+  },
+  {
+    "query_id": "csn-sample-122",
+    "query_text": "Function that performs task 122",
+    "code": "def function_122():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_122.py"
+  },
+  {
+    "query_id": "csn-sample-123",
+    "query_text": "Function that performs task 123",
+    "code": "def function_123():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_123.py"
+  },
+  {
+    "query_id": "csn-sample-124",
+    "query_text": "Function that performs task 124",
+    "code": "def function_124():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_124.py"
+  },
+  {
+    "query_id": "csn-sample-125",
+    "query_text": "Function that performs task 125",
+    "code": "def function_125():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_125.py"
+  },
+  {
+    "query_id": "csn-sample-126",
+    "query_text": "Function that performs task 126",
+    "code": "def function_126():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_126.py"
+  },
+  {
+    "query_id": "csn-sample-127",
+    "query_text": "Function that performs task 127",
+    "code": "def function_127():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_127.py"
+  },
+  {
+    "query_id": "csn-sample-128",
+    "query_text": "Function that performs task 128",
+    "code": "def function_128():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_128.py"
+  },
+  {
+    "query_id": "csn-sample-129",
+    "query_text": "Function that performs task 129",
+    "code": "def function_129():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_129.py"
+  },
+  {
+    "query_id": "csn-sample-130",
+    "query_text": "Function that performs task 130",
+    "code": "def function_130():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_130.py"
+  },
+  {
+    "query_id": "csn-sample-131",
+    "query_text": "Function that performs task 131",
+    "code": "def function_131():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_131.py"
+  },
+  {
+    "query_id": "csn-sample-132",
+    "query_text": "Function that performs task 132",
+    "code": "def function_132():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_132.py"
+  },
+  {
+    "query_id": "csn-sample-133",
+    "query_text": "Function that performs task 133",
+    "code": "def function_133():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_133.py"
+  },
+  {
+    "query_id": "csn-sample-134",
+    "query_text": "Function that performs task 134",
+    "code": "def function_134():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_134.py"
+  },
+  {
+    "query_id": "csn-sample-135",
+    "query_text": "Function that performs task 135",
+    "code": "def function_135():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_135.py"
+  },
+  {
+    "query_id": "csn-sample-136",
+    "query_text": "Function that performs task 136",
+    "code": "def function_136():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_136.py"
+  },
+  {
+    "query_id": "csn-sample-137",
+    "query_text": "Function that performs task 137",
+    "code": "def function_137():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_137.py"
+  },
+  {
+    "query_id": "csn-sample-138",
+    "query_text": "Function that performs task 138",
+    "code": "def function_138():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_138.py"
+  },
+  {
+    "query_id": "csn-sample-139",
+    "query_text": "Function that performs task 139",
+    "code": "def function_139():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_139.py"
+  },
+  {
+    "query_id": "csn-sample-140",
+    "query_text": "Function that performs task 140",
+    "code": "def function_140():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_140.py"
+  },
+  {
+    "query_id": "csn-sample-141",
+    "query_text": "Function that performs task 141",
+    "code": "def function_141():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_141.py"
+  },
+  {
+    "query_id": "csn-sample-142",
+    "query_text": "Function that performs task 142",
+    "code": "def function_142():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_142.py"
+  },
+  {
+    "query_id": "csn-sample-143",
+    "query_text": "Function that performs task 143",
+    "code": "def function_143():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_143.py"
+  },
+  {
+    "query_id": "csn-sample-144",
+    "query_text": "Function that performs task 144",
+    "code": "def function_144():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_144.py"
+  },
+  {
+    "query_id": "csn-sample-145",
+    "query_text": "Function that performs task 145",
+    "code": "def function_145():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_145.py"
+  },
+  {
+    "query_id": "csn-sample-146",
+    "query_text": "Function that performs task 146",
+    "code": "def function_146():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_146.py"
+  },
+  {
+    "query_id": "csn-sample-147",
+    "query_text": "Function that performs task 147",
+    "code": "def function_147():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_147.py"
+  },
+  {
+    "query_id": "csn-sample-148",
+    "query_text": "Function that performs task 148",
+    "code": "def function_148():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_148.py"
+  },
+  {
+    "query_id": "csn-sample-149",
+    "query_text": "Function that performs task 149",
+    "code": "def function_149():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_149.py"
+  },
+  {
+    "query_id": "csn-sample-150",
+    "query_text": "Function that performs task 150",
+    "code": "def function_150():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_150.py"
+  },
+  {
+    "query_id": "csn-sample-151",
+    "query_text": "Function that performs task 151",
+    "code": "def function_151():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_151.py"
+  },
+  {
+    "query_id": "csn-sample-152",
+    "query_text": "Function that performs task 152",
+    "code": "def function_152():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_152.py"
+  },
+  {
+    "query_id": "csn-sample-153",
+    "query_text": "Function that performs task 153",
+    "code": "def function_153():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_153.py"
+  },
+  {
+    "query_id": "csn-sample-154",
+    "query_text": "Function that performs task 154",
+    "code": "def function_154():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_154.py"
+  },
+  {
+    "query_id": "csn-sample-155",
+    "query_text": "Function that performs task 155",
+    "code": "def function_155():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_155.py"
+  },
+  {
+    "query_id": "csn-sample-156",
+    "query_text": "Function that performs task 156",
+    "code": "def function_156():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_156.py"
+  },
+  {
+    "query_id": "csn-sample-157",
+    "query_text": "Function that performs task 157",
+    "code": "def function_157():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_157.py"
+  },
+  {
+    "query_id": "csn-sample-158",
+    "query_text": "Function that performs task 158",
+    "code": "def function_158():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_158.py"
+  },
+  {
+    "query_id": "csn-sample-159",
+    "query_text": "Function that performs task 159",
+    "code": "def function_159():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_159.py"
+  },
+  {
+    "query_id": "csn-sample-160",
+    "query_text": "Function that performs task 160",
+    "code": "def function_160():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_160.py"
+  },
+  {
+    "query_id": "csn-sample-161",
+    "query_text": "Function that performs task 161",
+    "code": "def function_161():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_161.py"
+  },
+  {
+    "query_id": "csn-sample-162",
+    "query_text": "Function that performs task 162",
+    "code": "def function_162():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_162.py"
+  },
+  {
+    "query_id": "csn-sample-163",
+    "query_text": "Function that performs task 163",
+    "code": "def function_163():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_163.py"
+  },
+  {
+    "query_id": "csn-sample-164",
+    "query_text": "Function that performs task 164",
+    "code": "def function_164():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_164.py"
+  },
+  {
+    "query_id": "csn-sample-165",
+    "query_text": "Function that performs task 165",
+    "code": "def function_165():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_165.py"
+  },
+  {
+    "query_id": "csn-sample-166",
+    "query_text": "Function that performs task 166",
+    "code": "def function_166():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_166.py"
+  },
+  {
+    "query_id": "csn-sample-167",
+    "query_text": "Function that performs task 167",
+    "code": "def function_167():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_167.py"
+  },
+  {
+    "query_id": "csn-sample-168",
+    "query_text": "Function that performs task 168",
+    "code": "def function_168():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_168.py"
+  },
+  {
+    "query_id": "csn-sample-169",
+    "query_text": "Function that performs task 169",
+    "code": "def function_169():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_169.py"
+  },
+  {
+    "query_id": "csn-sample-170",
+    "query_text": "Function that performs task 170",
+    "code": "def function_170():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_170.py"
+  },
+  {
+    "query_id": "csn-sample-171",
+    "query_text": "Function that performs task 171",
+    "code": "def function_171():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_171.py"
+  },
+  {
+    "query_id": "csn-sample-172",
+    "query_text": "Function that performs task 172",
+    "code": "def function_172():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_172.py"
+  },
+  {
+    "query_id": "csn-sample-173",
+    "query_text": "Function that performs task 173",
+    "code": "def function_173():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_173.py"
+  },
+  {
+    "query_id": "csn-sample-174",
+    "query_text": "Function that performs task 174",
+    "code": "def function_174():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_174.py"
+  },
+  {
+    "query_id": "csn-sample-175",
+    "query_text": "Function that performs task 175",
+    "code": "def function_175():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_175.py"
+  },
+  {
+    "query_id": "csn-sample-176",
+    "query_text": "Function that performs task 176",
+    "code": "def function_176():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_176.py"
+  },
+  {
+    "query_id": "csn-sample-177",
+    "query_text": "Function that performs task 177",
+    "code": "def function_177():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_177.py"
+  },
+  {
+    "query_id": "csn-sample-178",
+    "query_text": "Function that performs task 178",
+    "code": "def function_178():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_178.py"
+  },
+  {
+    "query_id": "csn-sample-179",
+    "query_text": "Function that performs task 179",
+    "code": "def function_179():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_179.py"
+  },
+  {
+    "query_id": "csn-sample-180",
+    "query_text": "Function that performs task 180",
+    "code": "def function_180():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_180.py"
+  },
+  {
+    "query_id": "csn-sample-181",
+    "query_text": "Function that performs task 181",
+    "code": "def function_181():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_181.py"
+  },
+  {
+    "query_id": "csn-sample-182",
+    "query_text": "Function that performs task 182",
+    "code": "def function_182():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_182.py"
+  },
+  {
+    "query_id": "csn-sample-183",
+    "query_text": "Function that performs task 183",
+    "code": "def function_183():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_183.py"
+  },
+  {
+    "query_id": "csn-sample-184",
+    "query_text": "Function that performs task 184",
+    "code": "def function_184():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_184.py"
+  },
+  {
+    "query_id": "csn-sample-185",
+    "query_text": "Function that performs task 185",
+    "code": "def function_185():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_185.py"
+  },
+  {
+    "query_id": "csn-sample-186",
+    "query_text": "Function that performs task 186",
+    "code": "def function_186():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_186.py"
+  },
+  {
+    "query_id": "csn-sample-187",
+    "query_text": "Function that performs task 187",
+    "code": "def function_187():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_187.py"
+  },
+  {
+    "query_id": "csn-sample-188",
+    "query_text": "Function that performs task 188",
+    "code": "def function_188():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_188.py"
+  },
+  {
+    "query_id": "csn-sample-189",
+    "query_text": "Function that performs task 189",
+    "code": "def function_189():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_189.py"
+  },
+  {
+    "query_id": "csn-sample-190",
+    "query_text": "Function that performs task 190",
+    "code": "def function_190():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_190.py"
+  },
+  {
+    "query_id": "csn-sample-191",
+    "query_text": "Function that performs task 191",
+    "code": "def function_191():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_191.py"
+  },
+  {
+    "query_id": "csn-sample-192",
+    "query_text": "Function that performs task 192",
+    "code": "def function_192():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_192.py"
+  },
+  {
+    "query_id": "csn-sample-193",
+    "query_text": "Function that performs task 193",
+    "code": "def function_193():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_193.py"
+  },
+  {
+    "query_id": "csn-sample-194",
+    "query_text": "Function that performs task 194",
+    "code": "def function_194():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_194.py"
+  },
+  {
+    "query_id": "csn-sample-195",
+    "query_text": "Function that performs task 195",
+    "code": "def function_195():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_195.py"
+  },
+  {
+    "query_id": "csn-sample-196",
+    "query_text": "Function that performs task 196",
+    "code": "def function_196():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_196.py"
+  },
+  {
+    "query_id": "csn-sample-197",
+    "query_text": "Function that performs task 197",
+    "code": "def function_197():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_197.py"
+  },
+  {
+    "query_id": "csn-sample-198",
+    "query_text": "Function that performs task 198",
+    "code": "def function_198():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_198.py"
+  },
+  {
+    "query_id": "csn-sample-199",
+    "query_text": "Function that performs task 199",
+    "code": "def function_199():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_199.py"
+  },
+  {
+    "query_id": "csn-sample-200",
+    "query_text": "Function that performs task 200",
+    "code": "def function_200():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_200.py"
+  },
+  {
+    "query_id": "csn-sample-201",
+    "query_text": "Function that performs task 201",
+    "code": "def function_201():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_201.py"
+  },
+  {
+    "query_id": "csn-sample-202",
+    "query_text": "Function that performs task 202",
+    "code": "def function_202():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_202.py"
+  },
+  {
+    "query_id": "csn-sample-203",
+    "query_text": "Function that performs task 203",
+    "code": "def function_203():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_203.py"
+  },
+  {
+    "query_id": "csn-sample-204",
+    "query_text": "Function that performs task 204",
+    "code": "def function_204():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_204.py"
+  },
+  {
+    "query_id": "csn-sample-205",
+    "query_text": "Function that performs task 205",
+    "code": "def function_205():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_205.py"
+  },
+  {
+    "query_id": "csn-sample-206",
+    "query_text": "Function that performs task 206",
+    "code": "def function_206():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_206.py"
+  },
+  {
+    "query_id": "csn-sample-207",
+    "query_text": "Function that performs task 207",
+    "code": "def function_207():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_207.py"
+  },
+  {
+    "query_id": "csn-sample-208",
+    "query_text": "Function that performs task 208",
+    "code": "def function_208():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_208.py"
+  },
+  {
+    "query_id": "csn-sample-209",
+    "query_text": "Function that performs task 209",
+    "code": "def function_209():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_209.py"
+  },
+  {
+    "query_id": "csn-sample-210",
+    "query_text": "Function that performs task 210",
+    "code": "def function_210():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_210.py"
+  },
+  {
+    "query_id": "csn-sample-211",
+    "query_text": "Function that performs task 211",
+    "code": "def function_211():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_211.py"
+  },
+  {
+    "query_id": "csn-sample-212",
+    "query_text": "Function that performs task 212",
+    "code": "def function_212():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_212.py"
+  },
+  {
+    "query_id": "csn-sample-213",
+    "query_text": "Function that performs task 213",
+    "code": "def function_213():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_213.py"
+  },
+  {
+    "query_id": "csn-sample-214",
+    "query_text": "Function that performs task 214",
+    "code": "def function_214():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_214.py"
+  },
+  {
+    "query_id": "csn-sample-215",
+    "query_text": "Function that performs task 215",
+    "code": "def function_215():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_215.py"
+  },
+  {
+    "query_id": "csn-sample-216",
+    "query_text": "Function that performs task 216",
+    "code": "def function_216():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_216.py"
+  },
+  {
+    "query_id": "csn-sample-217",
+    "query_text": "Function that performs task 217",
+    "code": "def function_217():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_217.py"
+  },
+  {
+    "query_id": "csn-sample-218",
+    "query_text": "Function that performs task 218",
+    "code": "def function_218():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_218.py"
+  },
+  {
+    "query_id": "csn-sample-219",
+    "query_text": "Function that performs task 219",
+    "code": "def function_219():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_219.py"
+  },
+  {
+    "query_id": "csn-sample-220",
+    "query_text": "Function that performs task 220",
+    "code": "def function_220():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_220.py"
+  },
+  {
+    "query_id": "csn-sample-221",
+    "query_text": "Function that performs task 221",
+    "code": "def function_221():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_221.py"
+  },
+  {
+    "query_id": "csn-sample-222",
+    "query_text": "Function that performs task 222",
+    "code": "def function_222():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_222.py"
+  },
+  {
+    "query_id": "csn-sample-223",
+    "query_text": "Function that performs task 223",
+    "code": "def function_223():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_223.py"
+  },
+  {
+    "query_id": "csn-sample-224",
+    "query_text": "Function that performs task 224",
+    "code": "def function_224():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_224.py"
+  },
+  {
+    "query_id": "csn-sample-225",
+    "query_text": "Function that performs task 225",
+    "code": "def function_225():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_225.py"
+  },
+  {
+    "query_id": "csn-sample-226",
+    "query_text": "Function that performs task 226",
+    "code": "def function_226():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_226.py"
+  },
+  {
+    "query_id": "csn-sample-227",
+    "query_text": "Function that performs task 227",
+    "code": "def function_227():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_227.py"
+  },
+  {
+    "query_id": "csn-sample-228",
+    "query_text": "Function that performs task 228",
+    "code": "def function_228():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_228.py"
+  },
+  {
+    "query_id": "csn-sample-229",
+    "query_text": "Function that performs task 229",
+    "code": "def function_229():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_229.py"
+  },
+  {
+    "query_id": "csn-sample-230",
+    "query_text": "Function that performs task 230",
+    "code": "def function_230():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_230.py"
+  },
+  {
+    "query_id": "csn-sample-231",
+    "query_text": "Function that performs task 231",
+    "code": "def function_231():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_231.py"
+  },
+  {
+    "query_id": "csn-sample-232",
+    "query_text": "Function that performs task 232",
+    "code": "def function_232():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_232.py"
+  },
+  {
+    "query_id": "csn-sample-233",
+    "query_text": "Function that performs task 233",
+    "code": "def function_233():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_233.py"
+  },
+  {
+    "query_id": "csn-sample-234",
+    "query_text": "Function that performs task 234",
+    "code": "def function_234():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_234.py"
+  },
+  {
+    "query_id": "csn-sample-235",
+    "query_text": "Function that performs task 235",
+    "code": "def function_235():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_235.py"
+  },
+  {
+    "query_id": "csn-sample-236",
+    "query_text": "Function that performs task 236",
+    "code": "def function_236():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_236.py"
+  },
+  {
+    "query_id": "csn-sample-237",
+    "query_text": "Function that performs task 237",
+    "code": "def function_237():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_237.py"
+  },
+  {
+    "query_id": "csn-sample-238",
+    "query_text": "Function that performs task 238",
+    "code": "def function_238():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_238.py"
+  },
+  {
+    "query_id": "csn-sample-239",
+    "query_text": "Function that performs task 239",
+    "code": "def function_239():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_239.py"
+  },
+  {
+    "query_id": "csn-sample-240",
+    "query_text": "Function that performs task 240",
+    "code": "def function_240():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_240.py"
+  },
+  {
+    "query_id": "csn-sample-241",
+    "query_text": "Function that performs task 241",
+    "code": "def function_241():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_241.py"
+  },
+  {
+    "query_id": "csn-sample-242",
+    "query_text": "Function that performs task 242",
+    "code": "def function_242():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_242.py"
+  },
+  {
+    "query_id": "csn-sample-243",
+    "query_text": "Function that performs task 243",
+    "code": "def function_243():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_243.py"
+  },
+  {
+    "query_id": "csn-sample-244",
+    "query_text": "Function that performs task 244",
+    "code": "def function_244():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_244.py"
+  },
+  {
+    "query_id": "csn-sample-245",
+    "query_text": "Function that performs task 245",
+    "code": "def function_245():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_245.py"
+  },
+  {
+    "query_id": "csn-sample-246",
+    "query_text": "Function that performs task 246",
+    "code": "def function_246():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_246.py"
+  },
+  {
+    "query_id": "csn-sample-247",
+    "query_text": "Function that performs task 247",
+    "code": "def function_247():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_247.py"
+  },
+  {
+    "query_id": "csn-sample-248",
+    "query_text": "Function that performs task 248",
+    "code": "def function_248():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_248.py"
+  },
+  {
+    "query_id": "csn-sample-249",
+    "query_text": "Function that performs task 249",
+    "code": "def function_249():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_249.py"
+  },
+  {
+    "query_id": "csn-sample-250",
+    "query_text": "Function that performs task 250",
+    "code": "def function_250():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_250.py"
+  },
+  {
+    "query_id": "csn-sample-251",
+    "query_text": "Function that performs task 251",
+    "code": "def function_251():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_251.py"
+  },
+  {
+    "query_id": "csn-sample-252",
+    "query_text": "Function that performs task 252",
+    "code": "def function_252():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_252.py"
+  },
+  {
+    "query_id": "csn-sample-253",
+    "query_text": "Function that performs task 253",
+    "code": "def function_253():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_253.py"
+  },
+  {
+    "query_id": "csn-sample-254",
+    "query_text": "Function that performs task 254",
+    "code": "def function_254():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_254.py"
+  },
+  {
+    "query_id": "csn-sample-255",
+    "query_text": "Function that performs task 255",
+    "code": "def function_255():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_255.py"
+  },
+  {
+    "query_id": "csn-sample-256",
+    "query_text": "Function that performs task 256",
+    "code": "def function_256():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_256.py"
+  },
+  {
+    "query_id": "csn-sample-257",
+    "query_text": "Function that performs task 257",
+    "code": "def function_257():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_257.py"
+  },
+  {
+    "query_id": "csn-sample-258",
+    "query_text": "Function that performs task 258",
+    "code": "def function_258():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_258.py"
+  },
+  {
+    "query_id": "csn-sample-259",
+    "query_text": "Function that performs task 259",
+    "code": "def function_259():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_259.py"
+  },
+  {
+    "query_id": "csn-sample-260",
+    "query_text": "Function that performs task 260",
+    "code": "def function_260():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_260.py"
+  },
+  {
+    "query_id": "csn-sample-261",
+    "query_text": "Function that performs task 261",
+    "code": "def function_261():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_261.py"
+  },
+  {
+    "query_id": "csn-sample-262",
+    "query_text": "Function that performs task 262",
+    "code": "def function_262():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_262.py"
+  },
+  {
+    "query_id": "csn-sample-263",
+    "query_text": "Function that performs task 263",
+    "code": "def function_263():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_263.py"
+  },
+  {
+    "query_id": "csn-sample-264",
+    "query_text": "Function that performs task 264",
+    "code": "def function_264():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_264.py"
+  },
+  {
+    "query_id": "csn-sample-265",
+    "query_text": "Function that performs task 265",
+    "code": "def function_265():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_265.py"
+  },
+  {
+    "query_id": "csn-sample-266",
+    "query_text": "Function that performs task 266",
+    "code": "def function_266():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_266.py"
+  },
+  {
+    "query_id": "csn-sample-267",
+    "query_text": "Function that performs task 267",
+    "code": "def function_267():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_267.py"
+  },
+  {
+    "query_id": "csn-sample-268",
+    "query_text": "Function that performs task 268",
+    "code": "def function_268():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_268.py"
+  },
+  {
+    "query_id": "csn-sample-269",
+    "query_text": "Function that performs task 269",
+    "code": "def function_269():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_269.py"
+  },
+  {
+    "query_id": "csn-sample-270",
+    "query_text": "Function that performs task 270",
+    "code": "def function_270():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_270.py"
+  },
+  {
+    "query_id": "csn-sample-271",
+    "query_text": "Function that performs task 271",
+    "code": "def function_271():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_271.py"
+  },
+  {
+    "query_id": "csn-sample-272",
+    "query_text": "Function that performs task 272",
+    "code": "def function_272():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_272.py"
+  },
+  {
+    "query_id": "csn-sample-273",
+    "query_text": "Function that performs task 273",
+    "code": "def function_273():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_273.py"
+  },
+  {
+    "query_id": "csn-sample-274",
+    "query_text": "Function that performs task 274",
+    "code": "def function_274():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_274.py"
+  },
+  {
+    "query_id": "csn-sample-275",
+    "query_text": "Function that performs task 275",
+    "code": "def function_275():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_275.py"
+  },
+  {
+    "query_id": "csn-sample-276",
+    "query_text": "Function that performs task 276",
+    "code": "def function_276():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_276.py"
+  },
+  {
+    "query_id": "csn-sample-277",
+    "query_text": "Function that performs task 277",
+    "code": "def function_277():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_277.py"
+  },
+  {
+    "query_id": "csn-sample-278",
+    "query_text": "Function that performs task 278",
+    "code": "def function_278():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_278.py"
+  },
+  {
+    "query_id": "csn-sample-279",
+    "query_text": "Function that performs task 279",
+    "code": "def function_279():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_279.py"
+  },
+  {
+    "query_id": "csn-sample-280",
+    "query_text": "Function that performs task 280",
+    "code": "def function_280():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_280.py"
+  },
+  {
+    "query_id": "csn-sample-281",
+    "query_text": "Function that performs task 281",
+    "code": "def function_281():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_281.py"
+  },
+  {
+    "query_id": "csn-sample-282",
+    "query_text": "Function that performs task 282",
+    "code": "def function_282():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_282.py"
+  },
+  {
+    "query_id": "csn-sample-283",
+    "query_text": "Function that performs task 283",
+    "code": "def function_283():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_283.py"
+  },
+  {
+    "query_id": "csn-sample-284",
+    "query_text": "Function that performs task 284",
+    "code": "def function_284():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_284.py"
+  },
+  {
+    "query_id": "csn-sample-285",
+    "query_text": "Function that performs task 285",
+    "code": "def function_285():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_285.py"
+  },
+  {
+    "query_id": "csn-sample-286",
+    "query_text": "Function that performs task 286",
+    "code": "def function_286():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_286.py"
+  },
+  {
+    "query_id": "csn-sample-287",
+    "query_text": "Function that performs task 287",
+    "code": "def function_287():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_287.py"
+  },
+  {
+    "query_id": "csn-sample-288",
+    "query_text": "Function that performs task 288",
+    "code": "def function_288():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_288.py"
+  },
+  {
+    "query_id": "csn-sample-289",
+    "query_text": "Function that performs task 289",
+    "code": "def function_289():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_289.py"
+  },
+  {
+    "query_id": "csn-sample-290",
+    "query_text": "Function that performs task 290",
+    "code": "def function_290():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_0",
+    "path": "src/module_290.py"
+  },
+  {
+    "query_id": "csn-sample-291",
+    "query_text": "Function that performs task 291",
+    "code": "def function_291():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_1",
+    "path": "src/module_291.py"
+  },
+  {
+    "query_id": "csn-sample-292",
+    "query_text": "Function that performs task 292",
+    "code": "def function_292():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_2",
+    "path": "src/module_292.py"
+  },
+  {
+    "query_id": "csn-sample-293",
+    "query_text": "Function that performs task 293",
+    "code": "def function_293():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_3",
+    "path": "src/module_293.py"
+  },
+  {
+    "query_id": "csn-sample-294",
+    "query_text": "Function that performs task 294",
+    "code": "def function_294():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_4",
+    "path": "src/module_294.py"
+  },
+  {
+    "query_id": "csn-sample-295",
+    "query_text": "Function that performs task 295",
+    "code": "def function_295():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_5",
+    "path": "src/module_295.py"
+  },
+  {
+    "query_id": "csn-sample-296",
+    "query_text": "Function that performs task 296",
+    "code": "def function_296():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_6",
+    "path": "src/module_296.py"
+  },
+  {
+    "query_id": "csn-sample-297",
+    "query_text": "Function that performs task 297",
+    "code": "def function_297():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_7",
+    "path": "src/module_297.py"
+  },
+  {
+    "query_id": "csn-sample-298",
+    "query_text": "Function that performs task 298",
+    "code": "def function_298():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_8",
+    "path": "src/module_298.py"
+  },
+  {
+    "query_id": "csn-sample-299",
+    "query_text": "Function that performs task 299",
+    "code": "def function_299():\n    pass",
+    "language": "python",
+    "repository": "sample/repo_9",
+    "path": "src/module_299.py"
+  }
+]

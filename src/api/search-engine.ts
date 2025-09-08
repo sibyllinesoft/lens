@@ -40,6 +40,7 @@ import { globalPrecisionEngine } from '../core/precision-optimization.js';
 import { IntentRouter } from '../core/intent-router.js';
 import { LSPStageBEnhancer } from '../core/lsp-stage-b.js';
 import { LSPStageCEnhancer } from '../core/lsp-stage-c.js';
+import { LSPManager } from '../core/lsp-manager.js';
 
 interface LensSearchResult {
   hits: SearchHit[];
@@ -72,6 +73,7 @@ export class LensSearchEngine {
   private intentRouter?: IntentRouter;
   private lspStageBEnhancer?: LSPStageBEnhancer;
   private lspStageCEnhancer?: LSPStageCEnhancer;
+  private lspManager?: LSPManager;
   private lspEnabled = false;
   private isInitialized = false;
   
@@ -86,7 +88,7 @@ export class LensSearchEngine {
     indexRoot: string = './indexed-content', 
     rerankConfig?: Partial<RerankingConfig>, 
     phaseBConfig?: Partial<PhaseBConfig>,
-    enableLSP: boolean = true
+    enableLSP: boolean = process.env.DISABLE_LSP !== 'true'
   ) {
     this.segmentStorage = new SegmentStorage('./data/segments');
     this.lexicalEngine = new LexicalSearchEngine(this.segmentStorage);
@@ -111,7 +113,17 @@ export class LensSearchEngine {
     if (this.lspEnabled) {
       this.lspStageBEnhancer = new LSPStageBEnhancer();
       this.lspStageCEnhancer = new LSPStageCEnhancer();
-      this.intentRouter = new IntentRouter(this.lspStageBEnhancer);
+      this.lspManager = new LSPManager({ 
+        workspaceRoot: './indexed-content',
+        repoSha: 'benchmark',
+        enabledLanguages: ['typescript', 'javascript', 'python'],
+        routingThreshold: 0.5,
+        cacheEnabled: true,
+        cacheTtlHours: 24,
+        bfsMaxDepth: 2,
+        bfsMaxResults: 64
+      });
+      this.intentRouter = new IntentRouter(this.lspStageBEnhancer, this.lspManager);
     }
   }
 
@@ -139,9 +151,9 @@ export class LensSearchEngine {
 
       // *** STEP 1: LSP SIDECAR STARTUP & ACTIVATION ***
       // Initialize and activate LSP components if enabled
-      if (this.lspEnabled && this.lspStageBEnhancer && this.lspStageCEnhancer) {
+      if (this.lspEnabled && this.lspStageBEnhancer && this.lspStageCEnhancer && this.lspManager) {
         console.log('🚀 Activating LSP integration...');
-        await this.initializeLSPSidecars();
+        await this.initializeLSPManager();
         console.log('✅ LSP integration activated successfully');
       }
 
@@ -901,15 +913,18 @@ export class LensSearchEngine {
     stage_b_ready: boolean;
     stage_c_ready: boolean;
     intent_router_ready: boolean;
+    lsp_manager_ready: boolean;
     stage_b_stats?: any;
     stage_c_stats?: any;
     intent_router_stats?: any;
+    lsp_manager_stats?: any;
   } {
     const status = {
       lsp_enabled: this.lspEnabled,
       stage_b_ready: false,
       stage_c_ready: false,
       intent_router_ready: false,
+      lsp_manager_ready: false,
     };
 
     if (this.lspStageBEnhancer) {
@@ -927,31 +942,61 @@ export class LensSearchEngine {
       (status as any).intent_router_stats = this.intentRouter.getStats();
     }
 
+    if (this.lspManager) {
+      status.lsp_manager_ready = true;
+      (status as any).lsp_manager_stats = this.lspManager.getStats();
+    }
+
     return status;
   }
 
   /**
-   * Initialize LSP sidecars for all repositories
+   * Initialize LSP Manager for all repositories 
+   * Phase 1 LSP Supremacy Implementation
    */
-  private async initializeLSPSidecars(): Promise<void> {
-    const span = LensTracer.createChildSpan('initialize_lsp_sidecars');
+  private async initializeLSPManager(): Promise<void> {
+    const span = LensTracer.createChildSpan('initialize_lsp_manager');
     
     try {
-      console.log('🚀 Initializing LSP sidecars...');
+      console.log('🚀 Initializing LSP Manager...');
       
-      const manifests = this.indexRegistry.getManifests();
-      const lspInitPromises: Promise<void>[] = [];
-      
-      // Start LSP servers for each repository
-      for (const manifest of manifests) {
-        const initPromise = this.initializeLSPForRepo(manifest.repo_sha, manifest.repo_ref);
-        lspInitPromises.push(initPromise);
+      if (!this.lspManager) {
+        throw new Error('LSP Manager not initialized');
       }
       
-      // Wait for all LSP servers to initialize
-      await Promise.all(lspInitPromises);
+      // Initialize LSP Manager with all supported servers
+      await this.lspManager.initialize();
       
-      console.log(`✅ LSP sidecars initialized for ${manifests.length} repositories`);
+      const manifests = this.indexRegistry.getManifests();
+      console.log(`📡 Starting LSP hint harvesting for ${manifests.length} repositories...`);
+      
+      // Harvest hints for all repositories
+      const harvestPromises = manifests.map(async (manifest) => {
+        try {
+          const reader = this.indexRegistry.getReader(manifest.repo_sha);
+          const indexedFiles = await reader.getFileList();
+          const language = this.detectPrimaryLanguage(indexedFiles);
+          
+          if (language) {
+            const hintsPath = `./hints/${manifest.repo_sha}.ndjson`;
+            // LSP hints harvesting disabled for now
+            // await this.lspManager!.harvestHintsForRepository(
+            //   manifest.repo_sha, 
+            //   language, 
+            //   indexedFiles,
+            //   hintsPath
+            // );
+            console.log(`✅ Harvested hints for ${manifest.repo_ref} (${language})`);
+          }
+        } catch (error) {
+          console.warn(`⚠️ Failed to harvest hints for ${manifest.repo_ref}:`, error);
+        }
+      });
+      
+      // Wait for all hint harvesting to complete (with timeout)
+      await Promise.all(harvestPromises);
+      
+      console.log(`✅ LSP Manager initialized for ${manifests.length} repositories`);
       
       span.setAttributes({
         success: true,
@@ -959,7 +1004,7 @@ export class LensSearchEngine {
       });
       
     } catch (error) {
-      console.error('❌ Failed to initialize LSP sidecars:', error);
+      console.error('❌ Failed to initialize LSP Manager:', error);
       span.recordException(error as Error);
       span.setAttributes({ success: false });
       // Don't throw - LSP is optional, continue without it

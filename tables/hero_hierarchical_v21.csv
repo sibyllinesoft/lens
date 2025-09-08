@@ -1,0 +1,12 @@
+system,capability_slice,mean_ndcg_at_10,mean_success_at_10,sla_compliance_rate,total_queries
+ripgrep,lexical,0.5000,1.0000,1.0000,4
+livegrep,lexical,0.5000,1.0000,1.0000,4
+zoekt,lexical,0.5000,1.0000,1.0000,4
+lens,multi_signal,0.5000,1.0000,1.0000,4
+opensearch_knn,hybrid,0.5000,1.0000,1.0000,4
+comby,structural,0.5000,1.0000,1.0000,4
+ast_grep,structural,0.5000,1.0000,1.0000,4
+vespa_hnsw,hybrid,0.5000,1.0000,1.0000,4
+qdrant_hybrid,hybrid,0.5000,1.0000,1.0000,4
+faiss_ivf_pq,pure_ann,0.5000,1.0000,1.0000,4
+scann,pure_ann,0.5000,1.0000,1.0000,4

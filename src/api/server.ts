@@ -154,6 +154,7 @@ async function initializeServer() {
   try {
     await searchEngine.initialize();
     console.log(`🔍 Lens Search Engine initialized for API server (LSP: ${enableLSP ? 'enabled' : 'disabled'})`);
+    return fastify; // Return the Fastify app instance
   } catch (error) {
     console.error('Failed to initialize search engine:', error);
     throw error;
@@ -167,10 +168,12 @@ export let isInitialized = false;
 const originalInitialize = initializeServer;
 async function initializeServerWithTracking() {
   if (!isInitialized) {
-    await originalInitialize();
+    const app = await originalInitialize();
     // @ts-ignore - need to mutate exported variable
     isInitialized = true;
+    return app;
   }
+  return fastify;
 }
 
 // Override the export
@@ -2144,98 +2147,7 @@ fastify.post('/phase3/rollback', async (request, reply) => {
 // ==== Precision Optimization Pipeline Endpoints ====
 //
 
-// Apply Block A: Early-exit optimization patch
-fastify.patch('/policy/stageC', async (request, reply) => {
-  const span = LensTracer.createChildSpan('api_precision_block_a');
-  const startTime = Date.now();
-
-  try {
-    const body = request.body as {
-      early_exit?: {
-        enabled: boolean;
-        margin: number;
-        min_probes: number;
-      };
-      ann?: {
-        k: number;
-        efSearch: number;
-      };
-      gate?: {
-        nl_threshold: number;
-        min_candidates: number;
-        confidence_cutoff: number;
-      };
-    };
-
-    // Validate Block A configuration
-    if (body.early_exit) {
-      if (body.early_exit.margin < 0 || body.early_exit.margin > 1) {
-        reply.status(400);
-        return {
-          success: false,
-          error: 'early_exit.margin must be between 0 and 1'
-        };
-      }
-      if (body.early_exit.min_probes < 16 || body.early_exit.min_probes > 512) {
-        reply.status(400);
-        return {
-          success: false,
-          error: 'early_exit.min_probes must be between 16 and 512'
-        };
-      }
-    }
-
-    if (body.ann) {
-      if (body.ann.k < 100 || body.ann.k > 500) {
-        reply.status(400);
-        return {
-          success: false,
-          error: 'ann.k must be between 100 and 500'
-        };
-      }
-      if (body.ann.efSearch < 16 || body.ann.efSearch > 512) {
-        reply.status(400);
-        return {
-          success: false,
-          error: 'ann.efSearch must be between 16 and 512'
-        };
-      }
-    }
-
-    // Enable Block A and apply configuration
-    searchEngine.setPrecisionOptimizationEnabled('A', true);
-
-    const latency = Date.now() - startTime;
-
-    span.setAttributes({
-      success: true,
-      latency_ms: latency,
-      block_a_enabled: true,
-      early_exit_enabled: body.early_exit?.enabled || false
-    });
-
-    return {
-      success: true,
-      message: 'Block A early-exit optimization applied',
-      config: body,
-      timestamp: new Date().toISOString()
-    };
-
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-    span.recordException(error as Error);
-    span.setAttributes({ success: false, error: errorMsg });
-    
-    reply.status(500);
-    return {
-      success: false,
-      error: 'Failed to apply Block A configuration',
-      message: errorMsg
-    };
-  } finally {
-    span.end();
-  }
-});
+// Block A configuration is handled by the existing /policy/stageC route above
 
 // Apply Block B: Calibrated dynamic_topn
 fastify.patch('/policy/output', async (request, reply) => {

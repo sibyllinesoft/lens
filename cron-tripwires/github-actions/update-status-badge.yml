@@ -1,0 +1,31 @@
+name: Update Tripwire Status Badge
+
+on:
+  workflow_run:
+    workflows: ["Weekly Tripwire Validation"]
+    types: [completed]
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Update status badge
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = context.payload.workflow_run.conclusion === 'success' ? 'passing' : 'failing';
+            const color = status === 'passing' ? 'green' : 'red';
+            
+            console.log(`Updating tripwire status badge: ${status}`);
+            
+            // Create or update a status file that can be used to generate badges
+            const statusData = {
+              status: status,
+              color: color,
+              timestamp: new Date().toISOString(),
+              run_url: context.payload.workflow_run.html_url
+            };
+            
+            // In a real implementation, this would update a status endpoint
+            // or create a file that gets deployed to serve badge requests

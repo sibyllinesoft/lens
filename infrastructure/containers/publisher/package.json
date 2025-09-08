@@ -1,0 +1,13 @@
+{
+  "name": "benchmark-results-publisher",
+  "version": "1.0.0",
+  "description": "Publication-grade results publisher for Protocol v2.0",
+  "main": "publisher.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "json2csv": "^6.1.0",
+    "moment": "^2.29.4"
+  }
+}

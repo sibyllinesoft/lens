@@ -1,0 +1,9 @@
+system,dataset,credit_type,mean_ndcg_at_10,mean_success_at_10,sla_compliance_rate,p95_latency_ms,total_queries
+lens,swe_verified,span_only,0.5000,1.0000,1.0000,87.8,45
+lens,coir,span_only,0.5000,1.0000,1.0000,91.8,55
+lens,csn,span_only,0.5000,1.0000,1.0000,92.9,55
+lens,cosqa,span_only,0.5000,1.0000,1.0000,86.7,45
+lens,swe_verified,hierarchical,0.5000,1.0000,1.0000,87.8,45
+lens,coir,hierarchical,0.5000,1.0000,1.0000,91.8,55
+lens,csn,hierarchical,0.5000,1.0000,1.0000,92.9,55
+lens,cosqa,hierarchical,0.5000,1.0000,1.0000,86.7,45

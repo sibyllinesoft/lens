@@ -1,61 +1,56 @@
-# Multi-stage Docker build for Lens
-FROM node:20-alpine AS builder
+# Multi-stage Dockerfile for fraud-resistant builds
+FROM rust:1.75-slim as builder
 
-# Install system dependencies for native modules
-RUN apk add --no-cache \
-    build-base \
-    python3 \
-    make \
-    g++
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    protobuf-compiler \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY tsconfig.json ./
+# Copy manifests
+COPY Cargo.toml Cargo.lock ./
+COPY build.rs ./
+COPY proto/ ./proto/
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Build dependencies (this is the caching layer)
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN cargo build --release
+RUN rm -f target/release/deps/lens_core*
 
-# Copy source code
-COPY src ./src
+# Copy source and build
+COPY src/ ./src/
+COPY benches/ ./benches/
 
-# Build TypeScript
-RUN npm run build
+# Build with attestation info
+ARG GIT_SHA=unknown
+ARG BUILD_TIMESTAMP
+ENV GIT_SHA=${GIT_SHA}
+ENV BUILD_TIMESTAMP=${BUILD_TIMESTAMP}
+ENV LENS_MODE=real
 
-# Production stage
-FROM node:20-alpine AS runtime
+RUN cargo build --release
+
+# Runtime image
+FROM debian:bookworm-slim
 
 # Install runtime dependencies
-RUN apk add --no-cache \
-    dumb-init \
-    curl
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN addgroup -g 1001 -S lens && \
-    adduser -S lens -u 1001
+# Copy binary
+COPY --from=builder /app/target/release/lens-core /usr/local/bin/lens-core
 
-WORKDIR /app
+# Health check with mode verification
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:50051/health || exit 1
 
-# Copy built application
-COPY --from=builder --chown=lens:lens /app/dist ./dist
-COPY --from=builder --chown=lens:lens /app/node_modules ./node_modules
-COPY --chown=lens:lens package*.json ./
+EXPOSE 50051
 
-# Create data directories
-RUN mkdir -p /app/data /app/segments /app/logs && \
-    chown -R lens:lens /app
+# Ensure real mode
+ENV LENS_MODE=real
 
-# Switch to non-root user
-USER lens
-
-# Health check
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:3000/health || exit 1
-
-# Expose ports
-EXPOSE 3000 9464
-
-# Use dumb-init to handle signals properly
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/server.js"]
+CMD ["lens-core"]

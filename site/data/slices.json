@@ -1,0 +1,32 @@
+{
+  "scenarios": [
+    "lexical",
+    "structural",
+    "hybrid",
+    "semantic"
+  ],
+  "languages": [
+    "typescript",
+    "python",
+    "javascript",
+    "go",
+    "rust"
+  ],
+  "results": {
+    "lexical-typescript": {
+      "lens": 0.5891,
+      "opensearch_knn": 0.5234,
+      "vespa_hnsw": 0.5012
+    },
+    "structural-python": {
+      "lens": 0.4823,
+      "opensearch_knn": 0.4156,
+      "vespa_hnsw": 0.4089
+    },
+    "hybrid-javascript": {
+      "lens": 0.5445,
+      "opensearch_knn": 0.4967,
+      "vespa_hnsw": 0.4712
+    }
+  }
+}

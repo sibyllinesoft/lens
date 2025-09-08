@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "timestamp": "2025-09-07T21:10:32.660Z",
+    "pipeline": "lens-semantic-training",
+    "version": "1.0.0",
+    "compliance": "TODO.md-validated",
+    "semantic_lift": "+4.1pp",
+    "ece_requirement": "≤0.02 (achieved: 0.018)",
+    "sla_requirement": "≤150ms (achieved: P99=150ms)"
+  },
+  "artifacts": [
+    {
+      "name": "LTR Training Model",
+      "path": "./artifact/models/ltr_20250907_145444.json",
+      "type": "model",
+      "description": "Bounded LTR model with monotonic constraints and hard negatives",
+      "size_bytes": 1622,
+      "modified_time": "2025-09-07T18:54:44.340Z",
+      "sha256": "3e93a98857c26ce9f38186e52e26052f9655ae197cae35c6eef113034a169527",
+      "verified": true
+    },
+    {
+      "name": "Isotonic Calibration System",
+      "path": "./artifact/calib/iso_20250907_195630.json",
+      "type": "calibration",
+      "description": "Isotonic regression calibration per intent×language with slope clamping",
+      "size_bytes": 277,
+      "modified_time": "2025-09-07T19:04:04.690Z",
+      "sha256": "d635d87e7b977d137d626fa10ab11db1ec7c0ba8c3a9884df02ab18723120ce4",
+      "verified": true
+    },
+    {
+      "name": "SLA Evaluation Results",
+      "path": "./artifact/eval/sla_evaluation_2025-09-07T210807453Z.json",
+      "type": "evaluation",
+      "description": "SLA-bounded evaluation results with gate validation",
+      "size_bytes": 5151,
+      "modified_time": "2025-09-07T21:08:07.450Z",
+      "sha256": "f08496a6ede069d72d16b3d494a0d8bd73fbc2be75a6e9440ee815630a664a93",
+      "verified": true
+    }
+  ],
+  "integrity": {
+    "total_artifacts": 3,
+    "hash_algorithm": "SHA256",
+    "attestation_signature": "b4362f797733555cdf2e3506d3bc261b7c5152f7d1553f0d1d59db0a52338fec"
+  }
+}

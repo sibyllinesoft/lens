@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const http = require('http');
-const { performance } = require('perf_hooks');
-const fs = require('fs').promises;
+import http from 'http';
+import { performance } from 'perf_hooks';
+import { promises as fs } from 'fs';
 
 /**
  * Comprehensive Service Performance Benchmark
@@ -354,7 +354,7 @@ class ServicePerformanceBenchmark {
 }
 
 // Run the benchmark if this script is executed directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const benchmark = new ServicePerformanceBenchmark();
   
   benchmark.runFullBenchmark()
@@ -373,4 +373,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = ServicePerformanceBenchmark;
+export default ServicePerformanceBenchmark;

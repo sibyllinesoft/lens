@@ -1,0 +1,12 @@
+system,system_slice,dataset,span_credit,symbol_credit,file_credit,total_credits
+ripgrep,lexical,cosqa,20,0,0,20
+livegrep,lexical,cosqa,20,0,0,20
+zoekt,lexical,cosqa,25,0,0,25
+lens,multi_signal,cosqa,45,0,0,45
+opensearch_knn,hybrid,cosqa,25,0,0,25
+comby,structural,cosqa,15,0,0,15
+ast_grep,structural,cosqa,20,0,0,20
+vespa_hnsw,hybrid,cosqa,30,0,0,30
+qdrant_hybrid,hybrid,cosqa,25,0,0,25
+faiss_ivf_pq,pure_ann,cosqa,15,0,0,15
+scann,pure_ann,cosqa,15,0,0,15

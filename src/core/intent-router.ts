@@ -13,6 +13,7 @@ import type {
 } from '../types/core.js';
 import { LensTracer } from '../telemetry/tracer.js';
 import { LSPStageBEnhancer } from './lsp-stage-b.js';
+import { LSPManager, type LSPRoutingDecision } from './lsp-manager.js';
 
 interface IntentRouterResult {
   classification: IntentClassification;
@@ -20,6 +21,8 @@ interface IntentRouterResult {
   fallback_triggered: boolean;
   routing_path: string[];
   confidence_threshold_met: boolean;
+  lsp_routing_decision?: LSPRoutingDecision;
+  lsp_routed: boolean;
 }
 
 export class IntentRouter {
@@ -27,7 +30,8 @@ export class IntentRouter {
   private static readonly MAX_PRIMARY_RESULTS = 20;
 
   constructor(
-    private lspEnhancer: LSPStageBEnhancer
+    private lspEnhancer: LSPStageBEnhancer,
+    private lspManager?: LSPManager
   ) {}
 
   /**
@@ -45,16 +49,45 @@ export class IntentRouter {
     });
 
     try {
-      // Step 1: Classify query intent
+      // Step 1: LSP Manager Routing Decision (if available)
+      let lspRoutingDecision: LSPRoutingDecision | undefined;
+      let lspRoutedCandidates: Candidate[] = [];
+      let lspRouted = false;
+
+      if (this.lspManager) {
+        lspRoutingDecision = this.lspManager.makeRoutingDecision(query, context);
+        
+        if (lspRoutingDecision.shouldRoute) {
+          console.log(`🎯 LSP routing: ${lspRoutingDecision.intent} (confidence: ${lspRoutingDecision.confidence.toFixed(2)}, reason: ${lspRoutingDecision.routingReason})`);
+          
+          try {
+            lspRoutedCandidates = await this.lspManager.executeRoutedQuery(query, context, lspRoutingDecision);
+            lspRouted = lspRoutedCandidates.length > 0;
+          } catch (error) {
+            console.warn('LSP routed query failed, falling back:', error);
+          }
+        }
+      }
+
+      // Step 2: Fallback to traditional routing if LSP didn't produce results
       const classification = this.classifyQueryIntent(query);
-      const routingPath: string[] = [`classified_as_${classification.intent}`];
+      const routingPath: string[] = [];
+      
+      if (lspRoutingDecision?.shouldRoute) {
+        routingPath.push(`lsp_routed_as_${lspRoutingDecision.intent}`);
+        if (lspRoutingDecision.safetyFloorTriggered) {
+          routingPath.push('safety_floor_triggered');
+        }
+      } else {
+        routingPath.push(`classified_as_${classification.intent}`);
+      }
 
-      let primaryCandidates: Candidate[] = [];
+      let primaryCandidates = lspRoutedCandidates;
       let fallbackTriggered = false;
-      const confidenceThresholdMet = classification.confidence >= IntentRouter.CONFIDENCE_THRESHOLD;
+      const confidenceThresholdMet = (lspRoutingDecision?.confidence || classification.confidence) >= IntentRouter.CONFIDENCE_THRESHOLD;
 
-      // Step 2: Route based on intent and confidence
-      if (confidenceThresholdMet) {
+      // Step 3: Traditional routing if LSP didn't handle it
+      if (!lspRouted && confidenceThresholdMet) {
         switch (classification.intent) {
           case 'def':
             primaryCandidates = await this.handleDefinitionIntent(query, context, symbolsNearHandler);
@@ -113,6 +146,7 @@ export class IntentRouter {
         fallback_triggered: fallbackTriggered,
         routing_path: routingPath,
         confidence_threshold_met: confidenceThresholdMet,
+        lsp_routed: false
       };
 
       span.setAttributes({

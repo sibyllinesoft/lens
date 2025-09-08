@@ -1,0 +1,18 @@
+{
+  "run_id": "protocol_v22_1757345166574",
+  "artifact_hash": "v22_1f3db391_1757345166574",
+  "data": {
+    "span_only": {
+      "count": 48768,
+      "avg_ndcg": 0.3902673189751217
+    },
+    "hierarchical": {
+      "count": 0,
+      "avg_ndcg": 0
+    },
+    "file_fallback": {
+      "count": 0,
+      "avg_ndcg": 0
+    }
+  }
+}

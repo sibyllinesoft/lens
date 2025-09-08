@@ -1,0 +1,702 @@
+[
+  {
+    "query_id": "coir-sample-0",
+    "query_text": "Find code that implements sorting algorithm 0",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-1",
+    "query_text": "Find code that implements sorting algorithm 1",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-2",
+    "query_text": "Find code that implements sorting algorithm 2",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-3",
+    "query_text": "Find code that implements sorting algorithm 3",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-4",
+    "query_text": "Find code that implements sorting algorithm 4",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-5",
+    "query_text": "Find code that implements sorting algorithm 5",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-6",
+    "query_text": "Find code that implements sorting algorithm 6",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-7",
+    "query_text": "Find code that implements sorting algorithm 7",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-8",
+    "query_text": "Find code that implements sorting algorithm 8",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-9",
+    "query_text": "Find code that implements sorting algorithm 9",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-10",
+    "query_text": "Find code that implements sorting algorithm 10",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-11",
+    "query_text": "Find code that implements sorting algorithm 11",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-12",
+    "query_text": "Find code that implements sorting algorithm 12",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-13",
+    "query_text": "Find code that implements sorting algorithm 13",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-14",
+    "query_text": "Find code that implements sorting algorithm 14",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-15",
+    "query_text": "Find code that implements sorting algorithm 15",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-16",
+    "query_text": "Find code that implements sorting algorithm 16",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-17",
+    "query_text": "Find code that implements sorting algorithm 17",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-18",
+    "query_text": "Find code that implements sorting algorithm 18",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-19",
+    "query_text": "Find code that implements sorting algorithm 19",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-20",
+    "query_text": "Find code that implements sorting algorithm 20",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-21",
+    "query_text": "Find code that implements sorting algorithm 21",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-22",
+    "query_text": "Find code that implements sorting algorithm 22",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-23",
+    "query_text": "Find code that implements sorting algorithm 23",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-24",
+    "query_text": "Find code that implements sorting algorithm 24",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-25",
+    "query_text": "Find code that implements sorting algorithm 25",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-26",
+    "query_text": "Find code that implements sorting algorithm 26",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-27",
+    "query_text": "Find code that implements sorting algorithm 27",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-28",
+    "query_text": "Find code that implements sorting algorithm 28",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-29",
+    "query_text": "Find code that implements sorting algorithm 29",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-30",
+    "query_text": "Find code that implements sorting algorithm 30",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-31",
+    "query_text": "Find code that implements sorting algorithm 31",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-32",
+    "query_text": "Find code that implements sorting algorithm 32",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-33",
+    "query_text": "Find code that implements sorting algorithm 33",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-34",
+    "query_text": "Find code that implements sorting algorithm 34",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-35",
+    "query_text": "Find code that implements sorting algorithm 35",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-36",
+    "query_text": "Find code that implements sorting algorithm 36",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-37",
+    "query_text": "Find code that implements sorting algorithm 37",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-38",
+    "query_text": "Find code that implements sorting algorithm 38",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-39",
+    "query_text": "Find code that implements sorting algorithm 39",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-40",
+    "query_text": "Find code that implements sorting algorithm 40",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-41",
+    "query_text": "Find code that implements sorting algorithm 41",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-42",
+    "query_text": "Find code that implements sorting algorithm 42",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-43",
+    "query_text": "Find code that implements sorting algorithm 43",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-44",
+    "query_text": "Find code that implements sorting algorithm 44",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-45",
+    "query_text": "Find code that implements sorting algorithm 45",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-46",
+    "query_text": "Find code that implements sorting algorithm 46",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-47",
+    "query_text": "Find code that implements sorting algorithm 47",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-48",
+    "query_text": "Find code that implements sorting algorithm 48",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-49",
+    "query_text": "Find code that implements sorting algorithm 49",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-50",
+    "query_text": "Find code that implements sorting algorithm 50",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-51",
+    "query_text": "Find code that implements sorting algorithm 51",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-52",
+    "query_text": "Find code that implements sorting algorithm 52",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-53",
+    "query_text": "Find code that implements sorting algorithm 53",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-54",
+    "query_text": "Find code that implements sorting algorithm 54",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-55",
+    "query_text": "Find code that implements sorting algorithm 55",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-56",
+    "query_text": "Find code that implements sorting algorithm 56",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-57",
+    "query_text": "Find code that implements sorting algorithm 57",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-58",
+    "query_text": "Find code that implements sorting algorithm 58",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-59",
+    "query_text": "Find code that implements sorting algorithm 59",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-60",
+    "query_text": "Find code that implements sorting algorithm 60",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-61",
+    "query_text": "Find code that implements sorting algorithm 61",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-62",
+    "query_text": "Find code that implements sorting algorithm 62",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-63",
+    "query_text": "Find code that implements sorting algorithm 63",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-64",
+    "query_text": "Find code that implements sorting algorithm 64",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-65",
+    "query_text": "Find code that implements sorting algorithm 65",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-66",
+    "query_text": "Find code that implements sorting algorithm 66",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-67",
+    "query_text": "Find code that implements sorting algorithm 67",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-68",
+    "query_text": "Find code that implements sorting algorithm 68",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-69",
+    "query_text": "Find code that implements sorting algorithm 69",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-70",
+    "query_text": "Find code that implements sorting algorithm 70",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-71",
+    "query_text": "Find code that implements sorting algorithm 71",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-72",
+    "query_text": "Find code that implements sorting algorithm 72",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-73",
+    "query_text": "Find code that implements sorting algorithm 73",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-74",
+    "query_text": "Find code that implements sorting algorithm 74",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-75",
+    "query_text": "Find code that implements sorting algorithm 75",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-76",
+    "query_text": "Find code that implements sorting algorithm 76",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-77",
+    "query_text": "Find code that implements sorting algorithm 77",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-78",
+    "query_text": "Find code that implements sorting algorithm 78",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-79",
+    "query_text": "Find code that implements sorting algorithm 79",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-80",
+    "query_text": "Find code that implements sorting algorithm 80",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-81",
+    "query_text": "Find code that implements sorting algorithm 81",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-82",
+    "query_text": "Find code that implements sorting algorithm 82",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-83",
+    "query_text": "Find code that implements sorting algorithm 83",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-84",
+    "query_text": "Find code that implements sorting algorithm 84",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-85",
+    "query_text": "Find code that implements sorting algorithm 85",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-86",
+    "query_text": "Find code that implements sorting algorithm 86",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-87",
+    "query_text": "Find code that implements sorting algorithm 87",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-88",
+    "query_text": "Find code that implements sorting algorithm 88",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-89",
+    "query_text": "Find code that implements sorting algorithm 89",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-90",
+    "query_text": "Find code that implements sorting algorithm 90",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-91",
+    "query_text": "Find code that implements sorting algorithm 91",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-92",
+    "query_text": "Find code that implements sorting algorithm 92",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-93",
+    "query_text": "Find code that implements sorting algorithm 93",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-94",
+    "query_text": "Find code that implements sorting algorithm 94",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-95",
+    "query_text": "Find code that implements sorting algorithm 95",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-96",
+    "query_text": "Find code that implements sorting algorithm 96",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-97",
+    "query_text": "Find code that implements sorting algorithm 97",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-98",
+    "query_text": "Find code that implements sorting algorithm 98",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  },
+  {
+    "query_id": "coir-sample-99",
+    "query_text": "Find code that implements sorting algorithm 99",
+    "code": "def quicksort(arr): pass",
+    "language": "python",
+    "domain": "algorithms"
+  }
+]

@@ -1,156 +1,157 @@
-**TL;DR:** Leave search alone. Add a small LSP-backed SPI to Lens—diagnostics, format, selection/folding ranges, rename (prepare+workspace edit), code actions, and call/type hierarchy—plus deterministic ordering, caching by `source_hash`, and metrics. These unlock safer `spatch/srefactor`, tighter `scontext`, and smarter `simpact` without changing your current search path.
+**TL;DR:** Wire the framework to real endpoints, run an A/A→A/B canary under the v2.2 gates, and replace every simulator with production signals; ship Sprint-1 tail-taming behind a flag, then lock replication on real pools. Below is a crisp, integration-first plan with acceptance criteria.
 
-### Assumptions (explicit)
+### 0) Assumptions
 
-* You already expose `/v1/spi/{search,resolve,context,xref}` and bake LSP signals into **search**.
-* Lens can talk to per-lang LSP servers you run sidecar or in-proc.
-* `ref = lens://{repo_sha}/{path}@{source_hash}#B{start}:{end}` is the stable address.
+* Lens `/search` is NDJSON and returns span-accurate hits with `why:[lex|struct|sem]`, latency, and shard ids.
+* Metrics engine is `@lens/metrics` and the scoreboard uses pooled-qrels from v2.2.
+* Simulators currently feed the monitoring, transparency pages, and weekly cron.
 
----
+### 1) Convert “simulated” → “real” (48 hours, merge in stages)
 
-## 1) New SPI endpoints (LSP-backed, read-only + edit synthesis)
+**Idea:** Replace data sources at the boundary, not in consumers. Keep simulator as a fallback via env flag.
 
-All endpoints must: accept `budget_ms`, return `duration_ms`, sort outputs deterministically, and be cacheable by `(repo_sha, path, source_hash)`. Return `429/504` on budget exceed, not silent truncation.
+**Mechanism:**
 
-**Capabilities**
+* **Config:** `DATA_SOURCE=sim|prod`; `LENS_ENDPOINTS=[…]`; `AUTH_TOKEN=…`; `SLA_MS=150`.
+* **Client:** idempotent, retry-aware fetcher with `deadline = SLA_MS` and `cancel_on_first`.
+* **Emit:** one canonical record per query → `agg.parquet` row schema, plus `hits.parquet`.
+* **Map fields:** `req_ts, shard, lat_ms, within_sla=(lat_ms<=150), why_mix_* from hit.why counts`.
 
-* `GET /v1/spi/lsp/capabilities?repo_sha=…`
+**Trade-offs:** Minimal churn, but you must hard-fail on schema drift to preserve artifact binding.
 
-  * → `{ languages:[{lang, features:[diagnostics,format,selectionRanges,foldingRanges,prepareRename,rename,codeActions,callHierarchy,typeHierarchy]}] }`
+**Next steps:**
 
-**Diagnostics (fast verify gate)**
+1. Implement `ProdIngestor` beside `SimIngestor`; add parity tests (same query ids → same row counts).
+2. Add **schema guard**: refuse writes if any required column missing; stamp `attestation_sha256`.
+3. Flip staging to `DATA_SOURCE=prod`, run 10k queries (mixed suites) to populate *new* `runs/staging/`.
+4. Run `bench score` span-only with pooled-qrels; publish staging dashboard privately.
 
-* `POST /v1/spi/lsp/diagnostics`
-
-  * Req: `{ files:[{path, source_hash}], budget_ms }`
-  * Res: `{ diags:[{path, source_hash, items:[{range:{b0,b1}, severity∈{hint,info,warning,error}, code?, message}]}], duration_ms }`
-
-**Format (idempotence & normalization)**
-
-* `POST /v1/spi/lsp/format`
-
-  * Req: `{ ref? , path?, range? , options? , budget_ms }`
-  * Res: `{ edits:[{path, range:{b0,b1}, new_text}], idempotent:boolean, duration_ms }`
-  * Contract: applying `edits` twice yields no diff when `idempotent=true`.
-
-**Selection & Folding (snippet fences)**
-
-* `POST /v1/spi/lsp/selectionRanges`
-
-  * Req: `{ refs:[ref], budget_ms }`
-  * Res: `{ chains:[[{range, parent_ix?}]], duration_ms }`  // outer→inner chain per ref
-* `POST /v1/spi/lsp/foldingRanges`
-
-  * Req: `{ files:[{path, source_hash}], budget_ms }`
-  * Res: `{ folds:[{path, ranges:[{b0,b1,kind}] }], duration_ms }`
-
-**Rename / Workspace Edit (safe multi-file changes)**
-
-* `POST /v1/spi/lsp/prepareRename`
-
-  * Req: `{ ref, budget_ms }`
-  * Res: `{ allowed:boolean, placeholder?:string, range?:{b0,b1}, reason? }`
-* `POST /v1/spi/lsp/rename`
-
-  * Req: `{ ref, new_name, budget_ms }`
-  * Res: `{ workspaceEdit:{ changes:[{path, source_hash, edits:[{b0,b1,new_text}]}] }, duration_ms }`
-  * Determinism: sort `changes` by `path`, `edits` by `b0`.
-
-**Code Actions (quick-fixes & refactors as proposals)**
-
-* `POST /v1/spi/lsp/codeActions`
-
-  * Req: `{ ref, kinds?:[\"quickfix\",\"refactor\",\"source.organizeImports\",…], diagnostics?[], budget_ms }`
-  * Res: `{ actions:[{title, kind, workspaceEdit?, data?}], duration_ms }`
-  * Do **not** execute arbitrary commands; only return pure text edits.
-
-**Hierarchy (impact ranking substrate)**
-
-* `POST /v1/spi/lsp/hierarchy`
-
-  * Req: `{ ref, kind∈{\"call\",\"type\"}, dir∈{\"incoming\",\"outgoing\"}, depth?:int, fanout_cap?:int, budget_ms }`
-  * Res: `{ nodes:[{symbol_id,name,kind,def_ref?}], edges:[{src:symbol_id,dst:symbol_id,role}], truncated:boolean, duration_ms }`
+**Definition of Done (DoD):** No simulator process is required to render the live dashboards; staging run passes **all gates** (ECE, power, pool, p99/p95).
 
 ---
 
-## 2) Engine/runtime changes (minimal but important)
+### 2) Sprint-1 (Tail-taming) integration (one week, gated)
 
-* **Caching & invalidation**
+**Idea:** Land tail-taming behind a router flag; measure SLA-bounded recall not just latency.
 
-  * Cache responses by `(repo_sha, path, source_hash)`; TTL = 10–60s.
-  * Invalidate on index change or when `source_hash` differs from working tree.
-  * Batch LSP calls per language server to reduce chattiness; enforce `budget_ms`.
+**Mechanism:**
 
-* **Determinism**
+* **Hedged probes:** secondary probe at `t = min(6ms, 0.1·p50_shard)`; cancel on first success.
+* **Cooperative cancel:** shard workers observe `ctx` cancellation; maintain visited-set reuse.
+* **Cross-shard TA/NRA:** global threshold maintains min required score; stop shards early.
+* **Learning-to-stop:** feature vector ⟨top-k gap, shard residuals, elapsed, efSearch⟩ → logistic stop; clamp with monotone floor.
 
-  * Sort diagnostics by `(severity desc, b0 asc, code asc?)`.
-  * Sort actions by `(kind, title, first_edit.b0)`.
-  * Canonicalize newline/encoding in `format` and `workspaceEdit` outputs.
-  * Include `seed` echo and `trace:{stages[],timings}` in every response.
+**Gates (all must hold vs v2.2):**
 
-* **Safety & sandbox**
+* `p99_latency`: −10–15% *and* `p99/p95 ≤ 2.0`
+* `SLA-Recall@50`: ≥ baseline (Δ ≥ 0.0 pp)
+* `QPS@150ms`: +10–15%
+* Cost: ≤ +5%
 
-  * Formatting may shell out (prettier, rustfmt, gofmt): execute in a sandbox with CPU/mem caps and a 2× budget sub-cap.
-  * Reject code actions that contain ExecuteCommand-type side effects; allow only text edits.
+**Rollout:** 5%→25%→50%→100% traffic by repo bucket; tripwire auto-revert on any gate breach for two consecutive 15-min windows.
 
-* **Observability**
+**Next steps:**
 
-  * New metrics: `lsp_diag_latency_ms{lang}`, `lsp_format_idempotent_rate`, `lsp_rename_size_edits`, `lsp_cache_hit_ratio`, `lsp_timeout_rate`.
-  * Structured logs include repo, path, source\_hash, counts, truncated flag.
+1. Add router flags: `TAIL_HEDGE=true`, `HEDGE_DELAY_MS`, `TA_STOP=true`, `LTS_STOP=true`.
+2. Instrument per-shard spans: `probe_id, issued_ts, first_byte_ts, cancel_ts`.
+3. Canary A/A (flags off vs off) to establish *noise floor*; then A/B: control(flags off) vs test(flags on).
+4. Score **SLA-Recall\@50** hourly; block promotion unless CI width ≤ 0.03 (paired bootstrap B≥2000).
 
----
-
-## 3) Data model tweaks (no search changes)
-
-* Introduce a **LensSymbol** view (in-memory or persisted) to attach stable `symbol_id` and `moniker` to `ref`s returned by hierarchy/rename:
-
-  * `{ symbol_id, lang, name, kind, def_ref, container[], moniker? }`
-  * Build on demand from LSP or from your existing symbol index; **not** required to modify `/search` responses.
+**DoD:** Canary at 100% with green gates for 24h; commit flags default-on; artifacts stamped with new cfg hash.
 
 ---
 
-## 4) Backward compatibility & rollout
+### 3) Replication kit: move to *real pools* (2–3 days)
 
-* All endpoints are **additive** under `/v1/spi/lsp/*`. No changes to `/search`.
-* Feature flag per language (`lsp.enabled.go=true`, etc.).
-* Canary policy: error budget <1% for `lsp_*` endpoints in a week before GA; auto-disable specific langs on crash/timeout spikes.
+**Idea:** Your kit is solid but simulated; swap in production pool manifests and enforce parity embeddings + SLA mask.
+
+**Mechanism:**
+
+* Bundle `pool/` built from union of **in-SLA** top-k across systems; include `pool_counts_by_system.csv`.
+* Freeze `Gemma-256` parity weights (digest in attestation).
+* Tighten `make repro`: assert **ECE ≤ 0.02** per intent×language; clamp isotonic slope to \[0.9, 1.1].
+
+**Next steps:**
+
+1. Publish `pool/` and `hero_span_v22.csv` from *production runs* (not simulator).
+2. Update kit README with **SLA note** and **fingerprint** `v22_1f3db391_1757345166574`.
+3. Run partner dry-run on 1k queries; verify ±0.1 pp tolerance, then full 48,768.
+
+**DoD:** External lab returns attested `hero_span_v22.csv` within tolerance; we host “replicated” badge.
 
 ---
 
-## 5) Contract tests (must pass before GA)
+### 4) Transparency & weekly cron: bind to prod (1 day)
 
-* **Format idempotence:** apply returned edits twice ⇒ identical tree/hash.
-* **Diagnostics stability:** re-ordering of unrelated edits doesn’t reshuffle diagnostics ordering.
-* **Rename determinism:** same input ⇒ identical `workspaceEdit` byte ranges across runs.
-* **Hierarchy truncation:** `truncated=true` when `(fanout,depth)` limits hit; never partial without the flag.
-* **Budget behavior:** when `budget_ms` is too small, return `504` with `timed_out:true`, not empty 200s.
+**Idea:** Keep the simulator for local dev, but public pages must source production fingerprints.
+
+**Mechanism:**
+
+* Cron at Sun 02:00 uses `DATA_SOURCE=prod`; on green gates → publish new fingerprint; else auto-revert and open P0.
+* Leaderboard renders CI whiskers and `p99/p95` per system; link pool audit & ECE reliability diagrams.
+
+**Next steps:** Wire the cron job creds to call Lens endpoints and write to the immutable bucket; add “pool membership” counts widget.
+
+**DoD:** First cron run produces a *public* green fingerprint without manual edits.
 
 ---
 
-## 6) Minimal JSON schemas (for Lens only)
+### 5) Sprint-2 prep (in parallel, but don’t ship yet)
 
-```json
-// Diagnostics
-{ "diags": [
-  { "path":"src/a.go","source_hash":"…",
-    "items":[{"range":{"b0":123,"b1":135},"severity":"error","code":"E1001","message":"undefined x"}]
-  }
-], "duration_ms": 32, "timed_out": false, "trace": {...} }
+**Idea:** Build the harness so shipping is a config change post Sprint-1.
 
-// Rename (workspace edits)
-{ "workspaceEdit": {
-    "changes": [
-      {"path":"pkg/f.go","source_hash":"…",
-       "edits":[{"b0":250,"b1":253,"new_text":"Foo"}]}
-    ]},
-  "duration_ms": 71
-}
+**Mechanism:**
+
+* Lexical phrase/prox scorer with impact-ordered postings; backoff “panic exactifier” under high entropy.
+* **Gate:** +1–2 pp on lexical slices, ≤ +0.5 ms p95.
+* Precompute phrase windows for hot n-grams to keep SLA flat.
+
+**DoD:** Benchmark report with Pareto curves (quality vs ms) and reproducible cfg hashes.
+
+---
+
+### 6) Calibration sanity (continuous)
+
+**Idea:** Guard against confidence drift as tails change.
+
+**Mechanism:**
+
+* Refit isotonic per intent×language each weekly cron; **slope clamp \[0.9,1.1]**; assert `ECE ≤ 0.02`.
+* Tripwire: if clamp activates >10% of bins, open P1 for calibration drift.
+
+---
+
+### 7) Minimal pseudocode (for avoidance of doubt)
+
+```pseudo
+for q in suite:
+  t0 = now()
+  ctl = search(q, flags=OFF, deadline=150)
+  tst = search(q, flags=TAIL_TAMING, deadline=150)
+  log_rows = toAggRows([ctl, tst], qid=q.id, cfg_hash, sla=150)
+  writeParquet(agg, log_rows); writeParquet(hits, toHits(ctl,tst))
+score = benchScore(agg, pool, credit=span_only, bootstrap=2000, permute=holm)
+assert gates(score)  // ECE, power, CI width, p99/p95, SLA-Recall@50
 ```
 
 ---
 
-## 7) Sequenced implementation (2 sprints)
+### 8) Owner map & timeline
 
-* **Sprint A:** capabilities, diagnostics, format, selection/folding; caching, metrics, tests.
-* **Sprint B:** prepareRename/rename, codeActions (text edits only), hierarchy; determinism polish; rollout per language.
+* **Prod wiring (Section 1):** 2 days — *Infra owner*.
+* **Sprint-1 canary (Section 2):** 5–7 days — *Search core*.
+* **Replication swap (Section 3):** 2–3 days — *Benchmarks owner*.
+* **Cron & transparency (Section 4):** 1 day — *DevEx*.
+* **Calibration (Section 6):** ongoing — *ML owner*.
 
+---
+
+### 9) Risks → Mitigations
+
+* **Pool drift:** lock pool build from in-SLA tops; publish membership deltas.
+* **Hidden cost creep:** budget tracker per query class; fail build if >5% delta.
+* **Router mis-spend:** entropy-conditioned spend cap; conformal guard for upshifts.
+
+---
+
+When these are green, Sprint-1 ships by flipping defaults; you’ll have removed the last “simulated” crutch, proven tail wins under SLA-Recall, and set the table for small, defensible lexical and ANN gains next.

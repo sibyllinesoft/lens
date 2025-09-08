@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methods - Lens Benchmark v2.2</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="../">🔍 Lens Benchmark v2.2</a></h1>
+            <p class="subtitle">Evaluation Methodology</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section id="sla-mask">
+                <h2>📏 SLA Masking</h2>
+                <p>All systems evaluated under identical 150ms hard timeout:</p>
+                <ul>
+                    <li>Queries exceeding 150ms are masked (excluded from evaluation)</li>
+                    <li>SLA compliance rate reported separately</li>
+                    <li>Ensures fair comparison across systems with different latency profiles</li>
+                </ul>
+            </section>
+
+            <section id="pooled-qrels">
+                <h2>🔄 Pooled Qrels Construction</h2>
+                <div class="method-detail">
+                    <h3>Process:</h3>
+                    <ol>
+                        <li>Collect top-k results from all systems</li>
+                        <li>Union results to form comprehensive relevance pool</li>
+                        <li>Expert annotation of pooled results</li>
+                        <li>Graded relevance: span (1.0) → symbol (0.7) → file (0.5)</li>
+                    </ol>
+                    <h3>Benefits:</h3>
+                    <ul>
+                        <li>Reduces evaluation bias toward any single system</li>
+                        <li>Ensures comprehensive coverage of relevant results</li>
+                        <li>Enables fair comparison across different system architectures</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="bootstrap">
+                <h2>📊 Bootstrap Sampling</h2>
+                <div class="stats-details">
+                    <p><strong>Sampling:</strong> 2000 bootstrap samples per system</p>
+                    <p><strong>Confidence Intervals:</strong> 95% CI using percentile method</p>
+                    <p><strong>Permutation Tests:</strong> Statistical significance testing</p>
+                    <p><strong>Power Analysis:</strong> Minimum 800 queries per suite</p>
+                </div>
+            </section>
+
+            <section id="artifact-hashes">
+                <h2>🔒 Artifact Integrity</h2>
+                <div class="hash-table">
+                    <h3>SHA256 Checksums:</h3>
+                    <table>
+                        <tr><td>hero_span_v22.csv</td><td>ee3add795f54...</td></tr>
+                        <tr><td>weights.json</td><td>c4d9e13e1759...</td></tr>
+                        <tr><td>embeddings.manifest</td><td>475a6d914081...</td></tr>
+                        <tr><td>pool_counts.csv</td><td>733ccfca05e9...</td></tr>
+                    </table>
+                </div>
+                <p><a href="../release/v2.2/MANIFEST.json">Full manifest with all SHA256 hashes →</a></p>
+            </section>
+
+            <section id="pool-composition">
+                <h2>📋 Pool Composition Audit</h2>
+                <div class="pool-stats">
+                    <h3>System Contributions:</h3>
+                    <div class="contrib-chart">
+                        <div class="contrib-bar">
+                            <span class="system">Lens</span>
+                            <div class="bar" style="width: 31.2%"></div>
+                            <span class="pct">31.2%</span>
+                        </div>
+                        <div class="contrib-bar">
+                            <span class="system">OpenSearch</span>
+                            <div class="bar" style="width: 26.4%"></div>
+                            <span class="pct">26.4%</span>
+                        </div>
+                        <div class="contrib-bar">
+                            <span class="system">Vespa</span>
+                            <div class="bar" style="width: 24.1%"></div>
+                            <span class="pct">24.1%</span>
+                        </div>
+                        <div class="contrib-bar">
+                            <span class="system">Others</span>
+                            <div class="bar" style="width: 18.3%"></div>
+                            <span class="pct">18.3%</span>
+                        </div>
+                    </div>
+                    <p>✅ All systems contribute unique results to ≥30% of queries</p>
+                </div>
+            </section>
+
+            <section id="comparison-modes">
+                <h2>⚖️  Evaluation Modes</h2>
+                <div class="mode-comparison">
+                    <div class="mode-card">
+                        <h3>Span-only (Primary)</h3>
+                        <p>Credit given only for exact span matches (span=1.0, file=0.5)</p>
+                        <p>Primary ranking for system comparison</p>
+                    </div>
+                    <div class="mode-card">
+                        <h3>Hierarchical (Transparency)</h3>
+                        <p>Graded credit: span=1.0, symbol=0.7, file=0.5</p>
+                        <p>Provides additional insight into system behavior</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="../assets/methods.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "lens-v2.2-sbom",
+  "documentNamespace": "https://lens.dev/sbom/v2.2/v22_1f3db391_1757345166574",
+  "creationInfo": {
+    "created": "2025-09-08T16:04:56.638Z",
+    "creators": [
+      "Tool: lens-release-manager"
+    ]
+  },
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-Package-lens",
+      "name": "lens",
+      "versionInfo": "v2.2",
+      "downloadLocation": "https://github.com/sibyllinesoft/lens/releases/tag/v2.2",
+      "filesAnalyzed": false,
+      "copyrightText": "NOASSERTION"
+    }
+  ]
+}

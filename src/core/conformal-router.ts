@@ -384,8 +384,11 @@ export class ConformalRouter {
     ctx: SearchContext, 
     currentCandidates?: any[]
   ): ConformalPredictionFeatures {
-    const words = ctx.query.split(/\s+/).filter(w => w.length > 0);
-    const chars = ctx.query.split('');
+    // Handle null/undefined queries
+    const query = ctx.query || '';
+    
+    const words = query.split(/\s+/).filter(w => w.length > 0);
+    const chars = query.split('');
     
     // Calculate query entropy
     const charCounts = chars.reduce((acc, char) => {
@@ -401,15 +404,15 @@ export class ConformalRouter {
     
     // Calculate identifier density (how code-like is the query)
     const identifierPattern = /[a-zA-Z_][a-zA-Z0-9_]*/g;
-    const identifiers = ctx.query.match(identifierPattern) || [];
+    const identifiers = query.match(identifierPattern) || [];
     const identifierDensity = identifiers.length / Math.max(1, words.length);
     
     // Estimate semantic complexity based on query structure
-    const specialChars = (ctx.query.match(/[{}()\[\]<>.,;:]/g) || []).length;
+    const specialChars = (query.match(/[{}()\[\]<>.,;:]/g) || []).length;
     const semanticComplexity = Math.min(1, (specialChars + words.length) / 20);
     
     return {
-      query_length: ctx.query.length,
+      query_length: query.length,
       word_count: words.length,
       has_special_chars: specialChars > 0,
       fuzzy_enabled: ctx.fuzzy || false,

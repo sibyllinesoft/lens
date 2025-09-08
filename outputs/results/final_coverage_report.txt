@@ -1,0 +1,255 @@
+
+ RUN  v1.6.1 /media/nathan/Seagate Hub/Projects/lens
+      Coverage enabled with v8
+
+stdout | src/telemetry/tracer.ts:29:9
+OpenTelemetry tracing initialized
+
+stdout | __vite_ssr_import_0__.NodeSDK.metricReader (/media/nathan/Seagate Hub/Projects/lens/src/telemetry/tracer.ts:22:13)
+Prometheus metrics server started on port 9464
+
+stdout | new FeatureFlagManager (/media/nathan/Seagate Hub/Projects/lens/src/core/feature-flags.ts:168:13)
+🚩 FeatureFlagManager initialized with 16 flags
+
+stdout | new FeatureFlagManager (/media/nathan/Seagate Hub/Projects/lens/src/core/feature-flags.ts:169:13)
+  - A/B Testing: false (10%)
+
+stdout | new FeatureFlagManager (/media/nathan/Seagate Hub/Projects/lens/src/core/feature-flags.ts:170:13)
+  - Safety Thresholds: latency=12ms, quality=0.95
+
+stdout | new PhaseDDashboardManager (/media/nathan/Seagate Hub/Projects/lens/src/monitoring/phase-d-dashboards.ts:95:13)
+📊 Phase D Dashboard Manager initialized
+
+stdout | new PhaseDDashboardManager (/media/nathan/Seagate Hub/Projects/lens/src/monitoring/phase-d-dashboards.ts:96:13)
+   - 9 alert thresholds configured
+
+stdout | new PhaseDDashboardManager (/media/nathan/Seagate Hub/Projects/lens/src/monitoring/phase-d-dashboards.ts:97:13)
+   - Real-time monitoring active
+
+stdout | new QualityGatesManager (/media/nathan/Seagate Hub/Projects/lens/src/core/quality-gates.ts:48:13)
+🚦 Quality Gates Manager initialized
+
+stdout | new QualityGatesManager (/media/nathan/Seagate Hub/Projects/lens/src/core/quality-gates.ts:49:13)
+   - Version: 1.0.0-rc.1
+
+stdout | new QualityGatesManager (/media/nathan/Seagate Hub/Projects/lens/src/core/quality-gates.ts:50:13)
+   - Environment: production
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise ASTCache methods
+📋 AST cache MISS for /test.ts - parsing...
+⚡ Parsed /test.ts in 1ms - found 2 symbols
+📋 AST cache HIT for /test.ts (50% hit rate)
+📋 AST cache MISS for /test.ts - parsing...
+⚡ Parsed /test.ts in 0ms - found 2 symbols
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise IndexRegistry
+🔍 Scanning for index shards in /tmp/coverage-test
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise IndexRegistry
+Shutting down IndexRegistry...
+IndexRegistry shut down successfully
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise utility functions
+🚦 Running Phase D quality gates validation...
+
+stderr | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise utility functions
+🚨 ALERT [WARNING]: LSIF coverage regression detected
+   Metric: quality.lsif_coverage_percent = 0 (threshold: <95)
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise utility functions
+✅ Quality gates validation completed in 2ms
+   - Gates passed: 16/17
+   - Overall status: FAILED
+   - Promotion eligible: NO
+
+ ✓ src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise ASTCache methods
+ ✓ src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise IndexRegistry
+ ✓ src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise LensTracer
+ ✓ src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise FeatureFlags
+ ✓ src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise utility functions
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  04:53:36
+   Duration  1.47s (transform 144ms, setup 0ms, collect 980ms, tests 20ms, environment 0ms, prepare 82ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    1.92 |     28.7 |   24.56 |    1.92 |                   
+ api               |       0 |        0 |       0 |       0 |                   
+  ...-endpoints.ts |       0 |        0 |       0 |       0 | 1-757             
+  ...rch-engine.ts |       0 |        0 |       0 |       0 | 1-360             
+  ...-endpoints.ts |       0 |        0 |       0 |       0 | 1-498             
+  ...-endpoints.ts |       0 |        0 |       0 |       0 | 1-647             
+  ...s-endpoint.ts |       0 |        0 |       0 |       0 | 1-261             
+  ...gine-fixed.ts |       0 |        0 |       0 |       0 | 1-627             
+  search-engine.ts |       0 |        0 |       0 |       0 | 1-1631            
+  server.ts        |       0 |        0 |       0 |       0 | 1-4108            
+ core              |    2.83 |    34.06 |   29.83 |    2.83 |                   
+  ...d-governor.ts |       0 |        0 |       0 |       0 | 1-855             
+  ...ive-fanout.ts |       0 |        0 |       0 |       0 | 1-211             
+  ...he-manager.ts |       0 |        0 |       0 |       0 | 1-871             
+  ...ntegration.ts |       0 |        0 |       0 |       0 | 1-540             
+  ...ntegration.ts |       0 |        0 |       0 |       0 | 1-544             
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-837             
+  ast-cache.ts     |   74.13 |       50 |   91.66 |   74.13 | ...59-272,279-309 
+  ...est-priors.ts |       0 |        0 |       0 |       0 | 1-648             
+  ...on-learner.ts |       0 |        0 |       0 |       0 | 1-800             
+  ...ene-system.ts |       0 |        0 |       0 |       0 | 1-749             
+  ...ity-config.ts |       0 |        0 |       0 |       0 | 1-293             
+  ...-framework.ts |       0 |        0 |       0 |       0 | 1-1009            
+  ...-scenarios.ts |       0 |        0 |       0 |       0 | 1-653             
+  ...ty-checker.ts |       0 |        0 |       0 |       0 | 1-321             
+  ...monitoring.ts |       0 |        0 |       0 |       0 | 1-834             
+  ...ig-manager.ts |       0 |        0 |       0 |       0 | 1-758             
+  ...mal-router.ts |       0 |        0 |       0 |       0 | 1-536             
+  ...e-reranker.ts |       0 |        0 |       0 |       0 | 1-576             
+  ...hy-tooling.ts |       0 |        0 |       0 |       0 | 1-770             
+  ...ge-tracker.ts |       0 |        0 |       0 |       0 | 1-667             
+  ...e-resolver.ts |       0 |        0 |       0 |       0 | 1-1105            
+  ...-threshold.ts |       0 |        0 |       0 |       0 | 1-291             
+  ...ion-system.ts |       0 |        0 |       0 |       0 | 1-735             
+  ...controller.ts |       0 |        0 |       0 |       0 | 1-718             
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-521             
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-578             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-789             
+  ...antization.ts |       0 |        0 |       0 |       0 | 1-614             
+  ...ng-roadmap.ts |       0 |        0 |       0 |       0 | 1-927             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-551             
+  ...monitoring.ts |       0 |        0 |       0 |       0 | 1-1234            
+  ...ted-priors.ts |       0 |        0 |       0 |       0 | 1-693             
+  ...lity-gates.ts |       0 |        0 |       0 |       0 | 1-654             
+  ...ntegration.ts |       0 |        0 |       0 |       0 | 1-598             
+  ...on-mapping.ts |       0 |        0 |       0 |       0 | 1-636             
+  ...-reporting.ts |       0 |        0 |       0 |       0 | 1-1234            
+  feature-flags.ts |   61.15 |    36.73 |   53.84 |   61.15 | ...94-698,704-708 
+  ...on-manager.ts |       0 |        0 |       0 |       0 | 1-1073            
+  ...ann-retune.ts |       0 |        0 |       0 |       0 | 1-862             
+  ...alibration.ts |       0 |        0 |       0 |       0 | 1-646             
+  ...ry-rollout.ts |       0 |        0 |       0 |       0 | 1-1051            
+  ...rid-router.ts |       0 |        0 |       0 |       0 | 1-706             
+  ...monitoring.ts |       0 |        0 |       0 |       0 | 1-1117            
+  ...adow-audit.ts |       0 |        0 |       0 |       0 | 1-793             
+  ...uth-engine.ts |       0 |        0 |       0 |       0 | 1-633             
+  ...x-registry.ts |   18.17 |    52.94 |   64.28 |   18.17 | ...0-343,354-1271 
+  index.ts         |       0 |        0 |       0 |       0 | 1-89              
+  ...ntegration.ts |       0 |        0 |       0 |       0 | 1-874             
+  intent-router.ts |       0 |        0 |       0 |       0 | 1-502             
+  ...c-reranker.ts |       0 |        0 |       0 |       0 | 1-459             
+  ...ed-metrics.ts |       0 |        0 |       0 |       0 | 1-703             
+  ...d-reranker.ts |       0 |        0 |       0 |       0 | 1-367             
+  lsp-sidecar.ts   |       0 |        0 |       0 |       0 | 1-847             
+  lsp-stage-b.ts   |       0 |        0 |       0 |       0 | 1-510             
+  lsp-stage-c.ts   |       0 |        0 |       0 |       0 | 1-472             
+  ...g-pipeline.ts |       0 |        0 |       0 |       0 | 1-705             
+  ...ol-manager.ts |       0 |        0 |       0 |       0 | 1-557             
+  messaging.ts     |       0 |        0 |       0 |       0 | 1-284             
+  ...on-manager.ts |       0 |        0 |       0 |       0 | 1-253             
+  ...er-linking.ts |       0 |        0 |       0 |       0 | 1-490             
+  ...boundaries.ts |       0 |        0 |       0 |       0 | 1-1047            
+  ...-formatter.ts |       0 |        0 |       0 |       0 | 1-139             
+  ...bol-bridge.ts |       0 |        0 |       0 |       0 | 1-452             
+  ...y-learning.ts |       0 |        0 |       0 |       0 | 1-607             
+  ...-ast-cache.ts |       0 |        0 |       0 |       0 | 1-688             
+  ...mized-hnsw.ts |       0 |        0 |       0 |       0 | 1-786             
+  ...-processor.ts |       0 |        0 |       0 |       0 | 1-1287            
+  ...ce-monitor.ts |   50.43 |       80 |    25.8 |   50.43 | ...48-653,656-663 
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-479             
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-589             
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-517             
+  ...e-b2-index.ts |       0 |        0 |       0 |       0 | 1-295             
+  ...path-prior.ts |       0 |        0 |       0 |       0 | 1-594             
+  ...ecall-pack.ts |       0 |        0 |       0 |       0 | 1-682             
+  ...onym-miner.ts |       0 |        0 |       0 |       0 | 1-457             
+  ...tern-packs.ts |       0 |        0 |       0 |       0 | 1-502             
+  ...ision-pack.ts |       0 |        0 |       0 |       0 | 1-687             
+  ...timization.ts |       0 |        0 |       0 |       0 | 1-583             
+  ...timization.ts |       0 |        0 |       0 |       0 | 1-828             
+  ...ice-recall.ts |       0 |        0 |       0 |       0 | 1-653             
+  ...-integrity.ts |       0 |        0 |       0 |       0 | 1-647             
+  quality-gates.ts |   94.24 |    67.39 |   94.73 |   94.24 | ...72-473,475-476 
+  ...classifier.ts |       0 |        0 |       0 |       0 | 1-186             
+  ...y-compiler.ts |       0 |        0 |       0 |       0 | 1-799             
+  ...or-hygiene.ts |       0 |        0 |       0 |       0 | 1-857             
+  ...age-router.ts |       0 |        0 |       0 |       0 | 1-644             
+  ...se-manager.ts |       0 |        0 |       0 |       0 | 1-808             
+  ...-bisection.ts |       0 |        0 |       0 |       0 | 1-813             
+  ...ce-manager.ts |       0 |        0 |       0 |       0 | 1-884             
+  result-ranker.ts |       0 |        0 |       0 |       0 | 1-584             
+  ...ware-spans.ts |       0 |        0 |       0 |       0 | 1-584             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-1007            
+  ...icro-cache.ts |       0 |        0 |       0 |       0 | 1-711             
+  ...-retrieval.ts |       0 |        0 |       0 |       0 | 1-490             
+  ...ff-manager.ts |       0 |        0 |       0 |       0 | 1-768             
+  ...ccelerator.ts |       0 |        0 |       0 |       0 | 1-695             
+  ...-optimizer.ts |       0 |        0 |       0 |       0 | 1-716             
+  ...scheduling.ts |       0 |        0 |       0 |       0 | 1-699             
+  ...ery-engine.ts |       0 |        0 |       0 |       0 | 1-887             
+  ...-canonical.ts |       0 |        0 |       0 |       0 | 1-405             
+  ...multi-plan.ts |       0 |        0 |       0 |       0 | 1-667             
+  ...ce-chasing.ts |       0 |        0 |       0 |       0 | 1-644             
+  ...ern-engine.ts |       0 |        0 |       0 |       0 | 1-658             
+  ...d-sketches.ts |       0 |        0 |       0 |       0 | 1-460             
+  ...cy-monitor.ts |       0 |        0 |       0 |       0 | 1-609             
+  ...-execution.ts |       0 |        0 |       0 |       0 | 1-438             
+  ...validation.ts |       0 |        0 |       0 |       0 | 1-560             
+  ...normalizer.ts |       0 |        0 |       0 |       0 | 1-555             
+  ...on-manager.ts |   41.79 |    78.57 |   35.48 |   41.79 | ...53-774,783-828 
+  ...erving-ann.ts |       0 |        0 |       0 |       0 | 1-220             
+  ...ace-config.ts |       0 |        0 |       0 |       0 | 1-626             
+ core/__tests__    |       0 |        0 |       0 |       0 |                   
+  ...validation.ts |       0 |        0 |       0 |       0 | 1-567             
+ .../span_resolver |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 | 1-13              
+  lexical.ts       |       0 |        0 |       0 |       0 | 1-287             
+  normalize.ts     |       0 |        0 |       0 |       0 | 1-242             
+  semantic.ts      |       0 |        0 |       0 |       0 | 1-107             
+  symbols.ts       |       0 |        0 |       0 |       0 | 1-255             
+ deployment        |       0 |        0 |       0 |       0 |                   
+  ...dow-tester.ts |       0 |        0 |       0 |       0 | 1-501             
+  auto-rollback.ts |       0 |        0 |       0 |       0 | 1-565             
+  ...-validator.ts |       0 |        0 |       0 |       0 | 1-582             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-542             
+  ...out-system.ts |       0 |        0 |       0 |       0 | 1-694             
+  ...ing-system.ts |       0 |        0 |       0 |       0 | 1-842             
+  ...-dashboard.ts |       0 |        0 |       0 |       0 | 1-854             
+  ...ity-canary.ts |       0 |        0 |       0 |       0 | 1-524             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-753             
+  ...nch-system.ts |       0 |        0 |       0 |       0 | 1-692             
+  ...sed-canary.ts |       0 |        0 |       0 |       0 | 1-948             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-410             
+  mmr-pilot.ts     |       0 |        0 |       0 |       0 | 1-470             
+  ...ion-system.ts |       0 |        0 |       0 |       0 | 1-800             
+  ...ion-system.ts |       0 |        0 |       0 |       0 | 1-751             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-826             
+  ...ing-system.ts |       0 |        0 |       0 |       0 | 1-943             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-556             
+  ...-scheduler.ts |       0 |        0 |       0 |       0 | 1-1162            
+  ...ay-monitor.ts |       0 |        0 |       0 |       0 | 1-467             
+  ...tch-system.ts |       0 |        0 |       0 |       0 | 1-983             
+  ...-dashboard.ts |       0 |        0 |       0 |       0 | 1-646             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-741             
+  ...chestrator.ts |       0 |        0 |       0 |       0 | 1-1084            
+  ...on-manager.ts |       0 |        0 |       0 |       0 | 1-410             
+  ...monitoring.ts |       0 |        0 |       0 |       0 | 1-801             
+ indexer           |       0 |        0 |       0 |       0 |                   
+  ...d-semantic.ts |       0 |        0 |       0 |       0 | 1-828             
+  ...ed-symbols.ts |       0 |        0 |       0 |       0 | 1-714             
+  lexical.ts       |       0 |        0 |       0 |       0 | 1-658             
+  ...gram-index.ts |       0 |        0 |       0 |       0 | 1-394             
+  semantic.ts      |       0 |        0 |       0 |       0 | 1-723             
+  symbols.ts       |       0 |        0 |       0 |       0 | 1-645             
+ storage           |       0 |        0 |       0 |       0 |                   
+  segments.ts      |       0 |        0 |       0 |       0 | 1-522             
+ types             |       0 |        0 |       0 |       0 |                   
+  ...ed-systems.ts |       0 |        0 |       0 |       0 | 1-222             
+  api.ts           |       0 |        0 |       0 |       0 | 1-626             
+  benchmark.ts     |       0 |        0 |       0 |       0 | 1-294             
+  config.ts        |       0 |        0 |       0 |       0 | 1-87              
+-------------------|---------|----------|---------|---------|-------------------
+ERROR: Coverage for lines (1.92%) does not meet global threshold (85%)
+ERROR: Coverage for functions (24.56%) does not meet global threshold (85%)
+ERROR: Coverage for statements (1.92%) does not meet global threshold (85%)
+ERROR: Coverage for branches (28.7%) does not meet global threshold (85%)

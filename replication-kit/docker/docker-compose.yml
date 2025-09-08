@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  lens-benchmark:
+    build: .
+    image: lens-benchmark:v2.2-repro
+    environment:
+      - NODE_ENV=reproduction
+      - FINGERPRINT=v22_1f3db391_1757345166574
+      - POSTGRES_URL=postgresql://lens:reproduction@postgres:5432/lens
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./results:/app/results
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+      
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: lens
+      POSTGRES_USER: lens  
+      POSTGRES_PASSWORD: reproduction
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+      
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -83,18 +83,36 @@ export class LSPSidecar {
   private async startLSPServer(): Promise<void> {
     const serverCommands = this.getServerCommand(this.config.language);
     
-    this.lspProcess = spawn(serverCommands.command, serverCommands.args, {
-      cwd: this.workspaceRoot,
-      stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...process.env, ...serverCommands.env },
+    return new Promise((resolve, reject) => {
+      try {
+        this.lspProcess = spawn(serverCommands.command, serverCommands.args, {
+          cwd: this.workspaceRoot,
+          stdio: ['pipe', 'pipe', 'pipe'],
+          env: { ...process.env, ...serverCommands.env },
+        });
+
+        // Handle spawn failure
+        this.lspProcess.on('error', (error) => {
+          reject(new Error(`Cannot spawn ${this.config.language} LSP server (${serverCommands.command}): ${error.message}`));
+        });
+
+        // Handle successful spawn
+        this.lspProcess.on('spawn', () => {
+          if (!this.lspProcess!.stdout || !this.lspProcess!.stdin) {
+            reject(new Error('Failed to create LSP process stdio'));
+            return;
+          }
+
+          // Handle LSP messages
+          this.setupMessageHandlers();
+          resolve();
+        });
+
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        reject(new Error(`Cannot start ${this.config.language} LSP server: ${errorMsg}`));
+      }
     });
-
-    if (!this.lspProcess.stdout || !this.lspProcess.stdin) {
-      throw new Error('Failed to create LSP process stdio');
-    }
-
-    // Handle LSP messages
-    this.setupMessageHandlers();
   }
 
   /**
@@ -330,8 +348,13 @@ export class LSPSidecar {
 
     try {
       if (!this.initialized) {
-        console.warn('LSP sidecar not initialized, cannot harvest hints');
-        return [];
+        console.warn('LSP sidecar not initialized, attempting to initialize...');
+        try {
+          await this.initialize();
+        } catch (error) {
+          console.error('Failed to initialize LSP sidecar during harvest:', error);
+          return [];
+        }
       }
 
       const cacheKey = `${this.repoSha}:${filePaths.slice(0, 10).join(':')}`;

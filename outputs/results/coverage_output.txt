@@ -1,0 +1,69 @@
+
+ RUN  v1.6.1 /media/nathan/Seagate Hub/Projects/lens
+      Coverage enabled with v8
+
+stdout | src/telemetry/tracer.ts:29:9
+OpenTelemetry tracing initialized
+
+stdout | __vite_ssr_import_0__.NodeSDK.metricReader (/media/nathan/Seagate Hub/Projects/lens/src/telemetry/tracer.ts:22:13)
+Prometheus metrics server started on port 9464
+
+stdout | new FeatureFlagManager (/media/nathan/Seagate Hub/Projects/lens/src/core/feature-flags.ts:168:13)
+🚩 FeatureFlagManager initialized with 16 flags
+
+stdout | new FeatureFlagManager (/media/nathan/Seagate Hub/Projects/lens/src/core/feature-flags.ts:169:13)
+  - A/B Testing: false (10%)
+
+stdout | new FeatureFlagManager (/media/nathan/Seagate Hub/Projects/lens/src/core/feature-flags.ts:170:13)
+  - Safety Thresholds: latency=12ms, quality=0.95
+
+stdout | new PhaseDDashboardManager (/media/nathan/Seagate Hub/Projects/lens/src/monitoring/phase-d-dashboards.ts:95:13)
+📊 Phase D Dashboard Manager initialized
+
+stdout | new PhaseDDashboardManager (/media/nathan/Seagate Hub/Projects/lens/src/monitoring/phase-d-dashboards.ts:96:13)
+   - 9 alert thresholds configured
+
+stdout | new PhaseDDashboardManager (/media/nathan/Seagate Hub/Projects/lens/src/monitoring/phase-d-dashboards.ts:97:13)
+   - Real-time monitoring active
+
+stdout | new QualityGatesManager (/media/nathan/Seagate Hub/Projects/lens/src/core/quality-gates.ts:48:13)
+🚦 Quality Gates Manager initialized
+
+stdout | new QualityGatesManager (/media/nathan/Seagate Hub/Projects/lens/src/core/quality-gates.ts:49:13)
+   - Version: 1.0.0-rc.1
+
+stdout | new QualityGatesManager (/media/nathan/Seagate Hub/Projects/lens/src/core/quality-gates.ts:50:13)
+   - Environment: production
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise ASTCache methods
+📋 AST cache MISS for /test.ts - parsing...
+⚡ Parsed /test.ts in 1ms - found 2 symbols
+📋 AST cache HIT for /test.ts (50% hit rate)
+📋 AST cache MISS for /test.ts - parsing...
+⚡ Parsed /test.ts in 0ms - found 2 symbols
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise IndexRegistry
+🔍 Scanning for index shards in /tmp/coverage-test
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise IndexRegistry
+Shutting down IndexRegistry...
+IndexRegistry shut down successfully
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise utility functions
+🚦 Running Phase D quality gates validation...
+
+stdout | src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise utility functions
+✅ Quality gates validation completed in 2ms
+   - Gates passed: 16/17
+   - Overall status: FAILED
+   - Promotion eligible: NO
+
+ ❯ src/__tests__/coverage-measurement.test.ts  (5 tests | 1 failed) 19ms
+   ❯ src/__tests__/coverage-measurement.test.ts > Coverage Measurement Test > should exercise FeatureFlags
+     → globalFeatureFlags.isEnabledForUser is not a function
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  04:52:58
+   Duration  1.44s (transform 150ms, setup 0ms, collect 968ms, tests 19ms, environment 0ms, prepare 120ms)
+

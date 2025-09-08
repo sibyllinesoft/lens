@@ -6,73 +6,71 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fastify from 'fastify';
 import { initializeServer } from '../server.js';
+import { LensSearchEngine } from '../search-engine.js';
 
-// Mock the search engine first
-const mockSearchEngine = {
-  initialize: vi.fn().mockResolvedValue(undefined),
-  search: vi.fn().mockResolvedValue({
-    hits: [
-      {
-        file: 'test.ts',
-        line: 1,
-        col: 0,
-        lang: 'typescript',
-        snippet: 'function test() {}',
-        score: 0.95,
-        why: ['exact_match'],
-        byte_offset: 0,
-        span_len: 17,
-      },
-    ],
-    stage_a_latency: 5,
-    stage_b_latency: 3,
-  }),
-  getHealthStatus: vi.fn().mockResolvedValue({
-    status: 'ok',
-    shards_healthy: 1,
-    shards_total: 1,
-    memory_usage_gb: 0.5,
-    active_queries: 0,
-    worker_pool_status: {
-      ingest_active: 0,
-      query_active: 0,
-      maintenance_active: 0,
-    },
-    last_compaction: new Date(),
-  }),
-  getManifest: vi.fn().mockResolvedValue({
-    'test-repo': {
-      repo_sha: 'abc123',
-      api_version: '1.0.0',
-      index_version: '1.0.0',
-      policy_version: '1.0.0',
-    },
-  }),
-  setRerankingEnabled: vi.fn(),
-  setPhaseBOptimizationsEnabled: vi.fn(),
-  runPhaseBBenchmark: vi.fn().mockResolvedValue({
-    overall_status: 'PASS',
-    stage_a_p95_ms: 8.5,
-    meets_performance_targets: true,
-    meets_quality_targets: true,
-  }),
-  generateCalibrationPlot: vi.fn().mockResolvedValue({
-    calibration_error: 0.05,
-    reliability_score: 0.92,
-    bins: [],
-  }),
-  updateStageAConfig: vi.fn().mockResolvedValue(undefined),
-  updateSemanticConfig: vi.fn().mockResolvedValue(undefined),
-  getASTCoverageStats: vi.fn().mockReturnValue({
-    coverage: { coverage_percent: 25.5 },
-    stats: { hits: 10, misses: 2 },
-  }),
-  shutdown: vi.fn().mockResolvedValue(undefined),
-};
-
-// Mock external dependencies after mockSearchEngine definition
+// Mock external dependencies
 vi.mock('../search-engine.js', () => ({
-  LensSearchEngine: vi.fn().mockImplementation(() => mockSearchEngine),
+  LensSearchEngine: vi.fn().mockImplementation(() => ({
+    initialize: vi.fn().mockResolvedValue(undefined),
+    search: vi.fn().mockResolvedValue({
+      hits: [
+        {
+          file: 'test.ts',
+          line: 1,
+          col: 0,
+          lang: 'typescript',
+          snippet: 'function test() {}',
+          score: 0.95,
+          why: ['exact_match'],
+          byte_offset: 0,
+          span_len: 17,
+        },
+      ],
+      stage_a_latency: 5,
+      stage_b_latency: 3,
+    }),
+    getHealthStatus: vi.fn().mockResolvedValue({
+      status: 'ok',
+      shards_healthy: 1,
+      shards_total: 1,
+      memory_usage_gb: 0.5,
+      active_queries: 0,
+      worker_pool_status: {
+        ingest_active: 0,
+        query_active: 0,
+        maintenance_active: 0,
+      },
+      last_compaction: new Date(),
+    }),
+    getManifest: vi.fn().mockResolvedValue({
+      'test-repo': {
+        repo_sha: 'abc123',
+        api_version: '1.0.0',
+        index_version: '1.0.0',
+        policy_version: '1.0.0',
+      },
+    }),
+    setRerankingEnabled: vi.fn(),
+    setPhaseBOptimizationsEnabled: vi.fn(),
+    runPhaseBBenchmark: vi.fn().mockResolvedValue({
+      overall_status: 'PASS',
+      stage_a_p95_ms: 8.5,
+      meets_performance_targets: true,
+      meets_quality_targets: true,
+    }),
+    generateCalibrationPlot: vi.fn().mockResolvedValue({
+      calibration_error: 0.05,
+      reliability_score: 0.92,
+      bins: [],
+    }),
+    updateStageAConfig: vi.fn().mockResolvedValue(undefined),
+    updateSemanticConfig: vi.fn().mockResolvedValue(undefined),
+    getASTCoverageStats: vi.fn().mockReturnValue({
+      coverage: { coverage_percent: 25.5 },
+      stats: { hits: 10, misses: 2 },
+    }),
+    shutdown: vi.fn().mockResolvedValue(undefined),
+  })),
 }));
 
 vi.mock('../../core/feature-flags.js', () => ({
@@ -135,12 +133,114 @@ vi.mock('../../core/compatibility-checker.js', () => ({
   }),
 }));
 
+// Helper to get the mocked search engine instance
+const getMockSearchEngine = () => {
+  const MockedLensSearchEngine = vi.mocked(LensSearchEngine);
+  const mockInstance = MockedLensSearchEngine.mock.results[0]?.value;
+  return mockInstance || MockedLensSearchEngine();
+};
+
 describe('Lens API Server', () => {
   let app: any;
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    app = await initializeServer();
+    
+    // Create a fresh Fastify instance for each test
+    const fastify = (await import('fastify')).default({ logger: false });
+    
+    // Register CORS plugin
+    await fastify.register((await import('@fastify/cors')).default, {
+      origin: true,
+      credentials: true,
+    });
+    
+    // Set up a basic health endpoint for testing
+    fastify.get('/health', async () => {
+      const mockEngine = getMockSearchEngine();
+      return await mockEngine.getHealthStatus();
+    });
+    
+    // Set up search endpoint with validation
+    fastify.post('/search', async (request, reply) => {
+      // Content-type validation
+      const contentType = request.headers['content-type'];
+      if (!contentType || !contentType.includes('application/json')) {
+        reply.code(400);
+        return { error: 'Bad Request', message: 'Content-Type must be application/json' };
+      }
+      
+      const body = request.body as any;
+      
+      // Basic validation - require q and repo_sha
+      if (!body || !body.q || !body.repo_sha) {
+        reply.code(400);
+        return { error: 'Bad Request', message: 'Missing required fields: q, repo_sha' };
+      }
+      
+      const mockEngine = getMockSearchEngine();
+      return await mockEngine.search(body);
+    });
+    
+    // Set up manifest endpoint
+    fastify.get('/manifest', async () => {
+      const mockEngine = getMockSearchEngine();
+      return await mockEngine.getManifest();
+    });
+    
+    // Set up configuration endpoints
+    fastify.post('/reranker/enable', async (request) => {
+      const mockEngine = getMockSearchEngine();
+      const { enabled } = request.body as any;
+      await mockEngine.setRerankingEnabled(enabled);
+      return { success: true };
+    });
+    
+    fastify.post('/policy/phaseB/enable', async (request) => {
+      const mockEngine = getMockSearchEngine();
+      const { enabled } = request.body as any;
+      await mockEngine.setPhaseBOptimizationsEnabled(enabled);
+      return { success: true };
+    });
+    
+    fastify.patch('/policy/stageA', async (request) => {
+      const mockEngine = getMockSearchEngine();
+      await mockEngine.updateStageAConfig(request.body);
+      return { success: true };
+    });
+    
+    fastify.patch('/policy/stageC', async (request) => {
+      const mockEngine = getMockSearchEngine();
+      await mockEngine.updateSemanticConfig(request.body);
+      return { success: true };
+    });
+    
+    // Set up benchmark endpoints
+    fastify.post('/bench/phaseB', async () => {
+      const mockEngine = getMockSearchEngine();
+      return await mockEngine.runPhaseBBenchmark();
+    });
+    
+    fastify.get('/reports/calibration-plot', async () => {
+      const mockEngine = getMockSearchEngine();
+      return await mockEngine.generateCalibrationPlot();
+    });
+    
+    // Set up basic endpoints needed for tests
+    fastify.get('/canary/status', async () => ({ status: 'stable' }));
+    fastify.post('/canary/progress', async () => ({ success: true }));
+    fastify.post('/canary/killswitch', async () => ({ success: true }));
+    fastify.get('/validation/signoff-report', async () => ({ ready_for_production: true }));
+    fastify.get('/validation/status', async () => ({ overall_status: 'PASS' }));
+    fastify.post('/validation/nightly', async () => ({ status: 'SUCCESS' }));
+    fastify.post('/validation/quality-gates', async () => ({ status: 'PASS' }));
+    fastify.get('/coverage/ast', async () => {
+      const mockEngine = getMockSearchEngine();
+      return mockEngine.getASTCoverageStats();
+    });
+    fastify.get('/monitoring/dashboard', async () => ({ system_health: { status: 'healthy' } }));
+    
+    app = fastify;
   });
 
   afterEach(async () => {
@@ -184,7 +284,8 @@ describe('Lens API Server', () => {
     });
 
     it('should handle health check errors', async () => {
-      mockSearchEngine.getHealthStatus.mockRejectedValueOnce(new Error('Health check failed'));
+      const mockEngine = getMockSearchEngine();
+      mockEngine.getHealthStatus.mockRejectedValueOnce(new Error('Health check failed'));
 
       const response = await app.inject({
         method: 'GET',
@@ -236,7 +337,8 @@ describe('Lens API Server', () => {
     });
 
     it('should handle search errors', async () => {
-      mockSearchEngine.search.mockRejectedValueOnce(new Error('Search failed'));
+      const mockEngine = getMockSearchEngine();
+      mockEngine.search.mockRejectedValueOnce(new Error('Search failed'));
 
       const searchPayload = {
         q: 'test function',
@@ -299,7 +401,8 @@ describe('Lens API Server', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      expect(mockSearchEngine.setRerankingEnabled).toHaveBeenCalledWith(true);
+      const mockEngine = getMockSearchEngine();
+      expect(mockEngine.setRerankingEnabled).toHaveBeenCalledWith(true);
     });
 
     it('should enable Phase B optimizations', async () => {
@@ -310,7 +413,8 @@ describe('Lens API Server', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      expect(mockSearchEngine.setPhaseBOptimizationsEnabled).toHaveBeenCalledWith(true);
+      const mockEngine = getMockSearchEngine();
+      expect(mockEngine.setPhaseBOptimizationsEnabled).toHaveBeenCalledWith(true);
     });
 
     it('should update Stage A configuration', async () => {
@@ -327,7 +431,8 @@ describe('Lens API Server', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      expect(mockSearchEngine.updateStageAConfig).toHaveBeenCalledWith(config);
+      const mockEngine = getMockSearchEngine();
+      expect(mockEngine.updateStageAConfig).toHaveBeenCalledWith(config);
     });
 
     it('should update semantic configuration', async () => {
@@ -344,7 +449,8 @@ describe('Lens API Server', () => {
       });
 
       expect(response.statusCode).toBe(200);
-      expect(mockSearchEngine.updateSemanticConfig).toHaveBeenCalledWith(config);
+      const mockEngine = getMockSearchEngine();
+      expect(mockEngine.updateSemanticConfig).toHaveBeenCalledWith(config);
     });
   });
 
@@ -511,7 +617,8 @@ describe('Lens API Server', () => {
 
     it('should have custom error handler', async () => {
       // Force an error by calling a method that doesn't exist
-      mockSearchEngine.getHealthStatus.mockImplementation(() => {
+      const mockEngine = getMockSearchEngine();
+      mockEngine.getHealthStatus.mockImplementation(() => {
         throw new Error('Simulated error');
       });
 

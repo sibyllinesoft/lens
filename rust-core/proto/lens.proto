@@ -1,0 +1,183 @@
+syntax = "proto3";
+package lens.v1;
+
+// Industry-standard search service with complete attestation
+service LensSearch {
+  // Mandatory attestation endpoints
+  rpc GetManifest(ManifestRequest) returns (ManifestResponse);
+  rpc Handshake(HandshakeRequest) returns (HandshakeResponse);
+  
+  // Core search endpoints  
+  rpc Search(SearchRequest) returns (SearchResponse);
+  rpc StructuralSearch(StructRequest) returns (StructResponse);
+  rpc SymbolsNear(SymbolsRequest) returns (SymbolsResponse);
+  rpc Rerank(RerankRequest) returns (RerankResponse);
+  
+  // Metrics and health
+  rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+  rpc Health(HealthRequest) returns (HealthResponse);
+}
+
+message ManifestRequest {}
+
+message ManifestResponse {
+  string service_name = 1;
+  string version = 2;
+  string git_sha = 3;
+  string build_timestamp = 4;
+  repeated string features = 5;
+  ConfigFingerprint config = 6;
+}
+
+message ConfigFingerprint {
+  string hash = 1;
+  map<string, string> ann_params = 2;
+  map<string, int32> caps = 3;
+  string calibration_hash = 4;
+}
+
+message HandshakeRequest {
+  string nonce = 1;
+}
+
+message HandshakeResponse {
+  string nonce = 1;
+  string response = 2;  // SHA256(nonce || build_sha)
+  ManifestResponse manifest = 3;
+}
+
+message SearchRequest {
+  string query = 1;
+  uint32 limit = 2;
+  SearchOptions options = 3;
+  string dataset_sha256 = 4;  // Required for attestation
+  string correlation_id = 5;  // For tracking
+}
+
+message SearchOptions {
+  repeated string languages = 1;
+  repeated string file_patterns = 2;
+  bool enable_fuzzy = 3;
+  bool enable_structural = 4;
+  bool enable_ann = 5;
+  double min_score = 6;
+  uint32 max_results_per_file = 7;
+}
+
+message SearchResponse {
+  repeated Hit hits = 1;
+  SearchMetrics metrics = 2;
+  string attestation_hash = 3;
+  string correlation_id = 4;
+}
+
+message Hit {
+  string file = 1;
+  uint32 line = 2;
+  uint32 col = 3;
+  string lang = 4;
+  string snippet = 5;
+  double score = 6;
+  repeated string why = 7;  // ["exact", "fuzzy", "struct", "lsp_hint", "topic_hit"]
+  
+  // Optional structural information
+  string ast_path = 8;
+  string symbol_kind = 9;
+  uint64 byte_offset = 10;
+  uint32 span_len = 11;
+}
+
+message SearchMetrics {
+  uint64 total_docs = 1;
+  uint64 matched_docs = 2;
+  uint32 duration_ms = 3;
+  double ndcg_at_10 = 4;
+  double recall_at_50 = 5;
+  uint32 span_coverage_percent = 6;
+}
+
+message StructRequest {
+  string symbol = 1;
+  string file_context = 2;
+  uint32 depth_limit = 3;  // ≤2
+  uint32 result_limit = 4; // ≤64
+}
+
+message StructResponse {
+  repeated StructuralHit hits = 1;
+  StructMetrics metrics = 2;
+}
+
+message StructuralHit {
+  Hit base = 1;
+  string relation_type = 2;  // "def", "ref", "type", "impl", "alias"
+  uint32 depth = 3;
+}
+
+message StructMetrics {
+  uint32 bfs_nodes_visited = 1;
+  uint32 duration_ms = 2;
+}
+
+message SymbolsRequest {
+  string query_vector = 1;  // base64 encoded
+  uint32 ef_search = 2;
+  uint32 limit = 3;
+}
+
+message SymbolsResponse {
+  repeated VectorHit hits = 1;
+  VectorMetrics metrics = 2;
+}
+
+message VectorHit {
+  Hit base = 1;
+  double vector_score = 2;
+  string vector_why = 3;
+}
+
+message VectorMetrics {
+  uint32 candidates_evaluated = 1;
+  uint32 duration_ms = 2;
+  double ece_score = 3;  // Expected Calibration Error
+}
+
+message RerankRequest {
+  repeated Hit candidates = 1;
+  string query = 2;
+  RerankOptions options = 3;
+}
+
+message RerankOptions {
+  bool use_gam = 1;
+  bool isotonic_calibration = 2;
+  map<string, double> feature_weights = 3;
+}
+
+message RerankResponse {
+  repeated Hit reranked = 1;
+  RerankMetrics metrics = 2;
+}
+
+message RerankMetrics {
+  uint32 candidates_processed = 1;
+  uint32 duration_ms = 2;
+  double why_mix_kl = 3;
+}
+
+message MetricsRequest {}
+
+message MetricsResponse {
+  map<string, double> counters = 1;
+  map<string, double> gauges = 2;
+  map<string, string> info = 3;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;      // "healthy", "degraded", "unhealthy"
+  string mode = 2;        // MUST be "real"
+  string version = 3;
+  repeated string checks = 4;
+}

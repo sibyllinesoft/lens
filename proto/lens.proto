@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package lens.v1;
+
+// Anti-fraud service with mandatory attestation
+service LensSearch {
+  // Get build information for anti-fraud verification
+  rpc GetBuildInfo(BuildInfoRequest) returns (BuildInfoResponse);
+  
+  // Perform handshake with nonce/response
+  rpc Handshake(HandshakeRequest) returns (HandshakeResponse);
+  
+  // Execute search with full attestation
+  rpc Search(SearchRequest) returns (SearchResponse);
+  
+  // Health check with mode verification
+  rpc Health(HealthRequest) returns (HealthResponse);
+}
+
+message BuildInfoRequest {}
+
+message BuildInfoResponse {
+  string git_sha = 1;
+  bool dirty_flag = 2;
+  string build_timestamp = 3;
+  string rustc_version = 4;
+  string target_triple = 5;
+  repeated string feature_flags = 6;
+  string mode = 7;  // MUST be "real", never "mock"
+}
+
+message HandshakeRequest {
+  string nonce = 1;
+}
+
+message HandshakeResponse {
+  string nonce = 1;
+  string response = 2;  // SHA256(nonce || build_sha)
+  BuildInfoResponse build_info = 3;
+}
+
+message SearchRequest {
+  string query = 1;
+  uint32 limit = 2;
+  string dataset_sha256 = 3;  // Required for provenance
+}
+
+message SearchResponse {
+  repeated SearchResult results = 1;
+  SearchMetrics metrics = 2;
+  string attestation = 3;  // Response attestation hash
+}
+
+message SearchResult {
+  string file_path = 1;
+  uint32 line_number = 2;
+  string content = 3;
+  double score = 4;
+}
+
+message SearchMetrics {
+  uint64 total_docs = 1;
+  uint64 matched_docs = 2;
+  uint32 duration_ms = 3;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
+  string mode = 2;    // MUST be "real"
+  string version = 3;
+}

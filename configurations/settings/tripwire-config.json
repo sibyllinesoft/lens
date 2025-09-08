@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "implemented_at": "2025-09-06T14:53:47.139Z",
+  "components": {
+    "static_analysis": {
+      "banned_patterns": [
+        "generateMock",
+        "simulate",
+        "MOCK_RESULT",
+        "mock_file_"
+      ],
+      "file_extensions": [
+        ".rust"
+      ],
+      "ci_integration": true
+    },
+    "runtime_validation": {
+      "handshake_required": true,
+      "service_mode_check": true,
+      "network_connectivity": true
+    },
+    "provenance_chain": {
+      "binary_attestation": "planned",
+      "dataset_digests": true,
+      "environment_capture": true
+    },
+    "governance": {
+      "pre_registration": true,
+      "pr_compliance": true,
+      "audit_trail": true
+    }
+  },
+  "artifacts": {
+    "handshake_endpoint": "/media/nathan/Seagate Hub/Projects/lens/src/tripwires/handshake-endpoint.ts",
+    "report_schema": "/media/nathan/Seagate Hub/Projects/lens/src/tripwires/report-schema.ts",
+    "ci_tripwires": [
+      "/media/nathan/Seagate Hub/Projects/lens/.github/workflows/tripwires.yml"
+    ],
+    "governance": "/media/nathan/Seagate Hub/Projects/lens/BENCHMARK_GOVERNANCE.md"
+  }
+}

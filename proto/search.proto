@@ -1,0 +1,275 @@
+syntax = "proto3";
+
+package lens.search;
+
+// Search Service Definition
+service SearchService {
+  // Execute a search query with LSP integration
+  rpc Search(SearchRequest) returns (SearchResponse);
+  
+  // Stream search results for long-running queries
+  rpc StreamSearch(SearchRequest) returns (stream SearchResult);
+  
+  // Health check for service monitoring
+  rpc Health(HealthRequest) returns (HealthResponse);
+  
+  // Get performance metrics
+  rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+  
+  // Execute benchmark queries
+  rpc Benchmark(BenchmarkRequest) returns (BenchmarkResponse);
+}
+
+// Search Request Message
+message SearchRequest {
+  string query = 1;
+  optional string file_path = 2;
+  optional string language = 3;
+  optional uint32 limit = 4;
+  optional bool enable_lsp = 5;
+  optional bool enable_semantic = 6;
+  repeated string file_extensions = 7;
+  optional SearchOptions options = 8;
+  optional AttestationToken attestation = 9;
+}
+
+// Search Options
+message SearchOptions {
+  uint32 max_results = 1;
+  bool case_sensitive = 2;
+  bool whole_word = 3;
+  bool regex_enabled = 4;
+  optional uint32 context_lines = 5;
+  optional double confidence_threshold = 6;
+  repeated string include_paths = 7;
+  repeated string exclude_paths = 8;
+}
+
+// Attestation Token for fraud-resistant validation
+message AttestationToken {
+  string token = 1;
+  int64 timestamp = 2;
+  string signature = 3;
+  optional string nonce = 4;
+}
+
+// Search Response Message
+message SearchResponse {
+  repeated SearchResult results = 1;
+  SearchMetrics metrics = 2;
+  optional string error = 3;
+  uint32 total_results = 4;
+  bool has_more = 5;
+  optional string cursor = 6;
+  AttestationProof attestation = 7;
+}
+
+// Individual Search Result
+message SearchResult {
+  string file_path = 1;
+  uint32 line_number = 2;
+  uint32 column = 3;
+  string content = 4;
+  repeated string context_lines = 5;
+  double confidence_score = 6;
+  ResultSource source = 7;
+  optional SymbolInfo symbol_info = 8;
+  repeated Highlight highlights = 9;
+}
+
+// Result Source Information
+message ResultSource {
+  enum SourceType {
+    TEXT_SEARCH = 0;
+    LSP_DEFINITION = 1;
+    LSP_REFERENCE = 2;
+    LSP_TYPE_DEFINITION = 3;
+    LSP_IMPLEMENTATION = 4;
+    SEMANTIC_SEARCH = 5;
+    HYBRID_FUSION = 6;
+  }
+  SourceType type = 1;
+  optional string lsp_server = 2;
+  optional double fusion_weight = 3;
+}
+
+// LSP Symbol Information
+message SymbolInfo {
+  enum SymbolKind {
+    FILE = 0;
+    MODULE = 1;
+    NAMESPACE = 2;
+    PACKAGE = 3;
+    CLASS = 4;
+    METHOD = 5;
+    PROPERTY = 6;
+    FIELD = 7;
+    CONSTRUCTOR = 8;
+    ENUM = 9;
+    INTERFACE = 10;
+    FUNCTION = 11;
+    VARIABLE = 12;
+    CONSTANT = 13;
+    STRING = 14;
+    NUMBER = 15;
+    BOOLEAN = 16;
+    ARRAY = 17;
+    OBJECT = 18;
+    KEY = 19;
+    NULL = 20;
+    ENUM_MEMBER = 21;
+    STRUCT = 22;
+    EVENT = 23;
+    OPERATOR = 24;
+    TYPE_PARAMETER = 25;
+  }
+  string name = 1;
+  SymbolKind kind = 2;
+  optional string container_name = 3;
+  optional string detail = 4;
+  optional string documentation = 5;
+}
+
+// Text Highlighting Information
+message Highlight {
+  uint32 start_offset = 1;
+  uint32 end_offset = 2;
+  string match_type = 3;
+}
+
+// Performance Metrics
+message SearchMetrics {
+  uint64 total_duration_ms = 1;
+  uint64 lsp_duration_ms = 2;
+  uint64 text_search_duration_ms = 3;
+  uint64 fusion_duration_ms = 4;
+  uint32 lsp_results_count = 5;
+  uint32 text_results_count = 6;
+  double lsp_routing_percentage = 7;
+  bool sla_compliant = 8;
+  optional double success_at_10 = 9;
+  optional double ndcg_at_10 = 10;
+  optional double sla_recall_at_50 = 11;
+  repeated ServerMetrics server_metrics = 12;
+  optional CacheMetrics cache_metrics = 13;
+}
+
+// Per-server Performance Metrics
+message ServerMetrics {
+  string server_name = 1;
+  uint64 duration_ms = 2;
+  uint32 results_count = 3;
+  bool timeout = 4;
+  optional string error = 5;
+}
+
+// Cache Performance Metrics
+message CacheMetrics {
+  uint64 hits = 1;
+  uint64 misses = 2;
+  uint64 evictions = 3;
+  double hit_rate = 4;
+  uint64 size = 5;
+}
+
+// Attestation Proof
+message AttestationProof {
+  string proof = 1;
+  int64 timestamp = 2;
+  string signature = 3;
+  string merkle_root = 4;
+}
+
+// Health Check Messages
+message HealthRequest {
+  optional string service = 1;
+}
+
+message HealthResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+    SERVICE_UNKNOWN = 3;
+  }
+  ServingStatus status = 1;
+  repeated ServiceHealth services = 2;
+}
+
+message ServiceHealth {
+  string name = 1;
+  HealthResponse.ServingStatus status = 2;
+  optional string message = 3;
+}
+
+// Metrics Request/Response
+message MetricsRequest {
+  optional string metric_type = 1;
+  optional int64 start_timestamp = 2;
+  optional int64 end_timestamp = 3;
+}
+
+message MetricsResponse {
+  repeated MetricValue metrics = 1;
+  int64 timestamp = 2;
+}
+
+message MetricValue {
+  string name = 1;
+  double value = 2;
+  map<string, string> labels = 3;
+  int64 timestamp = 4;
+}
+
+// Benchmark Messages
+message BenchmarkRequest {
+  string dataset_name = 1;
+  optional uint32 query_limit = 2;
+  optional bool enable_smoke_test = 3;
+  repeated string metric_types = 4;
+  optional BenchmarkOptions options = 5;
+}
+
+message BenchmarkOptions {
+  bool validate_corpus = 1;
+  bool generate_report = 2;
+  optional string output_path = 3;
+  repeated string systems_to_test = 4;
+}
+
+message BenchmarkResponse {
+  repeated BenchmarkResult results = 1;
+  BenchmarkSummary summary = 2;
+  optional string report_path = 3;
+  optional string error = 4;
+}
+
+message BenchmarkResult {
+  string system_name = 1;
+  string query_id = 2;
+  double success_at_10 = 3;
+  double ndcg_at_10 = 4;
+  double sla_recall_at_50 = 5;
+  uint64 latency_ms = 6;
+  bool sla_compliant = 7;
+}
+
+message BenchmarkSummary {
+  uint32 total_queries = 1;
+  uint32 successful_queries = 2;
+  double average_success_at_10 = 3;
+  double average_ndcg_at_10 = 4;
+  double average_sla_recall_at_50 = 5;
+  uint64 average_latency_ms = 6;
+  uint64 p95_latency_ms = 7;
+  double sla_compliance_rate = 8;
+  repeated SystemSummary system_summaries = 9;
+}
+
+message SystemSummary {
+  string system_name = 1;
+  double performance_gain_pp = 2;
+  uint64 p95_latency_ms = 3;
+  bool meets_sla = 4;
+  double lsp_routing_percentage = 5;
+}

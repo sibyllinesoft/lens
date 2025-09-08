@@ -1,0 +1,9 @@
+{
+  "hero_table_passes_gates": true,
+  "pool_membership_audited": true,
+  "ci_width_acceptable": true,
+  "figures_stamped_with_hashes": true,
+  "replication_script_tested": true,
+  "overall_ready": true,
+  "timestamp": "2025-09-08T14:41:20.294Z"
+}

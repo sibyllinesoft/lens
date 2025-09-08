@@ -1,0 +1,7 @@
+{
+  "hero_bars": "nDCG@10 ±95% CI per system",
+  "quality_per_ms": "nDCG@10 vs p95 latency frontier",
+  "slice_heatmap": "ΔnDCG by intent×language",
+  "credit_bars": "Stacked span/symbol/file credit distribution",
+  "reliability": "ECE calibration diagrams"
+}

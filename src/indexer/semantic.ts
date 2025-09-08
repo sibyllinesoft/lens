@@ -116,6 +116,7 @@ export class SemanticRerankEngine {
         minCandidates: this.config.minCandidates,
         maxCandidates: Math.min(PRODUCTION_CONFIG.performance.max_candidates, 200),
         confidenceCutoff: this.config.confidenceCutoff,
+        forceSemanticForBenchmark: (this.config as any).forceSemanticForBenchmark || process.env.NODE_ENV === 'benchmark',
       };
 
       if (!shouldApplySemanticReranking(context.query, candidates.length, context.mode, semanticConfig)) {

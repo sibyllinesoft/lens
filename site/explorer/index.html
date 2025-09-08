@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Explorer - Lens Benchmark v2.2</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="../">🔍 Lens Benchmark v2.2</a></h1>
+            <p class="subtitle">Sample Query Explorer</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section id="explorer-controls">
+                <div class="controls">
+                    <select id="suite-filter">
+                        <option value="all">All Suites</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                    </select>
+                    <button onclick="loadRandomSample()">🎲 Random Sample</button>
+                </div>
+            </section>
+
+            <section id="query-grid">
+                <div id="queries-container">
+                    <!-- Query cards loaded here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const sampleQueries = [
+  {
+    "id": "q001",
+    "suite": "typescript",
+    "query": "async function getUserById",
+    "why_mix": "function signature + async pattern",
+    "spans": [
+      "src/users/service.ts:42-44"
+    ],
+    "credit_mode": "span",
+    "expected_results": 3
+  },
+  {
+    "id": "q002",
+    "suite": "python",
+    "query": "class DatabaseConnection",
+    "why_mix": "class definition pattern",
+    "spans": [
+      "db/connection.py:15-25"
+    ],
+    "credit_mode": "span",
+    "expected_results": 2
+  }
+];
+    </script>
+    <script src="../assets/explorer.js"></script>
+</body>
+</html>

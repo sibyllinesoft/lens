@@ -1,0 +1,35 @@
+{
+  "name": "@lens/metrics",
+  "version": "1.0.0",
+  "description": "Canonical metrics calculation engine for Lens benchmarking",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": ["lens", "metrics", "benchmark", "evaluation", "ndcg"],
+  "author": "Lens Team",
+  "license": "MIT"
+}

@@ -1,0 +1,93 @@
+name: Anti-Fraud Tripwires
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  tripwire-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Scan for banned patterns
+      run: |
+        echo "🔍 Scanning for banned patterns..."
+        
+        # Check for banned words in benchmark paths
+        if grep -r -i "generateMock\|simulate\|MOCK_RESULT\|mock_file_" benchmark-results/ 2>/dev/null; then
+          echo "❌ TRIPWIRE VIOLATION: Banned patterns found in benchmark results"
+          exit 1
+        fi
+        
+        # Check for .rust extensions in suspicious contexts
+        if find . -name "*.rust" -not -path "./node_modules/*" | grep -q .; then
+          echo "❌ TRIPWIRE VIOLATION: Suspicious .rust files detected"
+          exit 1
+        fi
+        
+        echo "✅ No banned patterns detected"
+    
+    - name: Validate benchmark reports
+      run: |
+        echo "🔍 Validating benchmark report schemas..."
+        
+        # Check that all JSON reports have required fields
+        for file in $(find benchmark-results/ -name "*.json" 2>/dev/null || true); do
+          if [ -f "$file" ]; then
+            echo "Checking $file"
+            
+            # Must have handshake field
+            if ! grep -q '"handshake"' "$file"; then
+              echo "❌ TRIPWIRE VIOLATION: $file missing handshake field"
+              exit 1
+            fi
+            
+            # Must have dataset SHA256
+            if ! grep -q '"sha256"' "$file"; then
+              echo "❌ TRIPWIRE VIOLATION: $file missing dataset SHA256"  
+              exit 1
+            fi
+            
+            # Must not contain mock references
+            if grep -q -i '"mock"\|"simulate"\|"fake"' "$file"; then
+              echo "❌ TRIPWIRE VIOLATION: $file contains mock/simulate/fake references"
+              exit 1
+            fi
+          fi
+        done
+        
+        echo "✅ All benchmark reports validated"
+    
+    - name: Network connectivity test
+      run: |
+        echo "🌐 Testing network connectivity to SUT..."
+        
+        # This would test actual service connectivity in a real deployment
+        # For now, just verify localhost is reachable
+        if ! curl -f --connect-timeout 5 http://localhost:3001/__buildinfo 2>/dev/null; then
+          echo "⚠️  WARNING: Cannot connect to service (may be expected in CI)"
+        else
+          echo "✅ Service connectivity verified"
+        fi
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Scan for hardcoded secrets
+      run: |
+        echo "🔍 Scanning for potential secrets..."
+        
+        # Simple secret patterns (extend as needed)
+        if grep -r -E "(password|secret|key)\s*=\s*['"][^'"]{8,}['"]" . --exclude-dir=node_modules; then
+          echo "❌ SECURITY VIOLATION: Potential hardcoded secrets detected"
+          exit 1
+        fi
+        
+        echo "✅ No obvious secrets detected"

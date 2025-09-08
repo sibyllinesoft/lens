@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  lens:
+    image: lens-benchmark:v2.2
+    build: .
+    environment:
+      - NODE_ENV=reproduction
+      - FINGERPRINT=v22_1f3db391_1757345166574
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: lens
+      POSTGRES_PASSWORD: benchmark
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
+volumes:
+  postgres_data:

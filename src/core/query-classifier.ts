@@ -116,11 +116,24 @@ export function shouldApplySemanticReranking(
   query: string, 
   candidateCount: number,
   mode: string = 'hybrid',
-  config?: { nlThreshold?: number; minCandidates?: number; maxCandidates?: number; confidenceCutoff?: number }
+  config?: { nlThreshold?: number; minCandidates?: number; maxCandidates?: number; confidenceCutoff?: number; forceSemanticForBenchmark?: boolean }
 ): boolean {
   // Only apply for hybrid mode
   if (mode !== 'hybrid') {
     return false;
+  }
+  
+  // BENCHMARK OVERRIDE: Force semantic reranking for benchmark testing
+  if (config?.forceSemanticForBenchmark) {
+    // Still respect candidate count limits for performance
+    const minCandidates = config?.minCandidates ?? 10;
+    const maxCandidates = config?.maxCandidates ?? 200;
+    
+    if (candidateCount < minCandidates || candidateCount > maxCandidates) {
+      return false;
+    }
+    
+    return true; // Force semantic reranking for all benchmark queries
   }
   
   // Use configurable thresholds if provided, otherwise defaults

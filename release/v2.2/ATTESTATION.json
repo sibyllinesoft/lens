@@ -1,0 +1,29 @@
+{
+  "version": "0.1",
+  "subject": {
+    "name": "lens-v2.2",
+    "fingerprint": "v22_1f3db391_1757345166574"
+  },
+  "predicate": {
+    "buildType": "lens-benchmark-v2.2",
+    "invocation": {
+      "configSource": {
+        "uri": "git+https://github.com/sibyllinesoft/lens.git",
+        "digest": {
+          "sha1": "1f3db391..."
+        }
+      }
+    },
+    "buildConfig": {
+      "sla_ms": 150,
+      "parity_embeddings": "gemma-256",
+      "pooled_qrels": true,
+      "bootstrap_samples": 2000
+    },
+    "metadata": {
+      "buildStartedOn": "2025-09-08T16:04:56.638Z",
+      "completeness": "complete",
+      "reproducible": true
+    }
+  }
+}

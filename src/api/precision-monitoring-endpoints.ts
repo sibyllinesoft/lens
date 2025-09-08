@@ -18,6 +18,54 @@ import type { LTRTrainingConfig } from '../core/ltr-training-pipeline.js';
 import type { DriftMetrics } from '../core/drift-detection-system.js';
 
 // Request/Response schemas
+// JSON Schema for Fastify validation
+const LTRTrainingRequestJsonSchema = {
+  type: 'object',
+  required: ['config'],
+  properties: {
+    config: {
+      type: 'object',
+      required: ['learning_rate', 'regularization', 'max_iterations', 'convergence_threshold', 'validation_split', 'isotonic_calibration', 'feature_normalization'],
+      properties: {
+        learning_rate: { type: 'number', minimum: 0.001, maximum: 1.0 },
+        regularization: { type: 'number', minimum: 0, maximum: 1.0 },
+        max_iterations: { type: 'integer', minimum: 10, maximum: 1000 },
+        convergence_threshold: { type: 'number', minimum: 1e-8, maximum: 1e-2 },
+        validation_split: { type: 'number', minimum: 0.1, maximum: 0.5 },
+        isotonic_calibration: { type: 'boolean' },
+        feature_normalization: { type: 'boolean' }
+      }
+    },
+    training_data_source: { 
+      type: 'string',
+      enum: ['anchor_dataset', 'ladder_dataset', 'synthetic']
+    }
+  }
+};
+
+const DriftMetricsRequestJsonSchema = {
+  type: 'object',
+  required: ['anchor_p_at_1', 'anchor_recall_at_50', 'ladder_positives_ratio', 'lsif_coverage_pct', 'tree_sitter_coverage_pct', 'sample_count', 'query_complexity_distribution'],
+  properties: {
+    anchor_p_at_1: { type: 'number', minimum: 0, maximum: 1 },
+    anchor_recall_at_50: { type: 'number', minimum: 0, maximum: 1 },
+    ladder_positives_ratio: { type: 'number', minimum: 0, maximum: 1 },
+    lsif_coverage_pct: { type: 'number', minimum: 0, maximum: 100 },
+    tree_sitter_coverage_pct: { type: 'number', minimum: 0, maximum: 100 },
+    sample_count: { type: 'integer', minimum: 1 },
+    query_complexity_distribution: {
+      type: 'object',
+      required: ['simple', 'medium', 'complex'],
+      properties: {
+        simple: { type: 'number', minimum: 0, maximum: 1 },
+        medium: { type: 'number', minimum: 0, maximum: 1 },
+        complex: { type: 'number', minimum: 0, maximum: 1 }
+      }
+    }
+  }
+};
+
+// Keep Zod schemas for TypeScript types
 const LTRTrainingRequestSchema = z.object({
   config: z.object({
     learning_rate: z.number().min(0.001).max(1.0),
@@ -44,6 +92,17 @@ const DriftMetricsRequestSchema = z.object({
     complex: z.number().min(0).max(1)
   })
 });
+
+// JSON Schema for Fastify validation
+const SpanValidationRequestJsonSchema = {
+  type: 'object',
+  required: ['query'],
+  properties: {
+    query: { type: 'string', minLength: 1 },
+    expected_span_count: { type: 'integer', minimum: 1 },
+    coverage_threshold: { type: 'number', minimum: 0.9, maximum: 1.0, default: 0.99 }
+  }
+};
 
 const SpanValidationRequestSchema = z.object({
   query: z.string().min(1),
@@ -110,7 +169,7 @@ export async function registerPrecisionMonitoringEndpoints(fastify: FastifyInsta
    */
   fastify.post('/precision/ltr/train', {
     schema: {
-      body: LTRTrainingRequestSchema
+      body: LTRTrainingRequestJsonSchema
     }
   }, async (request: FastifyRequest<{ Body: z.infer<typeof LTRTrainingRequestSchema> }>, reply: FastifyReply) => {
     const span = LensTracer.createChildSpan('ltr_training_endpoint');
@@ -186,7 +245,7 @@ export async function registerPrecisionMonitoringEndpoints(fastify: FastifyInsta
    */
   fastify.post('/precision/drift/metrics', {
     schema: {
-      body: DriftMetricsRequestSchema
+      body: DriftMetricsRequestJsonSchema
     }
   }, async (request: FastifyRequest<{ Body: z.infer<typeof DriftMetricsRequestSchema> }>, reply: FastifyReply) => {
     const span = LensTracer.createChildSpan('drift_metrics_endpoint');
@@ -314,7 +373,7 @@ export async function registerPrecisionMonitoringEndpoints(fastify: FastifyInsta
    */
   fastify.post('/precision/span/validate', {
     schema: {
-      body: SpanValidationRequestSchema
+      body: SpanValidationRequestJsonSchema
     }
   }, async (request: FastifyRequest<{ Body: z.infer<typeof SpanValidationRequestSchema> }>, reply: FastifyReply) => {
     const span = LensTracer.createChildSpan('span_validation_endpoint');

@@ -1,0 +1,13 @@
+system,capability_slice,mean_ndcg_at_10,ci_lower,ci_upper,ci_width,total_queries
+lens,multi_signal,0.5197,0.5175,0.5219,0.0044,4064
+vespa_hnsw,hybrid,0.4784,0.4761,0.4806,0.0044,4064
+opensearch_knn,hybrid,0.4606,0.4584,0.4629,0.0044,4064
+qdrant_hybrid,hybrid,0.4398,0.4376,0.4420,0.0044,4064
+zoekt,lexical,0.4211,0.4188,0.4233,0.0045,4064
+faiss_ivf_pq,pure_ann,0.4003,0.3980,0.4025,0.0045,4064
+livegrep,lexical,0.3804,0.3782,0.3826,0.0044,4064
+scann,pure_ann,0.3608,0.3586,0.3630,0.0044,4064
+ripgrep,lexical,0.3406,0.3383,0.3428,0.0044,4064
+ast_grep,structural,0.3202,0.3180,0.3224,0.0045,4064
+comby,structural,0.3011,0.2989,0.3033,0.0044,4064
+bm25,lexical,0.2604,0.2582,0.2626,0.0044,4064

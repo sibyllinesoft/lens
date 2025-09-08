@@ -1,0 +1,722 @@
+{
+  "coir_1": {
+    "query_text": "parse configuration file",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_1_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_1_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_1_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_2": {
+    "query_text": "astropy coordinates",
+    "suite": "coir",
+    "intent": "identifier",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_2_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_2_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_2_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_3": {
+    "query_text": "class BaseFrame",
+    "suite": "coir",
+    "intent": "identifier",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_3_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_3_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_3_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_4": {
+    "query_text": "def transform_coordinates",
+    "suite": "coir",
+    "intent": "structural",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_4_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_4_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_4_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_5": {
+    "query_text": "import numpy",
+    "suite": "coir",
+    "intent": "structural",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_5_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_5_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_5_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_6": {
+    "query_text": "error handling in validation",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_6_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_6_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_6_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_7": {
+    "query_text": "test_configuration",
+    "suite": "coir",
+    "intent": "identifier",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_7_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_7_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_7_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_8": {
+    "query_text": "angle calculation",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_8_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_8_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_8_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_9": {
+    "query_text": "for * in *:",
+    "suite": "coir",
+    "intent": "structural",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_9_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_9_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_9_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "coir_10": {
+    "query_text": "coordinate transformation",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_coir_10_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_10_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_coir_10_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_1": {
+    "query_text": "fix null pointer exception",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_1_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_1_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_1_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_2": {
+    "query_text": "resolve import error",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_2_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_2_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_2_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_3": {
+    "query_text": "handle division by zero",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_3_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_3_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_3_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_4": {
+    "query_text": "test validation logic",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_4_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_4_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_4_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_5": {
+    "query_text": "memory leak in loop",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_5_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_5_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_5_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_6": {
+    "query_text": "configuration setup error",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_6_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_6_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_6_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_7": {
+    "query_text": "unit test failure",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "python",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_7_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_7_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_7_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "swe_8": {
+    "query_text": "deprecated function usage",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_swe_8_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_8_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_swe_8_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_1": {
+    "query_text": "read JSON file",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_1_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_1_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_1_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_2": {
+    "query_text": "validate email address",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_2_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_2_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_2_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_3": {
+    "query_text": "connect to database",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_3_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_3_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_3_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_4": {
+    "query_text": "format date string",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_4_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_4_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_4_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_5": {
+    "query_text": "calculate hash value",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_5_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_5_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_5_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_6": {
+    "query_text": "sort array elements",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_6_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_6_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_6_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_7": {
+    "query_text": "handle HTTP requests",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_7_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_7_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_7_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_8": {
+    "query_text": "parse XML data",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_8_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_8_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_8_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_9": {
+    "query_text": "log error messages",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_9_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_9_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_9_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "csn_10": {
+    "query_text": "compress file data",
+    "suite": "csn",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_csn_10_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_10_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_csn_10_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_1": {
+    "query_text": "How to implement authentication?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_1_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_1_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_1_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_2": {
+    "query_text": "What is the best error handling?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_2_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_2_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_2_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_3": {
+    "query_text": "How to parse configuration files?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_3_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_3_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_3_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_4": {
+    "query_text": "What library for HTTP requests?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_4_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_4_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_4_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_5": {
+    "query_text": "How to optimize database queries?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_5_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_5_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_5_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_6": {
+    "query_text": "What is the purpose of this class?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_6_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_6_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_6_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_7": {
+    "query_text": "How does caching work here?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_7_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_7_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_7_3",
+        "relevance": 0
+      }
+    ]
+  },
+  "cosqa_8": {
+    "query_text": "What are the configuration options?",
+    "suite": "cosqa",
+    "intent": "semantic",
+    "language": "unknown",
+    "relevant_documents": [
+      {
+        "doc_id": "doc_cosqa_8_1",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_8_2",
+        "relevance": 1
+      },
+      {
+        "doc_id": "doc_cosqa_8_3",
+        "relevance": 0
+      }
+    ]
+  }
+}

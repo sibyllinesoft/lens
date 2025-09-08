@@ -50,9 +50,11 @@ export class MessagingSystem {
       
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.warn(`⚠️ NATS messaging unavailable (${errorMsg}), running in standalone mode`);
       span.recordException(error as Error);
-      span.setAttributes({ success: false, error: errorMsg });
-      throw new Error(`Failed to initialize messaging system: ${errorMsg}`);
+      span.setAttributes({ success: false, error: errorMsg, standalone_mode: true });
+      // Don't throw - allow operation without NATS
+      this.isConnected = false;
     } finally {
       span.end();
     }

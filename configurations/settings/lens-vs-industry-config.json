@@ -1,0 +1,357 @@
+{
+  "metadata": {
+    "config_name": "lens-vs-industry-comparison",
+    "version": "1.0.0",
+    "created_at": "2025-09-06T15:49:31.018Z",
+    "description": "Production-ready configuration for comparing Lens against industry benchmarks",
+    "total_queries": 29679,
+    "config_fingerprint": "lens-industry-comparison-2025-09-06"
+  },
+  "industry_baselines": {
+    "swe_bench_verified": {
+      "dataset": "swe-bench-verified",
+      "version": "2024-11",
+      "total_instances": 500,
+      "methodology": "PR diff witness spans + FAIL→PASS test validation",
+      "baseline_results": {
+        "Success@10": 0.234,
+        "Success@20": 0.312,
+        "witness-coverage@10": 0.89,
+        "witness-coverage@20": 0.94,
+        "p95_latency_ms": 1847,
+        "p99_latency_ms": 2156,
+        "span_accuracy": 1.0
+      }
+    },
+    "coir_aggregate": {
+      "dataset": "coir-aggregate",
+      "version": "ACL-2025",
+      "subdatasets": ["cosqa", "codesearchnet", "codecontest", "apps", "humaneval", "mbpp", "conala"],
+      "total_queries": 8476,
+      "methodology": "MTEB/BEIR-style evaluation with SLA latency bounds",
+      "baseline_results": {
+        "nDCG@10": 0.467,
+        "nDCG@50": 0.512,
+        "SLA-Recall@50": 0.834,
+        "MRR": 0.523,
+        "ECE": 0.023,
+        "p95_latency_ms": 1654
+      }
+    },
+    "codesearchnet": {
+      "dataset": "codesearchnet",
+      "version": "2019-expert-labeled",
+      "query_count": 99,
+      "languages": ["python", "javascript", "java", "go", "php", "ruby"],
+      "methodology": "Expert-labeled queries with multi-language corpus",
+      "baseline_results": {
+        "nDCG@10": 0.412,
+        "SLA-Recall@50": 0.891,
+        "Success@10": 0.545,
+        "p95_latency_ms": 967,
+        "language_breakdown": {
+          "python": {"nDCG@10": 0.456},
+          "javascript": {"nDCG@10": 0.398},
+          "java": {"nDCG@10": 0.434},
+          "go": {"nDCG@10": 0.378},
+          "php": {"nDCG@10": 0.382},
+          "ruby": {"nDCG@10": 0.423}
+        }
+      }
+    },
+    "cosqa": {
+      "dataset": "cosqa",
+      "version": "2021",
+      "query_count": 20604,
+      "methodology": "Real web queries with known label noise",
+      "baseline_results": {
+        "nDCG@10": 0.389,
+        "SLA-Recall@50": 0.756,
+        "MRR": 0.441,
+        "ECE": 0.057,
+        "p95_latency_ms": 2134,
+        "robustness_check": {
+          "label_noise_estimate": 0.15,
+          "confidence_interval": "±0.023"
+        }
+      }
+    }
+  },
+  "systems_under_test": [
+    {
+      "name": "lens-lsp-only",
+      "display_name": "Lens (LSP Only)",
+      "description": "Lens with LSP-based search, no RAPTOR enhancement",
+      "api_base_url": "http://localhost:3000",
+      "config": {
+        "stage_b": {"enabled": false},
+        "stage_c": {"enabled": false},
+        "lsp_enabled": true,
+        "raptor_enabled": false
+      }
+    },
+    {
+      "name": "lens-full",
+      "display_name": "Lens (LSP + RAPTOR)",
+      "description": "Full Lens system with LSP + RAPTOR enhancement",
+      "api_base_url": "http://localhost:3000",
+      "config": {
+        "stage_b": {"enabled": true},
+        "stage_c": {"enabled": true},
+        "lsp_enabled": true,
+        "raptor_enabled": true
+      }
+    },
+    {
+      "name": "serena-lsp",
+      "display_name": "Serena LSP",
+      "description": "Primary competitor LSP system (32.8% performance gap to close)",
+      "api_base_url": "http://localhost:3001",
+      "expected_performance_gap": 0.328,
+      "config": {
+        "provider": "serena",
+        "semantic_search": true,
+        "symbol_indexing": true
+      }
+    }
+  ],
+  "benchmark_configuration": {
+    "trace_id": "lens-vs-industry-2025-09-06",
+    "suite": ["codesearch", "structural", "docs"],
+    "systems": ["lens-lsp-only", "lens-full", "serena-lsp"],
+    "slices": "ALL",
+    "seeds": 3,
+    "api_base_url": "http://localhost:3000",
+    "k": 50,
+    "include_cold_start": true,
+    "batch_size": 25,
+    "cache_mode": ["warm", "cold"],
+    "robustness": true,
+    "metamorphic": true,
+    "k_candidates": 200,
+    "top_n": 50,
+    "fuzzy": 2,
+    "subtokens": true,
+    "semantic_gating": {
+      "nl_likelihood_threshold": 0.5,
+      "min_candidates": 10
+    },
+    "latency_budgets": {
+      "stage_a_ms": 200,
+      "stage_b_ms": 300,
+      "stage_c_ms": 300
+    }
+  },
+  "corpus_configuration": {
+    "primary_corpus": {
+      "name": "storyviz",
+      "path": "/media/nathan/Seagate Hub/Projects/lens/indexed-content",
+      "golden_dataset": "/media/nathan/Seagate Hub/Projects/lens/src/benchmark/storyviz-ground-truth.json",
+      "total_files": 539,
+      "total_lines": 2339022,
+      "total_size_mb": 78.58,
+      "languages": {
+        "python": {"files": 250, "lines": 112305},
+        "typescript": {"files": 163, "lines": 48808},
+        "json": {"files": 54, "lines": 2153915},
+        "javascript": {"files": 9, "lines": 2248},
+        "markdown": {"files": 37, "lines": 19691},
+        "yaml": {"files": 26, "lines": 2055}
+      },
+      "golden_items": 294
+    },
+    "workspace_root": "/media/nathan/Seagate Hub/Projects/storyviz"
+  },
+  "stratification_config": {
+    "by_query_type": {
+      "exact_match": {"weight": 0.4, "min_queries": 50},
+      "identifier": {"weight": 0.3, "min_queries": 30},
+      "structural": {"weight": 0.2, "min_queries": 20},
+      "semantic": {"weight": 0.1, "min_queries": 10}
+    },
+    "by_difficulty": {
+      "simple": {"weight": 0.3, "complexity_threshold": 1},
+      "medium": {"weight": 0.5, "complexity_threshold": 2},
+      "complex": {"weight": 0.2, "complexity_threshold": 3}
+    },
+    "by_language": {
+      "python": {"weight": 0.46, "min_queries": 40},
+      "typescript": {"weight": 0.30, "min_queries": 25},
+      "javascript": {"weight": 0.12, "min_queries": 10},
+      "other": {"weight": 0.12, "min_queries": 10}
+    },
+    "by_intent": {
+      "def": {"weight": 0.2, "description": "Definition lookups"},
+      "refs": {"weight": 0.2, "description": "Reference finding"},
+      "symbol": {"weight": 0.2, "description": "Symbol search"},
+      "struct": {"weight": 0.2, "description": "Structural patterns"},
+      "lexical": {"weight": 0.1, "description": "Lexical matching"},
+      "NL": {"weight": 0.1, "description": "Natural language queries"}
+    }
+  },
+  "quality_gates": {
+    "promotion_criteria": {
+      "cbu_improvement_min": 0.05,
+      "ece_max": 0.05,
+      "cpu_p95_max_ms": 150,
+      "kv_reuse_improvement_min": 0.10,
+      "ndcg_improvement_min": 0.02,
+      "recall_50_non_degrading": true,
+      "latency_p95_max_increase": 0.10,
+      "significance_level": 0.05,
+      "max_slice_regression_pp": 2,
+      "bootstrap_samples": 1000,
+      "ci_level": 0.95
+    },
+    "performance_targets": {
+      "lens_vs_swe_bench": {
+        "Success@10": {"target": ">= 0.30", "improvement": "+6.6pp"},
+        "Success@20": {"target": ">= 0.40", "improvement": "+8.8pp"},
+        "p95_latency_ms": {"target": "<= 1500", "improvement": "-347ms"}
+      },
+      "lens_vs_coir": {
+        "nDCG@10": {"target": ">= 0.50", "improvement": "+3.3pp"},
+        "nDCG@50": {"target": ">= 0.55", "improvement": "+3.8pp"},
+        "MRR": {"target": ">= 0.55", "improvement": "+2.7pp"},
+        "p95_latency_ms": {"target": "<= 1400", "improvement": "-254ms"}
+      },
+      "lens_vs_codesearchnet": {
+        "nDCG@10": {"target": ">= 0.45", "improvement": "+3.8pp"},
+        "Success@10": {"target": ">= 0.60", "improvement": "+5.5pp"},
+        "p95_latency_ms": {"target": "<= 800", "improvement": "-167ms"}
+      },
+      "lens_vs_cosqa": {
+        "nDCG@10": {"target": ">= 0.42", "improvement": "+3.1pp"},
+        "MRR": {"target": ">= 0.47", "improvement": "+2.9pp"},
+        "p95_latency_ms": {"target": "<= 1800", "improvement": "-334ms"}
+      },
+      "lens_vs_serena": {
+        "performance_gap_closure": {"target": ">= 0.20", "description": "Close 20% of the 32.8% performance gap"},
+        "nDCG@10": {"target": "+6.56pp", "description": "20% of 32.8% gap"},
+        "latency_advantage": {"target": "<= 1000ms p95", "description": "Maintain latency advantage"}
+      }
+    }
+  },
+  "analysis_configuration": {
+    "statistical_tests": {
+      "significance_level": 0.05,
+      "bootstrap_samples": 1000,
+      "confidence_interval": 0.95,
+      "multiple_testing_correction": "bonferroni",
+      "effect_size_threshold": 0.2
+    },
+    "ablation_studies": [
+      "lsp_only_vs_lsp_raptor",
+      "stage_b_impact",
+      "stage_c_impact",
+      "semantic_gating_impact",
+      "symbol_ranking_impact"
+    ],
+    "performance_regression_detection": {
+      "enabled": true,
+      "baseline_window": "7d",
+      "alert_thresholds": {
+        "ndcg_regression": 0.02,
+        "latency_regression": 0.15,
+        "error_rate_increase": 0.05
+      }
+    }
+  },
+  "artifacts_configuration": {
+    "output_directory": "/media/nathan/Seagate Hub/Projects/lens/benchmark-results/industry-comparison",
+    "generate_artifacts": {
+      "metrics_parquet": true,
+      "errors_ndjson": true,
+      "traces_ndjson": true,
+      "comparison_report_pdf": true,
+      "config_fingerprint_json": true,
+      "stratified_analysis_json": true,
+      "ablation_results_json": true,
+      "statistical_tests_json": true,
+      "performance_dashboard_html": true
+    },
+    "report_templates": {
+      "executive_summary": {
+        "include_charts": true,
+        "include_recommendations": true,
+        "target_audience": "technical_leadership"
+      },
+      "technical_deep_dive": {
+        "include_raw_metrics": true,
+        "include_statistical_analysis": true,
+        "include_failure_analysis": true,
+        "target_audience": "engineering_team"
+      },
+      "competitive_analysis": {
+        "include_industry_comparison": true,
+        "include_positioning": true,
+        "include_roadmap_implications": true,
+        "target_audience": "product_strategy"
+      }
+    }
+  },
+  "execution_configuration": {
+    "parallel_execution": {
+      "enabled": true,
+      "max_workers": 4,
+      "batch_timeout_ms": 30000,
+      "retry_policy": {
+        "max_retries": 3,
+        "backoff_multiplier": 2.0,
+        "max_backoff_ms": 60000
+      }
+    },
+    "monitoring": {
+      "real_time_metrics": true,
+      "progress_reporting_interval_ms": 5000,
+      "resource_monitoring": true,
+      "error_aggregation": true
+    },
+    "failsafe_mechanisms": {
+      "graceful_degradation": true,
+      "partial_results_acceptable": true,
+      "checkpoint_frequency": 100,
+      "auto_recovery": true
+    }
+  },
+  "validation_configuration": {
+    "pre_execution_validation": {
+      "corpus_consistency_check": true,
+      "golden_dataset_alignment": true,
+      "api_endpoint_health_check": true,
+      "resource_availability_check": true
+    },
+    "runtime_validation": {
+      "result_sanity_checks": true,
+      "performance_bounds_checking": true,
+      "error_rate_monitoring": true,
+      "progress_validation": true
+    },
+    "post_execution_validation": {
+      "result_completeness_check": true,
+      "statistical_validity_check": true,
+      "artifact_generation_check": true,
+      "quality_gate_validation": true
+    }
+  },
+  "compliance_configuration": {
+    "reproducibility": {
+      "deterministic_seeding": true,
+      "environment_capture": true,
+      "dependency_locking": true,
+      "configuration_versioning": true
+    },
+    "audit_trail": {
+      "full_execution_log": true,
+      "decision_point_tracking": true,
+      "performance_impact_attribution": true,
+      "change_impact_analysis": true
+    },
+    "data_governance": {
+      "data_lineage_tracking": true,
+      "privacy_compliance": true,
+      "retention_policy_enforcement": true,
+      "access_control": true
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Real GitHub repository code for SWE-bench queries",
+  "source": "Cloned from GitHub repositories in SWE-bench dataset",
+  "content_type": "Source code files",
+  "use_case": "Software engineering issue resolution"
+}

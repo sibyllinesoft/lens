@@ -1,0 +1,10 @@
+{
+  "total_repositories_processed": 5,
+  "total_files_extracted": 8921,
+  "corpus_type": "swe-bench",
+  "source_dataset": "datasets/swe-bench-verified.json",
+  "extraction_params": {
+    "max_repos": 5,
+    "max_commits_per_repo": 1
+  }
+}

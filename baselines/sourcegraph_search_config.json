@@ -1,0 +1,7 @@
+{
+  "baseline_name": "sourcegraph_search",
+  "version": "4.5.1",
+  "hardware_spec": "AMD Ryzen 7 5800X, 32GB RAM",
+  "sla_bound_ms": 150,
+  "test_timestamp": "2025-09-07T21:58:27.403Z"
+}

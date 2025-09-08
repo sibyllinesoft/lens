@@ -1,0 +1,21 @@
+{
+  "extraction_time": "2025-09-07T16:47:47.928Z",
+  "total_files": 4596,
+  "repositories": {
+    "django/django": 738,
+    "sympy/sympy": 1466,
+    "sphinx-doc/sphinx": 222,
+    "matplotlib/matplotlib": 249,
+    "scikit-learn/scikit-learn": 561,
+    "astropy/astropy": 910,
+    "pydata/xarray": 185,
+    "pytest-dev/pytest": 69,
+    "pylint-dev/pylint": 178,
+    "psf/requests": 18
+  },
+  "extraction_config": {
+    "max_files_per_repo": 2000,
+    "max_file_size": 500000,
+    "min_file_size": 50
+  }
+}

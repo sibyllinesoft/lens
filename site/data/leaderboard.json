@@ -1,0 +1,104 @@
+{
+  "timestamp": "2025-09-08T16:07:03.789Z",
+  "version": "v2.2",
+  "fingerprint": "v22_1f3db391_1757345166574",
+  "evaluation": {
+    "sla_ms": 150,
+    "embeddings": "gemma-256-parity",
+    "pooled_qrels": true,
+    "bootstrap_samples": 2000,
+    "credit_mode": "span-only"
+  },
+  "systems": [
+    {
+      "rank": 1,
+      "system": "lens",
+      "display_name": "LENS",
+      "ndcg_at_10": 0.5234,
+      "ci_width": 0.0045,
+      "confidence_interval": [
+        0.5189,
+        0.5278999999999999
+      ],
+      "ece": 0.0146,
+      "tail_ratio": 1.03,
+      "sla_compliant": true,
+      "calibrated": true
+    },
+    {
+      "rank": 2,
+      "system": "opensearch_knn",
+      "display_name": "OPENSEARCH KNN",
+      "ndcg_at_10": 0.4876,
+      "ci_width": 0.0051,
+      "confidence_interval": [
+        0.4825,
+        0.49269999999999997
+      ],
+      "ece": 0.0134,
+      "tail_ratio": 1.15,
+      "sla_compliant": true,
+      "calibrated": true
+    },
+    {
+      "rank": 3,
+      "system": "vespa_hnsw",
+      "display_name": "VESPA HNSW",
+      "ndcg_at_10": 0.4654,
+      "ci_width": 0.0048,
+      "confidence_interval": [
+        0.46059999999999995,
+        0.4702
+      ],
+      "ece": 0.0142,
+      "tail_ratio": 1.09,
+      "sla_compliant": true,
+      "calibrated": true
+    },
+    {
+      "rank": 4,
+      "system": "zoekt",
+      "display_name": "ZOEKT",
+      "ndcg_at_10": 0.4423,
+      "ci_width": 0.0053,
+      "confidence_interval": [
+        0.437,
+        0.44760000000000005
+      ],
+      "ece": 0.0139,
+      "tail_ratio": 1.21,
+      "sla_compliant": true,
+      "calibrated": true
+    },
+    {
+      "rank": 5,
+      "system": "livegrep",
+      "display_name": "LIVEGREP",
+      "ndcg_at_10": 0.4198,
+      "ci_width": 0.0049,
+      "confidence_interval": [
+        0.4149,
+        0.4247
+      ],
+      "ece": 0.0137,
+      "tail_ratio": 1.18,
+      "sla_compliant": true,
+      "calibrated": true
+    },
+    {
+      "rank": 6,
+      "system": "faiss_ivf_pq",
+      "display_name": "FAISS IVF PQ",
+      "ndcg_at_10": 0.4067,
+      "ci_width": 0.0052,
+      "confidence_interval": [
+        0.4015,
+        0.4119
+      ],
+      "ece": 0.0145,
+      "tail_ratio": 1.25,
+      "sla_compliant": true,
+      "calibrated": true
+    }
+  ]
+}

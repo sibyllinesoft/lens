@@ -1,0 +1,28 @@
+{
+  "total_files": 2122,
+  "total_bytes": 28260281,
+  "generated_at": "2025-09-06T14:48:35.537Z",
+  "file_types": {
+    "md": 46,
+    "Dockerfile": 1,
+    "js": 494,
+    "cue": 2,
+    "json": 40,
+    "yml": 2,
+    "css": 2,
+    "html": 10,
+    "png": 2,
+    "txt": 2,
+    "ts": 820,
+    "map": 682,
+    "backup": 1,
+    "cjs": 5,
+    "ndjson": 2,
+    "mjs": 4,
+    "py": 1,
+    "sh": 3,
+    "snap": 1,
+    "bak": 1,
+    "tsv": 1
+  }
+}

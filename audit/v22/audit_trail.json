@@ -1,0 +1,410 @@
+{
+  "run_id": "protocol_v22_1757345166574",
+  "timestamp": "2025-09-08T15:26:08.320Z",
+  "config_fingerprint": "v22_1f3db391_1757345166574",
+  "total_queries": 48768,
+  "systems_evaluated": 12,
+  "scenarios_covered": 10,
+  "pool_composition": {
+    "ripgrep": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.3405693261714497,
+      "contribution_rate": 0.08333333333333333
+    },
+    "livegrep": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.3803927564078719,
+      "contribution_rate": 0.08333333333333333
+    },
+    "zoekt": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.42105203074767467,
+      "contribution_rate": 0.08333333333333333
+    },
+    "bm25": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.26039697032014386,
+      "contribution_rate": 0.08333333333333333
+    },
+    "comby": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.30108715857257284,
+      "contribution_rate": 0.08333333333333333
+    },
+    "ast_grep": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.32020242037210545,
+      "contribution_rate": 0.08333333333333333
+    },
+    "opensearch_knn": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.4606407743402207,
+      "contribution_rate": 0.08333333333333333
+    },
+    "vespa_hnsw": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.4783677837401436,
+      "contribution_rate": 0.08333333333333333
+    },
+    "qdrant_hybrid": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.4397890290013314,
+      "contribution_rate": 0.08333333333333333
+    },
+    "faiss_ivf_pq": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.40025460005208596,
+      "contribution_rate": 0.08333333333333333
+    },
+    "scann": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.3607967132626182,
+      "contribution_rate": 0.08333333333333333
+    },
+    "lens": {
+      "total_queries": 4064,
+      "unique_contribution": 0,
+      "avg_ndcg": 0.5196582647132381,
+      "contribution_rate": 0.08333333333333333
+    }
+  },
+  "sample_queries": [
+    {
+      "query_id": "csn_430",
+      "suite": "csn",
+      "scenario": "regex",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.46861803469904273,
+      "lat_ms": 55.61958798685967,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Find code matching regular expression pattern",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "cosqa_762",
+      "suite": "cosqa",
+      "scenario": "substring",
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "ndcg10": 0.3184216183347216,
+      "lat_ms": 104.93675875354226,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Simple text substring search",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "slow"
+      }
+    },
+    {
+      "query_id": "coir_525",
+      "suite": "coir",
+      "scenario": "filter_heavy",
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "ndcg10": 0.27793638953560884,
+      "lat_ms": 39.17250038699929,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Complex filtering with multiple constraints",
+        "performance": "poor",
+        "sla_status": "within_sla",
+        "relative_latency": "fast"
+      }
+    },
+    {
+      "query_id": "coir_274",
+      "suite": "coir",
+      "scenario": "clone_heavy",
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "ndcg10": 0.3440163090328016,
+      "lat_ms": 71.98586749246184,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Search in highly duplicated codebase",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "swe_verified_851",
+      "suite": "swe_verified",
+      "scenario": "substring",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.500149949152485,
+      "lat_ms": 47.02675985600369,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Simple text substring search",
+        "performance": "excellent",
+        "sla_status": "within_sla",
+        "relative_latency": "fast"
+      }
+    },
+    {
+      "query_id": "swe_verified_336",
+      "suite": "swe_verified",
+      "scenario": "regex",
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "ndcg10": 0.45931153128821794,
+      "lat_ms": 71.44853578057997,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Find code matching regular expression pattern",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "coir_443",
+      "suite": "coir",
+      "scenario": "filter_heavy",
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "ndcg10": 0.2638322149474774,
+      "lat_ms": 100.7586974070567,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Complex filtering with multiple constraints",
+        "performance": "poor",
+        "sla_status": "within_sla",
+        "relative_latency": "slow"
+      }
+    },
+    {
+      "query_id": "csn_791",
+      "suite": "csn",
+      "scenario": "substring",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.4987953786774207,
+      "lat_ms": 80.43473039703565,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Simple text substring search",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "swe_verified_813",
+      "suite": "swe_verified",
+      "scenario": "clone_heavy",
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "ndcg10": 0.3148519892370028,
+      "lat_ms": 74.1685675437232,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Search in highly duplicated codebase",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "coir_199",
+      "suite": "coir",
+      "scenario": "symbol",
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "ndcg10": 0.4231027773539963,
+      "lat_ms": 110.9178706581016,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Symbol and identifier lookup",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "slow"
+      }
+    },
+    {
+      "query_id": "swe_verified_479",
+      "suite": "swe_verified",
+      "scenario": "bloat_noise",
+      "system": "bm25",
+      "system_slice": "lexical",
+      "ndcg10": 0.2377894144987599,
+      "lat_ms": 34.987737430797466,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Search through noisy/generated code",
+        "performance": "poor",
+        "sla_status": "within_sla",
+        "relative_latency": "fast"
+      }
+    },
+    {
+      "query_id": "swe_verified_695",
+      "suite": "swe_verified",
+      "scenario": "regex",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.3846713160470767,
+      "lat_ms": 78.93197539357784,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Find code matching regular expression pattern",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "swe_verified_697",
+      "suite": "swe_verified",
+      "scenario": "clone_heavy",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.4839592937319743,
+      "lat_ms": 60.50936933221122,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Search in highly duplicated codebase",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "swe_verified_67",
+      "suite": "swe_verified",
+      "scenario": "bloat_noise",
+      "system": "bm25",
+      "system_slice": "lexical",
+      "ndcg10": 0.37762342015623285,
+      "lat_ms": 105.28427812126253,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Search through noisy/generated code",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "slow"
+      }
+    },
+    {
+      "query_id": "coir_159",
+      "suite": "coir",
+      "scenario": "filter_heavy",
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "ndcg10": 0.4004704765474949,
+      "lat_ms": 71.8638928008601,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Complex filtering with multiple constraints",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "csn_415",
+      "suite": "csn",
+      "scenario": "regex",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.49754188403234606,
+      "lat_ms": 105.55639021462669,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Find code matching regular expression pattern",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "slow"
+      }
+    },
+    {
+      "query_id": "swe_verified_835",
+      "suite": "swe_verified",
+      "scenario": "regex",
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "ndcg10": 0.41807740823294093,
+      "lat_ms": 91.01096562356469,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Find code matching regular expression pattern",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "swe_verified_358",
+      "suite": "swe_verified",
+      "scenario": "bloat_noise",
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "ndcg10": 0.3712763140408146,
+      "lat_ms": 103.19768183923922,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Search through noisy/generated code",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "slow"
+      }
+    },
+    {
+      "query_id": "coir_651",
+      "suite": "coir",
+      "scenario": "filter_heavy",
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "ndcg10": 0.4372286418846421,
+      "lat_ms": 64.75256986499856,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Complex filtering with multiple constraints",
+        "performance": "good",
+        "sla_status": "within_sla",
+        "relative_latency": "medium"
+      }
+    },
+    {
+      "query_id": "swe_verified_362",
+      "suite": "swe_verified",
+      "scenario": "symbol",
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "ndcg10": 0.29534427361007903,
+      "lat_ms": 33.83529561422956,
+      "within_sla": true,
+      "human_readable": {
+        "scenario_description": "Symbol and identifier lookup",
+        "performance": "poor",
+        "sla_status": "within_sla",
+        "relative_latency": "fast"
+      }
+    }
+  ],
+  "gates_summary": {
+    "power_passed": true,
+    "ci_passed": true,
+    "ece_passed": true,
+    "tail_passed": true
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "title": "Industry Benchmark Results with Complete Attestation",
+  "subtitle": "SLA-bounded performance on expert-curated datasets",
+  "generated": "2025-09-06T15:49:31.018Z",
+  "config_fingerprint": "8105d27180177394550aecc1cc135d4e3ed2f833ec88e5c4474fc777e218e558",
+  "results": [
+    {
+      "dataset": "SWE-bench Verified",
+      "type": "Task-level",
+      "queries": 500,
+      "primary_metric": "Success@10",
+      "value": "23.4%",
+      "witness-coverage@10": "89%",
+      "SLA-Recall@50": "N/A",
+      "ECE": "N/A",
+      "p95_latency": "1.85s",
+      "attestation_url": "#swe-bench-attestation"
+    },
+    {
+      "dataset": "CoIR (Aggregate)",
+      "type": "Retrieval-level",
+      "queries": 8476,
+      "primary_metric": "nDCG@10",
+      "value": "46.7%",
+      "witness-coverage@10": "N/A",
+      "SLA-Recall@50": "83.4%",
+      "ECE": "0.023",
+      "p95_latency": "1.65s",
+      "attestation_url": "#coir-attestation"
+    },
+    {
+      "dataset": "CodeSearchNet",
+      "type": "Retrieval-level",
+      "queries": 99,
+      "primary_metric": "nDCG@10",
+      "value": "41.2%",
+      "witness-coverage@10": "N/A",
+      "SLA-Recall@50": "89.1%",
+      "ECE": "N/A",
+      "p95_latency": "0.97s",
+      "attestation_url": "#csn-attestation"
+    },
+    {
+      "dataset": "CoSQA (Web queries)",
+      "type": "Retrieval-level",
+      "queries": 20604,
+      "primary_metric": "nDCG@10",
+      "value": "38.9%",
+      "witness-coverage@10": "N/A",
+      "SLA-Recall@50": "75.6%",
+      "ECE": "0.057",
+      "p95_latency": "2.13s",
+      "attestation_url": "#cosqa-attestation",
+      "notes": "Known label noise ~15%"
+    }
+  ],
+  "summary": {
+    "total_queries_evaluated": 29679,
+    "datasets_count": 4,
+    "sla_compliance_rate": "82.4%",
+    "average_ece": "0.040",
+    "fraud_resistance": "cryptographic_attestation"
+  }
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "swe_1",
+    "query": "fix null pointer exception",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "hard"
+  },
+  {
+    "id": "swe_2",
+    "query": "resolve import error",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "swe_3",
+    "query": "handle division by zero",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  },
+  {
+    "id": "swe_4",
+    "query": "test validation logic",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "swe_5",
+    "query": "memory leak in loop",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "hard"
+  },
+  {
+    "id": "swe_6",
+    "query": "configuration setup error",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "medium"
+  },
+  {
+    "id": "swe_7",
+    "query": "unit test failure",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "swe_8",
+    "query": "deprecated function usage",
+    "suite": "swe_verified",
+    "intent": "semantic",
+    "language": "unknown",
+    "difficulty": "easy"
+  }
+]

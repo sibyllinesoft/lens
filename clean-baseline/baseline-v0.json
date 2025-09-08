@@ -1,0 +1,238 @@
+{
+  "metadata": {
+    "name": "lens-clean-baseline-v0",
+    "purpose": "Post-contamination clean reference point",
+    "created_at": "2025-09-08T16:58:27.093Z",
+    "methodology": "fraud-resistant-attestation",
+    "confidence": "high",
+    "validated": false
+  },
+  "environment": {
+    "timestamp": "2025-09-08T16:58:27.094Z",
+    "hostname": "exnihilo",
+    "platform": "linux",
+    "arch": "x64",
+    "cpus": [
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3710,
+        "cores": {
+          "user": 10592100,
+          "nice": 2100,
+          "sys": 4312280,
+          "idle": 37095130,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 4639,
+        "cores": {
+          "user": 13243180,
+          "nice": 10520,
+          "sys": 6330710,
+          "idle": 13814980,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3711,
+        "cores": {
+          "user": 10830430,
+          "nice": 2430,
+          "sys": 4323530,
+          "idle": 13026100,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 4638,
+        "cores": {
+          "user": 12566740,
+          "nice": 6490,
+          "sys": 5767660,
+          "idle": 34136120,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3712,
+        "cores": {
+          "user": 12073310,
+          "nice": 4620,
+          "sys": 5552290,
+          "idle": 18713520,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3711,
+        "cores": {
+          "user": 15917700,
+          "nice": 15470,
+          "sys": 8437750,
+          "idle": 27233950,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 4614,
+        "cores": {
+          "user": 11453800,
+          "nice": 3670,
+          "sys": 5528530,
+          "idle": 15307340,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3712,
+        "cores": {
+          "user": 14991800,
+          "nice": 20850,
+          "sys": 8549340,
+          "idle": 14887580,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3711,
+        "cores": {
+          "user": 10584790,
+          "nice": 1980,
+          "sys": 4358540,
+          "idle": 33294930,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 4641,
+        "cores": {
+          "user": 14903550,
+          "nice": 20860,
+          "sys": 8114710,
+          "idle": 16615210,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3703,
+        "cores": {
+          "user": 11030310,
+          "nice": 2510,
+          "sys": 4121820,
+          "idle": 37092470,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 4640,
+        "cores": {
+          "user": 13702380,
+          "nice": 11420,
+          "sys": 6360890,
+          "idle": 8775390,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3758,
+        "cores": {
+          "user": 12840500,
+          "nice": 6290,
+          "sys": 5531150,
+          "idle": 14352820,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3711,
+        "cores": {
+          "user": 15932010,
+          "nice": 14770,
+          "sys": 8071210,
+          "idle": 14741120,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 4601,
+        "cores": {
+          "user": 12006710,
+          "nice": 4100,
+          "sys": 5077980,
+          "idle": 14039710,
+          "irq": 0
+        }
+      },
+      {
+        "model": "AMD Ryzen 7 5800X 8-Core Processor",
+        "speed": 3708,
+        "cores": {
+          "user": 18077670,
+          "nice": 56110,
+          "sys": 11975130,
+          "idle": 17782610,
+          "irq": 0
+        }
+      }
+    ],
+    "cpu_model": "AMD Ryzen 7 5800X 8-Core Processor",
+    "cpu_cores": 16,
+    "total_memory_gb": 125.68,
+    "free_memory_gb": 104.45,
+    "node_version": "v20.18.1",
+    "kernel_version": "6.14.0-29-generic",
+    "kernel_full": "Linux exnihilo 6.14.0-29-generic #29-Ubuntu SMP PREEMPT_DYNAMIC Thu Aug  7 18:32:38 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux",
+    "cpu_governor": "powersave",
+    "numa_nodes": "NUMA node(s):                            1",
+    "microcode": "microcode\t: 0xa201210",
+    "lscpu_output": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  16\nOn-line CPU(s) list:                     0-15\nVendor ID:                               AuthenticAMD\nModel name:                              AMD Ryzen 7 5800X 8-Core Processor\nCPU family:                              25\nModel:                                   33\nThread(s) per core:                      2\nCore(s) per socket:                      8\nSocket(s):                               1\nStepping:                                2\nFrequency boost:                         enabled\nCPU(s) scaling MHz:                      92%\nCPU max MHz:                             4853.0000\nCPU min MHz:                             550.0000\nBogoMIPS:                                7585.50\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk clzero irperf xsaveerptr rdpru wbnoinvd arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip pku ospke vaes vpclmulqdq rdpid overflow_recov succor smca fsrm debug_swap\nVirtualization:                          AMD-V\nL1d cache:                               256 KiB (8 instances)\nL1i cache:                               256 KiB (8 instances)\nL2 cache:                                4 MiB (8 instances)\nL3 cache:                                32 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-15\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Mitigation; Safe RET\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP always-on; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsx async abort:           Not affected",
+    "meminfo": "MemTotal:       131785580 kB\nMemFree:         2471916 kB\nMemAvailable:   109527928 kB\nBuffers:        13562364 kB\nCached:         86673268 kB\nSwapCached:          216 kB\nActive:         30047892 kB\nInactive:       83430524 kB\nActive(anon):   13742036 kB\nInactive(anon):   823808 kB"
+  },
+  "dataset": {
+    "uri": "file:///home/nathan/Projects/lens/clean-baseline/minimal-dataset-v0.json",
+    "sha256": "fda29d6cd8e835c7ba930fa5ced3545665cbeaaf5baf50c82e0a068841e8d427",
+    "size_bytes": 552
+  },
+  "service_handshake": {
+    "attempted_at": "2025-09-08T16:58:27.148Z",
+    "service_url": "http://localhost:3001",
+    "success": true,
+    "error": null,
+    "response": {
+      "git_sha": "887bdac42ffa3495cef4fb099a66c813c4bc764a",
+      "dirty_flag": true,
+      "build_timestamp": "2025-09-08T16:58:27.161Z",
+      "service_mode": "real",
+      "node_version": "v20.18.1",
+      "nonce": "r8fnroxbck",
+      "challenge_response": "36a43926d56398a7a950f8dac9b390753a06e79a957ff2571b93142655859004"
+    }
+  },
+  "git_provenance": {
+    "commit": "887bdac42ffa3495cef4fb099a66c813c4bc764a",
+    "branch": "rebuild/cleanroom-2025-09-06",
+    "remote_url": "https://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@github.com/sibyllinesoft/lens.git",
+    "commit_timestamp": "2025-09-06 00:48:23 -0400",
+    "author": "Nathan Rice <nathan.alexander.rice@gmail.com>"
+  },
+  "tripwire_status": {
+    "static_analysis": "pending",
+    "runtime_validation": "pending",
+    "provenance_chain": "partial"
+  }
+}

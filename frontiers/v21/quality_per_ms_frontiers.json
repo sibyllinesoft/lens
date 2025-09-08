@@ -1,0 +1,798 @@
+{
+  "span_only": [
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 31.7261965236413,
+      "sla_compliance": 1,
+      "efficiency_score": 15.759846902146519
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 32.96929545005469,
+      "sla_compliance": 1,
+      "efficiency_score": 15.165625870211633
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 33.18843449734242,
+      "sla_compliance": 1,
+      "efficiency_score": 15.065489155266956
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 37.71546303571136,
+      "sla_compliance": 1,
+      "efficiency_score": 13.25716191066165
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 37.906972119191764,
+      "sla_compliance": 1,
+      "efficiency_score": 13.190185658401798
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 38.95917283279725,
+      "sla_compliance": 1,
+      "efficiency_score": 12.833948044684403
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 39.74016411272954,
+      "sla_compliance": 1,
+      "efficiency_score": 12.58172962199319
+    },
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 39.8722885622724,
+      "sla_compliance": 1,
+      "efficiency_score": 12.540037655955006
+    },
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 39.87239993375843,
+      "sla_compliance": 1,
+      "efficiency_score": 12.540002629153738
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 40.36733115378065,
+      "sla_compliance": 1,
+      "efficiency_score": 12.386253579540195
+    },
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 40.914698759088,
+      "sla_compliance": 1,
+      "efficiency_score": 12.220547020132702
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 41.45462056582424,
+      "sla_compliance": 1,
+      "efficiency_score": 12.061381654816227
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 48.131207437849056,
+      "sla_compliance": 1,
+      "efficiency_score": 10.38827045105072
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 51.927331156224206,
+      "sla_compliance": 1,
+      "efficiency_score": 9.62884070617344
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 52.33364283139106,
+      "sla_compliance": 1,
+      "efficiency_score": 9.554083624770856
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 52.38334850162176,
+      "sla_compliance": 1,
+      "efficiency_score": 9.545017916991698
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 52.88214903586446,
+      "sla_compliance": 1,
+      "efficiency_score": 9.454986401193757
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 53.77505635495223,
+      "sla_compliance": 1,
+      "efficiency_score": 9.297991185721077
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 54.24180822067217,
+      "sla_compliance": 1,
+      "efficiency_score": 9.21798178198352
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 55.04069475805615,
+      "sla_compliance": 1,
+      "efficiency_score": 9.084187657838683
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 73.55799734813318,
+      "sla_compliance": 1,
+      "efficiency_score": 6.797357432579551
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 74.03450725030194,
+      "sla_compliance": 1,
+      "efficiency_score": 6.753607453745304
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 74.76673751824737,
+      "sla_compliance": 1,
+      "efficiency_score": 6.687465798249808
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 75.45134183256972,
+      "sla_compliance": 1,
+      "efficiency_score": 6.6267873818536565
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 76.1661393763671,
+      "sla_compliance": 1,
+      "efficiency_score": 6.564596868029528
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 76.21331871058688,
+      "sla_compliance": 1,
+      "efficiency_score": 6.560533099191027
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 77.22312609582482,
+      "sla_compliance": 1,
+      "efficiency_score": 6.474744358050965
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 78.01784844633097,
+      "sla_compliance": 1,
+      "efficiency_score": 6.408789910990092
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 78.13318751891421,
+      "sla_compliance": 1,
+      "efficiency_score": 6.3993293487349625
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 79.24277995900148,
+      "sla_compliance": 1,
+      "efficiency_score": 6.309723109899593
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 79.6373335755492,
+      "sla_compliance": 1,
+      "efficiency_score": 6.2784623436150975
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 80.77920219337605,
+      "sla_compliance": 1,
+      "efficiency_score": 6.189712035073804
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 86.66815450128617,
+      "sla_compliance": 1,
+      "efficiency_score": 5.769131728685649
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 87.84949865803353,
+      "sla_compliance": 1,
+      "efficiency_score": 5.691552116265569
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 91.7729095384493,
+      "sla_compliance": 1,
+      "efficiency_score": 5.448230883325317
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 92.92254716937747,
+      "sla_compliance": 1,
+      "efficiency_score": 5.3808253780281055
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 112.96591549156943,
+      "sla_compliance": 1,
+      "efficiency_score": 4.426113822246805
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 113.69627750388477,
+      "sla_compliance": 1,
+      "efficiency_score": 4.397681357535352
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 119.42282159284407,
+      "sla_compliance": 1,
+      "efficiency_score": 4.186804442660736
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 123.88002741139204,
+      "sla_compliance": 1,
+      "efficiency_score": 4.036163136609218
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 123.94430188641185,
+      "sla_compliance": 1,
+      "efficiency_score": 4.034070081400132
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 124.06972773143974,
+      "sla_compliance": 1,
+      "efficiency_score": 4.02999191778913
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 124.66589216649197,
+      "sla_compliance": 1,
+      "efficiency_score": 4.010720104038138
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 128.8685776301116,
+      "sla_compliance": 1,
+      "efficiency_score": 3.8799217714277727
+    }
+  ],
+  "hierarchical": [
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 31.7261965236413,
+      "sla_compliance": 1,
+      "efficiency_score": 15.759846902146519
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 32.96929545005469,
+      "sla_compliance": 1,
+      "efficiency_score": 15.165625870211633
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 33.18843449734242,
+      "sla_compliance": 1,
+      "efficiency_score": 15.065489155266956
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 37.71546303571136,
+      "sla_compliance": 1,
+      "efficiency_score": 13.25716191066165
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 37.906972119191764,
+      "sla_compliance": 1,
+      "efficiency_score": 13.190185658401798
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 38.95917283279725,
+      "sla_compliance": 1,
+      "efficiency_score": 12.833948044684403
+    },
+    {
+      "system": "zoekt",
+      "system_slice": "lexical",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 39.74016411272954,
+      "sla_compliance": 1,
+      "efficiency_score": 12.58172962199319
+    },
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 39.8722885622724,
+      "sla_compliance": 1,
+      "efficiency_score": 12.540037655955006
+    },
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 39.87239993375843,
+      "sla_compliance": 1,
+      "efficiency_score": 12.540002629153738
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 40.36733115378065,
+      "sla_compliance": 1,
+      "efficiency_score": 12.386253579540195
+    },
+    {
+      "system": "ripgrep",
+      "system_slice": "lexical",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 40.914698759088,
+      "sla_compliance": 1,
+      "efficiency_score": 12.220547020132702
+    },
+    {
+      "system": "livegrep",
+      "system_slice": "lexical",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 41.45462056582424,
+      "sla_compliance": 1,
+      "efficiency_score": 12.061381654816227
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 48.131207437849056,
+      "sla_compliance": 1,
+      "efficiency_score": 10.38827045105072
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 51.927331156224206,
+      "sla_compliance": 1,
+      "efficiency_score": 9.62884070617344
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 52.33364283139106,
+      "sla_compliance": 1,
+      "efficiency_score": 9.554083624770856
+    },
+    {
+      "system": "faiss_ivf_pq",
+      "system_slice": "pure_ann",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 52.38334850162176,
+      "sla_compliance": 1,
+      "efficiency_score": 9.545017916991698
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 52.88214903586446,
+      "sla_compliance": 1,
+      "efficiency_score": 9.454986401193757
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 53.77505635495223,
+      "sla_compliance": 1,
+      "efficiency_score": 9.297991185721077
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 54.24180822067217,
+      "sla_compliance": 1,
+      "efficiency_score": 9.21798178198352
+    },
+    {
+      "system": "scann",
+      "system_slice": "pure_ann",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 55.04069475805615,
+      "sla_compliance": 1,
+      "efficiency_score": 9.084187657838683
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 73.55799734813318,
+      "sla_compliance": 1,
+      "efficiency_score": 6.797357432579551
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 74.03450725030194,
+      "sla_compliance": 1,
+      "efficiency_score": 6.753607453745304
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 74.76673751824737,
+      "sla_compliance": 1,
+      "efficiency_score": 6.687465798249808
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 75.45134183256972,
+      "sla_compliance": 1,
+      "efficiency_score": 6.6267873818536565
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 76.1661393763671,
+      "sla_compliance": 1,
+      "efficiency_score": 6.564596868029528
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 76.21331871058688,
+      "sla_compliance": 1,
+      "efficiency_score": 6.560533099191027
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 77.22312609582482,
+      "sla_compliance": 1,
+      "efficiency_score": 6.474744358050965
+    },
+    {
+      "system": "opensearch_knn",
+      "system_slice": "hybrid",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 78.01784844633097,
+      "sla_compliance": 1,
+      "efficiency_score": 6.408789910990092
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 78.13318751891421,
+      "sla_compliance": 1,
+      "efficiency_score": 6.3993293487349625
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 79.24277995900148,
+      "sla_compliance": 1,
+      "efficiency_score": 6.309723109899593
+    },
+    {
+      "system": "qdrant_hybrid",
+      "system_slice": "hybrid",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 79.6373335755492,
+      "sla_compliance": 1,
+      "efficiency_score": 6.2784623436150975
+    },
+    {
+      "system": "vespa_hnsw",
+      "system_slice": "hybrid",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 80.77920219337605,
+      "sla_compliance": 1,
+      "efficiency_score": 6.189712035073804
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 86.66815450128617,
+      "sla_compliance": 1,
+      "efficiency_score": 5.769131728685649
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 87.84949865803353,
+      "sla_compliance": 1,
+      "efficiency_score": 5.691552116265569
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 91.7729095384493,
+      "sla_compliance": 1,
+      "efficiency_score": 5.448230883325317
+    },
+    {
+      "system": "lens",
+      "system_slice": "multi_signal",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 92.92254716937747,
+      "sla_compliance": 1,
+      "efficiency_score": 5.3808253780281055
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 112.96591549156943,
+      "sla_compliance": 1,
+      "efficiency_score": 4.426113822246805
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 113.69627750388477,
+      "sla_compliance": 1,
+      "efficiency_score": 4.397681357535352
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 119.42282159284407,
+      "sla_compliance": 1,
+      "efficiency_score": 4.186804442660736
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "coir",
+      "quality_ndcg": 0.5,
+      "latency_p95": 123.88002741139204,
+      "sla_compliance": 1,
+      "efficiency_score": 4.036163136609218
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "csn",
+      "quality_ndcg": 0.5,
+      "latency_p95": 123.94430188641185,
+      "sla_compliance": 1,
+      "efficiency_score": 4.034070081400132
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "swe_verified",
+      "quality_ndcg": 0.5,
+      "latency_p95": 124.06972773143974,
+      "sla_compliance": 1,
+      "efficiency_score": 4.02999191778913
+    },
+    {
+      "system": "comby",
+      "system_slice": "structural",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 124.66589216649197,
+      "sla_compliance": 1,
+      "efficiency_score": 4.010720104038138
+    },
+    {
+      "system": "ast_grep",
+      "system_slice": "structural",
+      "dataset": "cosqa",
+      "quality_ndcg": 0.5,
+      "latency_p95": 128.8685776301116,
+      "sla_compliance": 1,
+      "efficiency_score": 3.8799217714277727
+    }
+  ]
+}

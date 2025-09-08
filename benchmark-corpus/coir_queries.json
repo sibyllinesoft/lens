@@ -1,0 +1,82 @@
+[
+  {
+    "id": "coir_1",
+    "query": "parse configuration file",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "easy"
+  },
+  {
+    "id": "coir_2",
+    "query": "astropy coordinates",
+    "suite": "coir",
+    "intent": "identifier",
+    "language": "python",
+    "difficulty": "easy"
+  },
+  {
+    "id": "coir_3",
+    "query": "class BaseFrame",
+    "suite": "coir",
+    "intent": "identifier",
+    "language": "python",
+    "difficulty": "easy"
+  },
+  {
+    "id": "coir_4",
+    "query": "def transform_coordinates",
+    "suite": "coir",
+    "intent": "structural",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "coir_5",
+    "query": "import numpy",
+    "suite": "coir",
+    "intent": "structural",
+    "language": "python",
+    "difficulty": "easy"
+  },
+  {
+    "id": "coir_6",
+    "query": "error handling in validation",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "coir_7",
+    "query": "test_configuration",
+    "suite": "coir",
+    "intent": "identifier",
+    "language": "python",
+    "difficulty": "easy"
+  },
+  {
+    "id": "coir_8",
+    "query": "angle calculation",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "coir_9",
+    "query": "for * in *:",
+    "suite": "coir",
+    "intent": "structural",
+    "language": "python",
+    "difficulty": "medium"
+  },
+  {
+    "id": "coir_10",
+    "query": "coordinate transformation",
+    "suite": "coir",
+    "intent": "semantic",
+    "language": "python",
+    "difficulty": "hard"
+  }
+]

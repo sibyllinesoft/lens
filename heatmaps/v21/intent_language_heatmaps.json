@@ -1,0 +1,266 @@
+{
+  "span_only": {
+    "validation": {
+      "python": {
+        "lens_ndcg": 0.7969824937837809,
+        "best_other_ndcg": 0.4833530914935825,
+        "delta_ndcg": 0.3136294022901984,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.577180561318365,
+        "best_other_ndcg": 0.5194600889964158,
+        "delta_ndcg": 0.05772047232194921,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.6388249983042604,
+        "best_other_ndcg": 0.5618496079020543,
+        "delta_ndcg": 0.07697539040220613,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.7794698443793162,
+        "best_other_ndcg": 0.418148611454905,
+        "delta_ndcg": 0.3613212329244112,
+        "advantage": "lens_leads"
+      }
+    },
+    "algorithm": {
+      "python": {
+        "lens_ndcg": 0.5642790957654636,
+        "best_other_ndcg": 0.4040135123201624,
+        "delta_ndcg": 0.16026558344530123,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6059516695338112,
+        "best_other_ndcg": 0.46327709913556403,
+        "delta_ndcg": 0.14267457039824716,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.7838747707135464,
+        "best_other_ndcg": 0.48319028930843577,
+        "delta_ndcg": 0.3006844814051106,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.7625892738353621,
+        "best_other_ndcg": 0.5368998653576724,
+        "delta_ndcg": 0.2256894084776897,
+        "advantage": "lens_leads"
+      }
+    },
+    "sorting": {
+      "python": {
+        "lens_ndcg": 0.741517316104306,
+        "best_other_ndcg": 0.5852671801469617,
+        "delta_ndcg": 0.15625013595734438,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6010932498496893,
+        "best_other_ndcg": 0.4472170370245982,
+        "delta_ndcg": 0.15387621282509106,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.565907074249211,
+        "best_other_ndcg": 0.47672298780575867,
+        "delta_ndcg": 0.08918408644345238,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.5424686070389964,
+        "best_other_ndcg": 0.5291634420550997,
+        "delta_ndcg": 0.013305164983896667,
+        "advantage": "lens_leads"
+      }
+    },
+    "conversion": {
+      "python": {
+        "lens_ndcg": 0.7390252501988805,
+        "best_other_ndcg": 0.4479414908491018,
+        "delta_ndcg": 0.29108375934977876,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6223858561219453,
+        "best_other_ndcg": 0.5330161636348152,
+        "delta_ndcg": 0.08936969248713011,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.7440574593981883,
+        "best_other_ndcg": 0.575623295319813,
+        "delta_ndcg": 0.1684341640783753,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.6212814814766695,
+        "best_other_ndcg": 0.6187058342809847,
+        "delta_ndcg": 0.002575647195684816,
+        "advantage": "lens_leads"
+      }
+    },
+    "error_handling": {
+      "python": {
+        "lens_ndcg": 0.5249510411759513,
+        "best_other_ndcg": 0.4729359537440698,
+        "delta_ndcg": 0.052015087431881435,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6322923487553493,
+        "best_other_ndcg": 0.5788231894977298,
+        "delta_ndcg": 0.053469159257619525,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.7512301111983319,
+        "best_other_ndcg": 0.5973589560253204,
+        "delta_ndcg": 0.15387115517301153,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.7125120518511725,
+        "best_other_ndcg": 0.5017504659825932,
+        "delta_ndcg": 0.2107615858685793,
+        "advantage": "lens_leads"
+      }
+    }
+  },
+  "hierarchical": {
+    "validation": {
+      "python": {
+        "lens_ndcg": 0.548903964394717,
+        "best_other_ndcg": 0.5773181841821143,
+        "delta_ndcg": -0.028414219787397332,
+        "advantage": "lens_behind"
+      },
+      "javascript": {
+        "lens_ndcg": 0.7113717731739451,
+        "best_other_ndcg": 0.49757820914441897,
+        "delta_ndcg": 0.2137935640295261,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.7714922733743276,
+        "best_other_ndcg": 0.4212436487814955,
+        "delta_ndcg": 0.35024862459283207,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.7386077842589586,
+        "best_other_ndcg": 0.4185804010082468,
+        "delta_ndcg": 0.3200273832507118,
+        "advantage": "lens_leads"
+      }
+    },
+    "algorithm": {
+      "python": {
+        "lens_ndcg": 0.5549661861488523,
+        "best_other_ndcg": 0.5607049584195005,
+        "delta_ndcg": -0.005738772270648229,
+        "advantage": "lens_behind"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6501023545618988,
+        "best_other_ndcg": 0.44058543000002737,
+        "delta_ndcg": 0.20951692456187143,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.5502201263697964,
+        "best_other_ndcg": 0.5546024862936539,
+        "delta_ndcg": -0.004382359923857493,
+        "advantage": "lens_behind"
+      },
+      "typescript": {
+        "lens_ndcg": 0.6960168031702788,
+        "best_other_ndcg": 0.5829800459434393,
+        "delta_ndcg": 0.11303675722683948,
+        "advantage": "lens_leads"
+      }
+    },
+    "sorting": {
+      "python": {
+        "lens_ndcg": 0.5177116659040972,
+        "best_other_ndcg": 0.45213902903848224,
+        "delta_ndcg": 0.06557263686561499,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6831746214341023,
+        "best_other_ndcg": 0.43334330150761374,
+        "delta_ndcg": 0.2498313199264886,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.5818524354649055,
+        "best_other_ndcg": 0.46673186624482926,
+        "delta_ndcg": 0.11512056922007624,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.739513574786383,
+        "best_other_ndcg": 0.4078284591671602,
+        "delta_ndcg": 0.3316851156192228,
+        "advantage": "lens_leads"
+      }
+    },
+    "conversion": {
+      "python": {
+        "lens_ndcg": 0.6851778991126559,
+        "best_other_ndcg": 0.5463152472658546,
+        "delta_ndcg": 0.13886265184680135,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.7547784861283408,
+        "best_other_ndcg": 0.6339133214246668,
+        "delta_ndcg": 0.12086516470367392,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.7243786407996127,
+        "best_other_ndcg": 0.5904060712583322,
+        "delta_ndcg": 0.13397256954128045,
+        "advantage": "lens_leads"
+      },
+      "typescript": {
+        "lens_ndcg": 0.7370378154933895,
+        "best_other_ndcg": 0.5368774628016979,
+        "delta_ndcg": 0.20016035269169163,
+        "advantage": "lens_leads"
+      }
+    },
+    "error_handling": {
+      "python": {
+        "lens_ndcg": 0.6427331178859554,
+        "best_other_ndcg": 0.42681350505081117,
+        "delta_ndcg": 0.21591961283514427,
+        "advantage": "lens_leads"
+      },
+      "javascript": {
+        "lens_ndcg": 0.6007491427361158,
+        "best_other_ndcg": 0.533821242432666,
+        "delta_ndcg": 0.06692790030344975,
+        "advantage": "lens_leads"
+      },
+      "java": {
+        "lens_ndcg": 0.635441423122045,
+        "best_other_ndcg": 0.6384803312231788,
+        "delta_ndcg": -0.0030389081011338304,
+        "advantage": "lens_behind"
+      },
+      "typescript": {
+        "lens_ndcg": 0.7286604023613722,
+        "best_other_ndcg": 0.49207348262272654,
+        "delta_ndcg": 0.23658691973864565,
+        "advantage": "lens_leads"
+      }
+    }
+  }
+}

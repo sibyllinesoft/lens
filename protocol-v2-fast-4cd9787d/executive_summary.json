@@ -1,0 +1,16 @@
+{
+  "protocol_version": "v2.0",
+  "run_id": "4cd9787d",
+  "execution_time": "2025-09-08T04:16:27.875Z",
+  "total_scenarios": 9,
+  "total_systems": 6,
+  "total_queries": 108,
+  "sla_threshold_ms": 150,
+  "key_findings": {
+    "overall_sla_compliance": "66.7%",
+    "fastest_system": "qdrant",
+    "highest_quality": "opensearch",
+    "scenarios_tested": 9,
+    "systems_compared": 6
+  }
+}

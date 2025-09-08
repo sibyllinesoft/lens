@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  lens-core:
+    build:
+      context: .
+      dockerfile: Dockerfile.hermetic
+      args:
+        GIT_SHA: ${GIT_SHA:-$(git rev-parse HEAD)}
+        BUILD_TIMESTAMP: ${BUILD_TIMESTAMP:-$(date -Iseconds)}
+        CI_PIPELINE_ID: ${CI_PIPELINE_ID:-local}
+    environment:
+      - LENS_MODE=real
+      - RUST_LOG=info
+      - ATTESTATION_REQUIRED=true
+    ports:
+      - "50051:50051"  # gRPC
+      - "9090:9090"    # Metrics
+    healthcheck:
+      test: ["/usr/local/bin/lens-core", "--health-check"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - ./attestations:/attestations:ro
+      - lens-data:/data
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+      
+  attestation-validator:
+    image: alpine:3.19@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b
+    depends_on:
+      - lens-core
+    volumes:
+      - ./attestations:/attestations:ro
+    command: |
+      sh -c '
+        echo "🔍 Validating binary attestations..."
+        sha256sum -c /attestations/lens-core.sha256
+        echo "✅ Binary integrity verified"
+      '
+
+volumes:
+  lens-data:
+    driver: local
