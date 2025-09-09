@@ -28,6 +28,9 @@ __pycache__/
 *.log
 *.pid
 
+# AI agent memories (may contain sensitive local paths)
+.serena/
+
 # Memory mapped files
 *.mmap
 *.idx
@@ -46,25 +49,26 @@ __pycache__/
 *.cpuprofile
 *.memprofile
 
-# Benchmark results (organized)
-/results/
-/benchmarks/results/
-/benchmarks/reports/
-/benchmark-results/
-/anchor-benchmark-results/
-/anchor-datasets/
-/baseline-results/
-/ladder-datasets/
-/pinned-datasets/
-/validation-data/
-/indexed-content/
-/span-audit-results/
+# Generated reports and artifacts (moved to /reports/)
+/reports/
 *.bench
 *.json.parquet
 *benchmark*.json
 *results*.json
 *metrics*.json
 *analysis*.json
+*.ndjson
+*.parquet
+*.html
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Benchmark results (organized under /benchmarks/ and /reports/)
+/benchmarks/results/
+/benchmarks/reports/
+/benchmark-results/
 
 # Development tools
 .vscode/
