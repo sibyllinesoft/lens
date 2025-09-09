@@ -86,7 +86,7 @@ jobs:
       - name: Run corpus-golden consistency check
         run: |
           echo "🔍 Running corpus-golden consistency validation..."
-          node benchmarks/scripts/nightly-benchmark.js validate-consistency
+          node scripts/nightly-benchmark.js validate-consistency
           
           if [ $? -ne 0 ]; then
             echo "❌ Corpus-golden consistency check failed - cannot proceed with benchmark"
@@ -102,7 +102,7 @@ jobs:
           echo "🚀 Starting $SUITE_TYPE benchmark suite (Run ID: $BENCHMARK_RUN_ID)..."
           
           # Run the benchmark with timeout
-          timeout ${BENCHMARK_TIMEOUT_MINUTES}m node benchmarks/scripts/nightly-benchmark.js run-suite \
+          timeout ${BENCHMARK_TIMEOUT_MINUTES}m node scripts/nightly-benchmark.js run-suite \
             --suite-type "$SUITE_TYPE" \
             --output-dir "$OUTPUT_DIR" \
             --run-id "$BENCHMARK_RUN_ID" || {
