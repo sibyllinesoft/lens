@@ -38,7 +38,7 @@ export interface ArtifactMetricsConfig {
 
 export const DEFAULT_ARTIFACTS_CONFIG: ArtifactMetricsConfig = {
   maxTolerance: 0.001, // 0.1 percentage point tolerance
-  artifactsDirectory: './benchmark-results',
+  artifactsDirectory: '../../benchmarks/src-results',
   proseFiles: ['README.md', 'paper/src/*.md', 'docs/*.md'],
   requiredMetrics: [
     'nDCG@10',
@@ -338,7 +338,7 @@ export function createArtifactValidator(config?: Partial<ArtifactMetricsConfig>)
 if (import.meta.main) {
   const validator = createArtifactValidator();
   
-  const artifactPath = process.argv[2] || './benchmark-results/metrics.json';
+  const artifactPath = process.argv[2] || '../../benchmarks/src-results/metrics.json';
   const proseFiles = process.argv.slice(3).length > 0 
     ? process.argv.slice(3) 
     : ['README.md', 'paper/src/render.md'];

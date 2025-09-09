@@ -29,7 +29,7 @@ import {
   type ConfigFingerprint,
   type BenchmarkOrchestrationConfig,
   type ReportData,
-} from '../benchmark.js';
+} from '../../benchmarks/src.js';
 
 describe('Benchmark Types - Schema Validation', () => {
   describe('BenchmarkConfigSchema', () => {
@@ -746,7 +746,7 @@ describe('Benchmark Types - Constants and Interfaces', () => {
   describe('BenchmarkOrchestrationConfig Interface', () => {
     it('should define orchestration configuration', () => {
       const config: BenchmarkOrchestrationConfig = {
-        workingDir: '/tmp/benchmark',
+        workingDir: '/t../../benchmarks/src',
         outputDir: '/tmp/output',
         natsUrl: 'nats://localhost:4222',
         repositories: [
@@ -755,14 +755,14 @@ describe('Benchmark Types - Constants and Interfaces', () => {
         ]
       };
 
-      expect(config.workingDir).toBe('/tmp/benchmark');
+      expect(config.workingDir).toBe('/t../../benchmarks/src');
       expect(config.repositories).toHaveLength(2);
       expect(config.repositories[0].name).toBe('repo1');
     });
 
     it('should handle optional natsUrl', () => {
       const config: BenchmarkOrchestrationConfig = {
-        workingDir: '/tmp/benchmark',
+        workingDir: '/t../../benchmarks/src',
         outputDir: '/tmp/output',
         repositories: []
       };

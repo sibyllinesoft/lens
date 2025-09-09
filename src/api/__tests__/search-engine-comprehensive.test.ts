@@ -17,7 +17,7 @@ vi.mock('../../core/messaging.js');
 vi.mock('../../core/index-registry.js');
 vi.mock('../../core/ast-cache.js');
 vi.mock('../../core/learned-reranker.js');
-vi.mock('../../benchmark/phase-b-comprehensive.js');
+vi.mock('../../../benchmarks/src/phase-b-comprehensive.js');
 vi.mock('../../core/adaptive-fanout.js');
 vi.mock('../../core/work-conserving-ann.js');
 vi.mock('../../core/precision-optimization.js');

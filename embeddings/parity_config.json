@@ -1,6 +1,0 @@
-{
-  "name": "parity_gemma256",
-  "dimension": 256,
-  "cache_path": "embeddings/.cache",
-  "systems_using_vectors": 5
-}

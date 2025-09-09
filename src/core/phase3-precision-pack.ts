@@ -5,8 +5,8 @@
  */
 
 import { LensTracer } from '../telemetry/tracer.js';
-import { BenchmarkSuiteRunner } from '../benchmark/suite-runner.js';
-import { GroundTruthBuilder } from '../benchmark/ground-truth-builder.js';
+import { BenchmarkSuiteRunner } from '../../benchmarks/src/suite-runner.js';
+import { GroundTruthBuilder } from '../../benchmarks/src/ground-truth-builder.js';
 import { promises as fs } from 'fs';
 import path from 'path';
 

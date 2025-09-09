@@ -4,7 +4,7 @@
  */
 
 import crypto from 'crypto';
-import { TailTamingConfig } from '../config/tail-taming-config';
+import { TailTamingConfig } from '../config/tail-taming-config.js';
 
 export interface CanaryStageMetrics {
   stage: number;

@@ -6,8 +6,8 @@
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
-import { AggregationRecord } from '../schemas/output-schemas';
-import { getDataSourceConfig } from '../config/data-source-config';
+import { AggregationRecord } from '../schemas/output-schemas.js';
+import { getDataSourceConfig } from '../config/data-source-config.js';
 
 export interface PoolConfig {
   min_sla_queries_per_system: number;

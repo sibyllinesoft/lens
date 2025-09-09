@@ -177,14 +177,14 @@ program
 program
   .command('bench:freeze')
   .description('Freeze benchmark configuration and generate fingerprint')
-  .option('--config <path>', 'Benchmark configuration file', './benchmark.config.json')
-  .option('--output <path>', 'Output directory for frozen artifacts', './benchmark-frozen')
+  .option('--config <path>', 'Benchmark configuration file', '../../benchmarks/src/config.json')
+  .option('--output <path>', 'Output directory for frozen artifacts', '../../benchmarks/src-frozen')
   .action(async (options) => {
     console.log('🥶 Freezing benchmark configuration...');
     
     try {
-      const { LensBenchmarkOrchestrator } = await import('./benchmark/index.js');
-      const { GroundTruthBuilder } = await import('./benchmark/ground-truth-builder.js');
+      const { LensBenchmarkOrchestrator } = await import('../../benchmarks/src/index.js');
+      const { GroundTruthBuilder } = await import('../../benchmarks/src/ground-truth-builder.js');
       
       // Create orchestrator and ground truth builder
       const orchestrator = new LensBenchmarkOrchestrator({
@@ -224,13 +224,13 @@ program
 program
   .command('bench:oracle')
   .description('Generate oracle validation dataset')
-  .option('--config <path>', 'Frozen configuration fingerprint', './benchmark-frozen/config_fingerprint.json')
-  .option('--output <path>', 'Output directory', './benchmark-oracle')
+  .option('--config <path>', 'Frozen configuration fingerprint', '../../benchmarks/src-frozen/config_fingerprint.json')
+  .option('--output <path>', 'Output directory', '../../benchmarks/src-oracle')
   .action(async (options) => {
     console.log('🔮 Generating oracle validation dataset...');
     
     try {
-      const { GroundTruthBuilder } = await import('./benchmark/ground-truth-builder.js');
+      const { GroundTruthBuilder } = await import('../../benchmarks/src/ground-truth-builder.js');
       const { readFile, mkdir } = await import('fs/promises');
       
       // Load frozen configuration
@@ -260,16 +260,16 @@ program
 program
   .command('bench:compare')
   .description('Compare benchmark results with statistical validation')
-  .option('--baseline <path>', 'Baseline results directory', './benchmark-baseline')
-  .option('--treatment <path>', 'Treatment results directory', './benchmark-treatment') 
+  .option('--baseline <path>', 'Baseline results directory', '../../benchmarks/src-baseline')
+  .option('--treatment <path>', 'Treatment results directory', '../../benchmarks/src-treatment') 
   .option('--bootstrap', 'Enable bootstrap confidence intervals (B=1,000)', false)
   .option('--perm', 'Enable permutation tests for significance', false)
-  .option('--output <path>', 'Output directory for comparison results', './benchmark-comparison')
+  .option('--output <path>', 'Output directory for comparison results', '../../benchmarks/src-comparison')
   .action(async (options) => {
     console.log('📊 Comparing benchmark results with statistical validation...');
     
     try {
-      const { MetricsCalculator } = await import('./benchmark/metrics-calculator.js');
+      const { MetricsCalculator } = await import('../../benchmarks/src/metrics-calculator.js');
       const { readFile, writeFile, mkdir } = await import('fs/promises');
       
       await mkdir(options.output, { recursive: true });
@@ -325,15 +325,15 @@ program
 program
   .command('bench:report')
   .description('Generate comprehensive benchmark report')
-  .option('--data <path>', 'Comparison results directory', './benchmark-comparison')
+  .option('--data <path>', 'Comparison results directory', '../../benchmarks/src-comparison')
   .option('--html', 'Generate HTML report', false)
   .option('--fingerprint', 'Include configuration fingerprint validation', false)
-  .option('--output <path>', 'Output directory for reports', './benchmark-reports')
+  .option('--output <path>', 'Output directory for reports', '../../benchmarks/src-reports')
   .action(async (options) => {
     console.log('📝 Generating comprehensive benchmark report...');
     
     try {
-      const { BenchmarkReportGenerator } = await import('./benchmark/report-generator.js');
+      const { BenchmarkReportGenerator } = await import('../../benchmarks/src/report-generator.js');
       const { readFile, mkdir } = await import('fs/promises');
       
       await mkdir(options.output, { recursive: true });
@@ -345,7 +345,7 @@ program
       let fingerprint = null;
       if (options.fingerprint) {
         try {
-          fingerprint = JSON.parse(await readFile('./benchmark-frozen/config_fingerprint.json', 'utf8'));
+          fingerprint = JSON.parse(await readFile('../../benchmarks/src-frozen/config_fingerprint.json', 'utf8'));
           console.log(`🔒 Validating fingerprint: ${fingerprint.config_hash}`);
         } catch (error) {
           console.warn('⚠️  Could not load configuration fingerprint');

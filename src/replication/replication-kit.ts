@@ -5,9 +5,9 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { PoolBuilder, PoolManifest, HeroSpan } from './pool-builder';
-import { ProdIngestor } from '../ingestors/prod-ingestor';
-import { LensSearchRequest } from '../clients/lens-client';
+import { PoolBuilder, PoolManifest, HeroSpan } from './pool-builder.js';
+import { ProdIngestor } from '../ingestors/prod-ingestor.js';
+import { LensSearchRequest } from '../clients/lens-client.js';
 
 export interface ReplicationKitConfig {
   output_dir: string;

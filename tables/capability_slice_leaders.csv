@@ -1,6 +1,0 @@
-capability_slice,leader_system,leader_ndcg,systems_count,avg_ndcg
-multi_signal,lens,0.5175,1,0.5175
-hybrid,opensearch_knn,0.4846,2,0.4708
-lexical,zoekt,0.4368,4,0.3622
-pure_ann,faiss_ivf_pq,0.4084,2,0.3937
-structural,comby,0.3513,2,0.3441

@@ -1,5 +1,0 @@
-system,mean_ndcg_at_10,mean_success_at_10,sla_compliance_rate,total_queries
-bm25_prox,0.5125,1.0000,1.0000,80
-hybrid,0.5125,1.0000,1.0000,80
-lens,0.5000,1.0000,1.0000,80
-bm25,0.5000,1.0000,1.0000,80

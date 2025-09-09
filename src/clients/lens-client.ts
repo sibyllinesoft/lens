@@ -3,7 +3,7 @@
  * Implements Section 1 of TODO.md: idempotent, retry-aware fetcher
  */
 
-import { LensEndpointConfig } from '../config/data-source-config';
+import { LensEndpointConfig } from '../config/data-source-config.js';
 
 export interface LensSearchRequest {
   query: string;

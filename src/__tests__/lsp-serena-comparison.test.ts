@@ -5,7 +5,7 @@
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
-import { LSPSerenaComparisonTest } from '../benchmark/lsp-serena-comparison.js';
+import { LSPSerenaComparisonTest } from '../../benchmarks/src/lsp-serena-comparison.js';
 import { WorkspaceConfig } from '../core/workspace-config.js';
 import { SearchEngine } from '../api/search-engine.js';
 import { LSPSidecar } from '../core/lsp-sidecar.js';

@@ -101,7 +101,7 @@ export class FinalBenchSystem {
   private readonly pinnedDatasetPath: string;
   
   constructor(
-    benchmarkDir: string = './deployment-artifacts/benchmarks',
+    benchmarkDir: string = './deployment-artifac../../benchmarks/srcs',
     pinnedDatasetPath: string = './pinned-datasets/golden-pinned-current.json'
   ) {
     this.benchmarkDir = benchmarkDir;

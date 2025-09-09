@@ -18,8 +18,8 @@ import * as path from 'path';
 import { performance } from 'perf_hooks';
 import { Worker } from 'worker_threads';
 import { VectorAlignment, ScoreAlignment } from './alignment-system.js';
-import { MetricsCalculator, QueryResult } from '../benchmark/metrics-calculator.js';
-import type { BenchmarkConfig, BenchmarkRun } from '../types/benchmark.js';
+import { MetricsCalculator, QueryResult } from '../../benchmarks/src/metrics-calculator.js';
+import type { BenchmarkConfig } from '../types/benchmark.js';
 
 // Schema definitions for performance testing
 

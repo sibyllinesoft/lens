@@ -22,7 +22,7 @@ import { PRODUCTION_CONFIG } from '../types/config.js';
 import { IndexRegistry, type IndexReader } from '../core/index-registry.js';
 import { ASTCache, type CachedAST } from '../core/ast-cache.js';
 import { LearnedReranker, type RerankingConfig } from '../core/learned-reranker.js';
-import { PhaseBComprehensiveOptimizer, type PhaseBConfig } from '../benchmark/phase-b-comprehensive.js';
+import { PhaseBComprehensiveOptimizer } from '../../benchmarks/src/phase-b-comprehensive.js';
 import { 
   SearchHit, 
   resolveLexicalMatches, 

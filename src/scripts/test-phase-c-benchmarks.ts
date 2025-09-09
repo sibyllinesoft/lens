@@ -4,11 +4,11 @@
  * Tests comprehensive benchmarking suite with quality gates, hard negatives, and statistical rigor
  */
 
-import { BenchmarkSuiteRunner } from '../benchmark/suite-runner.js';
-import { GroundTruthBuilder } from '../benchmark/ground-truth-builder.js';
+import { BenchmarkSuiteRunner } from '../../benchmarks/src/suite-runner.js';
+import { GroundTruthBuilder } from '../../benchmarks/src/ground-truth-builder.js';
 import { promises as fs } from 'fs';
 import path from 'path';
-import type { BenchmarkConfig, BenchmarkRun } from '../types/benchmark.js';
+import type { BenchmarkConfig } from '../types/benchmark.js';
 
 interface TestResult {
   test_name: string;

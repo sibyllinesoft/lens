@@ -1,4 +1,0 @@
-stage_name,stage_description,ndcg_at_10,ndcg_at_10_ci_lower,ndcg_at_10_ci_upper,sla_recall_at_50,sla_recall_at_50_ci_lower,sla_recall_at_50_ci_upper,p95_latency_ms,p95_ci_lower,p95_ci_upper,ece,ece_ci_lower,ece_ci_upper,delta_ndcg_pp,delta_sla_recall_pp,delta_p95_ms,delta_ece,improvement_significant,p_value,cohens_d
-lex_struct,"Lexical + Structural search only",0.4210,0.4150,0.4270,0.7980,0.7920,0.8040,142.0,138.0,146.0,0.0310,0.0280,0.0340,0.0,0.0,0,0.000,false,1.0000,0.00
-semantic_ltr,"Added semantic search with LTR ranking",0.4560,0.4500,0.4620,0.8210,0.8150,0.8270,148.0,144.0,152.0,0.0220,0.0200,0.0240,3.5,2.3,6,-0.009,true,0.0015,0.82
-isotonic_calib,"Added isotonic calibration",0.4670,0.4610,0.4730,0.8340,0.8280,0.8400,145.0,141.0,149.0,0.0190,0.0170,0.0210,4.6,3.6,3,-0.012,true,0.0008,0.89

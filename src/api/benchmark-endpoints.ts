@@ -8,8 +8,8 @@ import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { BenchmarkSuiteRunner } from '../benchmark/suite-runner.js';
-import { GroundTruthBuilder } from '../benchmark/ground-truth-builder.js';
+import { BenchmarkSuiteRunner } from '../../benchmarks/src/suite-runner.js';
+import { GroundTruthBuilder } from '../../benchmarks/src/ground-truth-builder.js';
 import { LensTracer } from '../telemetry/tracer.js';
 import type {
   BenchmarkConfig,

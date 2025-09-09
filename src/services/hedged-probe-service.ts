@@ -3,8 +3,8 @@
  * Implements Section 2 of TODO.md: secondary probe at t = min(6ms, 0.1·p50_shard); cancel on first success
  */
 
-import { LensClient, LensSearchRequest, LensSearchResponse } from '../clients/lens-client';
-import { TailTamingConfig, calculateHedgeDelay } from '../config/tail-taming-config';
+import { LensClient, LensSearchRequest, LensSearchResponse } from '../clients/lens-client.js';
+import { TailTamingConfig, calculateHedgeDelay } from '../config/tail-taming-config.js';
 
 export interface HedgedProbeMetrics {
   probe_id: string;

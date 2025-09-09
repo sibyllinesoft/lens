@@ -1,6 +1,0 @@
-{
-  "description": "Code question-answering pairs",
-  "source": "Programming Q&A content",
-  "content_type": "Question-answer pairs",
-  "use_case": "Code question answering and explanation"
-}

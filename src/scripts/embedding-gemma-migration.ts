@@ -694,7 +694,7 @@ program
   .command('benchmark')
   .description('Run standalone benchmarking suite')
   .option('--tei-endpoint <url>', 'TEI server endpoint', 'http://localhost:8080')
-  .option('--output-dir <path>', 'Output directory', './benchmark_results')
+  .option('--output-dir <path>', 'Output directory', '../../benchmarks/src_results')
   .action(async (options) => {
     const cli = new EmbeddingGemmaMigrationCLI({
       ...options,

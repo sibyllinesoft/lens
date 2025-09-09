@@ -69,7 +69,7 @@ export interface ProductionReadinessReport {
 }
 
 export const DEFAULT_PRODUCTION_CONFIG: ProductionConfig = {
-  artifacts_path: './benchmark-results/metrics.json',
+  artifacts_path: '../../benchmarks/src-results/metrics.json',
   output_directory: './production-validation',
   query_set: [
     'class definition UserService',

@@ -1,4 +1,0 @@
-system,vs_baseline,response_time_delta_ms,ndcg_delta,sla_compliance_delta,overall_performance
-lens,bm25,-15.3,0.199,0.000,mixed
-bm25_prox,bm25,17.4,0.093,0.000,mixed
-hybrid,bm25,66.9,0.149,-0.167,mixed

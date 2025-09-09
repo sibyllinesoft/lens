@@ -97,7 +97,7 @@ vi.mock('../../core/learned-reranker.js', () => ({
   }))
 }));
 
-vi.mock('../../benchmark/phase-b-comprehensive.js', () => ({
+vi.mock('../../../benchmarks/src/phase-b-comprehensive.js', () => ({
   PhaseBComprehensiveOptimizer: vi.fn().mockImplementation(() => ({
     executeOptimizedSearch: vi.fn().mockResolvedValue({
       hits: [],

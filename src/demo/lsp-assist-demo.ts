@@ -13,9 +13,9 @@ import { LSPStageBEnhancer } from '../core/lsp-stage-b.js';
 import { LSPStageCEnhancer } from '../core/lsp-stage-c.js';
 import { IntentRouter } from '../core/intent-router.js';
 import { WorkspaceConfigParser } from '../core/workspace-config.js';
-import { LSPABBenchmarkHarness } from '../benchmark/lsp-ab-harness.js';
-import { LossTaxonomyAnalyzer } from '../benchmark/loss-taxonomy.js';
-import { TestDataGenerator } from '../benchmark/test-data-generator.js';
+import { LSPABBenchmarkHarness } from '../../benchmarks/src/lsp-ab-harness.js';
+import { LossTaxonomyAnalyzer } from '../../benchmarks/src/loss-taxonomy.js';
+import { TestDataGenerator } from '../../benchmarks/src/test-data-generator.js';
 import { LensTracer } from '../telemetry/tracer.js';
 
 interface DemoResults {

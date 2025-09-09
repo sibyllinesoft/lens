@@ -5,8 +5,8 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { SearchEngine } from '../api/search-engine.js';
-import { BenchmarkSuite } from '../benchmark/suite-runner.js';
-import { StatisticalValidator, PerformanceMetrics, BenchmarkResult } from '../benchmark/statistical-validator.js';
+import { BenchmarkSuite } from '../../benchmarks/src/suite-runner.js';
+import { StatisticalValidator, PerformanceMetrics, BenchmarkResult } from '../../benchmarks/src/statistical-validator.js';
 
 // Mock telemetry for performance testing
 vi.mock('../telemetry/tracer.js', () => ({

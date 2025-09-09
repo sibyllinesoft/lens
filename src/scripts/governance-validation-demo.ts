@@ -14,7 +14,7 @@ import {
   BenchmarkGovernanceSystem,
   AuditBundleGenerator,
   RedTeamValidationSuite
-} from '../benchmark/index.js';
+} from '../../benchmarks/src/index.js';
 import type { BenchmarkConfig } from '../types/benchmark.js';
 
 const program = new Command();
@@ -290,7 +290,7 @@ async function runStatisticalPowerDemo(governanceSystem: BenchmarkGovernanceSyst
   console.log('📊 Statistical Power Analysis Demo');
   console.log('=================================');
   
-  const { StatisticalPowerAnalyzer } = await import('../benchmark/governance-system.js');
+  const { StatisticalPowerAnalyzer } = await import('../../benchmarks/src/governance-system.js');
   const powerAnalyzer = new StatisticalPowerAnalyzer();
   
   // Demo: Calculate required sample sizes for different scenarios
@@ -347,7 +347,7 @@ async function runCalibrationDemo(governanceSystem: BenchmarkGovernanceSystem) {
   console.log('🎯 Calibration Monitoring Demo');
   console.log('==============================');
   
-  const { CalibrationMonitor } = await import('../benchmark/governance-system.js');
+  const { CalibrationMonitor } = await import('../../benchmarks/src/governance-system.js');
   const calibrationMonitor = new CalibrationMonitor();
   
   // Generate mock prediction data
@@ -424,7 +424,7 @@ async function runMultipleTestingDemo(governanceSystem: BenchmarkGovernanceSyste
   console.log('🔢 Multiple Testing Correction Demo');
   console.log('==================================');
   
-  const { MultipleTestingCorrector } = await import('../benchmark/governance-system.js');
+  const { MultipleTestingCorrector } = await import('../../benchmarks/src/governance-system.js');
   const multipleTestingCorrector = new MultipleTestingCorrector();
   
   // Generate mock slice results with some significant regressions

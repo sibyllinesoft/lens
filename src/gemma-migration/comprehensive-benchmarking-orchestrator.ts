@@ -30,7 +30,7 @@ import {
 } from './statistical-analysis-engine.js';
 import { DecisionFramework, DecisionReport } from './decision-framework.js';
 import { VectorAlignment, ScoreAlignment } from './alignment-system.js';
-import { MetricsCalculator, QueryResult } from '../benchmark/metrics-calculator.js';
+import { MetricsCalculator, QueryResult } from '../../benchmarks/src/metrics-calculator.js';
 
 // Schema for comprehensive benchmarking configuration
 

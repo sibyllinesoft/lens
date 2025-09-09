@@ -6,9 +6,9 @@
 import cron from 'node-cron';
 import fs from 'fs/promises';
 import path from 'path';
-import { ProdIngestor } from '../ingestors/prod-ingestor';
-import { getDataSourceConfig } from '../config/data-source-config';
-import { LensSearchRequest } from '../clients/lens-client';
+import { ProdIngestor } from '../ingestors/prod-ingestor.js';
+import { getDataSourceConfig } from '../config/data-source-config.js';
+import { LensSearchRequest } from '../clients/lens-client.js';
 
 export interface CronConfig {
   schedule: string; // '0 2 * * 0' for Sun 02:00
@@ -189,7 +189,7 @@ export class ProductionCron {
       return {
         metrics,
         system_performance: systemPerformance,
-        pool_audit
+        pool_audit: poolAudit
       };
       
     } finally {
@@ -216,9 +216,8 @@ export class ProductionCron {
         mockQueries.push({
           query: pattern,
           language,
-          max_results: 50,
-          timeout_ms: 150,
-          include_context: true
+          limit: 50,
+          context_lines: 3
         });
       }
     }

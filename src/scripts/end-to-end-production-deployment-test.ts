@@ -16,7 +16,7 @@
  */
 
 import { TODOCompleteDeploymentOrchestrator } from '../deployment/todo-complete-deployment-orchestrator.js';
-import { PinnedGroundTruthLoader } from '../benchmark/pinned-ground-truth-loader.js';
+import { PinnedGroundTruthLoader } from '../../benchmarks/src/pinned-ground-truth-loader.js';
 
 interface E2ETestResult {
   success: boolean;

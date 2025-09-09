@@ -4,9 +4,9 @@
  */
 
 import crypto from 'crypto';
-import { AggregationRecord, HitsRecord } from '../schemas/output-schemas';
-import { LensSearchRequest } from '../clients/lens-client';
-import { IngestorMetrics } from './prod-ingestor';
+import { AggregationRecord, HitsRecord } from '../schemas/output-schemas.js';
+import { LensSearchRequest } from '../clients/lens-client.js';
+import { IngestorMetrics } from './prod-ingestor.js';
 
 export class SimIngestor {
   private readonly configHash: string;

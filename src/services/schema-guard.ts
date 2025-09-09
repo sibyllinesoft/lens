@@ -4,7 +4,7 @@
  */
 
 import crypto from 'crypto';
-import { AggregationRecord, HitsRecord, validateAggregationSchema, validateHitsSchema } from '../schemas/output-schemas';
+import { AggregationRecord, HitsRecord, validateAggregationSchema, validateHitsSchema } from '../schemas/output-schemas.js';
 
 export interface SchemaGuardResult {
   valid: boolean;

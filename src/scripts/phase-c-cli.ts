@@ -5,8 +5,8 @@
  */
 
 import { Command } from 'commander';
-import { BenchmarkSuiteRunner } from '../benchmark/suite-runner.js';
-import { GroundTruthBuilder } from '../benchmark/ground-truth-builder.js';
+import { BenchmarkSuiteRunner } from '../../benchmarks/src/suite-runner.js';
+import { GroundTruthBuilder } from '../../benchmarks/src/ground-truth-builder.js';
 import { promises as fs } from 'fs';
 import path from 'path';
 import chalk from 'chalk';
@@ -22,7 +22,7 @@ program
 
 // Global options
 program
-  .option('-o, --output <dir>', 'Output directory for results', './benchmark-results')
+  .option('-o, --output <dir>', 'Output directory for results', '../../benchmarks/src-results')
   .option('--nats-url <url>', 'NATS server URL for telemetry', 'nats://localhost:4222')
   .option('--verbose', 'Enable verbose logging')
   .option('--trace-id <id>', 'Custom trace ID for the run');

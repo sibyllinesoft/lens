@@ -120,7 +120,7 @@ class ComprehensiveValidationTest {
 
     // Check benchmark configuration
     suite.results.push(this.validateFileExists(
-      'config/benchmark/final-bench-config.json',
+      'conf../../benchmarks/src/final-bench-config.json',
       'Final benchmark configuration'
     ));
 

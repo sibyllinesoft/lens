@@ -4,9 +4,9 @@
  */
 
 import crypto from 'crypto';
-import { LensClient, LensSearchRequest } from '../clients/lens-client';
-import { AggregationRecord, HitsRecord, validateAggregationSchema, validateHitsSchema } from '../schemas/output-schemas';
-import { getDataSourceConfig, createLensEndpointConfigs } from '../config/data-source-config';
+import { LensClient, LensSearchRequest } from '../clients/lens-client.js';
+import { AggregationRecord, HitsRecord, validateAggregationSchema, validateHitsSchema } from '../schemas/output-schemas.js';
+import { getDataSourceConfig, createLensEndpointConfigs } from '../config/data-source-config.js';
 
 export interface IngestorMetrics {
   total_queries: number;

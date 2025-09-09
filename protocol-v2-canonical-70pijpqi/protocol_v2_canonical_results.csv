@@ -1,7 +1,0 @@
-run_id,suite,scenario,system,version,cfg_hash,mean_ndcg_at_10,mean_success_at_10,sla_compliance_rate,span_coverage_avg,file_credit_ratio,validation_passed
-70pijpqi,protocol_v2_canonical,all_scenarios,ripgrep,canonical-v1.0.0,canonical-engine,0.485417,1.000000,1.000000,0.000000,0.000000,1
-70pijpqi,protocol_v2_canonical,all_scenarios,grep,canonical-v1.0.0,canonical-engine,0.488889,1.000000,1.000000,0.000000,0.000000,1
-70pijpqi,protocol_v2_canonical,all_scenarios,find,canonical-v1.0.0,canonical-engine,0.480556,1.000000,1.000000,0.000000,0.000000,1
-70pijpqi,protocol_v2_canonical,all_scenarios,opensearch,canonical-v1.0.0,canonical-engine,0.488194,1.000000,1.000000,0.000000,0.000000,1
-70pijpqi,protocol_v2_canonical,all_scenarios,qdrant,canonical-v1.0.0,canonical-engine,0.491667,1.000000,1.000000,0.000000,0.000000,1
-70pijpqi,protocol_v2_canonical,all_scenarios,lens,canonical-v1.0.0,canonical-engine,0.479167,1.000000,1.000000,0.000000,0.000000,1

@@ -23,7 +23,7 @@ import {
   ChaosExperimentType 
 } from './chaos-engineering-framework.js';
 import { ChaosExperimentSuite } from './chaos-scenarios.js';
-import { RobustnessTestRunner } from '../benchmark/robustness-tests.js';
+import { RobustnessTestRunner } from '../../benchmarks/src/robustness-tests.js';
 
 export interface RobustnessTestConfig {
   name: string;
