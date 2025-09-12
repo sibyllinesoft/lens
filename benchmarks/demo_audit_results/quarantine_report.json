@@ -1,0 +1,74 @@
+{
+  "run_id": "27df8ba8-802b-421e-9b94-47494f7d0a54",
+  "generated_at": 1757706191.8563755,
+  "total_systems": 5,
+  "quarantined_systems": [
+    {
+      "id": "cohere/embed-english-v3.0",
+      "name": "Cohere embed-english-v3.0",
+      "impl": "api",
+      "status": "UNAVAILABLE:NO_API_KEY",
+      "reason": "Missing environment variable: COHERE_API_KEY",
+      "checks": {
+        "has_api_key": false,
+        "can_auth": true,
+        "quota_ok": true,
+        "endpoint_probe": true
+      }
+    }
+  ],
+  "available_systems": [
+    {
+      "id": "openai/text-embedding-3-large",
+      "name": "OpenAI text-embedding-3-large",
+      "impl": "api",
+      "status": "AVAILABLE",
+      "reason": "All checks passed",
+      "checks": {
+        "has_api_key": true,
+        "can_auth": true,
+        "quota_ok": true,
+        "endpoint_probe": true
+      }
+    },
+    {
+      "id": "bm25",
+      "name": "BM25 Baseline",
+      "impl": "local",
+      "status": "AVAILABLE",
+      "reason": "All checks passed",
+      "checks": {
+        "has_api_key": true,
+        "can_auth": true,
+        "quota_ok": true,
+        "endpoint_probe": true
+      }
+    },
+    {
+      "id": "colbert-v2",
+      "name": "ColBERT v2",
+      "impl": "local",
+      "status": "AVAILABLE",
+      "reason": "All checks passed",
+      "checks": {
+        "has_api_key": true,
+        "can_auth": true,
+        "quota_ok": true,
+        "endpoint_probe": true
+      }
+    },
+    {
+      "id": "t1-hero",
+      "name": "T1 Hero",
+      "impl": "local",
+      "status": "AVAILABLE",
+      "reason": "All checks passed",
+      "checks": {
+        "has_api_key": true,
+        "can_auth": true,
+        "quota_ok": true,
+        "endpoint_probe": true
+      }
+    }
+  ]
+}

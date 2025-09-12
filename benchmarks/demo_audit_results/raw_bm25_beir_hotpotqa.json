@@ -1,0 +1,387 @@
+{
+  "system": "bm25",
+  "dataset": "beir/hotpotqa",
+  "queries": [
+    {
+      "query_id": "beir/hotpotqa_000",
+      "query": "multi-hop query 0",
+      "ndcg_10": 0.21536039734016285,
+      "recall_50": 0.2687151695775681,
+      "latency_ms": 71.29519093724566,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_001",
+      "query": "multi-hop query 1",
+      "ndcg_10": 0.3731375477517846,
+      "recall_50": 0.4958826643537394,
+      "latency_ms": 105.26984599924407,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_002",
+      "query": "multi-hop query 2",
+      "ndcg_10": 0.4522136561740933,
+      "recall_50": 0.5951041198447304,
+      "latency_ms": 54.14901286612843,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_003",
+      "query": "multi-hop query 3",
+      "ndcg_10": 0.5922122382658221,
+      "recall_50": 0.5939918257985554,
+      "latency_ms": 57.139312226509645,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_004",
+      "query": "multi-hop query 4",
+      "ndcg_10": 0.5355044556419394,
+      "recall_50": 0.6357169354801877,
+      "latency_ms": 136.2581538291136,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_005",
+      "query": "multi-hop query 5",
+      "ndcg_10": 0.5203293540408214,
+      "recall_50": 0.6549604433205966,
+      "latency_ms": 101.38576368525895,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_006",
+      "query": "multi-hop query 6",
+      "ndcg_10": 0.4082520025506138,
+      "recall_50": 0.49230597875820026,
+      "latency_ms": 67.87286875962114,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_007",
+      "query": "multi-hop query 7",
+      "ndcg_10": 0.35606077600801833,
+      "recall_50": 0.5342038977554426,
+      "latency_ms": 113.04324130054809,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_008",
+      "query": "multi-hop query 8",
+      "ndcg_10": 0.25233138696632895,
+      "recall_50": 0.3038313023513879,
+      "latency_ms": 64.21470266217564,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_009",
+      "query": "multi-hop query 9",
+      "ndcg_10": 0.498799103668771,
+      "recall_50": 0.5681225771066243,
+      "latency_ms": 65.12205736204132,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_010",
+      "query": "multi-hop query 10",
+      "ndcg_10": 0.5060224542425436,
+      "recall_50": 0.5417596409247184,
+      "latency_ms": 65.60862108340983,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_011",
+      "query": "multi-hop query 11",
+      "ndcg_10": 0.4126503065852615,
+      "recall_50": 0.6106506623562123,
+      "latency_ms": 135.34220983661902,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_012",
+      "query": "multi-hop query 12",
+      "ndcg_10": 0.5774910815115035,
+      "recall_50": 0.7428152109964912,
+      "latency_ms": 50.78691664816315,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_013",
+      "query": "multi-hop query 13",
+      "ndcg_10": 0.3977944555069342,
+      "recall_50": 0.48497312990496566,
+      "latency_ms": 70.8372032605535,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_014",
+      "query": "multi-hop query 14",
+      "ndcg_10": 0.5303912292823402,
+      "recall_50": 0.6090558452947608,
+      "latency_ms": 67.51116203727916,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_015",
+      "query": "multi-hop query 15",
+      "ndcg_10": 0.536514033443168,
+      "recall_50": 0.5526480908641505,
+      "latency_ms": 296.39808940771104,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_016",
+      "query": "multi-hop query 16",
+      "ndcg_10": 0.48055557085720857,
+      "recall_50": 0.6489568271790442,
+      "latency_ms": 79.79563564206701,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_017",
+      "query": "multi-hop query 17",
+      "ndcg_10": 0.39794567842805195,
+      "recall_50": 0.507713200389834,
+      "latency_ms": 166.22530970138484,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_018",
+      "query": "multi-hop query 18",
+      "ndcg_10": 0.364569682895222,
+      "recall_50": 0.5389420017729734,
+      "latency_ms": 85.48779860054728,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir/hotpotqa_019",
+      "query": "multi-hop query 19",
+      "ndcg_10": 0.5423771265574592,
+      "recall_50": 0.567794085615,
+      "latency_ms": 72.07686409087833,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    }
+  ],
+  "generated_at": 1757706191.8216138
+}

@@ -1,0 +1,7 @@
+{
+  "theta_nl": 0.8157894736842105,
+  "theta_gain": 0.894736842105263,
+  "objective_value": 0.9434103985880816,
+  "final_lambda": 0.9268317271842887,
+  "constraint_budget_ms": 4.7837100740465
+}

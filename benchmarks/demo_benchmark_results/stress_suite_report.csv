@@ -1,0 +1,9 @@
+guard_name,passed,measured_value,threshold_value,status_symbol,details
+ess_min_ratio,True,0.3381539204121222,0.2,✅,"{""description"": ""Effective sample size ratio"", ""requirement"": ""\u22650.2""}"
+pareto_kappa_max,True,0.35377481337963157,0.5,✅,"{""description"": ""Pareto distribution shape parameter"", ""requirement"": ""\u22640.5""}"
+conformal_coverage_cold,True,0.9518271379413283,0.95,✅,"{""description"": ""Conformal prediction coverage (cold)"", ""range"": ""[0.93, 0.97]""}"
+conformal_coverage_warm,True,0.9535253543521603,0.95,✅,"{""description"": ""Conformal prediction coverage (warm)"", ""range"": ""[0.93, 0.97]""}"
+ndcg_delta_min_pp,True,0.018300244883539117,0.0,✅,"{""description"": ""nDCG improvement requirement"", ""unit"": ""percentage_points""}"
+p95_delta_max_ms,True,0.6044031107495456,1.0,✅,"{""description"": ""P95 latency increase limit"", ""unit"": ""milliseconds""}"
+jaccard_min,True,0.8839692483747695,0.8,✅,"{""description"": ""Jaccard similarity stability"", ""requirement"": ""\u22650.80""}"
+aece_delta_max,True,-0.003074161944942153,0.01,✅,"{""description"": ""AECE calibration degradation limit"", ""unit"": ""absolute""}"

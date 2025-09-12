@@ -1,0 +1,118 @@
+{
+  "baseline_manifest": {
+    "version": "T0-2025-09-12T04:47:39Z",
+    "event": "hero_promotion_completion",
+    "status": "production_operational",
+    "configurations": {
+      "lexical_hero": {
+        "config_hash": "697653e2ede1a956",
+        "config_path": "configs/lexical_pack_a.yaml",
+        "release_fingerprint": "dd81166f3b74c108ee14f37af716c00947b4d36d67b37af815e279aee9213413",
+        "specialization": "lexical_precision_phrase_boosting"
+      },
+      "router_hero": {
+        "config_hash": "d90e823d7df5e664", 
+        "config_path": "configs/router_pack_b.yaml",
+        "release_fingerprint": "eb3b0abfdd6790edb230a652cf67555ccc084fd380824732e3bce3285bd5ddf7",
+        "specialization": "entropy_conditioned_smart_routing"
+      },
+      "ann_hero": {
+        "config_hash": "05efacf781b00c0d",
+        "config_path": "configs/ann_pack_c.yaml", 
+        "release_fingerprint": "6d326c79b359afcbdb678c058f9034ba8cc5c9e279c893ecd3e59ddf54fe840e",
+        "specialization": "hnsw_efSearch_optimization"
+      }
+    },
+    "baseline_metrics": {
+      "global_quality": {
+        "ndcg_at_10": {
+          "value": 0.345,
+          "ci_half_width": 0.008,
+          "ci_lower": 0.337,
+          "ci_upper": 0.353,
+          "sample_size": 2300000
+        },
+        "sla_recall_at_50": {
+          "value": 0.672,
+          "ci_half_width": 0.012,
+          "ci_lower": 0.660,
+          "ci_upper": 0.684,
+          "sample_size": 2300000
+        }
+      },
+      "latency_profile": {
+        "p95_latency_ms": {
+          "value": 118,
+          "ci_half_width": 3.2,
+          "ci_lower": 114.8,
+          "ci_upper": 121.2,
+          "sla_threshold": 150
+        },
+        "p99_latency_ms": {
+          "value": 142,
+          "ci_half_width": 5.1,
+          "ci_lower": 136.9,
+          "ci_upper": 147.1,
+          "sla_threshold": 180
+        }
+      },
+      "calibration_quality": {
+        "aece_score": {
+          "value": 0.014,
+          "ci_half_width": 0.003,
+          "ci_lower": 0.011,
+          "ci_upper": 0.017,
+          "calib_v22_threshold": 0.020
+        },
+        "cross_language_parity": {
+          "rust_ts_max_diff": 1e-6,
+          "validated": true,
+          "last_check": "2025-09-12T04:47:39Z"
+        }
+      },
+      "operational_efficiency": {
+        "file_credit_percent": {
+          "value": 2.8,
+          "ci_half_width": 0.4,
+          "ci_lower": 2.4,
+          "ci_upper": 3.2,
+          "safety_threshold": 5.0
+        },
+        "cost_per_request": {
+          "value": 0.0023,
+          "ci_half_width": 0.0002,
+          "ci_lower": 0.0021,
+          "ci_upper": 0.0025,
+          "currency": "USD"
+        }
+      }
+    },
+    "error_budgets_28_days": {
+      "quality_bounds": {
+        "ndcg_at_10_min_drop": -0.5,
+        "sla_recall_at_50_min_drop": -0.3,
+        "description": "Maximum allowable drops in percentage points before auto-revert"
+      },
+      "latency_bounds": {
+        "p95_max_increase_ms": 1.0,
+        "p99_max_increase_ms": 2.0,
+        "description": "Maximum latency increases before auto-revert triggers"
+      },
+      "calibration_bounds": {
+        "aece_max_increase": 0.01,
+        "description": "Maximum AECE degradation allowed"
+      },
+      "safety_bounds": {
+        "file_credit_max_percent": 5.0,
+        "consecutive_violation_window": 2,
+        "description": "Two consecutive windows above bounds trigger revert"
+      }
+    },
+    "traffic_mix_assumptions": {
+      "nl_queries_percent": 45,
+      "lexical_queries_percent": 55,
+      "max_drift_before_recalibration": 5,
+      "description": "If traffic mix shifts >5% NL vs lexical, schedule calibration spot-check"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "harvest_mode": "ann_parameter_optimization",
+  "version": "1.0",
+  "timestamp": "2025-09-12T13:51:12.093185Z",
+  "optimal_parameters": {
+    "ef": 108,
+    "topk": 96
+  },
+  "performance_characteristics": {
+    "expected_p95_latency": 55.01369814042339,
+    "expected_ndcg_delta": 0.013380365612186113,
+    "expected_jaccard_at_10": 0.8109466157652893
+  },
+  "constraints": {
+    "ndcg_non_negative": true,
+    "sign_match_required": true,
+    "jaccard_protection": 0.8
+  },
+  "pareto_analysis": {
+    "frontier_points": 2,
+    "selection_reason": "best_pareto_score_among_valid"
+  }
+}

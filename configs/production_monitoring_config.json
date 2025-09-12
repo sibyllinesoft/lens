@@ -1,0 +1,18 @@
+{
+  "monitoring_system": "ProductionMonitoringSystem",
+  "measurement_interval_seconds": 60,
+  "alert_thresholds": {
+    "global_ndcg_lcb": 0.0,
+    "hard_nl_ndcg_lcb": 0.0,
+    "p95_latency_max": 119.0,
+    "p99_p95_ratio_max": 2.0,
+    "jaccard_min": 0.8,
+    "aece_drift_max": 0.01
+  },
+  "rollback_triggers": {
+    "quality_regression_windows": 3,
+    "latency_breach_threshold": 120.0,
+    "stability_loss_threshold": 0.75,
+    "calibration_drift_threshold": 0.02
+  }
+}

@@ -1,0 +1,387 @@
+{
+  "system": "bm25",
+  "dataset": "msmarco/passage",
+  "queries": [
+    {
+      "query_id": "msmarco/passage_000",
+      "query": "passage query 0",
+      "ndcg_10": 0.3836623970767501,
+      "recall_50": 0.4483352201091466,
+      "latency_ms": 176.28088810756734,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_001",
+      "query": "passage query 1",
+      "ndcg_10": 0.580026239855466,
+      "recall_50": 0.7182337938453213,
+      "latency_ms": 69.54769785856911,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_002",
+      "query": "passage query 2",
+      "ndcg_10": 0.5369087045452087,
+      "recall_50": 0.5734677288033303,
+      "latency_ms": 68.38292707922993,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_003",
+      "query": "passage query 3",
+      "ndcg_10": 0.38902315469124876,
+      "recall_50": 0.3940110864974541,
+      "latency_ms": 81.02260096799749,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_004",
+      "query": "passage query 4",
+      "ndcg_10": 0.5111157271293045,
+      "recall_50": 0.563210879551009,
+      "latency_ms": 76.62537662389259,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_005",
+      "query": "passage query 5",
+      "ndcg_10": 0.41918906303141246,
+      "recall_50": 0.5630676450798385,
+      "latency_ms": 52.800346051219464,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_006",
+      "query": "passage query 6",
+      "ndcg_10": 0.4181193243291435,
+      "recall_50": 0.5317127845386906,
+      "latency_ms": 94.53298102683964,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_007",
+      "query": "passage query 7",
+      "ndcg_10": 0.4911430831775215,
+      "recall_50": 0.5673045762862443,
+      "latency_ms": 83.80968838268407,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_008",
+      "query": "passage query 8",
+      "ndcg_10": 0.4095380369685011,
+      "recall_50": 0.48041803353753715,
+      "latency_ms": 104.64847989879613,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_009",
+      "query": "passage query 9",
+      "ndcg_10": 0.576285172144197,
+      "recall_50": 0.6144254281227401,
+      "latency_ms": 65.64512055389837,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_010",
+      "query": "passage query 10",
+      "ndcg_10": 0.27513191990376357,
+      "recall_50": 0.4293478278883569,
+      "latency_ms": 64.15801890779481,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_011",
+      "query": "passage query 11",
+      "ndcg_10": 0.6656473857559063,
+      "recall_50": 0.7335869247841632,
+      "latency_ms": 59.120470585056296,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_012",
+      "query": "passage query 12",
+      "ndcg_10": 0.4102887587515879,
+      "recall_50": 0.549602599731201,
+      "latency_ms": 61.835353371210445,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_013",
+      "query": "passage query 13",
+      "ndcg_10": 0.2704196749231221,
+      "recall_50": 0.2957268933742409,
+      "latency_ms": 77.2094603560987,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_014",
+      "query": "passage query 14",
+      "ndcg_10": 0.6359590813751582,
+      "recall_50": 0.6485039016043956,
+      "latency_ms": 50.96041339478241,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_015",
+      "query": "passage query 15",
+      "ndcg_10": 0.5072651075397665,
+      "recall_50": 0.6043865239425001,
+      "latency_ms": 91.89330971281476,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_016",
+      "query": "passage query 16",
+      "ndcg_10": 0.41121216782398384,
+      "recall_50": 0.45959074120615817,
+      "latency_ms": 50.9163515526961,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_017",
+      "query": "passage query 17",
+      "ndcg_10": 0.679034850581323,
+      "recall_50": 0.8665993090148616,
+      "latency_ms": 109.33436987503052,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_018",
+      "query": "passage query 18",
+      "ndcg_10": 0.37496849438834234,
+      "recall_50": 0.43646607866622444,
+      "latency_ms": 121.6703515878904,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco/passage_019",
+      "query": "passage query 19",
+      "ndcg_10": 0.5485150729376025,
+      "recall_50": 0.7344747029231141,
+      "latency_ms": 65.2785671718462,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    }
+  ],
+  "generated_at": 1757706191.8242393
+}
