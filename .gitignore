@@ -49,8 +49,9 @@ __pycache__/
 *.cpuprofile
 *.memprofile
 
-# Generated reports and artifacts (moved to /reports/)
+# Generated reports and artifacts (moved to /reports/ and /artifacts/)
 /reports/
+/artifacts/
 *.bench
 *.json.parquet
 *benchmark*.json

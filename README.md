@@ -32,8 +32,10 @@ This repository is organized for maintainability and clarity:
 - **[`/benchmarks`](./benchmarks/)** - Performance benchmarking suites and analysis
 - **[`/scripts`](./scripts/)** - Utility scripts for development and operations
 - **[`/configs`](./configs/)** - Configuration files and settings
+- **[`/tools`](./tools/)** - Development tools and utilities
 - **[`/infra`](./infra/)** - Infrastructure as code (Docker, CI/CD, deployment)
-- **[`/reports`](./reports/)** - Generated reports and analysis outputs (git-ignored)
+- **[`/replication-kit`](./replication-kit/)** - External validation and reproducibility package
+- **[`/artifacts`](./artifacts/)** - Generated reports and analysis outputs (git-ignored)
 
 ### 📝 **Key Files**
 - **[`README.md`](./README.md)** - This overview and getting started guide
@@ -136,7 +138,7 @@ System configuration is centralized in [`/configs`](./configs/):
 
 ## 📈 **Monitoring & Reports**
 
-Generated reports and metrics are stored in [`/reports`](./reports/) (git-ignored):
+Generated reports and metrics are stored in [`/artifacts`](./artifacts/) (git-ignored):
 
 - Performance benchmarks and analysis
 - Coverage reports and test results
