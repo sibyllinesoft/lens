@@ -624,3 +624,122 @@ impl PipelineStageProcessor for PostProcessStage {
         true
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::search::SearchEngine;
+    use crate::config::LensConfig;
+    use tempfile::TempDir;
+
+    async fn create_mock_search_engine() -> Arc<SearchEngine> {
+        let temp_dir = TempDir::new().unwrap();
+        Arc::new(SearchEngine::new(temp_dir.path()).await.unwrap())
+    }
+
+    #[test]
+    fn test_executor_metrics_default() {
+        let metrics = ExecutorMetrics::default();
+        assert_eq!(metrics.total_executions, 0);
+        assert_eq!(metrics.successful_executions, 0);
+        assert_eq!(metrics.failed_executions, 0);
+        assert_eq!(metrics.avg_execution_time_ms, 0.0);
+        assert_eq!(metrics.stage_fusion_count, 0);
+        assert_eq!(metrics.early_stopping_count, 0);
+    }
+
+    #[test]
+    fn test_stopping_predictor_default() {
+        let predictor = StoppingPredictor::default();
+        assert_eq!(predictor.confidence_threshold, 0.9);
+        assert_eq!(predictor.quality_threshold, 0.8);
+        assert_eq!(predictor.historical_accuracies.len(), 0);
+        assert_eq!(predictor.max_history, 100);
+    }
+
+    #[test]
+    fn test_executor_metrics_update() {
+        let mut metrics = ExecutorMetrics::default();
+        metrics.total_executions = 10;
+        metrics.successful_executions = 8;
+        metrics.failed_executions = 2;
+        metrics.avg_execution_time_ms = 150.0;
+
+        assert_eq!(metrics.total_executions, 10);
+        assert_eq!(metrics.successful_executions, 8);
+        assert_eq!(metrics.failed_executions, 2);
+        assert_eq!(metrics.avg_execution_time_ms, 150.0);
+    }
+
+    #[tokio::test]
+    async fn test_pipeline_executor_creation() {
+        let config = super::super::PipelineConfig::default();
+
+        let executor = PipelineExecutor::new(config.clone()).await;
+
+        assert!(executor.is_ok());
+        let executor = executor.unwrap();
+        assert_eq!(executor.config.max_latency_ms, 150);
+        assert_eq!(executor.config.max_concurrent, 50);
+        assert!(executor.config.fusion_enabled);
+        assert!(executor.config.early_stopping_enabled);
+    }
+
+    #[test]
+    fn test_stopping_predictor_should_stop() {
+        let predictor = StoppingPredictor::default();
+        
+        // Should not stop early with low time budget
+        assert!(!predictor.should_stop_early(0.9, 0.95, 0.2));
+        
+        // Should stop with high confidence and quality
+        assert!(predictor.should_stop_early(0.85, 0.95, 0.5));
+        
+        // Should stop when running out of time with reasonable quality
+        assert!(predictor.should_stop_early(0.6, 0.7, 0.9));
+        
+        // Should not stop with low quality
+        assert!(!predictor.should_stop_early(0.4, 0.5, 0.5));
+    }
+
+    #[test]
+    fn test_stopping_predictor_update() {
+        let mut predictor = StoppingPredictor::default();
+        let initial_quality_threshold = predictor.quality_threshold;
+        let initial_confidence_threshold = predictor.confidence_threshold;
+        
+        // Update with good prediction
+        predictor.update(true, 0.85);
+        assert_eq!(predictor.historical_accuracies.len(), 1);
+        
+        // Add more data points to test threshold adaptation
+        for _ in 0..10 {
+            predictor.update(true, 0.9);
+        }
+        
+        // Should have collected historical data
+        assert_eq!(predictor.historical_accuracies.len(), 11);
+        assert!(predictor.historical_accuracies.len() <= predictor.max_history);
+    }
+
+    #[tokio::test]
+    async fn test_query_analysis_stage() {
+        let stage = QueryAnalysisStage::new();
+        assert_eq!(stage.stage_id(), super::super::PipelineStage::QueryAnalysis);
+        assert!(stage.supports_fusion());
+    }
+
+    #[tokio::test]
+    async fn test_post_process_stage() {
+        let stage = PostProcessStage::new();
+        assert_eq!(stage.stage_id(), super::super::PipelineStage::PostProcess);
+        assert!(stage.supports_fusion());
+    }
+
+    #[tokio::test]
+    async fn test_result_fusion_stage() {
+        let stage = ResultFusionStage::new();
+        assert_eq!(stage.stage_id(), super::super::PipelineStage::ResultFusion);
+        assert!(stage.supports_fusion()); // Fusion stage supports fusion
+    }
+}

@@ -18,6 +18,15 @@ pub mod pipeline;
 pub mod validation;
 pub mod ltr_trainer;
 
+// New Rust-based semantic processing modules  
+pub mod embedding;
+pub mod query_classifier;
+pub mod intent_router;
+pub mod conformal_router;
+pub mod benchmarks;
+pub mod integration;
+pub mod examples;
+
 // Re-export main types for easier usage
 pub use pipeline::{SemanticPipeline, SemanticSearchRequest, SemanticSearchResponse, initialize_semantic_pipeline};
 pub use encoder::{SemanticEncoder, CodeEmbedding};
@@ -29,6 +38,21 @@ pub use sla_bounded_evaluation::{SLABoundedEvaluator, SLAEvaluationConfig, SLABo
 pub use hard_negatives::{HardNegativesGenerator, ContrastivePair};
 pub use validation::{validate_phase3_implementation, ValidationResults};
 pub use ltr_trainer::{LTRTrainer, LTRConfig, LTRObjective, BoundedLTRModel, TrainingReport};
+
+// Re-export new Rust-based semantic processing types
+pub use embedding::{SemanticEncoder as RustSemanticEncoder, CodeEmbedding as RustCodeEmbedding, EmbeddingConfig};
+pub use query_classifier::{QueryClassifier, QueryClassification, QueryIntent as RustQueryIntent, ClassifierConfig};
+pub use intent_router::{IntentRouter, IntentRouterConfig};
+pub use conformal_router::{ConformalRouter, ConformalRouterConfig, UpshiftType};
+pub use integration::{
+    SemanticSearchIntegration, 
+    SemanticIntegrationConfig, 
+    SemanticSearchRequest as IntegratedSemanticSearchRequest,
+    SemanticSearchResponse as IntegratedSemanticSearchResponse,
+    SearchEngineSemanticExt,
+    SemanticHealthStatus,
+    IntegrationMetrics,
+};
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -198,7 +222,27 @@ impl SemanticMetrics {
     }
 }
 
-/// Initialize semantic search module
+/// Initialize new Rust-based semantic integration system
+pub async fn initialize_semantic_integration(config: &SemanticConfig) -> Result<SemanticSearchIntegration> {
+    tracing::info!("Initializing Rust-based semantic integration system");
+    
+    let integration_config = SemanticIntegrationConfig {
+        enabled: true,
+        nl_upshift_threshold: 0.7,
+        max_processing_time_ms: 100, // Stay within search SLA budget
+        enable_conformal_routing: true,
+        fallback_on_error: true,
+        enable_result_caching: config.cross_encoder.enabled,
+        similarity_threshold: 0.5,
+    };
+    
+    let integration = SemanticSearchIntegration::new(integration_config).await?;
+    
+    tracing::info!("✅ Rust-based semantic integration system initialized successfully");
+    Ok(integration)
+}
+
+/// Initialize semantic search module (original TypeScript-compatible function)
 pub async fn initialize_semantic(config: &SemanticConfig) -> Result<()> {
     tracing::info!("Initializing semantic search module");
     tracing::info!("Encoder: {} with {} tokens", config.encoder.model_type, config.encoder.max_tokens);

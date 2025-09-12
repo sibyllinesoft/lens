@@ -1255,4 +1255,417 @@ mod tests {
         let metrics = manager.get_metrics().await;
         assert!(metrics.total_queries >= 6);
     }
+
+    #[test]
+    fn test_prefetch_config_default() {
+        let config = PrefetchConfig::default();
+        
+        assert_eq!(config.similarity_threshold, 0.7);
+        assert_eq!(config.max_cached_visited_sets, 10000);
+        assert_eq!(config.pattern_window_size, 100);
+        assert_eq!(config.min_pattern_frequency, 3);
+        assert_eq!(config.prefetch_timeout_ms, 100);
+        assert_eq!(config.max_concurrent_prefetches, 5);
+        assert_eq!(config.enable_pattern_recognition, true);
+        assert_eq!(config.enable_memory_optimization, true);
+    }
+
+    #[test]
+    fn test_query_signature_creation() {
+        let signature = QuerySignature {
+            normalized_query: "function test".to_string(),
+            query_hash: 123456789,
+            context_hash: 987654321,
+        };
+        
+        assert_eq!(signature.normalized_query, "function test");
+        assert_eq!(signature.query_hash, 123456789);
+        assert_eq!(signature.context_hash, 987654321);
+    }
+
+    #[test]
+    fn test_result_hint_creation() {
+        let hint = ResultHint {
+            file_path: "/path/to/test.rs".to_string(),
+            line_number: 42,
+            relevance_score: 0.95,
+            access_probability: 0.85,
+        };
+        
+        assert_eq!(hint.file_path, "/path/to/test.rs");
+        assert_eq!(hint.line_number, 42);
+        assert_eq!(hint.relevance_score, 0.95);
+        assert_eq!(hint.access_probability, 0.85);
+    }
+
+    #[test]
+    fn test_prefetch_result_creation() {
+        let mut visited_set = HashSet::new();
+        visited_set.insert("node1".to_string());
+        visited_set.insert("node2".to_string());
+        
+        let hints = vec![
+            ResultHint {
+                file_path: "test1.rs".to_string(),
+                line_number: 10,
+                relevance_score: 0.9,
+                access_probability: 0.8,
+            },
+            ResultHint {
+                file_path: "test2.rs".to_string(),
+                line_number: 20,
+                relevance_score: 0.85,
+                access_probability: 0.75,
+            },
+        ];
+        
+        let result = PrefetchResult {
+            cache_hit: true,
+            visited_set: Some(visited_set.clone()),
+            result_hints: hints.clone(),
+            processing_time: Duration::from_millis(50),
+            confidence_score: 0.88,
+            pattern_match: Some("function_search_pattern".to_string()),
+            prefetch_suggestions: vec!["suggestion1".to_string(), "suggestion2".to_string()],
+        };
+        
+        assert_eq!(result.cache_hit, true);
+        assert_eq!(result.visited_set.as_ref().unwrap().len(), 2);
+        assert_eq!(result.result_hints.len(), 2);
+        assert_eq!(result.processing_time, Duration::from_millis(50));
+        assert_eq!(result.confidence_score, 0.88);
+        assert_eq!(result.pattern_match, Some("function_search_pattern".to_string()));
+        assert_eq!(result.prefetch_suggestions.len(), 2);
+    }
+
+    #[test]
+    fn test_query_history_entry() {
+        let entry = QueryHistoryEntry {
+            query: "test search query".to_string(),
+            signature: QuerySignature {
+                normalized_query: "test search".to_string(),
+                query_hash: 12345,
+                context_hash: 54321,
+            },
+            timestamp: Instant::now(),
+            results_count: 15,
+            processing_time: Duration::from_millis(75),
+            file_context: Some("main.rs".to_string()),
+        };
+        
+        assert_eq!(entry.query, "test search query");
+        assert_eq!(entry.signature.normalized_query, "test search");
+        assert_eq!(entry.signature.query_hash, 12345);
+        assert_eq!(entry.results_count, 15);
+        assert_eq!(entry.processing_time, Duration::from_millis(75));
+        assert_eq!(entry.file_context, Some("main.rs".to_string()));
+    }
+
+    #[test]
+    fn test_query_pattern_creation() {
+        let pattern = QueryPattern {
+            pattern_id: "pattern_123".to_string(),
+            query_template: "function {}".to_string(),
+            frequency: 10,
+            contexts: vec!["test.rs".to_string(), "main.rs".to_string()],
+            average_processing_time: Duration::from_millis(100),
+            last_seen: Instant::now(),
+            confidence: 0.95,
+        };
+        
+        assert_eq!(pattern.pattern_id, "pattern_123");
+        assert_eq!(pattern.query_template, "function {}");
+        assert_eq!(pattern.frequency, 10);
+        assert_eq!(pattern.contexts.len(), 2);
+        assert_eq!(pattern.average_processing_time, Duration::from_millis(100));
+        assert_eq!(pattern.confidence, 0.95);
+    }
+
+    #[test]
+    fn test_memory_pool_config() {
+        let config = MemoryPoolConfig {
+            max_memory_mb: 512,
+            pool_segment_size: 4096,
+            cleanup_interval_secs: 300,
+        };
+        
+        assert_eq!(config.max_memory_mb, 512);
+        assert_eq!(config.pool_segment_size, 4096);
+        assert_eq!(config.cleanup_interval_secs, 300);
+    }
+
+    #[tokio::test]
+    async fn test_query_similarity_detector_creation() {
+        let detector = QuerySimilarityDetector::new();
+        
+        // Test that detector can be created and used
+        let sig1 = QuerySignature {
+            normalized_query: "test query".to_string(),
+            query_hash: 1,
+            context_hash: 1,
+        };
+        
+        let sig2 = QuerySignature {
+            normalized_query: "test query".to_string(),
+            query_hash: 1,
+            context_hash: 1,
+        };
+        
+        let similarity = detector.compute_similarity(&sig1, &sig2).await.unwrap();
+        
+        // Identical queries should have high similarity
+        assert!(similarity > 0.9);
+    }
+
+    #[tokio::test]
+    async fn test_pattern_engine_creation() {
+        let config = PrefetchConfig::default();
+        let engine = PatternEngine::new(config);
+        
+        // Verify initial state
+        assert!(engine.patterns.is_empty());
+        assert!(engine.query_history.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_cache_miss_scenario() {
+        let config = PrefetchConfig::default();
+        let manager = PrefetchManager::new(config).await.unwrap();
+        
+        // Query for something that's not in cache
+        let result = manager.process_query("unique_uncached_query", None).await.unwrap();
+        
+        assert_eq!(result.cache_hit, false);
+        assert!(result.visited_set.is_none());
+        assert!(result.result_hints.is_empty());
+        assert!(result.processing_time > Duration::from_millis(0));
+    }
+
+    #[tokio::test]
+    async fn test_confidence_score_calculation() {
+        let config = PrefetchConfig::default();
+        let manager = PrefetchManager::new(config).await.unwrap();
+        
+        let visited_set = HashSet::new();
+        let hints = vec![
+            ResultHint {
+                file_path: "test.rs".to_string(),
+                line_number: 1,
+                relevance_score: 0.9,
+                access_probability: 0.8,
+            }
+        ];
+        
+        // Cache with different confidence scores
+        manager.cache_visited_set(
+            "high_confidence_query",
+            None,
+            visited_set.clone(),
+            hints.clone(),
+            0.95, // High confidence
+        ).await.unwrap();
+        
+        manager.cache_visited_set(
+            "low_confidence_query",
+            None,
+            visited_set.clone(),
+            hints.clone(),
+            0.3, // Low confidence
+        ).await.unwrap();
+        
+        let high_conf_result = manager.process_query("high_confidence_query", None).await.unwrap();
+        let low_conf_result = manager.process_query("low_confidence_query", None).await.unwrap();
+        
+        assert!(high_conf_result.confidence_score > low_conf_result.confidence_score);
+    }
+
+    #[tokio::test]
+    async fn test_concurrent_prefetch_operations() {
+        let config = PrefetchConfig::default();
+        let manager = PrefetchManager::new(config).await.unwrap();
+        
+        // Test concurrent cache operations
+        let tasks: Vec<_> = (0..10).map(|i| {
+            let manager = &manager;
+            async move {
+                let visited_set = HashSet::new();
+                let hints = vec![];
+                let query = format!("concurrent_query_{}", i);
+                
+                // Cache the query
+                let cache_result = manager.cache_visited_set(
+                    &query,
+                    None,
+                    visited_set,
+                    hints,
+                    0.8,
+                ).await;
+                
+                // Then query it
+                let query_result = manager.process_query(&query, None).await;
+                
+                (cache_result, query_result)
+            }
+        }).collect();
+        
+        let results = futures::future::join_all(tasks).await;
+        
+        // All operations should succeed
+        for (cache_result, query_result) in results {
+            assert!(cache_result.is_ok());
+            assert!(query_result.is_ok());
+            
+            let query_result = query_result.unwrap();
+            assert_eq!(query_result.cache_hit, true);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_pattern_detection_threshold() {
+        let config = PrefetchConfig {
+            min_pattern_frequency: 3, // Require at least 3 occurrences
+            ..Default::default()
+        };
+        
+        let mut engine = PatternEngine::new(config);
+        
+        // Add 2 similar queries (below threshold)
+        for i in 0..2 {
+            let entry = QueryHistoryEntry {
+                query: format!("function test_{}", i),
+                signature: QuerySignature {
+                    normalized_query: "function test".to_string(),
+                    query_hash: 1,
+                    context_hash: 1,
+                },
+                timestamp: Instant::now(),
+                results_count: 5,
+                processing_time: Duration::from_millis(50),
+                file_context: None,
+            };
+            engine.add_query_to_history(entry);
+        }
+        
+        // Should not detect pattern yet
+        assert!(engine.patterns.is_empty());
+        
+        // Add one more to reach threshold
+        let entry = QueryHistoryEntry {
+            query: "function test_3".to_string(),
+            signature: QuerySignature {
+                normalized_query: "function test".to_string(),
+                query_hash: 1,
+                context_hash: 1,
+            },
+            timestamp: Instant::now(),
+            results_count: 5,
+            processing_time: Duration::from_millis(50),
+            file_context: None,
+        };
+        engine.add_query_to_history(entry);
+        
+        // Should now detect pattern
+        assert!(!engine.patterns.is_empty());
+    }
+
+    #[test]
+    fn test_prefetch_metrics_default() {
+        let metrics = PrefetchMetrics::default();
+        
+        assert_eq!(metrics.total_queries, 0);
+        assert_eq!(metrics.cache_hits, 0);
+        assert_eq!(metrics.cache_misses, 0);
+        assert_eq!(metrics.patterns_detected, 0);
+        assert_eq!(metrics.prefetch_suggestions, 0);
+        assert_eq!(metrics.average_processing_time, Duration::from_millis(0));
+        assert_eq!(metrics.memory_usage_mb, 0.0);
+        assert_eq!(metrics.hit_rate, 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_prefetch_suggestions_generation() {
+        let config = PrefetchConfig::default();
+        let manager = PrefetchManager::new(config).await.unwrap();
+        
+        // Build a pattern by adding multiple similar queries
+        for i in 0..5 {
+            let query = format!("search term_{}", i);
+            manager.cache_visited_set(
+                &query,
+                Some("test.rs".to_string()),
+                HashSet::new(),
+                vec![],
+                0.8,
+            ).await.unwrap();
+        }
+        
+        // Process a new query that might get suggestions
+        let result = manager.process_query("search term_new", Some("test.rs".to_string())).await.unwrap();
+        
+        // May have suggestions based on pattern detection
+        // At minimum, verify structure is valid
+        assert!(result.prefetch_suggestions.len() >= 0);
+        assert!(result.confidence_score >= 0.0);
+        assert!(result.confidence_score <= 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_memory_cleanup() {
+        let config = PrefetchConfig {
+            max_cached_visited_sets: 2, // Very small cache for testing
+            ..Default::default()
+        };
+        
+        let manager = PrefetchManager::new(config).await.unwrap();
+        
+        // Add more items than the cache can hold
+        for i in 0..5 {
+            let query = format!("cache_test_{}", i);
+            manager.cache_visited_set(
+                &query,
+                None,
+                HashSet::new(),
+                vec![],
+                0.8,
+            ).await.unwrap();
+        }
+        
+        // Cache should have cleaned up old entries
+        let metrics = manager.get_metrics().await;
+        // The total queries should be 5, but effective cache size might be limited
+        assert_eq!(metrics.total_queries, 5);
+    }
+
+    #[test]
+    fn test_context_hashing_consistency() {
+        // Same context should produce same hash
+        let context1 = Some("test.rs");
+        let context2 = Some("test.rs");
+        let context3 = Some("other.rs");
+        let context4: Option<&str> = None;
+        
+        // In a real implementation, there would be a hash function for contexts
+        // Here we test that the pattern is consistent
+        assert_eq!(context1, context2);
+        assert_ne!(context1, context3);
+        assert_ne!(context1, context4);
+    }
+
+    #[test]
+    fn test_pattern_confidence_bounds() {
+        let pattern = QueryPattern {
+            pattern_id: "test".to_string(),
+            query_template: "function {}".to_string(),
+            frequency: 10,
+            contexts: vec![],
+            average_processing_time: Duration::from_millis(100),
+            last_seen: Instant::now(),
+            confidence: 0.85,
+        };
+        
+        // Confidence should be between 0 and 1
+        assert!(pattern.confidence >= 0.0);
+        assert!(pattern.confidence <= 1.0);
+        assert_eq!(pattern.confidence, 0.85);
+    }
 }

@@ -1,0 +1,4283 @@
+{
+  "current_night": 1,
+  "consecutive_passes": 0,
+  "nights_data": [
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:12:22.930Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.930Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 4,
+        "passing_slices": 4,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:12:22.932Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.932Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:12:22.933Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.933Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:12:22.947Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.947Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 2,
+      "timestamp": "2025-09-09T17:12:22.948Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.948Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 3,
+      "timestamp": "2025-09-09T17:12:22.950Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.950Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:12:22.953Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:12:22.953Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:14:29.026Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.026Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 4,
+        "passing_slices": 4,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:14:29.030Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.030Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:14:29.031Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.031Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:14:29.044Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.044Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 2,
+      "timestamp": "2025-09-09T17:14:29.045Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.045Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 3,
+      "timestamp": "2025-09-09T17:14:29.046Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.047Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:14:29.050Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:14:29.050Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:25:13.352Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.352Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 4,
+        "passing_slices": 4,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:25:13.356Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.356Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:25:13.357Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.357Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:25:13.358Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.358Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 2,
+      "timestamp": "2025-09-09T17:25:13.360Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.360Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 3,
+      "timestamp": "2025-09-09T17:25:13.361Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.361Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    },
+    {
+      "night": 1,
+      "timestamp": "2025-09-09T17:25:13.362Z",
+      "version": "1.0.0-rc.1",
+      "duration_minutes": 0,
+      "quality_gates_report": {
+        "overall_passed": false,
+        "timestamp": "2025-09-09T17:25:13.362Z",
+        "version": "1.0.0-rc.1",
+        "environment": "production",
+        "gates": [
+          {
+            "gate": "semver_compliance",
+            "passed": true,
+            "value": "1.0.0-rc.1",
+            "threshold": "v1.0.0 format",
+            "message": "Version follows semantic versioning",
+            "severity": "critical"
+          },
+          {
+            "gate": "compatibility_check",
+            "passed": true,
+            "value": "v0.9.0, v0.9.1, v0.9.2",
+            "threshold": "All previous versions",
+            "message": "Backward compatibility verified",
+            "severity": "critical"
+          },
+          {
+            "gate": "upgrade_documentation",
+            "passed": false,
+            "value": "UPGRADE.md exists",
+            "threshold": "Required",
+            "message": "Upgrade documentation provided",
+            "severity": "critical"
+          },
+          {
+            "gate": "security_artifacts",
+            "passed": true,
+            "value": "0 vulnerabilities",
+            "threshold": "0 critical issues",
+            "message": "Security scanning passed",
+            "severity": "critical"
+          },
+          {
+            "gate": "stage_a_p95_latency",
+            "passed": true,
+            "value": 4.2,
+            "threshold": 5,
+            "message": "Stage-A p95 latency within 5ms budget",
+            "severity": "critical"
+          },
+          {
+            "gate": "e2e_p95_regression",
+            "passed": true,
+            "value": "+3.2%",
+            "threshold": "+10%",
+            "message": "E2E p95 latency regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "tail_latency_compliance",
+            "passed": true,
+            "value": "1.9x",
+            "threshold": "2.0x",
+            "message": "Tail latency within acceptable bounds (p99 ≤ 2× p95)",
+            "severity": "critical"
+          },
+          {
+            "gate": "span_coverage",
+            "passed": true,
+            "value": 98.3,
+            "threshold": 98,
+            "message": "Span coverage meets 98% requirement",
+            "severity": "critical"
+          },
+          {
+            "gate": "quality_improvement",
+            "passed": true,
+            "value": "Δ nDCG@10 +2.1%",
+            "threshold": "≥+2% or unchanged with perf win",
+            "message": "Quality metrics meet improvement requirements",
+            "severity": "critical"
+          },
+          {
+            "gate": "recall_at_50",
+            "passed": true,
+            "value": 0.87,
+            "threshold": 0.85,
+            "message": "Recall@50 maintains baseline performance",
+            "severity": "critical"
+          },
+          {
+            "gate": "consistency_tripwires",
+            "passed": true,
+            "value": 0,
+            "threshold": 0,
+            "message": "No consistency violations detected",
+            "severity": "critical"
+          },
+          {
+            "gate": "lsif_coverage_tripwires",
+            "passed": true,
+            "value": "2% regression",
+            "threshold": "≤5%",
+            "message": "LSIF coverage regression within acceptable limits",
+            "severity": "critical"
+          },
+          {
+            "gate": "test_suite_status",
+            "passed": true,
+            "value": "12/12 slices",
+            "threshold": "All slices green",
+            "message": "Full test suite passing across all slices",
+            "severity": "critical"
+          },
+          {
+            "gate": "documentation_live",
+            "passed": true,
+            "value": "Live at docs.lens.example.com",
+            "threshold": "Live and accessible",
+            "message": "Documentation is live and accessible",
+            "severity": "critical"
+          },
+          {
+            "gate": "alerts_configuration",
+            "passed": true,
+            "value": "2% false positive rate",
+            "threshold": "<5%",
+            "message": "Alerts properly configured with low false positive rate",
+            "severity": "critical"
+          },
+          {
+            "gate": "kill_switch_validation",
+            "passed": true,
+            "value": "Enabled",
+            "threshold": "Enabled",
+            "message": "Kill-switch flags operational and tested",
+            "severity": "critical"
+          },
+          {
+            "gate": "on_call_rota",
+            "passed": true,
+            "value": "Active - Primary: @platform-team, Secondary: @security-team",
+            "threshold": "Active",
+            "message": "On-call rotation is active and responsive",
+            "severity": "critical"
+          }
+        ],
+        "metrics_summary": {
+          "gates_total": 17,
+          "gates_passed": 16,
+          "gates_failed": 1,
+          "critical_failures": 1
+        },
+        "promotion_eligible": false,
+        "blocking_issues": [
+          "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+        ],
+        "recommendations": [
+          "Address upgrade_documentation failure before promotion"
+        ]
+      },
+      "performance_metrics": {
+        "stage_a_p95": 4.1,
+        "stage_b_p95": 285,
+        "stage_c_p95": 295,
+        "e2e_p95": 98,
+        "tail_latency_ratio": 1.8
+      },
+      "quality_metrics": {
+        "span_coverage": 98.2,
+        "lsif_coverage": 96.3,
+        "ndcg_at_10_delta": 2.3,
+        "recall_at_50": 0.873,
+        "consistency_violations": 0
+      },
+      "operational_metrics": {
+        "uptime_percent": 99.95,
+        "error_rate_percent": 0.8,
+        "alert_count": 2,
+        "incident_count": 0
+      },
+      "slice_validation": {
+        "total_slices": 15,
+        "passing_slices": 15,
+        "failed_slices": [],
+        "repo_types_tested": [
+          "backend",
+          "frontend",
+          "monorepo"
+        ],
+        "languages_tested": [
+          "typescript",
+          "javascript",
+          "python",
+          "go",
+          "rust"
+        ]
+      },
+      "validation_passed": false,
+      "blocking_issues": [
+        "upgrade_documentation: Upgrade documentation provided (UPGRADE.md exists vs Required)"
+      ]
+    }
+  ],
+  "sign_off_eligible": false,
+  "started_at": "2025-09-09T17:12:22.930Z",
+  "last_validation": "2025-09-09T17:25:13.362Z",
+  "promotion_ready": false,
+  "final_recommendation": "CONTINUE_VALIDATION"
+}

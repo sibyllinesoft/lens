@@ -385,3 +385,312 @@ impl Default for ResultFusion {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::search::SearchResult;
+
+    fn create_test_search_result(file_path: &str, line_number: u32, score: f64) -> SearchResult {
+        SearchResult {
+            file_path: file_path.to_string(),
+            line_number,
+            column: 1,
+            content: format!("test content for {}", file_path),
+            score,
+            result_type: crate::search::SearchResultType::TextMatch,
+            language: Some("rust".to_string()),
+            context_lines: Some(vec![]),
+            lsp_metadata: None,
+        }
+    }
+
+    fn create_test_system_results(system_name: &str, results: Vec<SearchResult>) -> SystemResults {
+        SystemResults {
+            system_name: system_name.to_string(),
+            results,
+            latency_ms: 50.0,
+            confidence: 0.8,
+        }
+    }
+
+    #[test]
+    fn test_result_fusion_creation() {
+        let fusion = ResultFusion::new();
+        assert_eq!(fusion.strategies.len(), 4);
+        assert_eq!(fusion.weights.len(), 3);
+        assert_eq!(fusion.weights.get("lex"), Some(&0.3));
+        assert_eq!(fusion.weights.get("symbols"), Some(&0.4));
+        assert_eq!(fusion.weights.get("semantic"), Some(&0.3));
+    }
+
+    #[test]
+    fn test_result_fusion_add_strategy() {
+        let mut fusion = ResultFusion::new();
+        let initial_count = fusion.strategies.len();
+        
+        fusion.add_strategy(Box::new(CombSumStrategy::new()));
+        assert_eq!(fusion.strategies.len(), initial_count + 1);
+    }
+
+    #[test]
+    fn test_result_fusion_set_weight() {
+        let mut fusion = ResultFusion::new();
+        fusion.set_weight("new_system".to_string(), 0.5);
+        assert_eq!(fusion.weights.get("new_system"), Some(&0.5));
+    }
+
+    #[tokio::test]
+    async fn test_fuse_empty_results() {
+        let fusion = ResultFusion::new();
+        let results = fusion.fuse_results(&[]).await.unwrap();
+        assert!(results.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_fuse_single_system() {
+        let fusion = ResultFusion::new();
+        let search_results = vec![
+            create_test_search_result("file1.rs", 10, 0.9),
+            create_test_search_result("file2.rs", 20, 0.7),
+        ];
+        let system_results = vec![create_test_system_results("lex", search_results)];
+        
+        let fused = fusion.fuse_results(&system_results).await.unwrap();
+        assert!(!fused.is_empty());
+        
+        // Check that fusion scores are assigned
+        for result in &fused {
+            assert!(result.fusion_score > 0.0);
+            assert_eq!(result.contributing_systems.len(), 1);
+            assert_eq!(result.contributing_systems[0], "lex");
+        }
+    }
+
+    #[tokio::test]
+    async fn test_fuse_multiple_systems() {
+        let fusion = ResultFusion::new();
+        
+        let lex_results = vec![
+            create_test_search_result("file1.rs", 10, 0.9),
+            create_test_search_result("file2.rs", 20, 0.8),
+        ];
+        let symbols_results = vec![
+            create_test_search_result("file1.rs", 10, 0.8), // Same file/line as lex
+            create_test_search_result("file3.rs", 30, 0.7),
+        ];
+        
+        let system_results = vec![
+            create_test_system_results("lex", lex_results),
+            create_test_system_results("symbols", symbols_results),
+        ];
+        
+        let fused = fusion.fuse_results(&system_results).await.unwrap();
+        assert!(!fused.is_empty());
+        
+        // Check for results from both systems
+        let has_overlapping_result = fused.iter().any(|r| 
+            r.result.file_path == "file1.rs" && r.result.line_number == 10
+        );
+        assert!(has_overlapping_result);
+    }
+
+    #[test]
+    fn test_select_best_fusion() {
+        let fusion = ResultFusion::new();
+        let search_result = create_test_search_result("file1.rs", 10, 0.9);
+        
+        let fused_results = vec![
+            FusedResult {
+                result: search_result.clone(),
+                fusion_score: 0.8,
+                contributing_systems: vec!["lex".to_string()],
+                fusion_strategy: "combsum".to_string(),
+                confidence: 0.8,
+            },
+            FusedResult {
+                result: search_result.clone(),
+                fusion_score: 0.9, // Higher score
+                contributing_systems: vec!["symbols".to_string()],
+                fusion_strategy: "combmnz".to_string(),
+                confidence: 0.9,
+            },
+        ];
+        
+        let best = fusion.select_best_fusion(fused_results);
+        assert_eq!(best.len(), 1);
+        assert_eq!(best[0].fusion_score, 0.9);
+        assert_eq!(best[0].fusion_strategy, "combmnz");
+    }
+
+    #[test]
+    fn test_combsum_strategy() {
+        let strategy = CombSumStrategy::new();
+        assert_eq!(strategy.name(), "combsum");
+    }
+
+    #[tokio::test]
+    async fn test_combsum_fuse() {
+        let strategy = CombSumStrategy::new();
+        let system_results = vec![
+            create_test_system_results("system1", vec![
+                create_test_search_result("file1.rs", 10, 1.0),
+                create_test_search_result("file2.rs", 20, 0.8),
+            ]),
+            create_test_system_results("system2", vec![
+                create_test_search_result("file1.rs", 10, 0.6), // Same file, should combine
+                create_test_search_result("file3.rs", 30, 1.0),
+            ]),
+        ];
+        
+        let fused = strategy.fuse(&system_results).await.unwrap();
+        assert!(!fused.is_empty());
+        
+        // Check that scores are combined for overlapping results
+        let file1_result = fused.iter().find(|r| r.file_path == "file1.rs" && r.line_number == 10);
+        assert!(file1_result.is_some());
+        assert!(file1_result.unwrap().score > 1.0); // Should be sum of normalized scores
+    }
+
+    #[test]
+    fn test_combsum_confidence() {
+        let strategy = CombSumStrategy::new();
+        let system_results = vec![
+            SystemResults {
+                system_name: "system1".to_string(),
+                results: vec![],
+                latency_ms: 50.0,
+                confidence: 0.8,
+            },
+            SystemResults {
+                system_name: "system2".to_string(),
+                results: vec![],
+                latency_ms: 60.0,
+                confidence: 0.9,
+            },
+        ];
+        
+        let confidence = strategy.confidence(&system_results);
+        assert!(confidence > 0.8); // Should include agreement bonus
+        assert!(confidence <= 1.0);
+        
+        // Test empty results
+        assert_eq!(strategy.confidence(&[]), 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_combmnz_fuse() {
+        let strategy = CombMnzStrategy::new();
+        assert_eq!(strategy.name(), "combmnz");
+        
+        let system_results = vec![
+            create_test_system_results("system1", vec![
+                create_test_search_result("file1.rs", 10, 1.0),
+            ]),
+            create_test_system_results("system2", vec![
+                create_test_search_result("file1.rs", 10, 0.8), // Same result in both systems
+            ]),
+        ];
+        
+        let fused = strategy.fuse(&system_results).await.unwrap();
+        assert!(!fused.is_empty());
+        
+        // CombMNZ should boost scores for results found in multiple systems
+        let result = &fused[0];
+        assert!(result.score > 1.0); // Score boosted by multiple systems
+    }
+
+    #[test]
+    fn test_combmnz_confidence() {
+        let strategy = CombMnzStrategy::new();
+        let system_results = vec![
+            SystemResults {
+                system_name: "system1".to_string(),
+                results: vec![],
+                latency_ms: 50.0,
+                confidence: 0.8,
+            },
+            SystemResults {
+                system_name: "system2".to_string(),
+                results: vec![],
+                latency_ms: 60.0,
+                confidence: 0.8,
+            },
+        ];
+        
+        let confidence = strategy.confidence(&system_results);
+        assert!(confidence > 0.8); // Should include system bonus
+        assert_eq!(strategy.confidence(&[]), 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_rank_based_fusion() {
+        let strategy = RankBasedFusion::new();
+        assert_eq!(strategy.name(), "rank_fusion");
+        assert_eq!(strategy.confidence(&[]), 0.8);
+        
+        let system_results = vec![
+            create_test_system_results("system1", vec![
+                create_test_search_result("file1.rs", 10, 1.0), // Rank 1
+                create_test_search_result("file2.rs", 20, 0.9), // Rank 2
+            ]),
+        ];
+        
+        let fused = strategy.fuse(&system_results).await.unwrap();
+        assert_eq!(fused.len(), 2);
+        
+        // Higher ranked results should have higher reciprocal rank scores
+        assert!(fused[0].score >= fused[1].score);
+        assert_eq!(fused[0].score, 1.0); // 1/(0+1)
+        assert_eq!(fused[1].score, 0.5); // 1/(1+1)
+    }
+
+    #[tokio::test]
+    async fn test_borda_count_fusion() {
+        let strategy = BordaCountFusion::new();
+        assert_eq!(strategy.name(), "borda_count");
+        assert_eq!(strategy.confidence(&[]), 0.75);
+        
+        let system_results = vec![
+            create_test_system_results("system1", vec![
+                create_test_search_result("file1.rs", 10, 1.0), // Rank 1: score = 2
+                create_test_search_result("file2.rs", 20, 0.9), // Rank 2: score = 1
+            ]),
+        ];
+        
+        let fused = strategy.fuse(&system_results).await.unwrap();
+        assert_eq!(fused.len(), 2);
+        
+        // Borda count: (num_results - rank)
+        assert_eq!(fused[0].score, 2.0); // 2 - 0
+        assert_eq!(fused[1].score, 1.0); // 2 - 1
+    }
+
+    #[test]
+    fn test_system_results_creation() {
+        let results = vec![create_test_search_result("test.rs", 1, 0.9)];
+        let system_results = create_test_system_results("test_system", results);
+        
+        assert_eq!(system_results.system_name, "test_system");
+        assert_eq!(system_results.results.len(), 1);
+        assert_eq!(system_results.latency_ms, 50.0);
+        assert_eq!(system_results.confidence, 0.8);
+    }
+
+    #[test]
+    fn test_fused_result_creation() {
+        let search_result = create_test_search_result("test.rs", 1, 0.9);
+        let fused_result = FusedResult {
+            result: search_result,
+            fusion_score: 1.5,
+            contributing_systems: vec!["system1".to_string(), "system2".to_string()],
+            fusion_strategy: "combsum".to_string(),
+            confidence: 0.9,
+        };
+        
+        assert_eq!(fused_result.fusion_score, 1.5);
+        assert_eq!(fused_result.contributing_systems.len(), 2);
+        assert_eq!(fused_result.fusion_strategy, "combsum");
+        assert_eq!(fused_result.confidence, 0.9);
+    }
+}

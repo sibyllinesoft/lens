@@ -3,7 +3,7 @@
  * Tests four production-ready systems for advanced search capabilities
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import {
   type SessionState,
   type SpanReference,

@@ -3,7 +3,7 @@
  * Tests LensConfig interface and PRODUCTION_CONFIG constants
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import { PRODUCTION_CONFIG, type LensConfig } from '../config.js';
 
 describe('LensConfig Type', () => {

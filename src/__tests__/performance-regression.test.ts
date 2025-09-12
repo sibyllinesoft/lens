@@ -3,23 +3,23 @@
  * Tests latency targets, throughput benchmarks, and statistical significance of performance changes
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { SearchEngine } from '../api/search-engine.js';
 import { BenchmarkSuite } from '../../benchmarks/src/suite-runner.js';
 import { StatisticalValidator, PerformanceMetrics, BenchmarkResult } from '../../benchmarks/src/statistical-validator.js';
 
 // Mock telemetry for performance testing
-vi.mock('../telemetry/tracer.js', () => ({
+mock('../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      setStatus: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      setStatus: jest.fn(),
+      end: jest.fn(),
     })),
-    startSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      setStatus: vi.fn(),
-      end: vi.fn(),
+    startSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      setStatus: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
@@ -423,7 +423,7 @@ describe('Performance Regression Tests', () => {
   describe('Statistical Significance Testing', () => {
     it('should detect performance improvements with statistical confidence', async () => {
       // Simulate performance improvement by artificially speeding up some operations
-      const mockImprovedSearch = vi.fn().mockImplementation(async (request) => {
+      const mockImprovedSearch = jest.fn().mockImplementation(async (request) => {
         const start = performance.now();
         const result = await searchEngine.search(request);
         const originalDuration = performance.now() - start;

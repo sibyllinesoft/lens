@@ -349,11 +349,12 @@ impl StressHarness {
         }
         
         // Monitor CPU utilization during stress test
-        let cpu_monitor_handle = tokio::spawn(async {
+        let duration_clone = duration;
+        let cpu_monitor_handle = tokio::spawn(async move {
             let mut peak_cpu = 0.0f32;
             let start = Instant::now();
             
-            while start.elapsed() < duration {
+            while start.elapsed() < duration_clone {
                 let current_cpu = Self::measure_cpu_utilization().await;
                 peak_cpu = peak_cpu.max(current_cpu);
                 tokio::time::sleep(Duration::from_millis(100)).await;

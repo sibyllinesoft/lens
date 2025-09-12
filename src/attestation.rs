@@ -18,13 +18,10 @@ pub fn verify_real_mode() -> Result<()> {
 /// Generate build information for handshake
 pub fn get_build_info() -> crate::proto::BuildInfoResponse {
     crate::proto::BuildInfoResponse {
-        git_sha: built_info::GIT_VERSION.unwrap_or("unknown").to_string(),
-        dirty_flag: built_info::GIT_DIRTY.unwrap_or(false),
+        version: env!("CARGO_PKG_VERSION").to_string(),
+        commit: built_info::GIT_VERSION.unwrap_or("unknown").to_string(),
         build_timestamp: env!("BUILD_TIMESTAMP", "unknown").to_string(),
-        rustc_version: built_info::RUSTC_VERSION.to_string(), 
-        target_triple: format!("{}-{}", built_info::CFG_TARGET_ARCH, built_info::CFG_OS),
-        feature_flags: vec![], // TODO: Add feature detection
-        mode: "real".to_string(), // NEVER "mock"
+        features: "default,lsp,benchmarks,attestation".to_string(), // Static for now
     }
 }
 
@@ -194,9 +191,15 @@ pub struct HandshakeResponse {
 mod tests {
     use super::*;
     use std::env;
+    use std::sync::Mutex;
+    
+    // Shared mutex to prevent race conditions with environment variables across all attestation tests
+    static ATTESTATION_ENV_MUTEX: Mutex<()> = Mutex::new(());
 
     #[test]
     fn test_verify_real_mode_default() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         // Default mode should be "real"
         env::remove_var("LENS_MODE");
         assert!(verify_real_mode().is_ok());
@@ -204,12 +207,18 @@ mod tests {
 
     #[test]
     fn test_verify_real_mode_explicit() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         env::set_var("LENS_MODE", "real");
         assert!(verify_real_mode().is_ok());
+        // Clean up
+        env::remove_var("LENS_MODE");
     }
 
     #[test]
     fn test_verify_real_mode_rejects_mock() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         env::set_var("LENS_MODE", "mock");
         let result = verify_real_mode();
         assert!(result.is_err());
@@ -221,6 +230,8 @@ mod tests {
 
     #[test]
     fn test_verify_real_mode_rejects_invalid() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         env::set_var("LENS_MODE", "test");
         let result = verify_real_mode();
         assert!(result.is_err());
@@ -233,10 +244,10 @@ mod tests {
     #[test]
     fn test_get_build_info() {
         let info = get_build_info();
-        assert_eq!(info.mode, "real");
-        assert!(!info.git_sha.is_empty());
-        assert!(!info.rustc_version.is_empty());
-        assert!(!info.target_triple.is_empty());
+        assert!(!info.version.is_empty());
+        assert!(!info.commit.is_empty());
+        assert!(!info.build_timestamp.is_empty());
+        assert!(!info.features.is_empty());
     }
 
     #[test]
@@ -302,6 +313,8 @@ mod tests {
 
     #[test]
     fn test_verify_integrity_clean_environment() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         // Ensure clean environment
         let suspicious_vars = ["LENS_MOCK", "LENS_SIMULATE", "LENS_FAKE", "LENS_MODE"];
         for var in suspicious_vars {
@@ -322,6 +335,8 @@ mod tests {
 
     #[test]
     fn test_verify_integrity_with_violations() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         // Set up violation condition
         env::set_var("LENS_MOCK", "true");
         
@@ -347,7 +362,7 @@ mod tests {
         assert!(!response.response_hash.is_empty());
         assert_eq!(response.response_hash.len(), 64);
         assert!(response.attestation_enabled);
-        assert_eq!(response.build_info.mode, "real");
+        assert!(!response.build_info.version.is_empty());
     }
 
     #[test]
@@ -374,6 +389,8 @@ mod tests {
 
     #[test]
     fn test_verify_environment_clean() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         // Clean environment
         let suspicious_vars = ["LENS_MOCK", "LENS_SIMULATE", "LENS_FAKE"];
         for var in suspicious_vars {
@@ -386,6 +403,8 @@ mod tests {
 
     #[test]
     fn test_verify_environment_suspicious() {
+        let _lock = ATTESTATION_ENV_MUTEX.lock().unwrap();
+        
         env::set_var("LENS_MOCK", "true");
         
         let manager = AttestationManager::new(true).unwrap();
@@ -430,8 +449,8 @@ mod tests {
         // Verify all fields are properly set
         assert!(!response.response_hash.is_empty());
         assert!(response.attestation_enabled);
-        assert_eq!(response.build_info.mode, "real");
-        assert!(!response.build_info.git_sha.is_empty());
-        assert!(!response.build_info.rustc_version.is_empty());
+        assert!(!response.build_info.version.is_empty());
+        assert!(!response.build_info.commit.is_empty());
+        assert!(!response.build_info.build_timestamp.is_empty());
     }
 }

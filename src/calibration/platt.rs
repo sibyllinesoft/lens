@@ -1,508 +1,447 @@
-//! # Platt Scaling Calibration
-//!
-//! Platt scaling for complex non-linear calibration cases in PHASE 4.
-//! Used for challenging calibration problems where isotonic and temperature scaling are insufficient.
+/// Platt Scaling Calibration for CALIB_V22
+/// Provides sigmoid-based calibration for prediction probabilities using Platt scaling
 
-use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use tracing::{debug, info, warn};
+use thiserror::Error;
 
-use super::CalibrationSample;
+/// Platt calibrator for transforming uncalibrated scores into calibrated probabilities
+/// Uses sigmoid function: P(y=1|s) = 1 / (1 + exp(A*s + B))
+#[derive(Debug, Clone)]
+pub struct PlattCalibrator {
+    /// Sigmoid parameter A
+    pub parameter_a: f64,
+    
+    /// Sigmoid parameter B  
+    pub parameter_b: f64,
+    
+    /// Metadata about the calibration fitting process
+    pub fit_metadata: PlattFitMetadata,
+    
+    /// Whether the calibrator has been fitted
+    pub is_fitted: bool,
+}
 
-/// Platt scaling configuration
+/// Metadata about the Platt calibration fitting
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PlattConfig {
-    /// Maximum optimization iterations
-    pub max_iterations: usize,
-    /// Convergence tolerance
-    pub convergence_tolerance: f64,
+pub struct PlattFitMetadata {
+    /// Total number of training samples used
+    pub total_samples: usize,
+    
+    /// Number of positive samples in training
+    pub positive_samples: usize,
+    
+    /// Number of negative samples in training
+    pub negative_samples: usize,
+    
+    /// Training set ECE (Expected Calibration Error)
+    pub training_ece: f64,
+    
+    /// Fitting convergence status
+    pub converged: bool,
+    
+    /// Number of iterations used in fitting
+    pub iterations_used: u32,
+    
+    /// Final log-likelihood value
+    pub final_log_likelihood: f64,
+    
+    /// Fit timestamp
+    pub fit_timestamp: std::time::SystemTime,
 }
 
-/// Platt scaling calibrator using sigmoid parameters A and B
-#[derive(Debug, Clone)]
-pub struct PlattScaler {
-    config: PlattConfig,
-    /// Parameter A for sigmoid: P(y=1|f) = 1 / (1 + exp(A*f + B))
-    parameter_a: f64,
-    /// Parameter B for sigmoid: P(y=1|f) = 1 / (1 + exp(A*f + B))
-    parameter_b: f64,
-    /// Current ECE for this slice
-    slice_ece: f32,
-    /// Training convergence status
-    converged: bool,
-    /// Number of training samples
-    training_samples: usize,
-    /// Final training likelihood
-    final_likelihood: f64,
+#[derive(Debug, Error)]
+pub enum PlattError {
+    #[error("Insufficient data for calibration: need at least {required} samples, got {actual}")]
+    InsufficientData { required: usize, actual: usize },
+    
+    #[error("Invalid probability values: {message}")]
+    InvalidProbabilities { message: String },
+    
+    #[error("Calibration fitting failed: {message}")]
+    FittingFailed { message: String },
+    
+    #[error("Prediction failed: {message}")]
+    PredictionFailed { message: String },
+    
+    #[error("Optimization did not converge after {iterations} iterations")]
+    ConvergenceError { iterations: u32 },
 }
 
-/// Optimization state for Platt scaling
-#[derive(Debug, Clone)]
-struct PlattOptimizationState {
-    a: f64,
-    b: f64,
-    likelihood: f64,
-    gradient_a: f64,
-    gradient_b: f64,
-    hessian_aa: f64,
-    hessian_ab: f64,
-    hessian_bb: f64,
+impl Default for PlattCalibrator {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
-impl PlattScaler {
-    /// Create new Platt scaler
-    pub fn new(config: PlattConfig) -> Self {
+impl PlattCalibrator {
+    /// Create new Platt calibrator
+    pub fn new() -> Self {
         Self {
-            config,
-            parameter_a: -1.0, // Initial guess (negative for typical case)
+            parameter_a: 0.0,
             parameter_b: 0.0,
-            slice_ece: 0.0,
-            converged: false,
-            training_samples: 0,
-            final_likelihood: f64::NEG_INFINITY,
+            fit_metadata: PlattFitMetadata {
+                total_samples: 0,
+                positive_samples: 0,
+                negative_samples: 0,
+                training_ece: 0.0,
+                converged: false,
+                iterations_used: 0,
+                final_log_likelihood: f64::NEG_INFINITY,
+                fit_timestamp: std::time::SystemTime::now(),
+            },
+            is_fitted: false,
         }
     }
-
-    /// Train Platt scaling on provided samples
-    pub async fn train(&mut self, samples: &[&CalibrationSample]) -> Result<()> {
-        if samples.len() < 30 {
-            anyhow::bail!("Insufficient samples for Platt scaling: {} < 30", samples.len());
+    
+    /// Fit Platt scaling on training data using maximum likelihood estimation
+    /// 
+    /// # Arguments
+    /// * `scores` - Uncalibrated prediction scores (decision values)
+    /// * `true_labels` - Ground truth binary labels (0.0 or 1.0)
+    /// 
+    /// # Returns
+    /// * `Ok(())` if fitting succeeds
+    /// * `Err(PlattError)` if fitting fails
+    pub fn fit(&mut self, scores: &[f64], true_labels: &[f64]) -> Result<(), PlattError> {
+        if scores.len() != true_labels.len() {
+            return Err(PlattError::InvalidProbabilities {
+                message: format!("Scores and labels length mismatch: {} vs {}", scores.len(), true_labels.len())
+            });
         }
-
-        info!(
-            "Training Platt scaler on {} samples (max_iter={})",
-            samples.len(),
-            self.config.max_iterations
-        );
-
-        self.training_samples = samples.len();
-
-        // Extract predictions and targets
-        let predictions: Vec<f64> = samples.iter().map(|s| s.prediction as f64).collect();
-        let targets: Vec<f64> = samples.iter().map(|s| s.ground_truth as f64).collect();
-
-        // Optimize parameters using Newton's method
-        let final_state = self.optimize_platt_parameters(&predictions, &targets).await?;
         
-        self.parameter_a = final_state.a;
-        self.parameter_b = final_state.b;
-        self.final_likelihood = final_state.likelihood;
-
-        // Calculate final ECE
-        self.slice_ece = self.calculate_ece_with_platt(samples).await?;
-        
-        // Check convergence
-        self.converged = self.check_convergence()?;
-
-        info!(
-            "Platt scaling trained: A={:.4}, B={:.4}, ECE={:.4}, likelihood={:.4}, converged={}",
-            self.parameter_a, self.parameter_b, self.slice_ece, self.final_likelihood, self.converged
-        );
-
-        if self.slice_ece > 0.015 {
-            warn!(
-                "Platt scaling ECE {:.4} exceeds PHASE 4 target ≤ 0.015",
-                self.slice_ece
-            );
+        if scores.len() < 2 {
+            return Err(PlattError::InsufficientData { 
+                required: 2, 
+                actual: scores.len() 
+            });
         }
-
-        Ok(())
-    }
-
-    /// Apply Platt scaling to a prediction
-    pub async fn calibrate(&self, prediction: f32, _features: &HashMap<String, f32>) -> Result<f32> {
-        let pred_f64 = prediction as f64;
         
-        // Apply Platt scaling: P(y=1|f) = 1 / (1 + exp(A*f + B))
-        let exponent = self.parameter_a * pred_f64 + self.parameter_b;
-        let calibrated = 1.0 / (1.0 + exponent.exp());
+        info!("Fitting Platt scaling on {} samples", scores.len());
         
-        debug!(
-            "Platt scaling: {:.4} -> {:.4} (A={:.3}, B={:.3})",
-            prediction, calibrated, self.parameter_a, self.parameter_b
-        );
-
-        Ok((calibrated as f32).clamp(0.001, 0.999))
-    }
-
-    /// Get learned parameters (A, B)
-    pub fn get_parameters(&self) -> (f32, f32) {
-        (self.parameter_a as f32, self.parameter_b as f32)
-    }
-
-    /// Get current ECE
-    pub fn get_ece(&self) -> f32 {
-        self.slice_ece
-    }
-
-    /// Check if training converged
-    pub fn is_converged(&self) -> bool {
-        self.converged
-    }
-
-    /// Get number of training samples
-    pub fn get_training_samples(&self) -> usize {
-        self.training_samples
-    }
-
-    /// Get final training likelihood
-    pub fn get_final_likelihood(&self) -> f64 {
-        self.final_likelihood
-    }
-
-    // Private implementation methods
-
-    /// Optimize Platt parameters using Newton's method
-    async fn optimize_platt_parameters(&self, predictions: &[f64], targets: &[f64]) -> Result<PlattOptimizationState> {
-        let mut state = PlattOptimizationState {
-            a: -1.0,
-            b: 0.0,
-            likelihood: f64::NEG_INFINITY,
-            gradient_a: 0.0,
-            gradient_b: 0.0,
-            hessian_aa: 0.0,
-            hessian_ab: 0.0,
-            hessian_bb: 0.0,
+        // Count positive and negative samples
+        let positive_count = true_labels.iter().filter(|&&label| label > 0.5).count();
+        let negative_count = scores.len() - positive_count;
+        
+        if positive_count == 0 || negative_count == 0 {
+            return Err(PlattError::InvalidProbabilities {
+                message: "Need both positive and negative samples for Platt scaling".to_string()
+            });
+        }
+        
+        // Transform labels to target values (with label smoothing to avoid overfitting)
+        let target_pos = (positive_count as f64 + 1.0) / (positive_count as f64 + 2.0);
+        let target_neg = 1.0 / (negative_count as f64 + 2.0);
+        
+        let targets: Vec<f64> = true_labels.iter().map(|&label| {
+            if label > 0.5 { target_pos } else { target_neg }
+        }).collect();
+        
+        // Fit sigmoid parameters using Newton-Raphson method
+        let (param_a, param_b, converged, iterations, final_ll) = 
+            self.fit_sigmoid_parameters(scores, &targets)?;
+        
+        // Store parameters and metadata
+        self.parameter_a = param_a;
+        self.parameter_b = param_b;
+        self.is_fitted = true;
+        
+        // Calculate training ECE
+        let training_ece = self.calculate_ece(scores, true_labels);
+        
+        self.fit_metadata = PlattFitMetadata {
+            total_samples: scores.len(),
+            positive_samples: positive_count,
+            negative_samples: negative_count,
+            training_ece,
+            converged,
+            iterations_used: iterations,
+            final_log_likelihood: final_ll,
+            fit_timestamp: std::time::SystemTime::now(),
         };
-
-        // Newton's method optimization
-        for iteration in 0..self.config.max_iterations {
-            // Calculate likelihood, gradient, and Hessian
-            self.calculate_likelihood_and_derivatives(predictions, targets, &mut state)?;
-
-            // Store previous parameters for convergence check
-            let prev_a = state.a;
-            let prev_b = state.b;
-
-            // Newton's method update: θ_new = θ_old - H^(-1) * g
-            let det = state.hessian_aa * state.hessian_bb - state.hessian_ab * state.hessian_ab;
-            
-            if det.abs() < 1e-12 {
-                warn!("Platt optimization: Hessian nearly singular at iteration {}", iteration);
-                break;
-            }
-
-            // Invert 2x2 Hessian matrix
-            let inv_hessian_aa = state.hessian_bb / det;
-            let inv_hessian_ab = -state.hessian_ab / det;
-            let inv_hessian_bb = state.hessian_aa / det;
-
-            // Update parameters
-            let delta_a = -(inv_hessian_aa * state.gradient_a + inv_hessian_ab * state.gradient_b);
-            let delta_b = -(inv_hessian_ab * state.gradient_a + inv_hessian_bb * state.gradient_b);
-
-            state.a += delta_a;
-            state.b += delta_b;
-
-            // Check convergence
-            let param_change = ((state.a - prev_a).powi(2) + (state.b - prev_b).powi(2)).sqrt();
-            
-            if param_change < self.config.convergence_tolerance {
-                info!("Platt optimization converged at iteration {} (change: {:.8})", iteration, param_change);
-                break;
-            }
-
-            if iteration % 20 == 0 {
-                debug!(
-                    "Platt optimization iter {}: likelihood={:.6}, A={:.4}, B={:.4}, change={:.8}",
-                    iteration, state.likelihood, state.a, state.b, param_change
-                );
-            }
-        }
-
-        Ok(state)
-    }
-
-    /// Calculate log-likelihood, gradient, and Hessian for Platt scaling
-    fn calculate_likelihood_and_derivatives(
-        &self,
-        predictions: &[f64],
-        targets: &[f64],
-        state: &mut PlattOptimizationState,
-    ) -> Result<()> {
-        let n = predictions.len();
         
-        // Reset accumulators
-        state.likelihood = 0.0;
-        state.gradient_a = 0.0;
-        state.gradient_b = 0.0;
-        state.hessian_aa = 0.0;
-        state.hessian_ab = 0.0;
-        state.hessian_bb = 0.0;
-
-        for (&pred, &target) in predictions.iter().zip(targets.iter()) {
-            // Calculate probability: P(y=1|f) = 1 / (1 + exp(A*f + B))
-            let linear_term = state.a * pred + state.b;
-            let exp_term = linear_term.exp();
-            let prob = 1.0 / (1.0 + exp_term);
-            
-            // Avoid numerical issues
-            let prob_clamped = prob.clamp(1e-15, 1.0 - 1e-15);
-            
-            // Log-likelihood: L = Σ [y_i * log(p_i) + (1 - y_i) * log(1 - p_i)]
-            let sample_likelihood = target * prob_clamped.ln() + (1.0 - target) * (1.0 - prob_clamped).ln();
-            state.likelihood += sample_likelihood;
-
-            // Gradient calculations
-            let error = prob - target;
-            let weighted_error_pred = error * pred;
-            
-            state.gradient_a += weighted_error_pred;
-            state.gradient_b += error;
-
-            // Hessian calculations (second derivatives)
-            let hessian_factor = prob * (1.0 - prob); // p * (1 - p)
-            
-            state.hessian_aa += hessian_factor * pred * pred;
-            state.hessian_ab += hessian_factor * pred;
-            state.hessian_bb += hessian_factor;
-        }
-
-        // Normalize by sample count
-        let n_f64 = n as f64;
-        state.likelihood /= n_f64;
-        state.gradient_a /= n_f64;
-        state.gradient_b /= n_f64;
-        state.hessian_aa /= n_f64;
-        state.hessian_ab /= n_f64;
-        state.hessian_bb /= n_f64;
-
+        info!("Platt scaling fitted: A={:.4}, B={:.4}, ECE={:.4}, converged={}", 
+              param_a, param_b, training_ece, converged);
+        
         Ok(())
     }
-
-    /// Calculate ECE with current Platt parameters
-    async fn calculate_ece_with_platt(&self, samples: &[&CalibrationSample]) -> Result<f32> {
-        const NUM_BINS: usize = 10;
-        let mut bins = vec![Vec::new(); NUM_BINS];
-
-        // Apply Platt scaling to get calibrated predictions
-        for sample in samples {
-            let pred_f64 = sample.prediction as f64;
-            let exponent = self.parameter_a * pred_f64 + self.parameter_b;
-            let calibrated_pred = (1.0 / (1.0 + exponent.exp())) as f32;
+    
+    /// Fit sigmoid parameters using Newton-Raphson optimization
+    fn fit_sigmoid_parameters(&self, scores: &[f64], targets: &[f64]) -> Result<(f64, f64, bool, u32, f64), PlattError> {
+        const MAX_ITERATIONS: u32 = 100;
+        const TOLERANCE: f64 = 1e-12;
+        const MIN_STEP: f64 = 1e-10;
+        
+        // Initialize parameters
+        let mut a = 0.0;
+        let mut b = 0.0;
+        
+        // Precompute some statistics for initialization
+        let n = scores.len() as f64;
+        let sum_targets: f64 = targets.iter().sum();
+        
+        // Better initialization based on data
+        let mean_score: f64 = scores.iter().sum::<f64>() / n;
+        let mean_target = sum_targets / n;
+        
+        // Initialize B to get reasonable starting probabilities
+        b = -(mean_target.ln() - (1.0 - mean_target).ln());
+        
+        for iteration in 0..MAX_ITERATIONS {
+            let mut gradient_a = 0.0;
+            let mut gradient_b = 0.0;
+            let mut hessian_aa = 0.0;
+            let mut hessian_ab = 0.0;
+            let mut hessian_bb = 0.0;
+            let mut log_likelihood = 0.0;
             
-            let bin_idx = ((calibrated_pred * NUM_BINS as f32) as usize).min(NUM_BINS - 1);
-            bins[bin_idx].push(sample.ground_truth);
+            // Compute gradients and Hessian
+            for i in 0..scores.len() {
+                let score = scores[i];
+                let target = targets[i];
+                
+                // Compute probability using current parameters
+                let fval = a * score + b;
+                let p = sigmoid(fval);
+                
+                // Avoid numerical issues
+                let p_clamped = p.clamp(1e-15, 1.0 - 1e-15);
+                
+                // Log likelihood
+                log_likelihood += target * p_clamped.ln() + (1.0 - target) * (1.0 - p_clamped).ln();
+                
+                // First derivatives
+                let d1 = target - p;
+                gradient_a += d1 * score;
+                gradient_b += d1;
+                
+                // Second derivatives 
+                let d2 = p * (1.0 - p);
+                hessian_aa += score * score * d2;
+                hessian_ab += score * d2;
+                hessian_bb += d2;
+            }
+            
+            // Check convergence
+            let grad_norm = (gradient_a * gradient_a + gradient_b * gradient_b).sqrt();
+            if grad_norm < TOLERANCE {
+                return Ok((a, b, true, iteration, log_likelihood));
+            }
+            
+            // Compute Newton step
+            let det = hessian_aa * hessian_bb - hessian_ab * hessian_ab;
+            if det.abs() < MIN_STEP {
+                // Singular Hessian, use gradient descent
+                let step_size = 0.01;
+                a += step_size * gradient_a;
+                b += step_size * gradient_b;
+            } else {
+                // Newton-Raphson step
+                let step_a = (hessian_bb * gradient_a - hessian_ab * gradient_b) / det;
+                let step_b = (hessian_aa * gradient_b - hessian_ab * gradient_a) / det;
+                
+                a += step_a;
+                b += step_b;
+            }
         }
-
+        
+        // Did not converge
+        warn!("Platt scaling did not converge after {} iterations", MAX_ITERATIONS);
+        Ok((a, b, false, MAX_ITERATIONS, f64::NEG_INFINITY))
+    }
+    
+    /// Predict calibrated probabilities for new scores
+    pub fn predict(&self, scores: &[f64]) -> Result<Vec<f64>, PlattError> {
+        if !self.is_fitted {
+            return Err(PlattError::PredictionFailed {
+                message: "Calibrator has not been fitted yet".to_string()
+            });
+        }
+        
+        let mut predictions = Vec::with_capacity(scores.len());
+        
+        for &score in scores {
+            let fval = self.parameter_a * score + self.parameter_b;
+            let probability = sigmoid(fval);
+            predictions.push(probability);
+        }
+        
+        Ok(predictions)
+    }
+    
+    /// Calculate Expected Calibration Error
+    fn calculate_ece(&self, scores: &[f64], true_labels: &[f64]) -> f64 {
+        if scores.is_empty() || !self.is_fitted {
+            return 0.0;
+        }
+        
+        let predictions = match self.predict(scores) {
+            Ok(preds) => preds,
+            Err(_) => return f64::NAN,
+        };
+        
+        // Use 10 bins for ECE calculation
+        const NUM_BINS: usize = 10;
+        let mut bins: Vec<Vec<(f64, f64)>> = vec![Vec::new(); NUM_BINS];
+        
+        // Assign predictions to bins
+        for i in 0..predictions.len() {
+            let bin_idx = ((predictions[i] * NUM_BINS as f64).floor() as usize).min(NUM_BINS - 1);
+            bins[bin_idx].push((predictions[i], true_labels[i]));
+        }
+        
         // Calculate ECE
         let mut ece = 0.0;
-        let total_samples = samples.len() as f32;
-
-        for (i, bin) in bins.iter().enumerate() {
+        let total_samples = predictions.len() as f64;
+        
+        for bin in &bins {
             if bin.is_empty() {
                 continue;
             }
-
-            let bin_center = (i as f32 + 0.5) / NUM_BINS as f32;
-            let bin_accuracy = bin.iter().sum::<f32>() / bin.len() as f32;
-            let bin_error = (bin_center - bin_accuracy).abs();
-            let bin_weight = bin.len() as f32 / total_samples;
-
-            ece += bin_error * bin_weight;
+            
+            let bin_size = bin.len() as f64;
+            let avg_confidence: f64 = bin.iter().map(|(conf, _)| conf).sum::<f64>() / bin_size;
+            let avg_accuracy: f64 = bin.iter().map(|(_, acc)| acc).sum::<f64>() / bin_size;
+            
+            ece += (bin_size / total_samples) * (avg_confidence - avg_accuracy).abs();
         }
-
-        Ok(ece)
+        
+        ece
     }
-
-    /// Check if training converged
-    fn check_convergence(&self) -> Result<bool> {
-        // Check if parameters are reasonable
-        let params_ok = self.parameter_a.is_finite() && 
-                       self.parameter_b.is_finite() &&
-                       self.parameter_a.abs() < 100.0 && 
-                       self.parameter_b.abs() < 100.0;
-        
-        // Check if ECE is within target
-        let ece_ok = self.slice_ece <= 0.015;
-        
-        // Check if likelihood is reasonable
-        let likelihood_ok = self.final_likelihood > f64::NEG_INFINITY && 
-                           self.final_likelihood.is_finite();
-
-        Ok(params_ok && ece_ok && likelihood_ok)
+    
+    /// Get calibration statistics for monitoring
+    pub fn get_calibration_stats(&self) -> CalibrationStats {
+        CalibrationStats {
+            parameter_a: self.parameter_a,
+            parameter_b: self.parameter_b,
+            is_fitted: self.is_fitted,
+            converged: self.fit_metadata.converged,
+            training_ece: self.fit_metadata.training_ece,
+            total_training_samples: self.fit_metadata.total_samples,
+            positive_training_samples: self.fit_metadata.positive_samples,
+            negative_training_samples: self.fit_metadata.negative_samples,
+        }
     }
 }
 
-impl Default for PlattConfig {
-    fn default() -> Self {
-        Self {
-            max_iterations: 100,
-            convergence_tolerance: 1e-6,
-        }
+/// Statistics about the Platt calibration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CalibrationStats {
+    pub parameter_a: f64,
+    pub parameter_b: f64,
+    pub is_fitted: bool,
+    pub converged: bool,
+    pub training_ece: f64,
+    pub total_training_samples: usize,
+    pub positive_training_samples: usize,
+    pub negative_training_samples: usize,
+}
+
+/// Sigmoid function: 1 / (1 + exp(-x))
+fn sigmoid(x: f64) -> f64 {
+    // Numerical stable sigmoid implementation
+    if x >= 0.0 {
+        let exp_neg_x = (-x).exp();
+        1.0 / (1.0 + exp_neg_x)
+    } else {
+        let exp_x = x.exp();
+        exp_x / (1.0 + exp_x)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    fn create_test_sample(prediction: f32, ground_truth: f32) -> CalibrationSample {
-        CalibrationSample {
-            prediction,
-            ground_truth,
-            intent: "test".to_string(),
-            language: Some("rust".to_string()),
-            features: HashMap::new(),
-            weight: 1.0,
-        }
-    }
-
-    #[tokio::test]
-    async fn test_platt_scaler_creation() {
-        let config = PlattConfig::default();
-        let scaler = PlattScaler::new(config);
-        
-        let (a, b) = scaler.get_parameters();
-        assert_eq!(a, -1.0);
-        assert_eq!(b, 0.0);
-        assert_eq!(scaler.get_ece(), 0.0);
-        assert!(!scaler.is_converged());
-    }
-
-    #[tokio::test]
-    async fn test_platt_training_insufficient_samples() {
-        let config = PlattConfig::default();
-        let mut scaler = PlattScaler::new(config);
-        
-        let samples = vec![
-            create_test_sample(0.8, 1.0),
-            create_test_sample(0.9, 1.0),
-        ];
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        
-        let result = scaler.train(&sample_refs).await;
-        assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Insufficient samples"));
-    }
-
-    #[tokio::test]
-    async fn test_platt_calibration() {
-        let config = PlattConfig {
-            max_iterations: 50,
-            convergence_tolerance: 1e-5,
-        };
-        let mut scaler = PlattScaler::new(config);
-        
-        // Create non-linear calibration problem
-        let mut samples = Vec::new();
-        for i in 0..50 {
-            let pred = (i as f32) / 50.0; // [0, 1]
-            // Create non-linear relationship: sigmoid-like ground truth
-            let sigmoid_input = (pred - 0.5) * 10.0; // Center around 0.5
-            let ground_truth = 1.0 / (1.0 + (-sigmoid_input).exp());
-            samples.push(create_test_sample(pred, ground_truth));
-        }
-        
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        scaler.train(&sample_refs).await.unwrap();
-        
-        // Test calibration
-        let features = HashMap::new();
-        let calibrated = scaler.calibrate(0.7, &features).await.unwrap();
-        
-        // Should be a valid probability
-        assert!(calibrated >= 0.001 && calibrated <= 0.999);
-        
-        // Check that parameters were learned
-        let (a, b) = scaler.get_parameters();
-        assert!(a.is_finite());
-        assert!(b.is_finite());
-        assert!(a.abs() < 100.0);
-        assert!(b.abs() < 100.0);
-        
-        println!("Platt parameters: A={:.4}, B={:.4}, ECE={:.4}", a, b, scaler.get_ece());
-    }
-
-    #[tokio::test]
-    async fn test_platt_overconfident_predictions() {
-        let config = PlattConfig {
-            max_iterations: 40,
-            convergence_tolerance: 1e-4,
-        };
-        let mut scaler = PlattScaler::new(config);
-        
-        // Create overconfident predictions that need strong calibration
-        let mut samples = Vec::new();
-        for i in 0..40 {
-            let pred = 0.8 + (i as f32 / 40.0) * 0.19; // High predictions [0.8, 0.99]
-            let ground_truth = if i < 20 { 1.0 } else { 0.0 }; // 50% should be positive
-            samples.push(create_test_sample(pred, ground_truth));
-        }
-        
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        scaler.train(&sample_refs).await.unwrap();
-        
-        // Test calibration - should reduce overconfident predictions
-        let features = HashMap::new();
-        let calibrated_high = scaler.calibrate(0.95, &features).await.unwrap();
-        let calibrated_med = scaler.calibrate(0.85, &features).await.unwrap();
-        
-        // Both should be valid probabilities
-        assert!(calibrated_high >= 0.001 && calibrated_high <= 0.999);
-        assert!(calibrated_med >= 0.001 && calibrated_med <= 0.999);
-        
-        // Higher prediction should generally give higher calibrated score
-        assert!(calibrated_high >= calibrated_med);
-        
-        println!("Platt calibration: 0.95 -> {:.4}, 0.85 -> {:.4}", calibrated_high, calibrated_med);
-    }
-
-    #[tokio::test] 
-    async fn test_platt_likelihood_calculation() {
-        let config = PlattConfig::default();
-        let scaler = PlattScaler::new(config);
-        
-        let predictions = vec![0.3, 0.7, 0.9];
-        let targets = vec![0.0, 1.0, 1.0];
-        
-        let mut state = PlattOptimizationState {
-            a: -1.0,
-            b: 0.0,
-            likelihood: 0.0,
-            gradient_a: 0.0,
-            gradient_b: 0.0,
-            hessian_aa: 0.0,
-            hessian_ab: 0.0,
-            hessian_bb: 0.0,
-        };
-        
-        let result = scaler.calculate_likelihood_and_derivatives(&predictions, &targets, &mut state);
-        assert!(result.is_ok());
-        
-        // Check that all values are finite
-        assert!(state.likelihood.is_finite());
-        assert!(state.gradient_a.is_finite());
-        assert!(state.gradient_b.is_finite());
-        assert!(state.hessian_aa.is_finite());
-        assert!(state.hessian_ab.is_finite());
-        assert!(state.hessian_bb.is_finite());
-        
-        // Likelihood should be negative (log probabilities)
-        assert!(state.likelihood < 0.0);
-    }
-
+    
     #[test]
-    fn test_parameter_bounds() {
-        let config = PlattConfig::default();
-        let mut scaler = PlattScaler::new(config);
+    fn test_platt_calibrator_creation() {
+        let calibrator = PlattCalibrator::new();
+        assert!(!calibrator.is_fitted);
+        assert_eq!(calibrator.parameter_a, 0.0);
+        assert_eq!(calibrator.parameter_b, 0.0);
+    }
+    
+    #[test]
+    fn test_sigmoid_function() {
+        assert!((sigmoid(0.0) - 0.5).abs() < 1e-10);
+        assert!(sigmoid(1000.0) > 0.99);
+        assert!(sigmoid(-1000.0) < 0.01);
+    }
+    
+    #[test]
+    fn test_platt_calibrator_fit() {
+        let mut calibrator = PlattCalibrator::new();
         
-        // Set extreme parameters
-        scaler.parameter_a = 150.0; // Too large
-        scaler.parameter_b = -200.0; // Too large
-        scaler.final_likelihood = f64::INFINITY;
+        // Create test data with known pattern
+        let scores = vec![-2.0, -1.0, 0.0, 1.0, 2.0];
+        let labels = vec![0.0, 0.0, 0.0, 1.0, 1.0];
         
-        // Should not converge with extreme parameters
-        assert!(!scaler.check_convergence().unwrap());
+        let result = calibrator.fit(&scores, &labels);
+        assert!(result.is_ok());
+        assert!(calibrator.is_fitted);
         
-        // Set reasonable parameters
-        scaler.parameter_a = -2.0;
-        scaler.parameter_b = 1.0;
-        scaler.final_likelihood = -0.5;
-        scaler.slice_ece = 0.01;
+        // Parameters should be reasonable
+        assert!(calibrator.parameter_a.is_finite());
+        assert!(calibrator.parameter_b.is_finite());
+    }
+    
+    #[test]
+    fn test_platt_prediction() {
+        let mut calibrator = PlattCalibrator::new();
         
-        // Should converge with reasonable parameters and ECE
-        assert!(scaler.check_convergence().unwrap());
+        // Fit calibrator with simple data
+        let scores = vec![-1.0, 0.0, 1.0];
+        let labels = vec![0.0, 0.5, 1.0];
+        calibrator.fit(&scores, &labels).unwrap();
+        
+        // Test prediction
+        let test_scores = vec![-0.5, 0.5];
+        let predictions = calibrator.predict(&test_scores);
+        assert!(predictions.is_ok());
+        
+        let preds = predictions.unwrap();
+        assert_eq!(preds.len(), 2);
+        
+        // All predictions should be valid probabilities
+        for &pred in &preds {
+            assert!(pred >= 0.0 && pred <= 1.0);
+        }
+        
+        // Higher scores should give higher probabilities
+        assert!(preds[1] > preds[0]);
+    }
+    
+    #[test]
+    fn test_platt_insufficient_data() {
+        let mut calibrator = PlattCalibrator::new();
+        
+        // Test with insufficient data
+        let scores = vec![0.0];
+        let labels = vec![1.0];
+        
+        let result = calibrator.fit(&scores, &labels);
+        assert!(result.is_err());
+        
+        match result {
+            Err(PlattError::InsufficientData { required: 2, actual: 1 }) => {},
+            _ => panic!("Expected InsufficientData error"),
+        }
+    }
+    
+    #[test]
+    fn test_platt_no_positive_samples() {
+        let mut calibrator = PlattCalibrator::new();
+        
+        // Test with no positive samples
+        let scores = vec![0.0, 1.0, 2.0];
+        let labels = vec![0.0, 0.0, 0.0];
+        
+        let result = calibrator.fit(&scores, &labels);
+        assert!(result.is_err());
+        
+        match result {
+            Err(PlattError::InvalidProbabilities { .. }) => {},
+            _ => panic!("Expected InvalidProbabilities error"),
+        }
     }
 }

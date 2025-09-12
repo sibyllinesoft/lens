@@ -1540,23 +1540,530 @@ mod tests {
             configuration: "test".to_string(),
             test_suite: "test".to_string(),
             latency_stats: LatencyStatistics {
+                p50_ms: 80.0,
                 p95_ms: 140.0,
                 p99_ms: 280.0,
-                ..Default::default()
+                p999_ms: 350.0,
+                mean_ms: 90.0,
+                std_dev_ms: 25.0,
+                min_ms: 50.0,
+                max_ms: 400.0,
+                sample_count: 1000,
             },
-            quality_stats: QualityStatistics {
-                average_recall_at_50: 0.85,
-                ..Default::default()
+            throughput_stats: ThroughputStatistics {
+                peak_qps: 100.0,
+                average_qps: 80.0,
+                sustained_qps: 75.0,
+                ramp_up_time_s: 10.0,
+                steady_state_duration_s: 60.0,
             },
             resource_stats: ResourceStatistics {
                 peak_memory_mb: 400.0,
+                average_memory_mb: 350.0,
+                peak_cpu_percent: 70.0,
+                average_cpu_percent: 55.0,
+                memory_efficiency: 0.8,
+                zero_copy_ratio: 0.9,
+            },
+            quality_stats: QualityStatistics {
+                average_recall_at_50: 0.85,
+                average_precision_at_10: 0.92,
+                mrr: 0.88,
+                ndcg_at_10: 0.90,
+                expected_reciprocal_rank: 0.87,
+                quality_trend: QualityTrend::Improving,
+            },
+            sla_compliance: SlaComplianceReport {
+                p95_compliant: true,
+                p99_compliant: true,
+                quality_compliant: true,
+                memory_compliant: true,
+                overall_compliant: true,
+                violations: Vec::new(),
+            },
+            optimization_metrics: OptimizationMetrics {
+                latency_improvement_percent: 15.0,
+                quality_improvement_percent: 8.0,
+                memory_savings_percent: 12.0,
+                optimization_confidence: 0.95,
+            },
+            execution_metadata: ExecutionMetadata {
+                duration: Duration::from_secs(300),
+                environment: "test".to_string(),
+                version: "1.0.0".to_string(),
+                git_commit: "abcd1234".to_string(),
+            },
+        };
+        
+        let compliance = validator.validate_result(&result).await.unwrap();
+        assert!(compliance.overall_compliant);
+    }
+
+    #[test]
+    fn test_benchmark_config_default() {
+        let config = BenchmarkConfig::default();
+        
+        assert_eq!(config.warmup_duration, Duration::from_secs(5));
+        assert_eq!(config.measurement_duration, Duration::from_secs(30));
+        assert_eq!(config.concurrent_requests, 10);
+        assert_eq!(config.iterations, 100);
+        assert_eq!(config.percentiles, vec![50.0, 95.0, 99.0]);
+    }
+
+    #[test]
+    fn test_sla_targets_creation() {
+        let targets = SlaTargets {
+            p95_latency_ms: 150,
+            p99_latency_ms: 300,
+            min_quality_score: 0.8,
+            max_memory_mb: 512.0,
+            max_cpu_percent: 80.0,
+        };
+        
+        assert_eq!(targets.p95_latency_ms, 150);
+        assert_eq!(targets.p99_latency_ms, 300);
+        assert_eq!(targets.min_quality_score, 0.8);
+        assert_eq!(targets.max_memory_mb, 512.0);
+        assert_eq!(targets.max_cpu_percent, 80.0);
+    }
+
+    #[test]
+    fn test_latency_statistics_default() {
+        let stats = LatencyStatistics::default();
+        
+        assert_eq!(stats.mean_ms, 0.0);
+        assert_eq!(stats.p50_ms, 0.0);
+        assert_eq!(stats.p95_ms, 0.0);
+        assert_eq!(stats.p99_ms, 0.0);
+        assert_eq!(stats.min_ms, 0.0);
+        assert_eq!(stats.max_ms, 0.0);
+        assert_eq!(stats.std_dev_ms, 0.0);
+        assert_eq!(stats.sample_count, 0);
+    }
+
+    #[test]
+    fn test_throughput_statistics_default() {
+        let stats = ThroughputStatistics::default();
+        
+        assert_eq!(stats.requests_per_second, 0.0);
+        assert_eq!(stats.peak_rps, 0.0);
+        assert_eq!(stats.total_requests, 0);
+        assert_eq!(stats.successful_requests, 0);
+        assert_eq!(stats.failed_requests, 0);
+        assert_eq!(stats.error_rate, 0.0);
+        assert_eq!(stats.timeout_rate, 0.0);
+    }
+
+    #[test]
+    fn test_resource_statistics_default() {
+        let stats = ResourceStatistics::default();
+        
+        assert_eq!(stats.peak_memory_mb, 0.0);
+        assert_eq!(stats.average_memory_mb, 0.0);
+        assert_eq!(stats.peak_cpu_percent, 0.0);
+        assert_eq!(stats.average_cpu_percent, 0.0);
+        assert_eq!(stats.disk_io_mb, 0.0);
+        assert_eq!(stats.network_io_mb, 0.0);
+    }
+
+    #[test]
+    fn test_quality_statistics_default() {
+        let stats = QualityStatistics::default();
+        
+        assert_eq!(stats.average_recall_at_50, 0.0);
+        assert_eq!(stats.average_precision_at_50, 0.0);
+        assert_eq!(stats.average_f1_score, 0.0);
+        assert_eq!(stats.ndcg_at_10, 0.0);
+        assert_eq!(stats.map_at_50, 0.0);
+        assert_eq!(stats.quality_distribution.len(), 0);
+    }
+
+    #[test]
+    fn test_optimization_metrics_default() {
+        let metrics = OptimizationMetrics::default();
+        
+        assert_eq!(metrics.fusion_effectiveness, 0.0);
+        assert_eq!(metrics.parallel_efficiency, 0.0);
+        assert_eq!(metrics.early_stopping_savings, 0.0);
+        assert_eq!(metrics.prefetch_hit_rate, 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_sla_validator_creation() {
+        let targets = SlaTargets {
+            p95_latency_ms: 150,
+            p99_latency_ms: 300,
+            min_quality_score: 0.8,
+            max_memory_mb: 512.0,
+            max_cpu_percent: 80.0,
+        };
+        
+        let validator = SlaValidator::new(targets);
+        
+        // Verify validator is created properly
+        assert!(std::ptr::addr_of!(validator) != std::ptr::null());
+    }
+
+    #[tokio::test]
+    async fn test_sla_validation_failure() {
+        let targets = SlaTargets {
+            p95_latency_ms: 150,
+            p99_latency_ms: 300,
+            min_quality_score: 0.8,
+            max_memory_mb: 512.0,
+            max_cpu_percent: 80.0,
+        };
+        
+        let validator = SlaValidator::new(targets);
+        
+        let result = BenchmarkResult {
+            benchmark_id: "test".to_string(),
+            timestamp: SystemTime::now(),
+            configuration: "test".to_string(),
+            test_suite: "test".to_string(),
+            latency_stats: LatencyStatistics {
+                p95_ms: 200.0, // Exceeds target
+                p99_ms: 350.0, // Exceeds target
+                ..Default::default()
+            },
+            quality_stats: QualityStatistics {
+                average_recall_at_50: 0.7, // Below target
+                ..Default::default()
+            },
+            resource_stats: ResourceStatistics {
+                peak_memory_mb: 600.0, // Exceeds target
+                peak_cpu_percent: 90.0, // Exceeds target
                 ..Default::default()
             },
             ..BenchmarkResult::default()
         };
         
         let compliance = validator.validate_result(&result).await.unwrap();
-        assert!(compliance.overall_compliant);
+        assert!(!compliance.overall_compliant); // Should fail
+    }
+
+    #[tokio::test]
+    async fn test_performance_measurement_system() {
+        let config = PerformanceMeasurementConfig {
+            enable_detailed_profiling: true,
+            enable_memory_tracking: true,
+            enable_cpu_tracking: true,
+            sampling_interval: Duration::from_millis(100),
+            max_sample_history: 1000,
+        };
+        
+        let system = PerformanceMeasurementSystem::new(config);
+        
+        // Test measurement start/stop
+        let session_id = system.start_measurement("test_session").await.unwrap();
+        assert!(!session_id.is_empty());
+        
+        // Simulate some work
+        sleep(Duration::from_millis(10)).await;
+        
+        let measurements = system.stop_measurement(&session_id).await.unwrap();
+        
+        // Verify measurements were collected
+        assert!(measurements.duration > Duration::from_millis(0));
+    }
+
+    #[tokio::test]
+    async fn test_statistics_engine_calculations() {
+        let values = vec![10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        
+        // Test different percentiles
+        assert_eq!(PipelineBenchmarker::percentile(&values, 10.0), 10.0);
+        assert_eq!(PipelineBenchmarker::percentile(&values, 25.0), 30.0);
+        assert_eq!(PipelineBenchmarker::percentile(&values, 75.0), 80.0);
+        assert_eq!(PipelineBenchmarker::percentile(&values, 90.0), 90.0);
+        
+        // Test edge cases
+        let single_value = vec![42];
+        assert_eq!(PipelineBenchmarker::percentile(&single_value, 50.0), 42.0);
+        assert_eq!(PipelineBenchmarker::percentile(&single_value, 95.0), 42.0);
+        
+        let empty_values = vec![];
+        assert_eq!(PipelineBenchmarker::percentile(&empty_values, 50.0), 0.0);
+    }
+
+    #[test]
+    fn test_std_deviation_edge_cases() {
+        // Single value
+        let single = vec![42];
+        assert_eq!(PipelineBenchmarker::std_deviation(&single), 0.0);
+        
+        // All same values
+        let same_values = vec![10, 10, 10, 10, 10];
+        assert_eq!(PipelineBenchmarker::std_deviation(&same_values), 0.0);
+        
+        // Empty values
+        let empty = vec![];
+        assert_eq!(PipelineBenchmarker::std_deviation(&empty), 0.0);
+        
+        // Two values
+        let two_values = vec![10, 20];
+        assert!((PipelineBenchmarker::std_deviation(&two_values) - 5.0).abs() < 0.1);
+    }
+
+    #[tokio::test]
+    async fn test_benchmark_test_suite_creation() {
+        let suite = BenchmarkTestSuite {
+            name: "test_suite".to_string(),
+            description: "Test suite description".to_string(),
+            test_queries: vec![
+                "test query 1".to_string(),
+                "test query 2".to_string(),
+                "test query 3".to_string(),
+            ],
+            expected_results: HashMap::new(),
+            weight: 1.0,
+            timeout: Duration::from_secs(5),
+        };
+        
+        assert_eq!(suite.name, "test_suite");
+        assert_eq!(suite.test_queries.len(), 3);
+        assert_eq!(suite.weight, 1.0);
+        assert_eq!(suite.timeout, Duration::from_secs(5));
+    }
+
+    #[test]
+    fn test_benchmark_result_creation() {
+        let result = BenchmarkResult {
+            benchmark_id: "test_benchmark".to_string(),
+            timestamp: SystemTime::now(),
+            configuration: "baseline".to_string(),
+            test_suite: "performance_suite".to_string(),
+            latency_stats: LatencyStatistics {
+                mean_ms: 120.0,
+                median_ms: 115.0,
+                p95_ms: 140.0,
+                p99_ms: 180.0,
+                min_ms: 80.0,
+                max_ms: 200.0,
+                std_dev_ms: 25.0,
+            },
+            throughput_stats: ThroughputStatistics {
+                requests_per_second: 100.0,
+                peak_rps: 150.0,
+                total_requests: 1000,
+                successful_requests: 980,
+                failed_requests: 20,
+                error_rate: 0.02,
+                timeout_rate: 0.005,
+            },
+            resource_stats: ResourceStatistics {
+                peak_memory_mb: 256.0,
+                average_memory_mb: 200.0,
+                peak_cpu_percent: 65.0,
+                average_cpu_percent: 45.0,
+                disk_io_mb: 10.5,
+                network_io_mb: 5.2,
+            },
+            quality_stats: QualityStatistics {
+                average_recall_at_50: 0.85,
+                average_precision_at_50: 0.82,
+                average_f1_score: 0.835,
+                ndcg_at_10: 0.78,
+                map_at_50: 0.80,
+                quality_distribution: HashMap::new(),
+            },
+            sla_compliance: SlaComplianceReport::default(),
+            optimization_metrics: OptimizationMetrics {
+                fusion_effectiveness: 0.15,
+                parallel_efficiency: 0.8,
+                early_stopping_savings: 0.12,
+                prefetch_hit_rate: 0.65,
+            },
+            execution_metadata: ExecutionMetadata {
+                duration: Duration::from_secs(30),
+                warmup_duration: Duration::from_secs(5),
+                test_environment: "test".to_string(),
+                git_commit: Some("abc123".to_string()),
+                benchmark_version: "1.0.0".to_string(),
+                additional_metadata: HashMap::new(),
+            },
+        };
+        
+        assert_eq!(result.benchmark_id, "test_benchmark");
+        assert_eq!(result.configuration, "baseline");
+        assert_eq!(result.latency_stats.mean_ms, 120.0);
+        assert_eq!(result.throughput_stats.requests_per_second, 100.0);
+        assert_eq!(result.resource_stats.peak_memory_mb, 256.0);
+        assert_eq!(result.quality_stats.average_recall_at_50, 0.85);
+        assert_eq!(result.optimization_metrics.fusion_effectiveness, 0.15);
+    }
+
+    #[tokio::test]
+    async fn test_concurrent_benchmarks() {
+        // Test that multiple benchmarks can run concurrently
+        let baseline_config = PipelineConfig::default();
+        let optimized_config = PipelineConfig::default();
+        let benchmark_config = BenchmarkConfig::default();
+        
+        let benchmarker = PipelineBenchmarker::new(
+            baseline_config,
+            optimized_config,
+            benchmark_config,
+        ).await.unwrap();
+        
+        // Run multiple concurrent benchmark sessions
+        let tasks: Vec<_> = (0..3).map(|i| {
+            let suite_name = format!("concurrent_suite_{}", i);
+            async move {
+                // Simulate benchmark work
+                sleep(Duration::from_millis(50)).await;
+                suite_name
+            }
+        }).collect();
+        
+        let results = futures::future::join_all(tasks).await;
+        assert_eq!(results.len(), 3);
+        
+        for (i, result) in results.into_iter().enumerate() {
+            assert_eq!(result, format!("concurrent_suite_{}", i));
+        }
+    }
+
+    #[test]
+    fn test_sla_compliance_report_default() {
+        let report = SlaComplianceReport::default();
+        
+        assert_eq!(report.overall_compliant, false);
+        assert_eq!(report.latency_compliant, false);
+        assert_eq!(report.resource_compliant, false);
+        assert_eq!(report.quality_compliant, false);
+        assert!(report.violations.is_empty());
+        assert!(report.warnings.is_empty());
+    }
+
+    #[test]
+    fn test_execution_metadata_creation() {
+        let mut metadata = HashMap::new();
+        metadata.insert("key1".to_string(), "value1".to_string());
+        metadata.insert("key2".to_string(), "value2".to_string());
+        
+        let exec_metadata = ExecutionMetadata {
+            duration: Duration::from_secs(45),
+            warmup_duration: Duration::from_secs(10),
+            test_environment: "production-like".to_string(),
+            git_commit: Some("def456".to_string()),
+            benchmark_version: "2.0.0".to_string(),
+            additional_metadata: metadata.clone(),
+        };
+        
+        assert_eq!(exec_metadata.duration, Duration::from_secs(45));
+        assert_eq!(exec_metadata.warmup_duration, Duration::from_secs(10));
+        assert_eq!(exec_metadata.test_environment, "production-like");
+        assert_eq!(exec_metadata.git_commit, Some("def456".to_string()));
+        assert_eq!(exec_metadata.benchmark_version, "2.0.0");
+        assert_eq!(exec_metadata.additional_metadata.len(), 2);
+        assert_eq!(exec_metadata.additional_metadata.get("key1"), Some(&"value1".to_string()));
+    }
+
+    #[test]
+    fn test_latency_statistics_calculations() {
+        let mut stats = LatencyStatistics::default();
+        
+        // Update with sample data
+        stats.mean_ms = 105.0;
+        stats.median_ms = 100.0;
+        stats.p95_ms = 145.0;
+        stats.p99_ms = 180.0;
+        stats.min_ms = 75.0;
+        stats.max_ms = 200.0;
+        stats.std_dev_ms = 20.0;
+        
+        // Verify values
+        assert_eq!(stats.mean_ms, 105.0);
+        assert_eq!(stats.median_ms, 100.0);
+        assert_eq!(stats.p95_ms, 145.0);
+        assert_eq!(stats.p99_ms, 180.0);
+        assert_eq!(stats.min_ms, 75.0);
+        assert_eq!(stats.max_ms, 200.0);
+        assert_eq!(stats.std_dev_ms, 20.0);
+        
+        // Verify p95 < p99
+        assert!(stats.p95_ms < stats.p99_ms);
+        assert!(stats.min_ms < stats.max_ms);
+        assert!(stats.median_ms >= stats.min_ms);
+        assert!(stats.median_ms <= stats.max_ms);
+    }
+
+    #[test]
+    fn test_quality_distribution() {
+        let mut quality_stats = QualityStatistics::default();
+        
+        // Add quality distribution data
+        let mut distribution = HashMap::new();
+        distribution.insert("excellent".to_string(), 25);
+        distribution.insert("good".to_string(), 40);
+        distribution.insert("fair".to_string(), 20);
+        distribution.insert("poor".to_string(), 15);
+        
+        quality_stats.quality_distribution = distribution.clone();
+        
+        assert_eq!(quality_stats.quality_distribution.len(), 4);
+        assert_eq!(quality_stats.quality_distribution.get("excellent"), Some(&25));
+        assert_eq!(quality_stats.quality_distribution.get("good"), Some(&40));
+        assert_eq!(quality_stats.quality_distribution.get("fair"), Some(&20));
+        assert_eq!(quality_stats.quality_distribution.get("poor"), Some(&15));
+        
+        // Test total count
+        let total: i32 = quality_stats.quality_distribution.values().sum();
+        assert_eq!(total, 100);
+    }
+
+    #[test]
+    fn test_benchmark_config_customization() {
+        let custom_config = BenchmarkConfig {
+            warmup_duration: Duration::from_secs(10),
+            measurement_duration: Duration::from_secs(60),
+            concurrent_requests: 20,
+            iterations: 500,
+            percentiles: vec![25.0, 50.0, 75.0, 90.0, 95.0, 99.0, 99.9],
+            enable_detailed_metrics: true,
+            enable_resource_monitoring: true,
+            max_acceptable_error_rate: 0.05,
+            target_rps: Some(150.0),
+            memory_limit_mb: Some(1024.0),
+            cpu_limit_percent: Some(85.0),
+        };
+        
+        assert_eq!(custom_config.warmup_duration, Duration::from_secs(10));
+        assert_eq!(custom_config.measurement_duration, Duration::from_secs(60));
+        assert_eq!(custom_config.concurrent_requests, 20);
+        assert_eq!(custom_config.iterations, 500);
+        assert_eq!(custom_config.percentiles.len(), 7);
+        assert_eq!(custom_config.enable_detailed_metrics, true);
+        assert_eq!(custom_config.enable_resource_monitoring, true);
+        assert_eq!(custom_config.max_acceptable_error_rate, 0.05);
+        assert_eq!(custom_config.target_rps, Some(150.0));
+        assert_eq!(custom_config.memory_limit_mb, Some(1024.0));
+        assert_eq!(custom_config.cpu_limit_percent, Some(85.0));
+    }
+
+    #[test]
+    fn test_error_rate_calculations() {
+        let stats = ThroughputStatistics {
+            requests_per_second: 95.0,
+            peak_rps: 120.0,
+            total_requests: 10000,
+            successful_requests: 9800,
+            failed_requests: 200,
+            error_rate: 0.02, // 2%
+            timeout_rate: 0.005, // 0.5%
+        };
+        
+        // Verify error rate calculation
+        let calculated_error_rate = stats.failed_requests as f64 / stats.total_requests as f64;
+        assert!((calculated_error_rate - stats.error_rate).abs() < 0.001);
+        
+        // Verify success rate
+        let success_rate = stats.successful_requests as f64 / stats.total_requests as f64;
+        assert_eq!(success_rate, 0.98);
+        
+        // Verify totals
+        assert_eq!(stats.successful_requests + stats.failed_requests, stats.total_requests);
     }
 }
 

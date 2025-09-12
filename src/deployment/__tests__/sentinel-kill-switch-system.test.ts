@@ -2,18 +2,18 @@
  * Tests for SentinelKillSwitchSystem
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 
 // Mock fs operations first before any imports
-vi.mock('fs', () => ({
-  writeFileSync: vi.fn(),
-  readFileSync: vi.fn(() => '{}'),
-  existsSync: vi.fn(() => true),
-  mkdirSync: vi.fn()
+mock('fs', () => ({
+  writeFileSync: jest.fn(),
+  readFileSync: jest.fn(() => '{}'),
+  existsSync: jest.fn(() => true),
+  mkdirSync: jest.fn()
 }));
 
-vi.mock('path', () => ({
-  join: vi.fn((...paths) => paths.join('/'))
+mock('path', () => ({
+  join: jest.fn((...paths) => paths.join('/'))
 }));
 
 // Import after mocking
@@ -21,15 +21,15 @@ import { SentinelKillSwitchSystem } from '../sentinel-kill-switch-system';
 
 describe('SentinelKillSwitchSystem', () => {
   let system: SentinelKillSwitchSystem;
-  let consoleLogSpy: ReturnType<typeof vi.spyOn>;
-  let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let consoleLogSpy: ReturnType<typeof jest.spyOn>;
+  let consoleWarnSpy: ReturnType<typeof jest.spyOn>;
+  let consoleErrorSpy: ReturnType<typeof jest.spyOn>;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation();
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
+    jest.clearAllMocks();
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     
     system = new SentinelKillSwitchSystem('./test-sentinel-data');
   });
@@ -172,7 +172,7 @@ describe('SentinelKillSwitchSystem', () => {
     it('should handle probe execution errors gracefully', async () => {
       // Mock probe execution to simulate error
       const originalExecuteSearchQuery = (system as any).executeSearchQuery;
-      (system as any).executeSearchQuery = vi.fn().mockRejectedValue(new Error('Search failed'));
+      (system as any).executeSearchQuery = jest.fn().mockRejectedValue(new Error('Search failed'));
       
       await system.executeAllProbes();
       
@@ -247,7 +247,7 @@ describe('SentinelKillSwitchSystem', () => {
 
   describe('Event System', () => {
     it('should emit events on system start', async () => {
-      const eventSpy = vi.fn();
+      const eventSpy = jest.fn();
       system.on('sentinel_started', eventSpy);
       
       await system.startSentinelSystem();
@@ -256,7 +256,7 @@ describe('SentinelKillSwitchSystem', () => {
     });
 
     it('should emit events on system stop', () => {
-      const eventSpy = vi.fn();
+      const eventSpy = jest.fn();
       system.on('sentinel_stopped', eventSpy);
       
       system.stopSentinelSystem();
@@ -265,7 +265,7 @@ describe('SentinelKillSwitchSystem', () => {
     });
 
     it('should emit events on kill switch activation', async () => {
-      const eventSpy = vi.fn();
+      const eventSpy = jest.fn();
       system.on('kill_switch_activated', eventSpy);
       
       await system.activateKillSwitch('zero_results_emergency', 'manual', 'Test');
@@ -278,7 +278,7 @@ describe('SentinelKillSwitchSystem', () => {
     });
 
     it('should emit events on kill switch deactivation', async () => {
-      const eventSpy = vi.fn();
+      const eventSpy = jest.fn();
       system.on('kill_switch_deactivated', eventSpy);
       
       await system.activateKillSwitch('zero_results_emergency', 'manual', 'Test');
@@ -291,7 +291,7 @@ describe('SentinelKillSwitchSystem', () => {
     });
 
     it('should emit events on probe execution', async () => {
-      const eventSpy = vi.fn();
+      const eventSpy = jest.fn();
       system.on('probe_executed', eventSpy);
       
       await system.manualProbeExecution('class_probe');
@@ -328,12 +328,12 @@ describe('SentinelKillSwitchSystem', () => {
 
   describe('Kill Switch Triggers', () => {
     it('should trigger kill switch on consecutive probe failures', async () => {
-      const eventSpy = vi.fn();
+      const eventSpy = jest.fn();
       system.on('kill_switch_activated', eventSpy);
       
       // Mock probe to fail consistently
       const originalExecuteSearchQuery = (system as any).executeSearchQuery;
-      (system as any).executeSearchQuery = vi.fn().mockResolvedValue([]); // No results
+      (system as any).executeSearchQuery = jest.fn().mockResolvedValue([]); // No results
       
       // Execute probe multiple times to trigger failure threshold
       await system.manualProbeExecution('class_probe');
@@ -355,9 +355,9 @@ describe('SentinelKillSwitchSystem', () => {
 
   describe('Error Handling and Edge Cases', () => {
     it('should handle file system errors gracefully', () => {
-      const mockFs = vi.mocked(require('fs'));
-      vi.clearAllMocks();
-      mockFs.writeFileSync = vi.fn().mockImplementation(() => {
+      const mockFs = mocked(require('fs'));
+      jest.clearAllMocks();
+      mockFs.writeFileSync = jest.fn().mockImplementation(() => {
         throw new Error('Disk full');
       });
       

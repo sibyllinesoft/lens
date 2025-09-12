@@ -694,9 +694,9 @@ mod tests {
         
         let hint = LspHint {
             file: "test.rs".to_string(),
-            range: Range {
-                start: Position { line: 0, character: 0 },
-                end: Position { line: 0, character: 10 },
+            range: crate::semantic::hard_negatives::Range {
+                start: crate::semantic::hard_negatives::Position { line: 0, character: 0 },
+                end: crate::semantic::hard_negatives::Position { line: 0, character: 10 },
             },
             text: "test_fn".to_string(),
             kind: "function".to_string(),

@@ -3,7 +3,7 @@
  * Implements Phase A3.2 requirement: snapshot tests for NDJSON output
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import { SearchHit } from '../../types/api.js';
 import { 
   formatResultsAsNDJSON,

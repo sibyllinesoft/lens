@@ -3,7 +3,7 @@
  * Tests quality gates, integration, and performance requirements
  */
 
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, afterEach, jest } from 'bun:test';
 import { 
   EvergreenSystemsIntegrator,
   type EvergreenSystemsConfig 

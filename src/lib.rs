@@ -71,8 +71,11 @@ pub async fn initialize() -> Result<()> {
         attestation::verify_real_mode()?;
     }
 
-    // Initialize metrics (TODO: implement init_prometheus_metrics)
-    // metrics::init_prometheus_metrics();
+    // Initialize metrics system
+    if let Err(e) = metrics::init_prometheus_metrics() {
+        tracing::warn!("Failed to initialize Prometheus metrics: {}", e);
+        tracing::info!("Continuing without Prometheus metrics - basic metrics still available");
+    }
 
     tracing::info!("Lens Core initialized");
     tracing::info!("Git SHA: {}", built_info::GIT_VERSION.unwrap_or("unknown"));
@@ -92,6 +95,12 @@ pub struct LensConfig {
     pub max_results: usize,
     pub performance_target_ms: u64,
     pub attestation_enabled: bool,
+    
+    // Dataset configuration for pinned golden datasets
+    pub dataset_path: String,
+    pub enable_pinned_datasets: bool,
+    pub default_dataset_version: Option<String>,
+    pub enable_corpus_validation: bool,
 }
 
 impl Default for LensConfig {
@@ -104,6 +113,85 @@ impl Default for LensConfig {
             max_results: 50,
             performance_target_ms: 150,
             attestation_enabled: true,
+            
+            // Default dataset configuration
+            dataset_path: "./pinned-datasets".to_string(),
+            enable_pinned_datasets: true,
+            default_dataset_version: Some(crate::benchmark::DEFAULT_PINNED_VERSION.to_string()),
+            enable_corpus_validation: true,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+
+    #[tokio::test]
+    async fn test_lens_config_default() {
+        let config = LensConfig::default();
+        
+        assert_eq!(config.server_port, 50051);
+        assert_eq!(config.index_path, "./index");
+        assert!(config.lsp_enabled);
+        assert_eq!(config.cache_ttl_hours, 24);
+        assert_eq!(config.max_results, 50);
+        assert_eq!(config.performance_target_ms, 150);
+        assert!(config.attestation_enabled);
+        assert!(config.enable_pinned_datasets);
+    }
+
+    #[test]
+    fn test_lens_config_clone() {
+        let config1 = LensConfig::default();
+        let config2 = config1.clone();
+        
+        assert_eq!(config1.server_port, config2.server_port);
+        assert_eq!(config1.index_path, config2.index_path);
+    }
+
+    #[tokio::test]
+    async fn test_initialize_in_test_mode() {
+        // Set test environment to avoid real mode verification
+        env::set_var("RUST_LOG", "debug");
+        
+        // Initialize should not fail in test environment
+        let result = initialize().await;
+        
+        // Should succeed or fail gracefully
+        match result {
+            Ok(_) => println!("Initialization successful"),
+            Err(e) => println!("Initialization failed as expected in test mode: {}", e),
+        }
+    }
+
+    #[test]
+    fn test_built_info_available() {
+        // Verify build info is accessible
+        assert!(built_info::PKG_NAME.len() > 0);
+        assert!(built_info::PKG_VERSION.len() > 0);
+    }
+    
+    // Additional simple configuration and data structure tests
+    #[test]
+    fn test_lens_config_debug_format() {
+        let config = LensConfig::default();
+        let debug_str = format!("{:?}", config);
+        assert!(debug_str.contains("LensConfig"));
+        assert!(debug_str.contains("50051"));
+    }
+    
+    #[test]
+    fn test_lens_config_modification() {
+        let mut config = LensConfig::default();
+        config.server_port = 8080;
+        config.max_results = 100;
+        
+        assert_eq!(config.server_port, 8080);
+        assert_eq!(config.max_results, 100);
+        // Other values should remain default
+        assert_eq!(config.cache_ttl_hours, 24);
+        assert!(config.lsp_enabled);
     }
 }

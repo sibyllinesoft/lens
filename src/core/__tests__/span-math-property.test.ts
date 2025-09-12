@@ -4,7 +4,7 @@
  * Phase A4 requirement for comprehensive span handling
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 
 // Span math utilities (assume these exist in the span resolver)
 interface SpanPosition {

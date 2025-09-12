@@ -3,28 +3,28 @@
  * Tests memory-mapped segment storage with filesystem mocking
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import * as fs from 'fs';
 import * as path from 'path';
 import { SegmentStorage } from '../segments.js';
 import type { SegmentType } from '../../types/core.js';
 
 // Mock filesystem operations
-vi.mock('fs');
-vi.mock('path');
+mock('fs');
+mock('path');
 
 // Mock telemetry
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
 
 // Mock production config
-vi.mock('../../types/config.js', () => ({
+mock('../../types/config.js', () => ({
   PRODUCTION_CONFIG: {
     segments: {
       defaultSize: 16 * 1024 * 1024,
@@ -38,14 +38,14 @@ describe('SegmentStorage', () => {
 
   beforeEach(() => {
     mockFs = {
-      existsSync: vi.fn(),
-      mkdirSync: vi.fn(),
-      openSync: vi.fn(),
-      ftruncateSync: vi.fn(),
-      readSync: vi.fn(),
-      writeSync: vi.fn(),
-      closeSync: vi.fn(),
-      unlinkSync: vi.fn(),
+      existsSync: jest.fn(),
+      mkdirSync: jest.fn(),
+      openSync: jest.fn(),
+      ftruncateSync: jest.fn(),
+      readSync: jest.fn(),
+      writeSync: jest.fn(),
+      closeSync: jest.fn(),
+      unlinkSync: jest.fn(),
     };
 
     // Set up default mock behaviors
@@ -64,8 +64,8 @@ describe('SegmentStorage', () => {
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
-    vi.restoreAllMocks();
+    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Constructor', () => {
@@ -356,7 +356,7 @@ describe('SegmentStorage', () => {
     it('should handle buffer allocation errors', async () => {
       // Mock Buffer.alloc to throw
       const originalAlloc = Buffer.alloc;
-      Buffer.alloc = vi.fn().mockImplementation(() => {
+      Buffer.alloc = jest.fn().mockImplementation(() => {
         throw new Error('Out of memory');
       });
 

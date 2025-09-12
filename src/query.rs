@@ -324,7 +324,7 @@ impl QueryProcessor {
         }
 
         // Regex patterns
-        if query.contains('*') || query.contains('?') || query.contains('[') || query.contains('^') {
+        if query.contains('*') || query.contains('?') || query.contains('[') || query.contains('^') || query.contains('$') {
             return QueryType::Regex;
         }
 

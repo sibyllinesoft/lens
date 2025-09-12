@@ -3,7 +3,7 @@
  * Covers all NDJSON formatting and parsing utilities
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import {
   formatResultsAsNDJSON,
   formatErrorsAsNDJSON,

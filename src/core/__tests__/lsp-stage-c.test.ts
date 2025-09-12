@@ -3,7 +3,7 @@
  * Tests bounded LSP features and log-odds capping (≤0.4)
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest } from 'bun:test';
 import { LSPStageCEnhancer } from '../lsp-stage-c.js';
 import type { LSPHint, SearchContext, Candidate, LSPFeatures } from '../../types/core.js';
 

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, jest } from 'bun:test';
 import { AdvancedSearchIntegration } from '../advanced-search-integration';
 import { ConformalRouter } from '../conformal-router';
 import { EntropyGatedPriors } from '../entropy-gated-priors';

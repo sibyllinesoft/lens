@@ -1,49 +1,49 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 
 // Mock all external dependencies BEFORE importing ParallelProcessor
-vi.mock('worker_threads', () => ({
-  Worker: vi.fn().mockImplementation(() => ({
-    postMessage: vi.fn(),
-    terminate: vi.fn().mockResolvedValue(undefined),
-    on: vi.fn(),
-    removeAllListeners: vi.fn(),
+mock('worker_threads', () => ({
+  Worker: jest.fn().mockImplementation(() => ({
+    postMessage: jest.fn(),
+    terminate: jest.fn().mockResolvedValue(undefined),
+    on: jest.fn(),
+    removeAllListeners: jest.fn(),
   })),
   isMainThread: true,
   parentPort: null,
   workerData: null,
 }));
 
-vi.mock('os', () => ({
-  cpus: vi.fn(() => Array(8).fill({ model: 'Intel Core' })),
+mock('os', () => ({
+  cpus: jest.fn(() => Array(8).fill({ model: 'Intel Core' })),
 }));
 
-vi.mock('perf_hooks', () => ({
+mock('perf_hooks', () => ({
   performance: {
-    now: vi.fn(() => Date.now()),
+    now: jest.fn(() => Date.now()),
   },
 }));
 
-vi.mock('../telemetry/tracer', () => ({
+mock('../telemetry/tracer', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
 
-vi.mock('./memory-pool-manager', () => ({
+mock('./memory-pool-manager', () => ({
   globalMemoryPool: {
-    allocate: vi.fn(),
-    release: vi.fn(),
+    allocate: jest.fn(),
+    release: jest.fn(),
   },
 }));
 
-vi.mock('./advanced-cache-manager', () => ({
+mock('./advanced-cache-manager', () => ({
   globalCacheManager: {
-    get: vi.fn().mockResolvedValue(null),
-    set: vi.fn(),
+    get: jest.fn().mockResolvedValue(null),
+    set: jest.fn(),
   },
 }));
 
@@ -75,7 +75,7 @@ describe('ParallelProcessor', () => {
   let processor: ParallelProcessor;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     // Get a fresh instance for each test
     processor = ParallelProcessor.getInstance();
   });

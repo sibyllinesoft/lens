@@ -3,7 +3,7 @@
  * Covers CUSUM detection, ladder monitoring, coverage tracking, and real-time alerting
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, jest, afterEach, mock } from 'bun:test';
 import { EventEmitter } from 'events';
 import {
   DriftDetectionSystem,
@@ -21,12 +21,12 @@ import {
 } from '../drift-detection-system.js';
 
 // Mock the tracer
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      setStatus: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      setStatus: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
@@ -36,7 +36,7 @@ describe('Drift Detection System', () => {
   let mockMetrics: DriftMetrics;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     driftDetector = new DriftDetectionSystem(DEFAULT_DRIFT_CONFIG);
     
     mockMetrics = {
@@ -57,7 +57,7 @@ describe('Drift Detection System', () => {
 
   afterEach(() => {
     driftDetector.destroy();
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('CUSUM Detector', () => {

@@ -657,7 +657,7 @@ mod tests {
     #[tokio::test]
     async fn test_typescript_tokenizer() {
         let config = TokenizationConfig::for_language("typescript");
-        let mut tokenizer = LanguageTokenizer::new(config).await.unwrap();
+        let mut tokenizer = LanguageTokenizer::new(config.clone()).await.unwrap();
         
         let text = "interface User { name: string; } type ID = number;";
         let result = tokenizer.tokenize(text).await.unwrap();

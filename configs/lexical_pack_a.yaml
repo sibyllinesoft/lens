@@ -1,0 +1,246 @@
+# Lexical Pack A: 3x3 Matrix Configuration
+# phrase_boost ∈ {1.10, 1.25, 1.40}
+# window_tokens ∈ {8, 16, 32}
+#
+# This configuration defines 9 system variants for lexical precision testing
+# with promotion gates focused on lexical scenario improvement.
+
+systems:
+  # Row 1: phrase_boost = 1.10
+  - name: "lexical_1.10_8"
+    description: "Lexical precision: boost=1.10, window=8"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.10
+        window_tokens: 8
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60  # Baseline router settings
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64  # Baseline ANN settings
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+      
+  - name: "lexical_1.10_16" 
+    description: "Lexical precision: boost=1.10, window=16"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.10
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "lexical_1.10_32"
+    description: "Lexical precision: boost=1.10, window=32"  
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.10
+        window_tokens: 32
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  # Row 2: phrase_boost = 1.25
+  - name: "lexical_1.25_8"
+    description: "Lexical precision: boost=1.25, window=8"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.25
+        window_tokens: 8
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "lexical_1.25_16"
+    description: "Lexical precision: boost=1.25, window=16"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.25
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "lexical_1.25_32"
+    description: "Lexical precision: boost=1.25, window=32"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.25
+        window_tokens: 32
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  # Row 3: phrase_boost = 1.40
+  - name: "lexical_1.40_8"
+    description: "Lexical precision: boost=1.40, window=8"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.40
+        window_tokens: 8
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "lexical_1.40_16"
+    description: "Lexical precision: boost=1.40, window=16"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.40
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "lexical_1.40_32"
+    description: "Lexical precision: boost=1.40, window=32"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.40
+        window_tokens: 32
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+# Pack A Promotion Rules (STRICT ENFORCEMENT)
+promotion_rules:
+  quality_gates:
+    primary_metric: "ndcg_at_10_span_only"
+    lexical_scenarios:
+      minimum_improvement_pp: 0.8  # ≥ +0.8 percentage points on lexical scenarios
+      scenarios_filter: "contains_exact_match OR phrase_proximity"
+    overall_quality:
+      minimum_improvement_pp: 0.0   # Overall Δ ≥ 0.0 pp (no regression)
+      
+  latency_gates:
+    p99_requirement: "≤ baseline"     # p99 ≤ baseline
+    p95_requirement: "≤ baseline + 0.5ms"  # p95 ≤ baseline + 0.5ms
+    p99_p95_ratio: "≤ 2.0"           # p99/p95 ≤ 2.0
+    
+  sla_gates:
+    sla_recall_at_50: "Δ ≥ 0.0 pp"   # No regression in SLA-Recall@50
+    
+  safety_gates:
+    ece_unchanged: "≤ 0.02"          # ECE ≤ 0.02 (CALIB_V22 unchanged)
+    file_credit_span_only: "≤ 5%"    # file-credit ≤ 5% (span-only policy)
+    calibration_version: "CALIB_V22" # Must use CALIB_V22, no retraining
+
+# Artifact Requirements
+artifacts:
+  required:
+    - "agg.parquet"
+    - "hits.parquet" 
+    - "tables/hero_span_v22.csv"
+    - "pool_counts_by_system.csv"
+    - "plots/*"
+    - "attestation.json"
+  attestation_includes:
+    - config_fingerprints
+    - promotion_gate_results
+    - calibration_verification
+    - sla_enforcement_proof

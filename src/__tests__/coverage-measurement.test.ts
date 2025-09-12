@@ -4,7 +4,7 @@
  * Target: Get accurate coverage measurement with working tests only
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import { ASTCache } from '../core/ast-cache.js';
 import { IndexRegistry } from '../core/index-registry.js';
 import { LensTracer } from '../telemetry/tracer.js';

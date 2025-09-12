@@ -3,7 +3,7 @@
  * Comprehensive test suite for bitmap operations and performance validation
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'bun:test';
 import { OptimizedTrigramIndex } from '../optimized-trigram-index.js';
 import type { DocumentPosition } from '../../types/core.js';
 

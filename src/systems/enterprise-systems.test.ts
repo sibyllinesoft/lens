@@ -8,7 +8,7 @@
  * 4. Adversarial/Durability Drills
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'bun:test';
 import { EnterpriseSystemsCoordinator } from './index.js';
 import type { EnterpriseSystemsConfig, SearchRequest } from './index.js';
 import { WitnessSetMiner } from './witness-set-mining.js';

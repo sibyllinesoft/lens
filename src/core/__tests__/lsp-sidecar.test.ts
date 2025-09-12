@@ -3,7 +3,7 @@
  * Tests LSP server management, hint generation, and core functionality
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { LSPSidecar } from '../lsp-sidecar.js';
 import type { LSPSidecarConfig, LSPHint } from '../../types/core.js';
 import { spawn, ChildProcess } from 'child_process';
@@ -11,31 +11,31 @@ import { EventEmitter } from 'events';
 import fs from 'fs';
 
 // Mock child_process module
-vi.mock('child_process', () => ({
-  spawn: vi.fn()
+mock('child_process', () => ({
+  spawn: jest.fn()
 }));
 
 // Mock fs module
-vi.mock('fs', () => ({
-  existsSync: vi.fn(),
-  mkdirSync: vi.fn(),
-  writeFileSync: vi.fn(),
-  readFileSync: vi.fn()
+mock('fs', () => ({
+  existsSync: jest.fn(),
+  mkdirSync: jest.fn(),
+  writeFileSync: jest.fn(),
+  readFileSync: jest.fn()
 }));
 
 // Mock path module
-vi.mock('path', () => ({
-  join: vi.fn((...args) => args.join('/')),
-  dirname: vi.fn()
+mock('path', () => ({
+  join: jest.fn((...args) => args.join('/')),
+  dirname: jest.fn()
 }));
 
 // Mock telemetry tracer
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));
@@ -47,14 +47,14 @@ describe('LSPSidecar', () => {
   
   // Mock child process with event emitter behavior
   class MockChildProcess extends EventEmitter {
-    stdin = { write: vi.fn() };
+    stdin = { write: jest.fn() };
     stdout = new EventEmitter();
     stderr = new EventEmitter();
-    kill = vi.fn();
+    kill = jest.fn();
   }
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Setup mock config
     mockConfig = {
@@ -223,7 +223,7 @@ describe('LSPSidecar', () => {
     });
 
     it('should handle LSP notifications correctly', () => {
-      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
       
       const notification = {
         jsonrpc: '2.0',
@@ -241,7 +241,7 @@ describe('LSPSidecar', () => {
     });
 
     it('should handle malformed LSP messages gracefully', () => {
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       
       // Send malformed JSON
       mockProcess.stdout.emit('data', Buffer.from(
@@ -476,7 +476,7 @@ describe('LSPSidecar', () => {
       // Only expect documentSymbol requests for included files (2 files)
       let requestCount = 0;
       const originalWrite = mockProcess.stdin.write;
-      mockProcess.stdin.write = vi.fn((data: any) => {
+      mockProcess.stdin.write = jest.fn((data: any) => {
         if (data.includes('textDocument/documentSymbol')) {
           requestCount++;
           setTimeout(() => {
@@ -534,7 +534,7 @@ describe('LSPSidecar', () => {
     });
 
     it('should handle corrupted shard file gracefully', async () => {
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       (fs.readFileSync as any).mockReturnValue('{ invalid json }');
 
       const loadedHints = await lspSidecar.loadHintsFromShard();
@@ -696,14 +696,14 @@ describe('LSPSidecar', () => {
       const harvestPromise = lspSidecar.harvestHints(['/test/workspace/test.ts']);
 
       // Fast-forward time to trigger timeout (would normally be 30s)
-      vi.useFakeTimers();
+      jest.useFakeTimers();
       setTimeout(() => {
-        vi.advanceTimersByTime(31000);
+        jest.advanceTimersByTime(31000);
       }, 100);
 
       await expect(harvestPromise).rejects.toThrow();
       
-      vi.useRealTimers();
+      jest.useRealTimers();
     });
 
     it('should handle file processing errors gracefully', async () => {
@@ -716,7 +716,7 @@ describe('LSPSidecar', () => {
 
       await lspSidecar.initialize();
 
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
       // Mock workspace symbols request
       setTimeout(() => {

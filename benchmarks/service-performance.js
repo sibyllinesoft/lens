@@ -10,33 +10,33 @@ import { promises as fs } from 'fs';
  */
 class ServicePerformanceBenchmark {
   constructor() {
-    this.baseUrl = 'http://localhost:3001';
+    this.baseUrl = 'http://localhost:3000';
     this.results = [];
     this.testQueries = [
-      // Stage A: Lexical queries (2-8ms target)
-      { query: 'function', mode: 'lex', fuzzy: 0.8, expectedStage: 'A' },
-      { query: 'class', mode: 'lex', fuzzy: 0.7, expectedStage: 'A' },
-      { query: 'user', mode: 'lex', fuzzy: 0.9, expectedStage: 'A' },
-      { query: 'search', mode: 'lex', fuzzy: 0.8, expectedStage: 'A' },
+      // Stage A: Basic keyword queries (2-8ms target)
+      { query: 'function', expectedStage: 'A' },
+      { query: 'class', expectedStage: 'A' },
+      { query: 'user', expectedStage: 'A' },
+      { query: 'search', expectedStage: 'A' },
       
-      // Stage B: Structural queries (3-10ms target)
-      { query: 'getUserById', mode: 'struct', fuzzy: 0.7, expectedStage: 'B' },
-      { query: 'UserService', mode: 'struct', fuzzy: 0.8, expectedStage: 'B' },
-      { query: 'async findUser', mode: 'struct', fuzzy: 0.6, expectedStage: 'B' },
+      // Stage B: More complex queries (3-10ms target)
+      { query: 'getUserById', expectedStage: 'B' },
+      { query: 'UserService', expectedStage: 'B' },
+      { query: 'async findUser', expectedStage: 'B' },
       
-      // Stage C: Hybrid queries (5-15ms target)
-      { query: 'authentication flow', mode: 'hybrid', fuzzy: 0.7, expectedStage: 'C' },
-      { query: 'database connection', mode: 'hybrid', fuzzy: 0.8, expectedStage: 'C' },
-      { query: 'error handling pattern', mode: 'hybrid', fuzzy: 0.6, expectedStage: 'C' }
+      // Stage C: Complex/phrase queries (5-15ms target)
+      { query: 'authentication flow', expectedStage: 'C' },
+      { query: 'database connection', expectedStage: 'C' },
+      { query: 'error handling pattern', expectedStage: 'C' }
     ];
   }
 
-  async makeRequest(query) {
+  async makeRequest(testQuery) {
     return new Promise((resolve, reject) => {
-      const data = JSON.stringify(query);
+      const data = JSON.stringify({ query: testQuery.query });
       const options = {
         hostname: 'localhost',
-        port: 3001,
+        port: 3000,
         path: '/search',
         method: 'POST',
         headers: {
@@ -59,14 +59,14 @@ class ServicePerformanceBenchmark {
               latency,
               statusCode: res.statusCode,
               data: result,
-              query
+              query: testQuery
             });
           } catch (e) {
             resolve({
               latency,
               statusCode: res.statusCode,
               error: responseData,
-              query
+              query: testQuery
             });
           }
         });

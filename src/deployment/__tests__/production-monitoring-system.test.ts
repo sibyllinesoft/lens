@@ -1,31 +1,31 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 import { EventEmitter } from 'events';
 import { ProductionMonitoringSystem } from '../production-monitoring-system.js';
 
 // Mock filesystem operations
-vi.mock('fs', () => ({
-  writeFileSync: vi.fn(),
-  readFileSync: vi.fn(),
-  existsSync: vi.fn(),
-  mkdirSync: vi.fn(),
+mock('fs', () => ({
+  writeFileSync: jest.fn(),
+  readFileSync: jest.fn(),
+  existsSync: jest.fn(),
+  mkdirSync: jest.fn(),
   promises: {
-    writeFile: vi.fn(),
-    readFile: vi.fn(),
-    mkdir: vi.fn()
+    writeFile: jest.fn(),
+    readFile: jest.fn(),
+    mkdir: jest.fn()
   }
 }));
 
-vi.mock('path', () => ({
-  join: vi.fn((...paths) => paths.join('/'))
+mock('path', () => ({
+  join: jest.fn((...paths) => paths.join('/'))
 }));
 
 // Mock fetch for API calls
-global.fetch = vi.fn();
+global.fetch = jest.fn();
 
 // Mock console to reduce noise
-const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
 describe('ProductionMonitoringSystem', () => {
   let monitoringSystem: ProductionMonitoringSystem;
@@ -76,12 +76,12 @@ describe('ProductionMonitoringSystem', () => {
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     mockMonitoringDir = './test-monitoring';
 
     // Setup filesystem mocks
-    const fs = await vi.importMock('fs') as any;
+    const fs = await jest.importMock('fs') as any;
     fs.existsSync.mockReturnValue(false);
     fs.readFileSync.mockReturnValue('{}');
     fs.writeFileSync.mockImplementation(() => {});
@@ -138,7 +138,7 @@ describe('ProductionMonitoringSystem', () => {
         last_baseline_update: '2024-01-15T00:00:00Z'
       };
 
-      const fs = await vi.importMock('fs') as any;
+      const fs = await jest.importMock('fs') as any;
       fs.existsSync.mockReturnValue(true);
       fs.readFileSync.mockReturnValue(JSON.stringify(mockState));
 
@@ -147,7 +147,7 @@ describe('ProductionMonitoringSystem', () => {
     });
 
     it('should handle corrupted state file gracefully', async () => {
-      const fs = await vi.importMock('fs') as any;
+      const fs = await jest.importMock('fs') as any;
       fs.existsSync.mockReturnValue(true);
       fs.readFileSync.mockReturnValue('invalid json');
 
@@ -185,7 +185,7 @@ describe('ProductionMonitoringSystem', () => {
     it('should handle start monitoring errors gracefully', async () => {
       // Mock initialization failure
       const originalMethod = monitoringSystem['initializeCUSUMBaselines'];
-      monitoringSystem['initializeCUSUMBaselines'] = vi.fn().mockRejectedValue(new Error('Init failed'));
+      monitoringSystem['initializeCUSUMBaselines'] = jest.fn().mockRejectedValue(new Error('Init failed'));
 
       await expect(monitoringSystem.startMonitoring()).rejects.toThrow('Init failed');
 
@@ -660,7 +660,7 @@ describe('ProductionMonitoringSystem', () => {
       // Trigger state save
       monitoringSystem['saveState']();
       
-      const fs = await vi.importMock('fs') as any;
+      const fs = await jest.importMock('fs') as any;
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining('monitoring-state.json'),
         expect.stringContaining('cusum_detectors')
@@ -668,7 +668,7 @@ describe('ProductionMonitoringSystem', () => {
     });
 
     it('should handle state save errors gracefully', async () => {
-      const fs = await vi.importMock('fs') as any;
+      const fs = await jest.importMock('fs') as any;
       fs.writeFileSync.mockImplementation(() => {
         throw new Error('Write failed');
       });
@@ -804,7 +804,7 @@ describe('ProductionMonitoringSystem', () => {
 
   describe('Event Emission', () => {
     it('should emit events on alert triggers', async () => {
-      const alertHandler = vi.fn();
+      const alertHandler = jest.fn();
       monitoringSystem.on('alert', alertHandler);
 
       const testCondition = {
@@ -828,7 +828,7 @@ describe('ProductionMonitoringSystem', () => {
     });
 
     it('should emit events on CUSUM alarms', async () => {
-      const cusumHandler = vi.fn();
+      const cusumHandler = jest.fn();
       monitoringSystem.on('cusum_alarm', cusumHandler);
 
       await monitoringSystem.startMonitoring();
@@ -851,7 +851,7 @@ describe('ProductionMonitoringSystem', () => {
     });
 
     it('should emit health status changes', () => {
-      const healthHandler = vi.fn();
+      const healthHandler = jest.fn();
       monitoringSystem.on('health_change', healthHandler);
 
       // Simulate health status change by activating an alarm

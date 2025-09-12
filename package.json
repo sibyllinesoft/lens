@@ -3,22 +3,22 @@
   "version": "1.0.0-rc.2",
   "type": "module",
   "description": "Lightning-fast code search with semantic understanding - search your entire codebase in sub-millisecond time with fuzzy matching, AST parsing, and natural language queries",
-  "main": "dist/index.js",
+  "main": "target/release/lens",
   "bin": {
-    "lens": "./dist/cli.js",
-    "deploy": "./scripts/deploy-cli.js"
+    "lens": "./target/release/lens"
   },
   "scripts": {
-    "build": "tsc",
-    "build:validate": "npm run validate:readme-metrics && tsc",
+    "build": "cargo build --release",
+    "build:validate": "npm run validate:readme-metrics && cargo build --release",
     "validate:readme-metrics": "echo 'validate-readme-metrics script not found'",
-    "dev": "tsx watch src/server.ts",
-    "start": "node dist/server.js",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "test:ui": "vitest --ui",
-    "lint": "eslint src/**/*.ts",
-    "fmt": "prettier --write src/**/*.ts",
+    "dev": "cargo run --bin lens",
+    "start": "./target/release/lens",
+    "test": "bun test && cargo test",
+    "test:ts": "bun test",
+    "test:rust": "cargo test",
+    "test:coverage": "bun test --coverage && cargo tarpaulin --out html",
+    "lint": "cargo clippy -- -D warnings",
+    "fmt": "cargo fmt",
     "validate:config": "cue eval configs/settings/architecture.cue",
     "validate:production": "cue export configs/settings/architecture.cue --expression lens_production",
     "deploy:production": "tsx infra/automation/scripts/execute-gemma256-production-deployment.ts",
@@ -60,9 +60,9 @@
     "governance:power": "tsx src/scripts/governance-validation-demo.ts --statistical-power",
     "governance:calibration": "tsx src/scripts/governance-validation-demo.ts --calibration",
     "governance:testing": "tsx src/scripts/governance-validation-demo.ts --multiple-testing",
-    "test:phase-d": "vitest run src/__tests__/phase-d-integration.test.ts",
+    "test:phase-d": "bun test src/__tests__/phase-d-integration.test.ts",
     "test:lsp-serena": "echo 'run-lsp-serena-comparison script not found'",
-    "test:lsp-serena-unit": "vitest run src/__tests__/lsp-serena-comparison.test.ts",
+    "test:lsp-serena-unit": "bun test src/__tests__/lsp-serena-comparison.test.ts",
     "deploy": "tsx scripts/deploy-cli.ts",
     "deploy:start": "tsx scripts/deploy-cli.ts start",
     "deploy:status": "tsx scripts/deploy-cli.ts status",
@@ -88,7 +88,7 @@
     "validate-paper-build": "echo 'validate-paper-build script not found'",
     "generate-complete-paper": "echo 'generate-complete-paper script not found'",
     "demo:enterprise": "tsx src/demo/enterprise-systems-demo.ts",
-    "test:enterprise": "vitest run src/systems/*.test.ts"
+    "test:enterprise": "bun test src/systems/*.test.ts"
   },
   "keywords": [
     "code-search",
@@ -117,7 +117,6 @@
     "@opentelemetry/exporter-prometheus": "^0.45.0",
     "@opentelemetry/instrumentation": "^0.45.1",
     "@opentelemetry/sdk-node": "^0.45.1",
-    "@types/lru-cache": "^7.10.10",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "fast-fuzzy": "^1.12.0",
@@ -136,21 +135,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/hapi__catbox": "^12.1.0",
-    "@types/hapi__shot": "^6.0.0",
-    "@types/node": "^20.19.11",
-    "@types/uuid": "^9.0.7",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
-    "@vitest/coverage-v8": "^1.6.1",
-    "@vitest/ui": "^1.6.1",
-    "c8": "^10.1.3",
-    "eslint": "^8.55.0",
-    "prettier": "^3.1.1",
-    "ts-node": "^10.9.2",
     "tsx": "^4.20.5",
-    "typescript": "^5.9.2",
-    "vitest": "^1.6.1"
+    "@types/bun": "latest"
   },
   "engines": {
     "node": ">=18.0.0"

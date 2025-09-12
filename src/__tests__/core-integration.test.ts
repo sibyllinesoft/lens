@@ -3,7 +3,7 @@
  * Exercises multiple systems together for broad coverage
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { LensSearchEngine } from '../api/search-engine.js';
 import { IndexRegistry } from '../core/index-registry.js';
 import { PrecisionOptimizationEngine } from '../core/precision-optimization.js';
@@ -12,22 +12,22 @@ import type { SearchContext } from '../types/core.js';
 import type { APIConfig } from '../types/api.js';
 
 // Mock filesystem operations
-vi.mock('fs', () => ({
-  existsSync: vi.fn(() => true),
-  mkdirSync: vi.fn(),
-  readFileSync: vi.fn(() => '{"test": true}'),
-  writeFileSync: vi.fn(),
-  readdirSync: vi.fn(() => ['test-manifest.json']),
-  statSync: vi.fn(() => ({ isFile: () => true, size: 1000 })),
+mock('fs', () => ({
+  existsSync: jest.fn(() => true),
+  mkdirSync: jest.fn(),
+  readFileSync: jest.fn(() => '{"test": true}'),
+  writeFileSync: jest.fn(),
+  readdirSync: jest.fn(() => ['test-manifest.json']),
+  statSync: jest.fn(() => ({ isFile: () => true, size: 1000 })),
 }));
 
 // Mock telemetry
-vi.mock('../telemetry/tracer.js', () => ({
+mock('../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(), 
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(), 
+      end: jest.fn(),
     })),
   },
 }));
@@ -47,7 +47,7 @@ describe('Core Lens Integration', () => {
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Initialize core systems
     indexRegistry = new IndexRegistry('/test/indexes');
@@ -77,7 +77,7 @@ describe('Core Lens Integration', () => {
 
       // Mock index reader
       const mockReader = {
-        search: vi.fn().mockResolvedValue([
+        search: jest.fn().mockResolvedValue([
           {
             file: 'src/user.ts',
             line: 10,
@@ -101,11 +101,11 @@ describe('Core Lens Integration', () => {
             span_len: 32,
           },
         ]),
-        searchStructural: vi.fn().mockResolvedValue([]),
+        searchStructural: jest.fn().mockResolvedValue([]),
       };
 
-      vi.spyOn(indexRegistry, 'hasRepository').mockReturnValue(true);
-      vi.spyOn(indexRegistry, 'getReader').mockReturnValue(mockReader);
+      jest.spyOn(indexRegistry, 'hasRepository').mockReturnValue(true);
+      jest.spyOn(indexRegistry, 'getReader').mockReturnValue(mockReader);
 
       // Execute search with all systems integrated
       const results = await searchEngine.search(context);
@@ -177,7 +177,7 @@ describe('Core Lens Integration', () => {
       const repos = ['repo-1', 'repo-2', 'repo-3'];
       
       repos.forEach(repo => {
-        vi.spyOn(indexRegistry, 'hasRepository').mockReturnValueOnce(true);
+        jest.spyOn(indexRegistry, 'hasRepository').mockReturnValueOnce(true);
       });
 
       // Test repository access
@@ -199,7 +199,7 @@ describe('Core Lens Integration', () => {
         fuzzy_distance: 1,
       };
 
-      vi.spyOn(indexRegistry, 'hasRepository').mockReturnValue(false);
+      jest.spyOn(indexRegistry, 'hasRepository').mockReturnValue(false);
 
       await expect(searchEngine.search(context)).resolves.toBeDefined();
     });
@@ -267,16 +267,16 @@ describe('Core Lens Integration', () => {
       };
 
       const mockReader = {
-        search: vi.fn().mockResolvedValue([
+        search: jest.fn().mockResolvedValue([
           { file: 'test1.ts', line: 1, col: 0, lang: 'ts', snippet: 'test1', score: 0.9, why: ['test'], byte_offset: 0, span_len: 5 },
           { file: 'test2.ts', line: 1, col: 0, lang: 'ts', snippet: 'test2', score: 0.8, why: ['test'], byte_offset: 0, span_len: 5 },
           { file: 'test3.ts', line: 1, col: 0, lang: 'ts', snippet: 'test3', score: 0.7, why: ['test'], byte_offset: 0, span_len: 5 },
         ]),
-        searchStructural: vi.fn().mockResolvedValue([]),
+        searchStructural: jest.fn().mockResolvedValue([]),
       };
 
-      vi.spyOn(indexRegistry, 'hasRepository').mockReturnValue(true);
-      vi.spyOn(indexRegistry, 'getReader').mockReturnValue(mockReader);
+      jest.spyOn(indexRegistry, 'hasRepository').mockReturnValue(true);
+      jest.spyOn(indexRegistry, 'getReader').mockReturnValue(mockReader);
 
       const results = await testEngine.search(context);
       
@@ -370,12 +370,12 @@ describe('Core Lens Integration', () => {
       ];
 
       const mockReader = {
-        search: vi.fn().mockResolvedValue([]),
-        searchStructural: vi.fn().mockResolvedValue([]),
+        search: jest.fn().mockResolvedValue([]),
+        searchStructural: jest.fn().mockResolvedValue([]),
       };
 
-      vi.spyOn(indexRegistry, 'hasRepository').mockReturnValue(true);
-      vi.spyOn(indexRegistry, 'getReader').mockReturnValue(mockReader);
+      jest.spyOn(indexRegistry, 'hasRepository').mockReturnValue(true);
+      jest.spyOn(indexRegistry, 'getReader').mockReturnValue(mockReader);
 
       // Execute concurrent searches
       const promises = contexts.map(ctx => searchEngine.search(ctx));

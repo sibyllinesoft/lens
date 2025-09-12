@@ -80,6 +80,17 @@ pub struct WandLearningConfig {
     pub term_contribution_threshold: f64,
 }
 
+impl Default for WandLearningConfig {
+    fn default() -> Self {
+        Self {
+            max_iterations: 100,
+            quality_threshold: 0.8,
+            score_improvement_tolerance: 0.01,
+            term_contribution_threshold: 0.05,
+        }
+    }
+}
+
 /// HNSW learning configuration
 #[derive(Debug, Clone)]
 pub struct HnswLearningConfig {
@@ -94,6 +105,17 @@ pub struct HnswLearningConfig {
     
     /// Neighbor exploration limit
     pub max_neighbors: usize,
+}
+
+impl Default for HnswLearningConfig {
+    fn default() -> Self {
+        Self {
+            max_layers: 5,
+            beam_width: 64,
+            distance_threshold: 0.1,
+            max_neighbors: 16,
+        }
+    }
 }
 
 /// WAND stopping predictor using learned features
@@ -252,12 +274,60 @@ pub struct LinearPredictor {
     learning_rate: f64,
 }
 
+impl LinearPredictor {
+    // Constructor for testing
+    pub fn new(weights: Vec<f64>, bias: f64, learning_rate: f64) -> Self {
+        Self {
+            weights,
+            bias,
+            learning_rate,
+        }
+    }
+    
+    // Getter methods for testing
+    pub fn weights(&self) -> &Vec<f64> {
+        &self.weights
+    }
+    
+    pub fn bias(&self) -> f64 {
+        self.bias
+    }
+    
+    pub fn learning_rate(&self) -> f64 {
+        self.learning_rate
+    }
+}
+
 /// Confidence calibration parameters
 #[derive(Debug, Clone)]
 pub struct CalibrationParams {
     temperature: f64,
     shift: f64,
     scale: f64,
+}
+
+impl CalibrationParams {
+    // Constructor for testing
+    pub fn new(temperature: f64, shift: f64, scale: f64) -> Self {
+        Self {
+            temperature,
+            shift,
+            scale,
+        }
+    }
+    
+    // Getter methods for testing
+    pub fn temperature(&self) -> f64 {
+        self.temperature
+    }
+    
+    pub fn shift(&self) -> f64 {
+        self.shift
+    }
+    
+    pub fn scale(&self) -> f64 {
+        self.scale
+    }
 }
 
 /// Feature extractors implementations
@@ -483,6 +553,11 @@ impl LearningStopModel {
                     timestamp: std::time::Instant::now(),
                 });
             }
+            "confidence" => {
+                // Handle confidence training
+                // For now, we'll accept the feedback without error
+                // This could be extended to actually train a confidence model
+            }
             _ => return Err(anyhow!("Unknown query type: {}", query_type)),
         }
         
@@ -563,7 +638,7 @@ impl LearningStopModel {
             0.0
         };
         
-        (distance_improvement * 0.3 + exploration_ratio * 0.3 + distance_quality * 0.4).min(1.0)
+        (distance_improvement * 0.3 + exploration_ratio * 0.3 + distance_quality as f64 * 0.4).min(1.0)
     }
     
     /// Estimate computation saved based on early stopping
@@ -646,6 +721,11 @@ impl LearningStopModel {
     pub async fn get_metrics(&self) -> LearningMetrics {
         self.metrics.read().await.clone()
     }
+    
+    /// Get configuration for testing
+    pub fn config(&self) -> &LearningConfig {
+        &self.config
+    }
 }
 
 impl WandStoppingPredictor {
@@ -722,6 +802,31 @@ impl WandStoppingPredictor {
         self.is_trained = true;
         
         Ok(())
+    }
+    
+    // Getter methods for testing
+    pub fn weights(&self) -> &HashMap<WandFeature, f64> {
+        &self.weights
+    }
+    
+    pub fn is_trained(&self) -> bool {
+        self.is_trained
+    }
+    
+    pub fn accuracy(&self) -> f64 {
+        self.accuracy
+    }
+    
+    pub fn precision(&self) -> f64 {
+        self.precision
+    }
+    
+    pub fn recall(&self) -> f64 {
+        self.recall
+    }
+    
+    pub fn training_history(&self) -> &VecDeque<WandTrainingSample> {
+        &self.training_history
     }
 }
 
@@ -806,6 +911,35 @@ impl HnswStoppingPredictor {
         
         Ok(())
     }
+    
+    // Getter methods for testing
+    pub fn layer_thresholds(&self) -> &HashMap<usize, f64> {
+        &self.layer_thresholds
+    }
+    
+    pub fn neighbor_quality_weights(&self) -> &HashMap<HnswFeature, f64> {
+        &self.neighbor_quality_weights
+    }
+    
+    pub fn training_samples(&self) -> &VecDeque<HnswTrainingSample> {
+        &self.training_samples
+    }
+    
+    pub fn search_efficiency(&self) -> f64 {
+        self.search_efficiency
+    }
+    
+    pub fn quality_maintained(&self) -> f64 {
+        self.quality_maintained
+    }
+    
+    pub fn beam_width_adaptation(&self) -> f64 {
+        self.beam_width_adaptation
+    }
+    
+    pub fn exploration_decay(&self) -> f64 {
+        self.exploration_decay
+    }
 }
 
 impl ConfidenceModel {
@@ -840,6 +974,28 @@ impl ConfidenceModel {
         }
         
         Ok(())
+    }
+    
+    // Getter methods for testing
+    pub fn confidence_predictors(&self) -> &HashMap<ConfidenceFeature, LinearPredictor> {
+        &self.confidence_predictors
+    }
+    
+    pub fn calibration_params(&self) -> &CalibrationParams {
+        &self.calibration_params
+    }
+    
+    pub fn confidence_accuracy(&self) -> f64 {
+        self.confidence_accuracy
+    }
+    
+    pub fn calibration_data(&self) -> &VecDeque<ConfidenceTrainingSample> {
+        &self.calibration_data
+    }
+    
+    // Method to add calibration data for testing
+    pub fn add_calibration_sample(&mut self, sample: ConfidenceTrainingSample) {
+        self.calibration_data.push_back(sample);
     }
 }
 

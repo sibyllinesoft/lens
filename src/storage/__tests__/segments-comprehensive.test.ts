@@ -4,15 +4,15 @@
  * Strategy: Test all storage operations, file I/O, memory mapping, and error scenarios
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import * as fs from 'fs';
 import * as path from 'path';
 import { SegmentStorage } from '../segments.js';
 import type { SegmentType, MMapSegment } from '../../types/core.js';
 
 // Mock fs operations for controlled testing
-vi.mock('fs');
-vi.mock('../../telemetry/tracer.js');
+mock('fs');
+mock('../../telemetry/tracer.js');
 
 describe('Comprehensive Segment Storage Tests', () => {
   let segmentStorage: SegmentStorage;
@@ -28,28 +28,28 @@ describe('Comprehensive Segment Storage Tests', () => {
   const mockFileDescriptor = 3;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     testBasePath = '/tmp/test-segments';
 
     // Mock fs methods with realistic implementations
-    mockFs = vi.mocked(fs);
+    mockFs = mocked(fs);
 
-    mockFs.existsSync = vi.fn().mockReturnValue(false);
-    mockFs.mkdirSync = vi.fn();
-    mockFs.openSync = vi.fn().mockReturnValue(mockFileDescriptor);
-    mockFs.ftruncateSync = vi.fn();
-    mockFs.writeSync = vi.fn();
-    mockFs.fsyncSync = vi.fn();
-    mockFs.closeSync = vi.fn();
-    mockFs.readSync = vi.fn();
-    mockFs.statSync = vi.fn().mockReturnValue({
+    mockFs.existsSync = jest.fn().mockReturnValue(false);
+    mockFs.mkdirSync = jest.fn();
+    mockFs.openSync = jest.fn().mockReturnValue(mockFileDescriptor);
+    mockFs.ftruncateSync = jest.fn();
+    mockFs.writeSync = jest.fn();
+    mockFs.fsyncSync = jest.fn();
+    mockFs.closeSync = jest.fn();
+    mockFs.readSync = jest.fn();
+    mockFs.statSync = jest.fn().mockReturnValue({
       size: mockInitialSize,
       mtimeMs: Date.now(),
     });
 
     // Mock Buffer.alloc to return our test buffer
-    vi.spyOn(Buffer, 'alloc').mockReturnValue(mockBuffer);
-    vi.spyOn(Buffer, 'from').mockImplementation((source: any) => {
+    jest.spyOn(Buffer, 'alloc').mockReturnValue(mockBuffer);
+    jest.spyOn(Buffer, 'from').mockImplementation((source: any) => {
       if (source.subarray) {
         return source.subarray();
       }
@@ -59,17 +59,17 @@ describe('Comprehensive Segment Storage Tests', () => {
     // Mock tracer
     const { LensTracer } = require('../../telemetry/tracer.js');
     const mockSpan = {
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     };
-    LensTracer.createChildSpan = vi.fn().mockReturnValue(mockSpan);
+    LensTracer.createChildSpan = jest.fn().mockReturnValue(mockSpan);
 
     segmentStorage = new SegmentStorage(testBasePath);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Initialization and Directory Management', () => {
@@ -311,7 +311,7 @@ describe('Comprehensive Segment Storage Tests', () => {
       const offset = 2048;
 
       // Mock buffer copy operation
-      const copySpy = vi.spyOn(testData, 'copy');
+      const copySpy = jest.spyOn(testData, 'copy');
 
       await segmentStorage.writeToSegment(mockSegmentId, offset, testData);
 
@@ -398,7 +398,7 @@ describe('Comprehensive Segment Storage Tests', () => {
       const expectedData = Buffer.from('Expected data content', 'utf8');
 
       // Mock buffer subarray to return expected data
-      mockBuffer.subarray = vi.fn().mockReturnValue(expectedData);
+      mockBuffer.subarray = jest.fn().mockReturnValue(expectedData);
 
       const result = await segmentStorage.readFromSegment(mockSegmentId, offset, length);
 
@@ -423,7 +423,7 @@ describe('Comprehensive Segment Storage Tests', () => {
     });
 
     it('should handle read errors gracefully', async () => {
-      mockBuffer.subarray = vi.fn().mockImplementation(() => {
+      mockBuffer.subarray = jest.fn().mockImplementation(() => {
         throw new Error('Buffer error');
       });
 
@@ -441,7 +441,7 @@ describe('Comprehensive Segment Storage Tests', () => {
 
       for (const { offset, length } of testCases) {
         const mockData = Buffer.alloc(length).fill(0xFF);
-        mockBuffer.subarray = vi.fn().mockReturnValue(mockData);
+        mockBuffer.subarray = jest.fn().mockReturnValue(mockData);
 
         const result = await segmentStorage.readFromSegment(mockSegmentId, offset, length);
 
@@ -557,7 +557,7 @@ describe('Comprehensive Segment Storage Tests', () => {
     it('should handle health check errors gracefully', async () => {
       // Mock process.memoryUsage to throw error
       const originalMemoryUsage = process.memoryUsage;
-      process.memoryUsage = vi.fn().mockImplementation(() => {
+      process.memoryUsage = jest.fn().mockImplementation(() => {
         throw new Error('Memory check failed');
       });
 

@@ -5,18 +5,18 @@
  * Coverage focus: Work-stealing, load balancing, batching, error handling
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, jest, mock } from 'bun:test';
 import { ParallelProcessor } from '../core/parallel-processor.js';
 import { LensTracer } from '../telemetry/tracer.js';
 import type { SearchContext, SearchHit, Candidate } from '../types/core.js';
 
 // Mock worker_threads module for testing
-vi.mock('worker_threads', () => ({
-  Worker: vi.fn().mockImplementation(() => ({
-    postMessage: vi.fn(),
-    terminate: vi.fn(),
-    on: vi.fn(),
-    removeAllListeners: vi.fn()
+mock('worker_threads', () => ({
+  Worker: jest.fn().mockImplementation(() => ({
+    postMessage: jest.fn(),
+    terminate: jest.fn(),
+    on: jest.fn(),
+    removeAllListeners: jest.fn()
   })),
   isMainThread: true,
   parentPort: null,
@@ -40,7 +40,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
   beforeEach(() => {
     // Reset mocks and create fresh processor instance
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     processor = new ParallelProcessor();
   });
 
@@ -113,7 +113,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
     it('should adapt to system CPU count', async () => {
       // Mock os.cpus() to return specific count
-      vi.doMock('os', () => ({
+      jest.doMock('os', () => ({
         cpus: () => Array.from({ length: 8 }, () => ({})) // Mock 8 CPUs
       }));
 
@@ -145,7 +145,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
       // Mock successful task completion
       const mockResult = { results: [{ file: 'test.ts', line: 1, score: 1.0 }] };
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockResolvedValueOnce(mockResult);
 
       const result = await processor.submitTask(task);
@@ -175,7 +175,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
       }));
 
       // Mock task execution for each type
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async (task) => ({ result: `processed-${task.type}` }));
 
       const results = await Promise.all(
@@ -198,7 +198,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
       const executionOrder: string[] = [];
       
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async (task) => {
           executionOrder.push(task.payload.id);
           return { processed: task.payload.id };
@@ -227,7 +227,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
       };
 
       // Mock slow execution
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           await new Promise(resolve => setTimeout(resolve, 500)); // Takes 500ms
           return { result: 'never reached' };
@@ -257,7 +257,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
       const executionOrder: string[] = [];
       
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async (task) => {
           executionOrder.push(task.id);
           // Simulate task duration
@@ -292,7 +292,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       }));
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           await new Promise(resolve => setTimeout(resolve, 50));
           return { processed: true };
@@ -325,7 +325,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
       };
 
       // Mock worker failure
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockRejectedValueOnce(new Error('Worker crashed'))
         .mockResolvedValueOnce({ recovered: true }); // Second attempt succeeds
 
@@ -366,7 +366,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         }
       ];
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async (task) => {
           const duration = task.type === 'SLOW_TASK' ? 200 : 10;
           await new Promise(resolve => setTimeout(resolve, duration));
@@ -401,7 +401,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       }));
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => ({ done: true }));
 
       await Promise.all(tasks.map(task => processor.submitTask(task)));
@@ -442,7 +442,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
       const batchedExecutions: any[] = [];
       
-      vi.spyOn(processor as any, 'executeBatch')
+      jest.spyOn(processor as any, 'executeBatch')
         .mockImplementation(async (batch) => {
           batchedExecutions.push(batch);
           return batch.map((task: any) => ({ processed: task.payload.id }));
@@ -468,7 +468,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       };
 
-      vi.spyOn(processor as any, 'executeBatch')
+      jest.spyOn(processor as any, 'executeBatch')
         .mockImplementation(async (batch) => {
           return batch.map((task: any) => ({ processed: task.payload.id }));
         });
@@ -492,7 +492,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
 
       const batchedExecutions: any[] = [];
       
-      vi.spyOn(processor as any, 'executeBatch')
+      jest.spyOn(processor as any, 'executeBatch')
         .mockImplementation(async (batch) => {
           batchedExecutions.push(batch.map((t: any) => t.priority));
           return batch.map((task: any) => ({ processed: task.payload.id }));
@@ -521,7 +521,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       }));
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async (task) => {
           await new Promise(resolve => setTimeout(resolve, 10));
           return { processed: task.payload.id };
@@ -563,7 +563,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           await new Promise(resolve => setTimeout(resolve, 50));
           return { done: true };
@@ -599,7 +599,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockRejectedValueOnce(new Error('Task execution failed'));
 
       await expect(processor.submitTask(task))
@@ -618,7 +618,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
       };
 
       // Mock repeated failures
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockRejectedValue(new Error('Worker failure'));
 
       // Submit multiple tasks to trigger circuit breaker
@@ -648,7 +648,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
       await processor.initialize(config);
 
       // Mock slow task execution to fill queue
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           await new Promise(resolve => setTimeout(resolve, 100));
           return { done: true };
@@ -678,7 +678,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async (task) => {
           // Simulate memory usage
           return { processed: true, dataSize: task.payload.largeData.length };
@@ -709,7 +709,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           await new Promise(resolve => setTimeout(resolve, 500));
           return { completed: true };
@@ -736,7 +736,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         executeAt: Date.now() + 100 // Execute in 100ms
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => ({ scheduled: true }));
 
       const startTime = Date.now();
@@ -760,7 +760,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         condition
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => ({ executed: true }));
 
       const result = await processor.submitTask(task);
@@ -781,7 +781,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 5000
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           await new Promise(resolve => setTimeout(resolve, 50));
           return { completed: true };
@@ -809,7 +809,7 @@ describe('Comprehensive Parallel Processor Coverage Tests', () => {
         timeout: 10000
       };
 
-      vi.spyOn(processor as any, 'executeTask')
+      jest.spyOn(processor as any, 'executeTask')
         .mockImplementation(async () => {
           // Never resolves
           return new Promise(() => {});

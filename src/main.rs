@@ -8,7 +8,7 @@
 //! - 40-60% LSP routing target
 
 use std::sync::Arc;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use clap::{Parser, Subcommand};
 use tracing::{info, error};
 
@@ -19,8 +19,9 @@ use lens_core::{
     pipeline::FusedPipeline,
     metrics::MetricsCollector,
     attestation::AttestationManager,
-    benchmark::{BenchmarkRunner, BenchmarkConfig},
-    grpc::{create_server, ServerConfig},
+    benchmark::{BenchmarkRunner, BenchmarkOrchestrator, BenchmarkConfig},
+    grpc::{create_server as create_grpc_server, ServerConfig as GrpcServerConfig},
+    server::{create_server as create_http_server, ServerConfig as HttpServerConfig},
 };
 
 #[derive(Parser)]
@@ -54,12 +55,30 @@ struct Cli {
     /// Cache TTL in hours
     #[arg(long, default_value = "24")]
     cache_ttl: u64,
+
+    /// Dataset path for pinned golden datasets
+    #[arg(long, default_value = "./pinned-datasets")]
+    dataset_path: String,
+
+    /// Enable pinned dataset loading
+    #[arg(long, default_value = "true")]
+    enable_datasets: bool,
+
+    /// Default dataset version to load
+    #[arg(long)]
+    dataset_version: Option<String>,
+
+    /// Enable corpus validation for datasets
+    #[arg(long, default_value = "true")]
+    enable_validation: bool,
 }
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Start the gRPC server
+    /// Start the HTTP REST API server
     Serve,
+    /// Start the gRPC server (legacy)
+    ServeGrpc,
     /// Run benchmarks
     Benchmark {
         /// Dataset name to benchmark
@@ -99,13 +118,26 @@ async fn main() -> Result<()> {
         lsp_enabled: cli.enable_lsp,
         cache_ttl_hours: cli.cache_ttl,
         performance_target_ms: 150, // ≤150ms p95 per TODO.md
+        
+        // Dataset configuration
+        dataset_path: cli.dataset_path,
+        enable_pinned_datasets: cli.enable_datasets,
+        default_dataset_version: cli.dataset_version.or_else(|| 
+            Some(lens_core::benchmark::DEFAULT_PINNED_VERSION.to_string())
+        ),
+        enable_corpus_validation: cli.enable_validation,
+        
         ..Default::default()
     };
 
     match cli.command {
         Commands::Serve => {
-            info!("🚀 Starting Lens server with Rust architecture");
-            serve(config, cli.bind, cli.port, cli.enable_semantic).await
+            info!("🚀 Starting Lens HTTP API server with Rust architecture");
+            serve_http(config, cli.bind, cli.port, cli.enable_semantic).await
+        }
+        Commands::ServeGrpc => {
+            info!("🚀 Starting Lens gRPC server (legacy mode)");
+            serve_grpc(config, cli.bind, cli.port, cli.enable_semantic).await
         }
         Commands::Benchmark { dataset, limit, smoke, reports } => {
             info!("🧪 Running benchmark suite for dataset: {}", dataset);
@@ -122,8 +154,78 @@ async fn main() -> Result<()> {
     }
 }
 
-/// Start the complete Rust gRPC server with all components
-async fn serve(
+/// Start the HTTP REST API server
+async fn serve_http(
+    config: LensConfig,
+    bind_address: String,
+    port: u16,
+    enable_semantic: bool,
+) -> Result<()> {
+    info!("Initializing HTTP REST API server components...");
+
+    // Create SearchConfig from LensConfig
+    let search_config = lens_core::search::SearchConfig {
+        index_path: config.index_path.clone(),
+        max_results_default: config.max_results,
+        sla_target_ms: config.performance_target_ms,
+        lsp_routing_rate: if config.lsp_enabled { 0.5 } else { 0.0 },
+        enable_fusion_pipeline: false, // Temporarily disabled
+        enable_semantic_search: enable_semantic,
+        enable_lsp: config.lsp_enabled,
+        context_lines: 3,
+        
+        // Dataset configuration from LensConfig
+        dataset_path: config.dataset_path.clone(),
+        enable_pinned_datasets: config.enable_pinned_datasets,
+        default_dataset_version: config.default_dataset_version.clone(),
+        enable_corpus_validation: config.enable_corpus_validation,
+    };
+
+    // Initialize search engine with dataset support
+    let search_engine = SearchEngine::with_config(&config.index_path, search_config).await
+        .map_err(|e| anyhow::anyhow!("Failed to create search engine: {}", e))?;
+
+    let search_engine = Arc::new(search_engine);
+
+    // Initialize metrics collector for SLA tracking
+    let metrics_collector = Arc::new(MetricsCollector::new());
+    
+    // Initialize attestation manager for fraud resistance
+    let attestation_manager = Arc::new(AttestationManager::new(config.attestation_enabled)?);
+
+    // Initialize benchmark runner
+    let benchmark_config = BenchmarkConfig::default();
+    let benchmark_runner = Arc::new(BenchmarkRunner::new(
+        search_engine.clone(),
+        metrics_collector.clone(),
+        benchmark_config,
+    ));
+
+    // Configure HTTP server
+    let http_server_config = HttpServerConfig {
+        bind_address,
+        port,
+        enable_cors: true,
+        request_timeout: std::time::Duration::from_millis(config.performance_target_ms),
+        max_request_size: 1024 * 1024, // 1MB
+        enable_tracing: true,
+    };
+
+    // Create and start HTTP server
+    info!("🌐 Starting HTTP API server on {}:{}", http_server_config.bind_address, http_server_config.port);
+    create_http_server(
+        http_server_config,
+        search_engine,
+        metrics_collector,
+        attestation_manager,
+        benchmark_runner,
+    ).await?;
+
+    Ok(())
+}
+
+/// Start the complete Rust gRPC server with all components (legacy)
+async fn serve_grpc(
     config: LensConfig,
     bind_address: String,
     port: u16,
@@ -131,8 +233,26 @@ async fn serve(
 ) -> Result<()> {
     info!("Initializing Rust migration components...");
 
-    // Initialize search engine with LSP integration
-    let mut search_engine = SearchEngine::new(&config.index_path).await
+    // Create SearchConfig from LensConfig
+    let search_config = lens_core::search::SearchConfig {
+        index_path: config.index_path.clone(),
+        max_results_default: config.max_results,
+        sla_target_ms: config.performance_target_ms,
+        lsp_routing_rate: if config.lsp_enabled { 0.5 } else { 0.0 },
+        enable_fusion_pipeline: false, // Temporarily disabled
+        enable_semantic_search: enable_semantic,
+        enable_lsp: config.lsp_enabled,
+        context_lines: 3,
+        
+        // Dataset configuration from LensConfig
+        dataset_path: config.dataset_path.clone(),
+        enable_pinned_datasets: config.enable_pinned_datasets,
+        default_dataset_version: config.default_dataset_version.clone(),
+        enable_corpus_validation: config.enable_corpus_validation,
+    };
+
+    // Initialize search engine with dataset support
+    let search_engine = SearchEngine::with_config(&config.index_path, search_config).await
         .map_err(|e| anyhow::anyhow!("Failed to create search engine: {}", e))?;
 
     // Initialize LSP manager if enabled  
@@ -178,7 +298,7 @@ async fn serve(
     ));
 
     // Configure gRPC server
-    let server_config = ServerConfig {
+    let server_config = GrpcServerConfig {
         bind_address,
         port,
         max_concurrent_requests: 1000,
@@ -189,7 +309,7 @@ async fn serve(
 
     // Create and start gRPC server
     info!("🌐 Starting gRPC server on {}:{}", server_config.bind_address, server_config.port);
-    let server = create_server(
+    let server = create_grpc_server(
         server_config,
         search_engine,
         metrics_collector,
@@ -226,8 +346,7 @@ async fn run_benchmark(
     let metrics_collector = Arc::new(MetricsCollector::new());
 
     // Configure benchmark
-    let mut benchmark_config = BenchmarkConfig::default();
-    benchmark_config.generate_reports = generate_reports;
+    let benchmark_config = BenchmarkConfig::default();
 
     let benchmark_runner = BenchmarkRunner::new(
         search_engine,
@@ -273,13 +392,36 @@ async fn run_benchmark(
 
 /// Validate corpus consistency
 async fn validate_corpus(config: LensConfig, dataset: String) -> Result<()> {
-    info!("Validating corpus consistency for dataset: {}", dataset);
+    info!("🔍 Validating corpus consistency for dataset: {}", dataset);
     
-    // TODO: Implement corpus validation
-    // This would check that all golden query files exist in the indexed corpus
-    info!("✅ Corpus validation completed (placeholder)");
+    // Create benchmark orchestrator to perform validation
+    let benchmark_config = BenchmarkConfig {
+        dataset_path: config.dataset_path.clone(),
+        enable_corpus_validation: config.enable_corpus_validation,
+        default_version: config.default_dataset_version.clone(),
+        ..BenchmarkConfig::default()
+    };
     
-    Ok(())
+    let orchestrator = BenchmarkOrchestrator::with_config(benchmark_config).await?;
+    
+    // Load the specified dataset (or current version if default)
+    let pinned_dataset = if dataset == "current" || dataset.is_empty() {
+        orchestrator.load_pinned_dataset().await?
+    } else {
+        orchestrator.load_dataset_version(&dataset).await?
+    };
+    
+    info!("📊 Loaded dataset with {} queries for validation", pinned_dataset.queries.len());
+    
+    // Perform corpus consistency validation
+    let is_consistent = orchestrator.validate_corpus_consistency(&pinned_dataset).await?;
+    
+    if is_consistent {
+        info!("✅ Corpus validation passed - all golden queries exist in the indexed corpus");
+        Ok(())
+    } else {
+        Err(anyhow!("❌ Corpus validation failed - some golden queries do not exist in the indexed corpus"))
+    }
 }
 
 /// Check system health
@@ -294,7 +436,36 @@ async fn check_health(config: LensConfig) -> Result<()> {
     // Check LSP servers if enabled
     if config.lsp_enabled {
         info!("🔧 LSP integration: ✅ ENABLED");
-        // TODO: Check individual LSP server health
+        
+        // Check if LSP servers are available (basic check without full initialization)
+        info!("🔍 Checking LSP server availability...");
+        let mut servers_found = 0;
+        
+        // Check for common LSP servers
+        let server_commands = vec![
+            ("TypeScript", "typescript-language-server"),
+            ("Python", "pylsp"),
+            ("Rust", "rust-analyzer"), 
+            ("Go", "gopls"),
+        ];
+        
+        for (name, command) in server_commands {
+            match tokio::process::Command::new(command)
+                .arg("--version")
+                .output()
+                .await
+            {
+                Ok(output) if output.status.success() => {
+                    info!("  ✅ {} LSP server found: {}", name, command);
+                    servers_found += 1;
+                }
+                _ => {
+                    info!("  ⚠️  {} LSP server not found: {}", name, command);
+                }
+            }
+        }
+        
+        info!("🔧 LSP servers available: {}/4", servers_found);
     } else {
         info!("🔧 LSP integration: ⚠️ DISABLED");
     }

@@ -84,7 +84,7 @@ pub struct FusedResultData {
 }
 
 /// Query type classification
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryType {
     Exact,
@@ -156,12 +156,12 @@ impl QueryPreprocessingStage {
     fn classify_query(&self, query: &str) -> QueryType {
         if query.starts_with('"') && query.ends_with('"') {
             QueryType::Exact
-        } else if query.contains("class ") || query.contains("function ") || query.contains("interface ") {
-            QueryType::Structural
         } else if query.contains('*') || query.contains('?') {
             QueryType::Fuzzy
         } else if query.split_whitespace().count() > 3 {
-            QueryType::Semantic
+            QueryType::Semantic  // Check semantic first (long queries)
+        } else if query.contains("class ") || query.contains("function ") || query.contains("interface ") {
+            QueryType::Structural
         } else if query.chars().all(|c| c.is_alphanumeric() || c == '_') {
             QueryType::Symbol
         } else {
@@ -179,14 +179,17 @@ impl QueryPreprocessingStage {
         // Extract file extensions (e.g., "ext:ts")
         if let Some(ext_match) = regex::Regex::new(r"ext:(\w+)").unwrap().find(query) {
             file_extensions.push(format!(".{}", &query[ext_match.start() + 4..ext_match.end()]));
-            processed_query = processed_query.replace(ext_match.as_str(), "").trim().to_string();
+            processed_query = processed_query.replace(ext_match.as_str(), "");
         }
 
         // Extract language filter (e.g., "lang:typescript")
         if let Some(lang_match) = regex::Regex::new(r"lang:(\w+)").unwrap().find(query) {
             language_filter = Some(query[lang_match.start() + 5..lang_match.end()].to_string());
-            processed_query = processed_query.replace(lang_match.as_str(), "").trim().to_string();
+            processed_query = processed_query.replace(lang_match.as_str(), "");
         }
+
+        // Clean up extra spaces
+        processed_query = processed_query.split_whitespace().collect::<Vec<_>>().join(" ");
 
         (processed_query, QueryFilters {
             file_extensions,
@@ -500,3 +503,379 @@ impl StageMetrics {
 }
 
 use std::sync::Arc;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+    use tokio::time::Duration;
+
+    fn create_test_context() -> PipelineContext {
+        PipelineContext {
+            timeout: Duration::from_secs(30),
+            language_hint: Some("rust".to_string()),
+            systems: vec!["test".to_string()],
+            max_results: 100,
+            metadata: HashMap::new(),
+        }
+    }
+
+    fn create_test_query_data() -> QueryData {
+        QueryData {
+            original_query: "test query".to_string(),
+            processed_query: "test".to_string(),
+            query_type: QueryType::Exact,
+            filters: QueryFilters {
+                file_extensions: vec![".rs".to_string()],
+                exclude_paths: vec![],
+                language_filter: Some("rust".to_string()),
+                size_limit: Some(1000),
+            },
+        }
+    }
+
+    #[test]
+    fn test_stage_input_creation() {
+        let context = create_test_context();
+        let query_data = create_test_query_data();
+        
+        let input = StageInput {
+            query: "test query".to_string(),
+            query_id: "test-123".to_string(),
+            context: context.clone(),
+            data: StageData::Query(query_data),
+        };
+
+        assert_eq!(input.query, "test query");
+        assert_eq!(input.query_id, "test-123");
+        assert_eq!(input.context.timeout, Duration::from_secs(30));
+        assert_eq!(input.context.max_results, 100);
+    }
+
+    #[test]
+    fn test_pipeline_context_creation() {
+        let mut metadata = HashMap::new();
+        metadata.insert("test_key".to_string(), "test_value".to_string());
+
+        let context = PipelineContext {
+            timeout: Duration::from_millis(5000),
+            language_hint: Some("typescript".to_string()),
+            systems: vec!["lsp".to_string(), "search".to_string()],
+            max_results: 50,
+            metadata,
+        };
+
+        assert_eq!(context.timeout, Duration::from_millis(5000));
+        assert_eq!(context.language_hint, Some("typescript".to_string()));
+        assert_eq!(context.systems.len(), 2);
+        assert_eq!(context.max_results, 50);
+        assert_eq!(context.metadata.get("test_key"), Some(&"test_value".to_string()));
+    }
+
+    #[test]
+    fn test_query_type_variants() {
+        let exact = QueryType::Exact;
+        let fuzzy = QueryType::Fuzzy;
+        let structural = QueryType::Structural;
+        let semantic = QueryType::Semantic;
+        let symbol = QueryType::Symbol;
+        let hybrid = QueryType::Hybrid;
+
+        // Test serialization/deserialization
+        assert_eq!(serde_json::to_string(&exact).unwrap(), "\"exact\"");
+        assert_eq!(serde_json::to_string(&fuzzy).unwrap(), "\"fuzzy\"");
+        assert_eq!(serde_json::to_string(&structural).unwrap(), "\"structural\"");
+        assert_eq!(serde_json::to_string(&semantic).unwrap(), "\"semantic\"");
+        assert_eq!(serde_json::to_string(&symbol).unwrap(), "\"symbol\"");
+        assert_eq!(serde_json::to_string(&hybrid).unwrap(), "\"hybrid\"");
+    }
+
+    #[test]
+    fn test_query_filters_creation() {
+        let filters = QueryFilters {
+            file_extensions: vec![".rs".to_string(), ".ts".to_string()],
+            exclude_paths: vec!["target/".to_string(), "node_modules/".to_string()],
+            language_filter: Some("rust".to_string()),
+            size_limit: Some(10000),
+        };
+
+        assert_eq!(filters.file_extensions.len(), 2);
+        assert_eq!(filters.exclude_paths.len(), 2);
+        assert_eq!(filters.language_filter, Some("rust".to_string()));
+        assert_eq!(filters.size_limit, Some(10000));
+    }
+
+    #[test]
+    fn test_stage_data_variants() {
+        let query_data = create_test_query_data();
+        let stage_data_query = StageData::Query(query_data);
+
+        match stage_data_query {
+            StageData::Query(data) => {
+                assert_eq!(data.original_query, "test query");
+                assert_eq!(data.query_type, QueryType::Exact);
+            }
+            _ => panic!("Expected Query variant"),
+        }
+
+        let lsp_data = LspResultData {
+            responses: vec![],
+            latencies: HashMap::new(),
+            errors: vec!["test error".to_string()],
+        };
+        let stage_data_lsp = StageData::LspResults(lsp_data);
+
+        match stage_data_lsp {
+            StageData::LspResults(data) => {
+                assert_eq!(data.responses.len(), 0);
+                assert_eq!(data.errors.len(), 1);
+            }
+            _ => panic!("Expected LspResults variant"),
+        }
+    }
+
+    #[test]
+    fn test_stage_execution_metrics() {
+        let metrics = StageExecutionMetrics {
+            execution_time_ms: 150.5,
+            memory_usage_mb: 25.3,
+            items_processed: 42,
+            success: true,
+        };
+
+        assert_eq!(metrics.execution_time_ms, 150.5);
+        assert_eq!(metrics.memory_usage_mb, 25.3);
+        assert_eq!(metrics.items_processed, 42);
+        assert!(metrics.success);
+    }
+
+    #[test]
+    fn test_stage_metrics_new() {
+        let metrics = StageMetrics::new();
+        
+        assert_eq!(metrics.total_executions, 0);
+        assert_eq!(metrics.successful_executions, 0);
+        assert_eq!(metrics.failed_executions, 0);
+        assert_eq!(metrics.average_latency_ms, 0.0);
+        assert_eq!(metrics.p95_latency_ms, 0.0);
+        assert_eq!(metrics.average_memory_mb, 0.0);
+    }
+
+    #[test]
+    fn test_stage_metrics_update_latency() {
+        let mut metrics = StageMetrics::new();
+        
+        // First update (total_executions = 0, so should set average directly)
+        metrics.total_executions = 1;
+        metrics.update_latency(100.0);
+        assert_eq!(metrics.average_latency_ms, 100.0);
+        assert_eq!(metrics.p95_latency_ms, 120.0); // 100.0 * 1.2
+
+        // Second update (total_executions > 0, so should calculate average)
+        metrics.total_executions = 2;
+        metrics.update_latency(200.0);
+        assert_eq!(metrics.average_latency_ms, 150.0); // (100.0 * 1 + 200.0) / 2
+        assert_eq!(metrics.p95_latency_ms, 180.0); // 150.0 * 1.2
+    }
+
+    #[test]
+    fn test_health_status() {
+        let mut checks = HashMap::new();
+        checks.insert("database".to_string(), true);
+        checks.insert("cache".to_string(), false);
+
+        let health = HealthStatus {
+            healthy: false,
+            message: "Cache is down".to_string(),
+            checks,
+        };
+
+        assert!(!health.healthy);
+        assert_eq!(health.message, "Cache is down");
+        assert_eq!(health.checks.len(), 2);
+        assert_eq!(health.checks.get("database"), Some(&true));
+        assert_eq!(health.checks.get("cache"), Some(&false));
+    }
+
+    #[tokio::test]
+    async fn test_query_preprocessing_stage_creation() {
+        let stage = QueryPreprocessingStage::new();
+        assert_eq!(stage.name(), "query_preprocessing");
+        
+        let metrics = stage.metrics();
+        assert_eq!(metrics.total_executions, 0);
+    }
+
+    #[tokio::test] 
+    async fn test_query_preprocessing_stage_classify_query() {
+        let stage = QueryPreprocessingStage::new();
+        
+        // Test exact query
+        assert_eq!(stage.classify_query("\"exact match\""), QueryType::Exact);
+        
+        // Test structural query
+        assert_eq!(stage.classify_query("class MyClass"), QueryType::Structural);
+        assert_eq!(stage.classify_query("function test"), QueryType::Structural);
+        assert_eq!(stage.classify_query("interface ITest"), QueryType::Structural);
+        
+        // Test fuzzy query
+        assert_eq!(stage.classify_query("test*"), QueryType::Fuzzy);
+        assert_eq!(stage.classify_query("test?query"), QueryType::Fuzzy);
+        
+        // Test semantic query (more than 3 words)
+        assert_eq!(stage.classify_query("find all function definitions that return string"), QueryType::Semantic);
+        
+        // Test symbol query (alphanumeric + underscore only)
+        assert_eq!(stage.classify_query("test_function"), QueryType::Symbol);
+        
+        // Test hybrid query (default)
+        assert_eq!(stage.classify_query("test-query"), QueryType::Hybrid);
+    }
+
+    #[tokio::test]
+    async fn test_query_preprocessing_stage_extract_filters() {
+        let stage = QueryPreprocessingStage::new();
+        
+        // Test extension filter
+        let (query, filters) = stage.extract_filters("test query ext:ts");
+        assert_eq!(query, "test query");
+        assert_eq!(filters.file_extensions, vec![".ts"]);
+        
+        // Test language filter
+        let (query, filters) = stage.extract_filters("test query lang:typescript");
+        assert_eq!(query, "test query");
+        assert_eq!(filters.language_filter, Some("typescript".to_string()));
+        
+        // Test both filters
+        let (query, filters) = stage.extract_filters("test ext:rs lang:rust query");
+        assert_eq!(query, "test query");
+        assert_eq!(filters.file_extensions, vec![".rs"]);
+        assert_eq!(filters.language_filter, Some("rust".to_string()));
+        
+        // Test no filters
+        let (query, filters) = stage.extract_filters("just a regular query");
+        assert_eq!(query, "just a regular query");
+        assert_eq!(filters.file_extensions.len(), 0);
+        assert_eq!(filters.language_filter, None);
+    }
+
+    #[tokio::test]
+    async fn test_query_preprocessing_stage_process() {
+        let stage = QueryPreprocessingStage::new();
+        let context = create_test_context();
+        
+        let input = StageInput {
+            query: "test ext:rs function".to_string(),
+            query_id: "test-123".to_string(),
+            context,
+            data: StageData::Query(create_test_query_data()),
+        };
+
+        let output = stage.process(input).await.unwrap();
+        
+        match output.data {
+            StageData::Query(query_data) => {
+                assert_eq!(query_data.original_query, "test ext:rs function");
+                assert_eq!(query_data.processed_query, "test function");
+                assert_eq!(query_data.query_type, QueryType::Hybrid); // Contains "function" but not "function " pattern
+                assert_eq!(query_data.filters.file_extensions, vec![".rs"]);
+            }
+            _ => panic!("Expected Query data"),
+        }
+
+        assert!(output.metrics.success);
+        assert!(output.metrics.execution_time_ms > 0.0);
+        assert_eq!(output.errors.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_query_preprocessing_stage_health_check() {
+        let stage = QueryPreprocessingStage::new();
+        let health = stage.health_check().await;
+        
+        assert!(health.healthy);
+        assert_eq!(health.message, "Query preprocessing stage is healthy");
+        assert_eq!(health.checks.len(), 2);
+        assert_eq!(health.checks.get("regex_engine"), Some(&true));
+        assert_eq!(health.checks.get("classification"), Some(&true));
+    }
+
+    #[tokio::test]
+    async fn test_lsp_search_stage_creation() {
+        let stage = LspSearchStage::new();
+        assert_eq!(stage.name(), "lsp_search");
+        
+        let metrics = stage.metrics();
+        assert_eq!(metrics.total_executions, 0);
+    }
+
+    #[tokio::test]
+    async fn test_lsp_search_stage_health_check() {
+        let stage = LspSearchStage::new();
+        let health = stage.health_check().await;
+        
+        // Should be healthy even with no clients (empty checks)
+        assert!(health.healthy);
+        assert_eq!(health.message, "All LSP clients are healthy");
+    }
+
+    #[tokio::test]
+    async fn test_text_search_stage_creation() {
+        let stage = TextSearchStage::new();
+        assert_eq!(stage.name(), "text_search");
+        
+        let metrics = stage.metrics();
+        assert_eq!(metrics.total_executions, 0);
+    }
+
+    #[tokio::test]
+    async fn test_text_search_stage_health_check() {
+        let stage = TextSearchStage::new();
+        let health = stage.health_check().await;
+        
+        // Should be unhealthy without index
+        assert!(!health.healthy);
+        assert_eq!(health.message, "Text search index is not available");
+        assert_eq!(health.checks.get("index_available"), Some(&false));
+    }
+
+    #[tokio::test]
+    async fn test_text_search_stage_process() {
+        let stage = TextSearchStage::new();
+        let context = create_test_context();
+        
+        let input = StageInput {
+            query: "test".to_string(),
+            query_id: "test-123".to_string(),
+            context,
+            data: StageData::Query(create_test_query_data()),
+        };
+
+        let output = stage.process(input).await.unwrap();
+        
+        match output.data {
+            StageData::SearchResults(search_data) => {
+                assert_eq!(search_data.results.len(), 0); // TODO implementation
+                assert_eq!(search_data.total_matches, 0);
+                assert!(search_data.search_time_ms >= 0.0); // Can be 0 for TODO implementation
+            }
+            _ => panic!("Expected SearchResults data"),
+        }
+
+        assert!(output.metrics.success);
+        assert_eq!(output.errors.len(), 0);
+    }
+
+    #[test]
+    fn test_lsp_search_options() {
+        let options = LspSearchOptions {
+            timeout: Duration::from_secs(10),
+            max_results: 50,
+            language_hint: Some("rust".to_string()),
+        };
+
+        assert_eq!(options.timeout, Duration::from_secs(10));
+        assert_eq!(options.max_results, 50);
+        assert_eq!(options.language_hint, Some("rust".to_string()));
+    }
+}

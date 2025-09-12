@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'bun:test';
 import { AdvancedSearchIntegration } from '../advanced-search-integration';
 import { ComprehensiveMonitoring } from '../comprehensive-monitoring';
 import type { SearchContext, SearchHit } from '../../types/search';

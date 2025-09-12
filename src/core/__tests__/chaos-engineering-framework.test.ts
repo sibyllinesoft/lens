@@ -2,7 +2,7 @@
  * Comprehensive test suite for Chaos Engineering Framework
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { 
   ChaosEngineeringFramework,
   ChaosExperimentType,
@@ -14,15 +14,15 @@ import {
 import { ChaosExperimentSuite } from '../chaos-scenarios.js';
 
 // Mock dependencies
-vi.mock('../performance-monitor.js', () => ({
+mock('../performance-monitor.js', () => ({
   performanceMonitor: {
-    recordMetric: vi.fn(),
+    recordMetric: jest.fn(),
   }
 }));
 
-vi.mock('../resilience-manager.js', () => ({
+mock('../resilience-manager.js', () => ({
   resilienceManager: {
-    getMetrics: vi.fn().mockReturnValue({
+    getMetrics: jest.fn().mockReturnValue({
       circuitBreakers: [],
       bulkheads: [],
       rateLimiters: [],
@@ -32,15 +32,15 @@ vi.mock('../resilience-manager.js', () => ({
   }
 }));
 
-vi.mock('../telemetry/tracer.js', () => ({
+mock('../telemetry/tracer.js', () => ({
   LensTracer: {
-    createTracer: vi.fn().mockReturnValue({
-      startActiveSpan: vi.fn().mockImplementation(async (name, fn) => {
+    createTracer: jest.fn().mockReturnValue({
+      startActiveSpan: jest.fn().mockImplementation(async (name, fn) => {
         const span = {
-          setAttributes: vi.fn(),
-          addEvent: vi.fn(),
-          recordException: vi.fn(),
-          end: vi.fn()
+          setAttributes: jest.fn(),
+          addEvent: jest.fn(),
+          recordException: jest.fn(),
+          end: jest.fn()
         };
         return await fn(span);
       })
@@ -306,7 +306,7 @@ describe('ChaosEngineeringFramework', () => {
     it('should track safety thresholds', async () => {
       // Mock getCurrentMetrics to return high error rate
       const originalGetCurrentMetrics = (chaosFramework as any).getCurrentMetrics;
-      (chaosFramework as any).getCurrentMetrics = vi.fn().mockResolvedValue({
+      (chaosFramework as any).getCurrentMetrics = jest.fn().mockResolvedValue({
         errorRate: 0.15, // Above emergency threshold (0.1)
         latencyP50: 10,
         latencyP95: 50,

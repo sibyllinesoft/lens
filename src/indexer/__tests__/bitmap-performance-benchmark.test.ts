@@ -3,7 +3,7 @@
  * Validates the ~30% Stage-A performance improvement from bitmap optimization
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'bun:test';
 import { LexicalSearchEngine } from '../lexical.js';
 import { SegmentStorage } from '../../storage/segments.js';
 import { featureFlags } from '../../config/features.js';

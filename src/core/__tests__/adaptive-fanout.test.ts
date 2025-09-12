@@ -3,7 +3,7 @@
  * Covers hardness-based query adaptation, configurable mapping, and performance optimization
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'bun:test';
 import {
   HardnessFeatures,
   AdaptiveConfig,

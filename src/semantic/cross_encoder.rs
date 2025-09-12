@@ -73,7 +73,7 @@ pub struct QueryComplexityAnalyzer {
 }
 
 /// Natural language query classifier
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct NLClassifier {
     /// Keywords indicating natural language queries
     nl_indicators: Vec<String>,
@@ -503,33 +503,8 @@ impl CrossEncoder {
 
 impl QueryComplexityAnalyzer {
     pub fn new() -> Self {
-        let nl_indicators = vec![
-            "find".to_string(),
-            "show".to_string(),
-            "get".to_string(),
-            "how".to_string(),
-            "what".to_string(),
-            "where".to_string(),
-            "functions".to_string(),
-            "methods".to_string(),
-            "classes".to_string(),
-        ];
-        
-        let code_patterns = vec![
-            "def ".to_string(),
-            "function".to_string(),
-            "class ".to_string(),
-            "import ".to_string(),
-            "const ".to_string(),
-            "let ".to_string(),
-            "fn ".to_string(),
-        ];
-        
         Self {
-            nl_classifier: NLClassifier {
-                nl_indicators,
-                code_patterns,
-            },
+            nl_classifier: NLClassifier::new(),
             complexity_cache: HashMap::new(),
         }
     }
@@ -560,7 +535,41 @@ impl QueryComplexityAnalyzer {
     }
 }
 
+impl Default for NLClassifier {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl NLClassifier {
+    pub fn new() -> Self {
+        let nl_indicators = vec![
+            "find".to_string(),
+            "show".to_string(),
+            "get".to_string(),
+            "how".to_string(),
+            "what".to_string(),
+            "where".to_string(),
+            "functions".to_string(),
+            "methods".to_string(),
+            "classes".to_string(),
+        ];
+        
+        let code_patterns = vec![
+            "def ".to_string(),
+            "function ".to_string(), // Add space to avoid matching "functions"
+            "class ".to_string(),
+            "import ".to_string(),
+            "const ".to_string(),
+            "let ".to_string(),
+            "fn ".to_string(),
+        ];
+        
+        Self {
+            nl_indicators,
+            code_patterns,
+        }
+    }
     pub fn is_natural_language_query(&self, query: &str) -> bool {
         let query_lower = query.to_lowercase();
         
@@ -571,6 +580,7 @@ impl NLClassifier {
         // Check for code patterns (negative indicator for NL)
         let has_code_patterns = self.code_patterns.iter()
             .any(|pattern| query_lower.contains(pattern));
+        
         
         // Simple heuristic: NL if has indicators and no code patterns
         has_nl_indicators && !has_code_patterns

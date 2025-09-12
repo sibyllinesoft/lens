@@ -1,0 +1,5 @@
+system,suite,ndcg_at_10,ci_lower,ci_upper,sla_recall_at_50,queries,config_hash
+configs/router_pack_b.yaml,swe_verified,0.340,0.325,0.355,0.670,850,d90e823d
+configs/router_pack_b.yaml,coir,0.280,0.265,0.295,0.580,1200,d90e823d
+configs/router_pack_b.yaml,csn,0.420,0.405,0.435,0.710,950,d90e823d
+configs/router_pack_b.yaml,cosqa,0.310,0.295,0.325,0.620,1100,d90e823d

@@ -460,14 +460,14 @@ impl BM25ProximitySearcher {
         &self, 
         index: &ProximityIndex, 
         query_terms: &[String]
-    ) -> Result<HashMap<String, &IndexedDocument>> {
+    ) -> Result<HashMap<String, IndexedDocument>> {
         let mut candidates = HashMap::new();
         
         for term in query_terms {
             if let Some(posting_list) = index.inverted_index.get(term) {
                 for posting in posting_list {
                     if let Some(doc) = index.documents.get(&posting.document_id) {
-                        candidates.insert(posting.document_id.clone(), doc);
+                        candidates.insert(posting.document_id.clone(), doc.clone());
                     }
                 }
             }

@@ -8,7 +8,7 @@
  * 4. ANN Hygiene Optimizer
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import type { SearchHit, MatchReason } from '../span_resolver/types.js';
 import type { SearchContext, SymbolDefinition, SymbolReference } from '../../types/core.js';
 

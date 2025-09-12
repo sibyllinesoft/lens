@@ -3,65 +3,65 @@
  * Priority: HIGH - Second highest complexity (108), 1089 LOC, critical for search functionality
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { IndexRegistry } from '../index-registry.js';
 import { readFileSync, existsSync, statSync } from 'fs';
 import * as fsPromises from 'fs/promises';
 import { join } from 'path';
 
 // Mock filesystem operations
-vi.mock('fs', () => ({
-  readFileSync: vi.fn(),
-  existsSync: vi.fn(),
-  readdirSync: vi.fn(),
-  statSync: vi.fn(),
+mock('fs', () => ({
+  readFileSync: jest.fn(),
+  existsSync: jest.fn(),
+  readdirSync: jest.fn(),
+  statSync: jest.fn(),
 }));
 
-vi.mock('fs/promises', () => ({
-  readFile: vi.fn(),
-  readdir: vi.fn(),
-  stat: vi.fn(),
-  access: vi.fn(),
+mock('fs/promises', () => ({
+  readFile: jest.fn(),
+  readdir: jest.fn(),
+  stat: jest.fn(),
+  access: jest.fn(),
 }));
 
-vi.mock('path', () => ({
-  join: vi.fn((...args) => args.join('/')),
-  dirname: vi.fn(path => path.split('/').slice(0, -1).join('/')),
-  basename: vi.fn(path => path.split('/').pop()),
-  extname: vi.fn(path => {
+mock('path', () => ({
+  join: jest.fn((...args) => args.join('/')),
+  dirname: jest.fn(path => path.split('/').slice(0, -1).join('/')),
+  basename: jest.fn(path => path.split('/').pop()),
+  extname: jest.fn(path => {
     const name = path.split('/').pop() || '';
     const dotIndex = name.lastIndexOf('.');
     return dotIndex > 0 ? name.slice(dotIndex) : '';
   }),
-  resolve: vi.fn((...args) => args.join('/').replace(/\/+/g, '/')),
-  relative: vi.fn((from, to) => to), // Simple mock that just returns the 'to' path
+  resolve: jest.fn((...args) => args.join('/').replace(/\/+/g, '/')),
+  relative: jest.fn((from, to) => to), // Simple mock that just returns the 'to' path
 }));
 
 // Mock telemetry
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn().mockReturnValue({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn().mockReturnValue({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     }),
   },
 }));
 
-const mockReadFileSync = vi.mocked(readFileSync);
-const mockExistsSync = vi.mocked(existsSync);
-const mockStatSync = vi.mocked(statSync);
-const mockJoin = vi.mocked(join);
-const mockFsAccess = vi.mocked(fsPromises.access);
-const mockFsReaddir = vi.mocked(fsPromises.readdir);
-const mockFsReadFile = vi.mocked(fsPromises.readFile);
+const mockReadFileSync = mocked(readFileSync);
+const mockExistsSync = mocked(existsSync);
+const mockStatSync = mocked(statSync);
+const mockJoin = mocked(join);
+const mockFsAccess = mocked(fsPromises.access);
+const mockFsReaddir = mocked(fsPromises.readdir);
+const mockFsReadFile = mocked(fsPromises.readFile);
 
 describe('IndexRegistry', () => {
   let registry: IndexRegistry;
   const testIndexRoot = '/test/indexed-content';
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     registry = new IndexRegistry(testIndexRoot);
     
     // Setup default mocks
@@ -86,7 +86,7 @@ describe('IndexRegistry', () => {
       const emptyRegistry = new IndexRegistry('/nonexistent');
       
       // Mock fs.access to reject for nonexistent directory
-      const mockAccess = vi.mocked(fsPromises.access);
+      const mockAccess = mocked(fsPromises.access);
       mockAccess.mockRejectedValueOnce(new Error('ENOENT: no such file or directory'));
       
       await expect(emptyRegistry.refresh()).rejects.toThrow('Index root does not exist');

@@ -14,7 +14,7 @@ mod adversarial {
         pub robustness_score: f32,
     }
     
-    pub async fn run_simple_test() -> Result<AdversarialAuditResult, Box<dyn std::error::Error>> {
+    pub async fn run_simple_test() -> anyhow::Result<AdversarialAuditResult> {
         println!("🎭 Running simple adversarial audit test");
         
         // Simulate adversarial testing

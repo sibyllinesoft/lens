@@ -10,6 +10,7 @@
 
 pub mod executor;
 pub mod fusion;
+pub mod learning;
 pub mod memory;
 pub mod scheduler;
 pub mod stages;

@@ -3,24 +3,24 @@
  * Priority: HIGH - Core semantic search functionality, 43 complexity, 615 LOC
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { SemanticRerankEngine } from '../semantic.js';
 import type { Candidate, SearchContext } from '../../types/core.js';
 
 // Mock dependencies
-vi.mock('../../storage/segments.js', () => ({
-  SegmentStorage: vi.fn().mockImplementation(() => ({
-    getSegment: vi.fn(),
-    storeSegment: vi.fn(),
+mock('../../storage/segments.js', () => ({
+  SegmentStorage: jest.fn().mockImplementation(() => ({
+    getSegment: jest.fn(),
+    storeSegment: jest.fn(),
   })),
 }));
 
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn().mockReturnValue({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn().mockReturnValue({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     }),
   },
 }));
@@ -30,10 +30,10 @@ describe('SemanticRerankEngine', () => {
   let mockSegmentStorage: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     mockSegmentStorage = {
-      getSegment: vi.fn(),
-      storeSegment: vi.fn(),
+      getSegment: jest.fn(),
+      storeSegment: jest.fn(),
     };
     engine = new SemanticRerankEngine(mockSegmentStorage);
   });
@@ -318,7 +318,7 @@ describe('SemanticRerankEngine', () => {
       // Mock internal error
       const originalRerank = (engine as any).performSemanticRerank;
       if (originalRerank) {
-        (engine as any).performSemanticRerank = vi.fn().mockRejectedValue(new Error('Semantic error'));
+        (engine as any).performSemanticRerank = jest.fn().mockRejectedValue(new Error('Semantic error'));
       }
 
       // Should return original candidates on error, not throw

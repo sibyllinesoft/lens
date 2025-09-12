@@ -3,32 +3,32 @@
  * Tests config parsing, path mapping, and language-specific configurations
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { WorkspaceConfigParser } from '../workspace-config.js';
 import type { WorkspaceConfig, SupportedLanguage } from '../../types/core.js';
 import fs from 'fs';
 
 // Mock fs module
-vi.mock('fs', () => ({
-  existsSync: vi.fn(),
-  readFileSync: vi.fn()
+mock('fs', () => ({
+  existsSync: jest.fn(),
+  readFileSync: jest.fn()
 }));
 
 // Mock path module
-vi.mock('path', () => ({
-  join: vi.fn((...args) => args.join('/')),
-  resolve: vi.fn((...args) => args.join('/')),
-  dirname: vi.fn((path) => path.split('/').slice(0, -1).join('/')),
-  relative: vi.fn((from, to) => to.replace(from, '').replace(/^\//, ''))
+mock('path', () => ({
+  join: jest.fn((...args) => args.join('/')),
+  resolve: jest.fn((...args) => args.join('/')),
+  dirname: jest.fn((path) => path.split('/').slice(0, -1).join('/')),
+  relative: jest.fn((from, to) => to.replace(from, '').replace(/^\//, ''))
 }));
 
 // Mock telemetry tracer
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));
@@ -38,7 +38,7 @@ describe('WorkspaceConfigParser', () => {
   const mockWorkspaceRoot = '/test/workspace';
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     parser = new WorkspaceConfigParser();
   });
 

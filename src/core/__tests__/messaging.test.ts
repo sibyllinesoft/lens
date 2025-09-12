@@ -3,29 +3,29 @@
  * Priority: MEDIUM - Core infrastructure component for system communication
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { MessagingSystem } from '../messaging.js';
 
 // Mock NATS or other messaging dependencies
-vi.mock('nats', () => ({
-  connect: vi.fn().mockResolvedValue({
-    publish: vi.fn(),
-    subscribe: vi.fn(),
-    drain: vi.fn(),
-    close: vi.fn(),
+mock('nats', () => ({
+  connect: jest.fn().mockResolvedValue({
+    publish: jest.fn(),
+    subscribe: jest.fn(),
+    drain: jest.fn(),
+    close: jest.fn(),
   }),
-  StringCodec: vi.fn().mockReturnValue({
-    encode: vi.fn().mockImplementation(str => Buffer.from(str)),
-    decode: vi.fn().mockImplementation(buf => buf.toString()),
+  StringCodec: jest.fn().mockReturnValue({
+    encode: jest.fn().mockImplementation(str => Buffer.from(str)),
+    decode: jest.fn().mockImplementation(buf => buf.toString()),
   }),
 }));
 
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn().mockReturnValue({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn().mockReturnValue({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     }),
   },
 }));
@@ -34,7 +34,7 @@ describe('MessagingSystem', () => {
   let messaging: MessagingSystem;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     messaging = new MessagingSystem();
   });
 
@@ -51,7 +51,7 @@ describe('MessagingSystem', () => {
 
     it('should handle initialization failures', async () => {
       const { connect } = await import('nats');
-      vi.mocked(connect).mockRejectedValueOnce(new Error('Connection failed'));
+      mocked(connect).mockRejectedValueOnce(new Error('Connection failed'));
       
       // Should handle connection failures gracefully
       await expect(messaging.initialize()).rejects.toThrow();
@@ -90,7 +90,7 @@ describe('MessagingSystem', () => {
       // Mock the internal status check to fail
       const originalGetWorkerStatus = (messaging as any).getWorkerStatus;
       if (originalGetWorkerStatus) {
-        (messaging as any).getWorkerStatus = vi.fn().mockRejectedValue(mockError);
+        (messaging as any).getWorkerStatus = jest.fn().mockRejectedValue(mockError);
       }
 
       // Should return default values or handle error
@@ -135,10 +135,10 @@ describe('MessagingSystem', () => {
 
     it('should handle publish errors gracefully', async () => {
       const { connect } = await import('nats');
-      const mockConnection = await vi.mocked(connect).mock.results[0]?.value;
+      const mockConnection = await mocked(connect).mock.results[0]?.value;
       
       if (mockConnection?.publish) {
-        vi.mocked(mockConnection.publish).mockImplementation(() => {
+        mocked(mockConnection.publish).mockImplementation(() => {
           throw new Error('Publish failed');
         });
       }
@@ -159,7 +159,7 @@ describe('MessagingSystem', () => {
     });
 
     it('should subscribe to topics successfully', async () => {
-      const callback = vi.fn();
+      const callback = jest.fn();
       
       // Should not throw when subscribing
       if (messaging.subscribe) {
@@ -170,15 +170,15 @@ describe('MessagingSystem', () => {
 
     it('should handle subscription errors', async () => {
       const { connect } = await import('nats');
-      const mockConnection = await vi.mocked(connect).mock.results[0]?.value;
+      const mockConnection = await mocked(connect).mock.results[0]?.value;
       
       if (mockConnection?.subscribe) {
-        vi.mocked(mockConnection.subscribe).mockImplementation(() => {
+        mocked(mockConnection.subscribe).mockImplementation(() => {
           throw new Error('Subscribe failed');
         });
       }
 
-      const callback = vi.fn();
+      const callback = jest.fn();
       
       if (messaging.subscribe) {
         await expect(messaging.subscribe('test.topic', callback))
@@ -187,7 +187,7 @@ describe('MessagingSystem', () => {
     });
 
     it('should handle message processing', async () => {
-      const callback = vi.fn();
+      const callback = jest.fn();
       const testMessage = { type: 'test', data: { value: 42 } };
       
       if (messaging.subscribe) {
@@ -221,7 +221,7 @@ describe('MessagingSystem', () => {
       
       // Simulate connection drop
       const { connect } = await import('nats');
-      const mockConnection = await vi.mocked(connect).mock.results[0]?.value;
+      const mockConnection = await mocked(connect).mock.results[0]?.value;
       
       if (mockConnection) {
         // Simulate connection close
@@ -248,7 +248,7 @@ describe('MessagingSystem', () => {
     it('should handle shutdown with active subscriptions', async () => {
       await messaging.initialize();
       
-      const callback = vi.fn();
+      const callback = jest.fn();
       if (messaging.subscribe) {
         await messaging.subscribe('test.topic', callback);
       }
@@ -270,10 +270,10 @@ describe('MessagingSystem', () => {
       
       // Simulate temporary network issue
       const { connect } = await import('nats');
-      const mockConnection = await vi.mocked(connect).mock.results[0]?.value;
+      const mockConnection = await mocked(connect).mock.results[0]?.value;
       
       if (mockConnection?.publish) {
-        vi.mocked(mockConnection.publish)
+        mocked(mockConnection.publish)
           .mockRejectedValueOnce(new Error('Temporary failure'))
           .mockResolvedValueOnce(undefined);
       }
@@ -288,7 +288,7 @@ describe('MessagingSystem', () => {
 
     it('should provide fallback behavior when messaging unavailable', async () => {
       const { connect } = await import('nats');
-      vi.mocked(connect).mockRejectedValue(new Error('NATS unavailable'));
+      mocked(connect).mockRejectedValue(new Error('NATS unavailable'));
       
       const fallbackMessaging = new MessagingSystem();
       

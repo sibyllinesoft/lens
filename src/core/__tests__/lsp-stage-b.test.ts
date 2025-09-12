@@ -3,7 +3,7 @@
  * Tests LSP hint consumption, symbol mapping, and candidate enhancement
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest } from 'bun:test';
 import { LSPStageBEnhancer } from '../lsp-stage-b.js';
 import type { LSPHint, SearchContext, Candidate } from '../../types/core.js';
 

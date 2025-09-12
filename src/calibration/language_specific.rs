@@ -706,8 +706,7 @@ mod tests {
             create_test_sample(0.8, 1.0, "test"),
         ];
         
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        let threshold = calibrator.calculate_optimal_threshold(&sample_refs).await.unwrap();
+        let threshold = calibrator.calculate_optimal_threshold(&samples).await.unwrap();
         
         // Should be reasonable threshold value
         assert!(threshold >= 0.1);

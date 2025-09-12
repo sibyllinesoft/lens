@@ -3,7 +3,7 @@
  * Tests all Zod schemas, type validations, and constants
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import {
   BenchmarkConfigSchema,
   RepoSnapshotSchema,

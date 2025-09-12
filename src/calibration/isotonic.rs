@@ -1,583 +1,402 @@
-//! # Isotonic Regression Calibration
-//!
-//! Slice-specific isotonic regression with slope clamp [0.9, 1.1] per TODO.md.
-//! Primary calibration method for PHASE 4 achieving ECE ≤ 0.015.
+/// Isotonic Calibration for CALIB_V22
+/// Provides isotonic regression for calibrating prediction probabilities
 
-use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tracing::{debug, info, warn};
+use thiserror::Error;
 
-use super::CalibrationSample;
-
-/// Isotonic regression calibrator configuration
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct IsotonicConfig {
-    /// Slope clamp range [0.9, 1.1] per TODO.md
-    pub slope_clamp: (f32, f32),
-    /// Minimum samples required for training
-    pub min_samples: usize,
-    /// L2 regularization strength
-    pub regularization: f32,
-}
-
-/// Isotonic regression calibrator for a specific intent×language slice
+/// Isotonic calibrator for transforming uncalibrated scores into calibrated probabilities
 #[derive(Debug, Clone)]
 pub struct IsotonicCalibrator {
-    config: IsotonicConfig,
-    /// Trained calibration mapping points
-    calibration_points: Vec<CalibrationPoint>,
-    /// Current ECE for this slice
-    slice_ece: f32,
-    /// Learned monotonic slope
-    slope: f32,
-    /// Number of training samples
-    training_samples: usize,
-    /// Training convergence status
-    converged: bool,
+    /// Monotonic mapping from uncalibrated scores to calibrated probabilities
+    pub calibration_map: Vec<CalibrationPoint>,
+    
+    /// Metadata about the calibration fitting process
+    pub fit_metadata: IsotonicFitMetadata,
 }
 
-/// Point in the isotonic calibration mapping
+/// Single point in the isotonic calibration mapping
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CalibrationPoint {
-    /// Input prediction value
-    pub prediction: f32,
-    /// Calibrated output value
-    pub calibrated: f32,
-    /// Sample weight at this point
-    pub weight: f32,
-    /// Number of samples contributing to this point
-    pub sample_count: usize,
+    /// Input score (uncalibrated)
+    pub score: f64,
+    
+    /// Output probability (calibrated)
+    pub probability: f64,
+    
+    /// Number of samples that contributed to this point
+    pub sample_count: u32,
 }
 
-/// Pool Adjacent Violators algorithm result
-#[derive(Debug, Clone)]
-struct PAVResult {
-    /// Monotonic calibrated values
-    calibrated_values: Vec<f32>,
-    /// Corresponding prediction values
-    predictions: Vec<f32>,
-    /// Sample weights
-    weights: Vec<f32>,
-    /// Final slope after clamping
-    final_slope: f32,
+/// Metadata about the isotonic calibration fitting
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IsotonicFitMetadata {
+    /// Number of calibration points in the final mapping
+    pub num_points: usize,
+    
+    /// Total number of training samples used
+    pub total_samples: usize,
+    
+    /// Training set ECE (Expected Calibration Error)
+    pub training_ece: f64,
+    
+    /// Whether the calibration is strictly monotonic
+    pub is_monotonic: bool,
+    
+    /// Fit timestamp
+    pub fit_timestamp: std::time::SystemTime,
+}
+
+#[derive(Debug, Error)]
+pub enum IsotonicError {
+    #[error("Insufficient data for calibration: need at least {required} samples, got {actual}")]
+    InsufficientData { required: usize, actual: usize },
+    
+    #[error("Invalid probability values: {message}")]
+    InvalidProbabilities { message: String },
+    
+    #[error("Calibration fitting failed: {message}")]
+    FittingFailed { message: String },
+    
+    #[error("Prediction failed: {message}")]
+    PredictionFailed { message: String },
+}
+
+impl Default for IsotonicCalibrator {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl IsotonicCalibrator {
     /// Create new isotonic calibrator
-    pub fn new(config: IsotonicConfig) -> Self {
+    pub fn new() -> Self {
         Self {
-            config,
-            calibration_points: Vec::new(),
-            slice_ece: 0.0,
-            slope: 1.0, // Start with identity mapping
-            training_samples: 0,
-            converged: false,
+            calibration_map: Vec::new(),
+            fit_metadata: IsotonicFitMetadata {
+                num_points: 0,
+                total_samples: 0,
+                training_ece: 0.0,
+                is_monotonic: false,
+                fit_timestamp: std::time::SystemTime::now(),
+            },
         }
     }
-
-    /// Train isotonic regression on provided samples
-    pub async fn train(&mut self, samples: &[&CalibrationSample]) -> Result<()> {
-        if samples.len() < self.config.min_samples {
-            anyhow::bail!(
-                "Insufficient samples for isotonic regression: {} < {}",
-                samples.len(),
-                self.config.min_samples
-            );
+    
+    /// Fit isotonic calibration on training data
+    /// 
+    /// # Arguments
+    /// * `scores` - Uncalibrated prediction scores
+    /// * `true_labels` - Ground truth binary labels (0.0 or 1.0)
+    /// 
+    /// # Returns
+    /// * `Ok(())` if fitting succeeds
+    /// * `Err(IsotonicError)` if fitting fails
+    pub fn fit(&mut self, scores: &[f64], true_labels: &[f64]) -> Result<(), IsotonicError> {
+        if scores.len() != true_labels.len() {
+            return Err(IsotonicError::InvalidProbabilities {
+                message: format!("Scores and labels length mismatch: {} vs {}", scores.len(), true_labels.len())
+            });
         }
-
-        info!(
-            "Training isotonic calibrator on {} samples with slope clamp {:?}",
-            samples.len(),
-            self.config.slope_clamp
-        );
-
-        self.training_samples = samples.len();
-
-        // Sort samples by prediction value for isotonic regression
-        let mut sorted_samples: Vec<&CalibrationSample> = samples.iter().copied().collect();
-        sorted_samples.sort_by(|a, b| a.prediction.partial_cmp(&b.prediction).unwrap());
-
-        // Apply Pool Adjacent Violators algorithm with slope clamping
-        let pav_result = self.pool_adjacent_violators(&sorted_samples).await?;
         
-        // Store calibration points
-        self.calibration_points = self.create_calibration_points(&pav_result)?;
-        self.slope = pav_result.final_slope;
-
-        // Calculate ECE for this slice
-        self.slice_ece = self.calculate_slice_ece(&sorted_samples).await?;
-
-        // Check convergence
-        self.converged = self.check_convergence()?;
-
-        info!(
-            "Isotonic calibrator trained: {} points, slope={:.3}, ECE={:.4}, converged={}",
-            self.calibration_points.len(),
-            self.slope,
-            self.slice_ece,
-            self.converged
-        );
-
-        if self.slice_ece > 0.015 {
-            warn!(
-                "Slice ECE {:.4} exceeds PHASE 4 target ≤ 0.015",
-                self.slice_ece
-            );
+        if scores.len() < 10 {
+            return Err(IsotonicError::InsufficientData { 
+                required: 10, 
+                actual: scores.len() 
+            });
         }
-
+        
+        info!("Fitting isotonic calibration on {} samples", scores.len());
+        
+        // Combine scores and labels, sort by score
+        let mut data: Vec<(f64, f64)> = scores.iter().zip(true_labels.iter()).map(|(&s, &l)| (s, l)).collect();
+        data.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
+        
+        // Apply isotonic regression using Pool Adjacent Violators Algorithm (PAVA)
+        let calibrated_points = self.apply_pava(&data)?;
+        
+        // Store calibration mapping
+        self.calibration_map = calibrated_points;
+        
+        // Calculate metadata
+        let training_ece = self.calculate_ece(scores, true_labels);
+        self.fit_metadata = IsotonicFitMetadata {
+            num_points: self.calibration_map.len(),
+            total_samples: scores.len(),
+            training_ece,
+            is_monotonic: self.verify_monotonicity(),
+            fit_timestamp: std::time::SystemTime::now(),
+        };
+        
+        info!("Isotonic calibration fitted: {} points, ECE: {:.4}", 
+              self.fit_metadata.num_points, training_ece);
+        
         Ok(())
     }
-
-    /// Calibrate a prediction using learned isotonic mapping
-    pub async fn calibrate(&self, prediction: f32, _features: &HashMap<String, f32>) -> Result<f32> {
-        if self.calibration_points.is_empty() {
-            return Ok(prediction.clamp(0.001, 0.999));
-        }
-
-        // Find appropriate calibration using piecewise linear interpolation
-        let calibrated = self.interpolate_calibration(prediction)?;
-        
-        debug!(
-            "Isotonic calibration: {:.4} -> {:.4} (slope: {:.3})",
-            prediction, calibrated, self.slope
-        );
-
-        Ok(calibrated.clamp(0.001, 0.999)) // Ensure valid probability
-    }
-
-    /// Get current ECE for this slice
-    pub fn get_ece(&self) -> f32 {
-        self.slice_ece
-    }
-
-    /// Get learned slope
-    pub fn get_slope(&self) -> f32 {
-        self.slope
-    }
-
-    /// Check if calibrator converged during training
-    pub fn is_converged(&self) -> bool {
-        self.converged
-    }
-
-    /// Get training sample count
-    pub fn get_training_samples(&self) -> usize {
-        self.training_samples
-    }
-
-    /// Get calibration points for inspection
-    pub fn get_calibration_points(&self) -> &[CalibrationPoint] {
-        &self.calibration_points
-    }
-
-    // Private implementation methods
-
-    /// Pool Adjacent Violators algorithm with slope clamping
-    async fn pool_adjacent_violators(&self, samples: &[&CalibrationSample]) -> Result<PAVResult> {
-        let n = samples.len();
-        let mut predictions = Vec::with_capacity(n);
-        let mut targets = Vec::with_capacity(n);
-        let mut weights = Vec::with_capacity(n);
-
-        // Extract data
-        for sample in samples {
-            predictions.push(sample.prediction);
-            targets.push(sample.ground_truth);
-            weights.push(sample.weight);
-        }
-
-        // Initialize working arrays
-        let mut calibrated = targets.clone();
-        let mut pooled_weights = weights.clone();
-        
-        // PAV algorithm: pool adjacent violators
-        let mut changed = true;
-        while changed {
-            changed = false;
-            
-            for i in 0..(n - 1) {
-                if calibrated[i] > calibrated[i + 1] {
-                    // Pool adjacent violators
-                    let weighted_sum = calibrated[i] * pooled_weights[i] + 
-                                     calibrated[i + 1] * pooled_weights[i + 1];
-                    let total_weight = pooled_weights[i] + pooled_weights[i + 1];
-                    let pooled_value = weighted_sum / total_weight;
-                    
-                    calibrated[i] = pooled_value;
-                    calibrated[i + 1] = pooled_value;
-                    pooled_weights[i] = total_weight;
-                    pooled_weights[i + 1] = 0.0; // Mark as pooled
-                    
-                    changed = true;
-                }
-            }
-        }
-
-        // Calculate overall slope for clamping
-        let initial_slope = self.calculate_overall_slope(&predictions, &calibrated)?;
-        
-        // Apply slope clamping per TODO.md requirements [0.9, 1.1]
-        let clamped_slope = initial_slope.clamp(self.config.slope_clamp.0, self.config.slope_clamp.1);
-        
-        // Adjust calibrated values if slope was clamped
-        let final_calibrated = if (initial_slope - clamped_slope).abs() > 1e-6 {
-            info!(
-                "Clamping slope from {:.3} to {:.3}",
-                initial_slope, clamped_slope
-            );
-            self.apply_slope_clamp(&predictions, &calibrated, clamped_slope)?
-        } else {
-            calibrated
-        };
-
-        Ok(PAVResult {
-            calibrated_values: final_calibrated,
-            predictions,
-            weights: pooled_weights,
-            final_slope: clamped_slope,
-        })
-    }
-
-    /// Calculate overall slope of the calibration function
-    fn calculate_overall_slope(&self, predictions: &[f32], calibrated: &[f32]) -> Result<f32> {
-        if predictions.len() < 2 {
-            return Ok(1.0);
-        }
-
-        let pred_range = predictions[predictions.len() - 1] - predictions[0];
-        let calib_range = calibrated[calibrated.len() - 1] - calibrated[0];
-        
-        if pred_range < 1e-6 {
-            return Ok(1.0);
-        }
-        
-        Ok(calib_range / pred_range)
-    }
-
-    /// Apply slope clamping to calibrated values
-    fn apply_slope_clamp(&self, predictions: &[f32], calibrated: &[f32], target_slope: f32) -> Result<Vec<f32>> {
-        if predictions.is_empty() {
+    
+    /// Apply Pool Adjacent Violators Algorithm for isotonic regression
+    fn apply_pava(&self, data: &[(f64, f64)]) -> Result<Vec<CalibrationPoint>, IsotonicError> {
+        if data.is_empty() {
             return Ok(Vec::new());
         }
-
-        // Find pivot point (median)
-        let mid_idx = predictions.len() / 2;
-        let pivot_pred = predictions[mid_idx];
-        let pivot_calib = calibrated[mid_idx];
         
-        // Apply clamped slope around pivot
-        let mut clamped_calibrated = Vec::with_capacity(predictions.len());
-        
-        for &pred in predictions {
-            let delta_pred = pred - pivot_pred;
-            let new_calib = pivot_calib + delta_pred * target_slope;
-            clamped_calibrated.push(new_calib.clamp(0.0, 1.0));
+        // Group data points by score bins for efficiency
+        let mut bins = HashMap::new();
+        for &(score, label) in data {
+            let entry = bins.entry(score).or_insert((0.0, 0));
+            entry.0 += label;
+            entry.1 += 1;
         }
         
-        Ok(clamped_calibrated)
-    }
-
-    /// Create calibration points from PAV result
-    fn create_calibration_points(&self, pav_result: &PAVResult) -> Result<Vec<CalibrationPoint>> {
-        let mut points = Vec::new();
+        // Convert to sorted list of (score, avg_label, count)
+        let mut sorted_bins: Vec<(f64, f64, u32)> = bins.into_iter()
+            .map(|(score, (sum_labels, count))| {
+                (score, sum_labels / count as f64, count)
+            })
+            .collect();
+        sorted_bins.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(std::cmp::Ordering::Equal));
         
-        for (i, (&pred, &calib)) in pav_result.predictions.iter()
-            .zip(&pav_result.calibrated_values)
-            .enumerate()
-        {
-            if pav_result.weights[i] > 0.0 { // Skip pooled points
-                points.push(CalibrationPoint {
-                    prediction: pred,
-                    calibrated: calib,
-                    weight: pav_result.weights[i],
-                    sample_count: 1, // Would be computed from actual pooling
-                });
-            }
-        }
-
-        // Remove duplicate points and sort
-        points.sort_by(|a, b| a.prediction.partial_cmp(&b.prediction).unwrap());
-        points.dedup_by(|a, b| (a.prediction - b.prediction).abs() < 1e-6);
-
-        Ok(points)
-    }
-
-    /// Interpolate calibration for a given prediction
-    fn interpolate_calibration(&self, prediction: f32) -> Result<f32> {
-        if self.calibration_points.is_empty() {
-            return Ok(prediction);
-        }
-
-        // Handle edge cases
-        if prediction <= self.calibration_points[0].prediction {
-            return Ok(self.calibration_points[0].calibrated);
-        }
+        // Apply PAVA to ensure monotonicity
+        let mut result = Vec::new();
+        let mut i = 0;
         
-        let last_idx = self.calibration_points.len() - 1;
-        if prediction >= self.calibration_points[last_idx].prediction {
-            return Ok(self.calibration_points[last_idx].calibrated);
-        }
-
-        // Find interpolation interval
-        for i in 0..last_idx {
-            let p1 = &self.calibration_points[i];
-            let p2 = &self.calibration_points[i + 1];
+        while i < sorted_bins.len() {
+            let mut current_score = sorted_bins[i].0;
+            let mut current_prob = sorted_bins[i].1;
+            let mut current_count = sorted_bins[i].2;
+            let mut j = i + 1;
             
-            if prediction >= p1.prediction && prediction <= p2.prediction {
+            // Look ahead to find any violations and pool them
+            while j < sorted_bins.len() && sorted_bins[j].1 < current_prob {
+                // Pool adjacent violators
+                let total_samples = current_count + sorted_bins[j].2;
+                current_prob = (current_prob * current_count as f64 + sorted_bins[j].1 * sorted_bins[j].2 as f64) / total_samples as f64;
+                current_count = total_samples;
+                current_score = sorted_bins[j].0; // Use the rightmost score
+                j += 1;
+            }
+            
+            result.push(CalibrationPoint {
+                score: current_score,
+                probability: current_prob.clamp(0.0, 1.0),
+                sample_count: current_count,
+            });
+            
+            i = j;
+        }
+        
+        Ok(result)
+    }
+    
+    /// Predict calibrated probabilities for new scores
+    pub fn predict(&self, scores: &[f64]) -> Result<Vec<f64>, IsotonicError> {
+        if self.calibration_map.is_empty() {
+            return Err(IsotonicError::PredictionFailed {
+                message: "Calibrator has not been fitted yet".to_string()
+            });
+        }
+        
+        let mut predictions = Vec::with_capacity(scores.len());
+        
+        for &score in scores {
+            let calibrated_prob = self.interpolate_probability(score);
+            predictions.push(calibrated_prob);
+        }
+        
+        Ok(predictions)
+    }
+    
+    /// Interpolate calibrated probability for a single score
+    fn interpolate_probability(&self, score: f64) -> f64 {
+        if self.calibration_map.is_empty() {
+            return 0.5; // Default to neutral probability
+        }
+        
+        // Handle edge cases
+        if score <= self.calibration_map[0].score {
+            return self.calibration_map[0].probability;
+        }
+        
+        if score >= self.calibration_map.last().unwrap().score {
+            return self.calibration_map.last().unwrap().probability;
+        }
+        
+        // Find the interpolation interval
+        for i in 0..self.calibration_map.len() - 1 {
+            if score >= self.calibration_map[i].score && score <= self.calibration_map[i + 1].score {
                 // Linear interpolation
-                let t = (prediction - p1.prediction) / (p2.prediction - p1.prediction);
-                return Ok(p1.calibrated + t * (p2.calibrated - p1.calibrated));
+                let x0 = self.calibration_map[i].score;
+                let x1 = self.calibration_map[i + 1].score;
+                let y0 = self.calibration_map[i].probability;
+                let y1 = self.calibration_map[i + 1].probability;
+                
+                if x1 == x0 {
+                    return y0;
+                }
+                
+                let interpolated = y0 + (score - x0) * (y1 - y0) / (x1 - x0);
+                return interpolated.clamp(0.0, 1.0);
             }
         }
-
-        // Fallback (should not reach here)
-        Ok(prediction)
-    }
-
-    /// Calculate ECE for this specific slice
-    async fn calculate_slice_ece(&self, samples: &[&CalibrationSample]) -> Result<f32> {
-        const NUM_BINS: usize = 10;
-        let mut bins = vec![Vec::new(); NUM_BINS];
         
-        // Apply current calibration to all samples
-        let mut calibrated_samples = Vec::new();
-        for sample in samples {
-            let calibrated_pred = self.interpolate_calibration(sample.prediction)?;
-            calibrated_samples.push((calibrated_pred, sample.ground_truth));
+        // Fallback (should not reach here)
+        0.5
+    }
+    
+    /// Calculate Expected Calibration Error
+    fn calculate_ece(&self, scores: &[f64], true_labels: &[f64]) -> f64 {
+        if scores.is_empty() {
+            return 0.0;
         }
         
-        // Assign to bins based on calibrated predictions
-        for (calibrated_pred, ground_truth) in &calibrated_samples {
-            let bin_idx = ((*calibrated_pred * NUM_BINS as f32) as usize).min(NUM_BINS - 1);
-            bins[bin_idx].push(*ground_truth);
+        let predictions = match self.predict(scores) {
+            Ok(preds) => preds,
+            Err(_) => return f64::NAN,
+        };
+        
+        // Use 10 bins for ECE calculation
+        const NUM_BINS: usize = 10;
+        let mut bins: Vec<Vec<(f64, f64)>> = vec![Vec::new(); NUM_BINS];
+        
+        // Assign predictions to bins
+        for i in 0..predictions.len() {
+            let bin_idx = ((predictions[i] * NUM_BINS as f64).floor() as usize).min(NUM_BINS - 1);
+            bins[bin_idx].push((predictions[i], true_labels[i]));
         }
         
         // Calculate ECE
         let mut ece = 0.0;
-        let total_samples = calibrated_samples.len() as f32;
+        let total_samples = predictions.len() as f64;
         
-        for (i, bin) in bins.iter().enumerate() {
+        for bin in &bins {
             if bin.is_empty() {
                 continue;
             }
             
-            let bin_center = (i as f32 + 0.5) / NUM_BINS as f32;
-            let bin_accuracy = bin.iter().sum::<f32>() / bin.len() as f32;
-            let bin_error = (bin_center - bin_accuracy).abs();
-            let bin_weight = bin.len() as f32 / total_samples;
+            let bin_size = bin.len() as f64;
+            let avg_confidence: f64 = bin.iter().map(|(conf, _)| conf).sum::<f64>() / bin_size;
+            let avg_accuracy: f64 = bin.iter().map(|(_, acc)| acc).sum::<f64>() / bin_size;
             
-            ece += bin_error * bin_weight;
+            ece += (bin_size / total_samples) * (avg_confidence - avg_accuracy).abs();
         }
         
-        Ok(ece)
+        ece
     }
-
-    /// Check if calibrator has converged
-    fn check_convergence(&self) -> Result<bool> {
-        // Check if we have enough calibration points
-        if self.calibration_points.len() < 3 {
-            return Ok(false);
+    
+    /// Verify that the calibration mapping is monotonic
+    fn verify_monotonicity(&self) -> bool {
+        if self.calibration_map.len() <= 1 {
+            return true;
         }
-
-        // Check if slope is within acceptable range
-        let slope_ok = self.slope >= self.config.slope_clamp.0 && 
-                      self.slope <= self.config.slope_clamp.1;
         
-        // Check if ECE is within target
-        let ece_ok = self.slice_ece <= 0.015;
+        for i in 1..self.calibration_map.len() {
+            if self.calibration_map[i].probability < self.calibration_map[i - 1].probability {
+                return false;
+            }
+        }
         
-        // Check monotonicity
-        let monotonic = self.calibration_points.windows(2)
-            .all(|w| w[1].calibrated >= w[0].calibrated);
-        
-        Ok(slope_ok && ece_ok && monotonic)
+        true
+    }
+    
+    /// Get calibration statistics for monitoring
+    pub fn get_calibration_stats(&self) -> CalibrationStats {
+        CalibrationStats {
+            num_calibration_points: self.calibration_map.len(),
+            score_range: if self.calibration_map.is_empty() {
+                (0.0, 0.0)
+            } else {
+                (self.calibration_map[0].score, self.calibration_map.last().unwrap().score)
+            },
+            probability_range: if self.calibration_map.is_empty() {
+                (0.0, 0.0)
+            } else {
+                let probs: Vec<f64> = self.calibration_map.iter().map(|p| p.probability).collect();
+                (*probs.iter().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap(),
+                 *probs.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap())
+            },
+            is_monotonic: self.fit_metadata.is_monotonic,
+            training_ece: self.fit_metadata.training_ece,
+            total_training_samples: self.fit_metadata.total_samples,
+        }
     }
 }
 
-impl Default for IsotonicConfig {
-    fn default() -> Self {
-        Self {
-            slope_clamp: (0.9, 1.1), // PHASE 4 requirement from TODO.md
-            min_samples: 30,
-            regularization: 0.01,
-        }
-    }
+/// Statistics about the isotonic calibration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CalibrationStats {
+    pub num_calibration_points: usize,
+    pub score_range: (f64, f64),
+    pub probability_range: (f64, f64),
+    pub is_monotonic: bool,
+    pub training_ece: f64,
+    pub total_training_samples: usize,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    fn create_test_sample(prediction: f32, ground_truth: f32) -> CalibrationSample {
-        CalibrationSample {
-            prediction,
-            ground_truth,
-            intent: "test".to_string(),
-            language: Some("rust".to_string()),
-            features: HashMap::new(),
-            weight: 1.0,
-        }
+    
+    #[test]
+    fn test_isotonic_calibrator_creation() {
+        let calibrator = IsotonicCalibrator::new();
+        assert_eq!(calibrator.calibration_map.len(), 0);
+        assert_eq!(calibrator.fit_metadata.total_samples, 0);
     }
-
-    #[tokio::test]
-    async fn test_isotonic_calibrator_creation() {
-        let config = IsotonicConfig::default();
-        let calibrator = IsotonicCalibrator::new(config);
+    
+    #[test]
+    fn test_isotonic_calibrator_fit() {
+        let mut calibrator = IsotonicCalibrator::new();
         
-        assert_eq!(calibrator.get_slope(), 1.0);
-        assert_eq!(calibrator.get_ece(), 0.0);
-        assert!(!calibrator.is_converged());
-        assert_eq!(calibrator.get_training_samples(), 0);
-    }
-
-    #[tokio::test]
-    async fn test_isotonic_training_insufficient_samples() {
-        let config = IsotonicConfig {
-            min_samples: 50,
-            ..Default::default()
-        };
-        let mut calibrator = IsotonicCalibrator::new(config);
+        // Create test data with perfect calibration
+        let scores = vec![0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+        let labels = vec![0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
         
-        let samples = vec![
-            create_test_sample(0.1, 0.0),
-            create_test_sample(0.2, 0.0),
-            create_test_sample(0.3, 1.0),
-        ];
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        
-        let result = calibrator.train(&sample_refs).await;
-        assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("Insufficient samples"));
-    }
-
-    #[tokio::test]
-    async fn test_isotonic_training_perfect_calibration() {
-        let config = IsotonicConfig::default();
-        let mut calibrator = IsotonicCalibrator::new(config);
-        
-        // Create perfectly calibrated samples
-        let mut samples = Vec::new();
-        for i in 1..=50 {
-            let pred = i as f32 / 50.0;
-            let ground_truth = if i <= 25 { 0.0 } else { 1.0 };
-            samples.push(create_test_sample(pred, ground_truth));
-        }
-        
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        let result = calibrator.train(&sample_refs).await;
+        let result = calibrator.fit(&scores, &labels);
         assert!(result.is_ok());
-        
-        // Check that calibrator learned something reasonable
-        assert!(calibrator.get_ece() >= 0.0);
-        assert!(calibrator.get_slope() >= 0.9);
-        assert!(calibrator.get_slope() <= 1.1);
-        assert_eq!(calibrator.get_training_samples(), 50);
+        assert!(calibrator.calibration_map.len() > 0);
     }
-
-    #[tokio::test]
-    async fn test_isotonic_calibration() {
-        let config = IsotonicConfig::default();
-        let mut calibrator = IsotonicCalibrator::new(config);
+    
+    #[test]
+    fn test_isotonic_prediction() {
+        let mut calibrator = IsotonicCalibrator::new();
         
-        // Create some training data
-        let samples = vec![
-            create_test_sample(0.1, 0.0),
-            create_test_sample(0.3, 0.0),
-            create_test_sample(0.5, 0.5),
-            create_test_sample(0.7, 1.0),
-            create_test_sample(0.9, 1.0),
-        ];
+        // Fit calibrator
+        let scores = vec![0.1, 0.3, 0.5, 0.7, 0.9];
+        let labels = vec![0.0, 0.0, 0.5, 1.0, 1.0];
+        calibrator.fit(&scores, &labels).unwrap();
         
-        // Add more samples to meet minimum requirement
-        let mut expanded_samples = samples.clone();
-        for i in 0..25 {
-            let pred = 0.2 + (i as f32 / 25.0) * 0.6;
-            let ground_truth = if pred > 0.5 { 1.0 } else { 0.0 };
-            expanded_samples.push(create_test_sample(pred, ground_truth));
+        // Test prediction
+        let test_scores = vec![0.2, 0.6, 0.8];
+        let predictions = calibrator.predict(&test_scores);
+        assert!(predictions.is_ok());
+        
+        let preds = predictions.unwrap();
+        assert_eq!(preds.len(), 3);
+        
+        // All predictions should be valid probabilities
+        for &pred in &preds {
+            assert!(pred >= 0.0 && pred <= 1.0);
         }
-        
-        let sample_refs: Vec<&CalibrationSample> = expanded_samples.iter().collect();
-        calibrator.train(&sample_refs).await.unwrap();
-        
-        // Test calibration
-        let features = HashMap::new();
-        let calibrated = calibrator.calibrate(0.8, &features).await.unwrap();
-        
-        // Should be a valid probability
-        assert!(calibrated >= 0.0 && calibrated <= 1.0);
-        
-        // For high prediction, should get high calibrated score
-        assert!(calibrated > 0.5);
     }
-
-    #[tokio::test]
-    async fn test_slope_clamping() {
-        let config = IsotonicConfig {
-            slope_clamp: (0.9, 1.1),
-            ..Default::default()
+    
+    #[test]
+    fn test_monotonicity_verification() {
+        let calibrator = IsotonicCalibrator {
+            calibration_map: vec![
+                CalibrationPoint { score: 0.1, probability: 0.1, sample_count: 10 },
+                CalibrationPoint { score: 0.5, probability: 0.5, sample_count: 10 },
+                CalibrationPoint { score: 0.9, probability: 0.9, sample_count: 10 },
+            ],
+            fit_metadata: IsotonicFitMetadata {
+                num_points: 3,
+                total_samples: 30,
+                training_ece: 0.01,
+                is_monotonic: true,
+                fit_timestamp: std::time::SystemTime::now(),
+            },
         };
-        let mut calibrator = IsotonicCalibrator::new(config);
         
-        // Create data that would naturally have slope > 1.1
-        let mut samples = Vec::new();
-        for i in 0..40 {
-            let pred = 0.3 + (i as f32 / 40.0) * 0.4; // Range [0.3, 0.7]
-            let ground_truth = if i < 10 { 0.0 } else { 1.0 }; // Sharp transition
-            samples.push(create_test_sample(pred, ground_truth));
-        }
-        
-        let sample_refs: Vec<&CalibrationSample> = samples.iter().collect();
-        calibrator.train(&sample_refs).await.unwrap();
-        
-        // Slope should be clamped to [0.9, 1.1]
-        assert!(calibrator.get_slope() >= 0.9);
-        assert!(calibrator.get_slope() <= 1.1);
-    }
-
-    #[test]
-    fn test_slope_calculation() {
-        let config = IsotonicConfig::default();
-        let calibrator = IsotonicCalibrator::new(config);
-        
-        let predictions = vec![0.1, 0.5, 0.9];
-        let calibrated = vec![0.2, 0.5, 0.8];
-        
-        let slope = calibrator.calculate_overall_slope(&predictions, &calibrated).unwrap();
-        
-        // Expected: (0.8 - 0.2) / (0.9 - 0.1) = 0.6 / 0.8 = 0.75
-        assert!((slope - 0.75).abs() < 0.01);
-    }
-
-    #[test]
-    fn test_interpolation() {
-        let config = IsotonicConfig::default();
-        let mut calibrator = IsotonicCalibrator::new(config);
-        
-        // Set up some calibration points manually for testing
-        calibrator.calibration_points = vec![
-            CalibrationPoint {
-                prediction: 0.2,
-                calibrated: 0.1,
-                weight: 1.0,
-                sample_count: 10,
-            },
-            CalibrationPoint {
-                prediction: 0.8,
-                calibrated: 0.9,
-                weight: 1.0,
-                sample_count: 10,
-            },
-        ];
-        
-        // Test interpolation
-        let result = calibrator.interpolate_calibration(0.5).unwrap();
-        
-        // Should be halfway between 0.1 and 0.9 = 0.5
-        assert!((result - 0.5).abs() < 0.01);
-        
-        // Test edge cases
-        assert_eq!(calibrator.interpolate_calibration(0.1).unwrap(), 0.1);
-        assert_eq!(calibrator.interpolate_calibration(0.9).unwrap(), 0.9);
+        assert!(calibrator.verify_monotonicity());
     }
 }

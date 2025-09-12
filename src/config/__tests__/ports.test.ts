@@ -3,54 +3,54 @@
  * Covers dynamic port allocation, configuration persistence, and environment variables
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import * as fs from 'fs/promises';
 import * as net from 'net';
 import * as path from 'path';
 import { portManager, getServerPort, getMetricsPort, getApiUrl, type PortConfig } from '../ports.js';
 
 // Mock fs operations
-vi.mock('fs/promises');
-vi.mock('net');
+mock('fs/promises');
+mock('net');
 
-const mockFs = vi.mocked(fs);
-const mockNet = vi.mocked(net);
+const mockFs = mocked(fs);
+const mockNet = mocked(net);
 
 // Mock server for port testing
 const createMockServer = (shouldError = false) => {
   const server = {
-    listen: vi.fn().mockImplementation((port, callback) => {
+    listen: jest.fn().mockImplementation((port, callback) => {
       if (shouldError) {
         setImmediate(() => server.emit('error', new Error('Port in use')));
       } else {
         setImmediate(callback);
       }
     }),
-    close: vi.fn().mockImplementation((callback) => {
+    close: jest.fn().mockImplementation((callback) => {
       setImmediate(callback, true);
     }),
-    on: vi.fn().mockImplementation((event, handler) => {
+    on: jest.fn().mockImplementation((event, handler) => {
       if (event === 'error' && shouldError) {
         setImmediate(handler);
       }
     }),
-    emit: vi.fn(),
+    emit: jest.fn(),
   };
   return server;
 };
 
 describe('Port Manager', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     // Reset the singleton's internal state
     (portManager as any).config = null;
     
     // Mock process.cwd()
-    vi.spyOn(process, 'cwd').mockReturnValue('/test');
+    jest.spyOn(process, 'cwd').mockReturnValue('/test');
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Port Availability Checking', () => {
@@ -120,7 +120,7 @@ describe('Port Manager', () => {
       mockFs.writeFile.mockResolvedValue(undefined);
       mockNet.createServer.mockImplementation(() => createMockServer(false));
 
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
       const config = await portManager.loadConfig();
       
@@ -148,7 +148,7 @@ describe('Port Manager', () => {
         return createMockServer(callCount <= 2); // First 2 calls fail
       });
 
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
       const config = await portManager.loadConfig();
       
@@ -162,7 +162,7 @@ describe('Port Manager', () => {
       mockFs.writeFile.mockResolvedValue(undefined);
       mockNet.createServer.mockImplementation(() => createMockServer(false));
 
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
       const config = await portManager.loadConfig();
       
@@ -235,7 +235,7 @@ describe('Port Manager', () => {
     it('should release reservations and delete config file', async () => {
       mockFs.unlink.mockResolvedValue(undefined);
       
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
       await portManager.releaseReservations();
       

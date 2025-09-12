@@ -3,7 +3,7 @@
  * Validates Phase B2 optimizations and Stage-B performance targets
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest } from 'bun:test';
 import { EnhancedSymbolSearchEngine, type EnhancedSearchConfig } from '../../indexer/enhanced-symbols.js';
 import { SegmentStorage } from '../../storage/segments.js';
 import type { SearchContext } from '../../types/core.js';
@@ -58,9 +58,9 @@ describe('EnhancedSymbolSearchEngine', () => {
   beforeEach(async () => {
     // Mock segment storage
     mockSegmentStorage = {
-      listSegments: vi.fn().mockReturnValue([]),
-      openSegment: vi.fn(),
-      readFromSegment: vi.fn(),
+      listSegments: jest.fn().mockReturnValue([]),
+      openSegment: jest.fn(),
+      readFromSegment: jest.fn(),
     } as any;
 
     mockConfig = {

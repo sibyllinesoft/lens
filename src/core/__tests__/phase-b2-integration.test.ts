@@ -4,7 +4,7 @@
  * Validates 40% Stage-B performance improvement target
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest } from 'bun:test';
 import { EnhancedSymbolSearchEngine } from '../../indexer/enhanced-symbols.js';
 import { OptimizedASTCache, PERFORMANCE_PRESETS } from '../optimized-ast-cache.js';
 import { StructuralPatternEngine, PATTERN_PRESETS } from '../structural-pattern-engine.js';
@@ -505,9 +505,9 @@ export default {
   beforeEach(() => {
     // Mock segment storage
     segmentStorage = {
-      listSegments: vi.fn().mockReturnValue([]),
-      openSegment: vi.fn(),
-      readFromSegment: vi.fn(),
+      listSegments: jest.fn().mockReturnValue([]),
+      openSegment: jest.fn(),
+      readFromSegment: jest.fn(),
     } as any;
 
     // Initialize feature flags for testing

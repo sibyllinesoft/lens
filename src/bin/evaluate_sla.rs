@@ -13,6 +13,7 @@ use clap::Parser;
 use lens_core::semantic::sla_bounded_evaluation::{
     SLABoundedEvaluator, SLAEvaluationConfig, SLABoundedEvaluationResult
 };
+use lens_core::semantic::sla_bounded_evaluation::{RankedResult, GroundTruthItem};
 use serde_json;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -84,8 +85,9 @@ async fn main() -> Result<()> {
         max_ece_threshold: 0.02, // TODO.md requirement
         bootstrap_samples: args.bootstrap_samples,
         significance_alpha: args.alpha,
-        confidence_bins: 15,
-        require_baseline_comparison: true,
+        ndcg_cutoff: 10,
+        calibration_bins: 15,
+        baseline_policy_fingerprint: "evaluate_sla_baseline".to_string(),
     };
 
     // Load models
@@ -111,13 +113,15 @@ async fn main() -> Result<()> {
 
     let evaluation_result = evaluator.evaluate_slice(
         &args.slice,
-        &queries,
-        &ltr_model,
-        &calibration_system,
-        |query| async {
-            // Mock search function - in production, this would call the actual search system
-            simulate_search_with_timeout(query, timeout_duration).await
-        }
+        queries,
+        move |query| {
+            let query_owned = query.to_string();
+            async move {
+                // Mock search function - in production, this would call the actual search system
+                simulate_search_with_timeout(&query_owned, timeout_duration).await
+            }
+        },
+        None, // baseline_results
     ).await.context("Failed to run SLA-bounded evaluation")?;
 
     // Validate results against TODO.md requirements
@@ -223,7 +227,7 @@ async fn load_calibration(calib_path: &str) -> Result<serde_json::Value> {
 }
 
 /// Load evaluation queries for the specified slice
-async fn load_evaluation_queries(slice: &str) -> Result<Vec<serde_json::Value>> {
+async fn load_evaluation_queries(slice: &str) -> Result<Vec<(String, String, Vec<GroundTruthItem>)>> {
     // For now, generate synthetic evaluation queries
     // In production, this would load real queries from the slice dataset
     warn!("Using synthetic evaluation data - implement real query loading for production");
@@ -240,23 +244,26 @@ async fn load_evaluation_queries(slice: &str) -> Result<Vec<serde_json::Value>> 
     };
 
     for i in 0..query_count {
-        let query = serde_json::json!({
-            "query_id": format!("{}_{:03}", slice.to_lowercase(), i),
-            "query_text": format!("Sample {} query number {}", slice, i),
-            "intent": slice,
-            "language": "python",
-            "ground_truth": [
-                {
-                    "document_id": format!("doc_{}_{}_relevant", slice.to_lowercase(), i),
-                    "relevance": 1.0
-                },
-                {
-                    "document_id": format!("doc_{}_{}_marginal", slice.to_lowercase(), i), 
-                    "relevance": 0.5
-                }
-            ]
-        });
-        queries.push(query);
+        let query_id = format!("{}_{:03}", slice.to_lowercase(), i);
+        let query_text = format!("Sample {} query number {}", slice, i);
+        
+        // Create ground truth items
+        let ground_truth = vec![
+            GroundTruthItem {
+                document_id: format!("doc_{}_{}_relevant", slice.to_lowercase(), i),
+                relevance: 1.0,
+                intent_category: slice.to_string(),
+                language: "python".to_string(),
+            },
+            GroundTruthItem {
+                document_id: format!("doc_{}_{}_marginal", slice.to_lowercase(), i),
+                relevance: 0.5,
+                intent_category: slice.to_string(),
+                language: "python".to_string(),
+            },
+        ];
+        
+        queries.push((query_id, query_text, ground_truth));
     }
 
     info!("Generated {} synthetic evaluation queries for slice '{}'", queries.len(), slice);
@@ -265,9 +272,9 @@ async fn load_evaluation_queries(slice: &str) -> Result<Vec<serde_json::Value>> 
 
 /// Simulate search with timeout constraint (mock implementation)
 async fn simulate_search_with_timeout(
-    query: &serde_json::Value,
+    query: &str,
     timeout: Duration
-) -> Result<Vec<serde_json::Value>> {
+) -> Result<Vec<RankedResult>> {
     let start = std::time::Instant::now();
     
     // Simulate search latency
@@ -282,18 +289,15 @@ async fn simulate_search_with_timeout(
     }
 
     // Generate mock search results
-    let query_id = query["query_id"].as_str().unwrap_or("unknown");
-    let intent = query["intent"].as_str().unwrap_or("NL");
-    
     let mut results = Vec::new();
     for i in 0..10 { // Top 10 results
         let score = 1.0 - (i as f32 * 0.1) + (fastrand::f32() * 0.05 - 0.025); // Decreasing score with noise
-        let result = serde_json::json!({
-            "document_id": format!("result_{}_{}", query_id, i),
-            "score": score.max(0.0),
-            "rank": i + 1,
-            "calibrated_probability": score.clamp(0.001, 0.999) * (0.8 + fastrand::f32() * 0.4) // Mock calibration
-        });
+        let result = RankedResult {
+            document_id: format!("result_query_{}", i),
+            score: score.max(0.0),
+            rank: i + 1,
+            calibrated_probability: Some(score.clamp(0.001, 0.999) * (0.8 + fastrand::f32() * 0.4)), // Mock calibration
+        };
         results.push(result);
     }
     

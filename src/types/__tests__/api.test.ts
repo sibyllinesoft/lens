@@ -3,7 +3,7 @@
  * Tests Zod validation schemas for API contracts
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import {
   ApiVersionSchema,
   IndexVersionSchema,

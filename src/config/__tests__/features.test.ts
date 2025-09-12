@@ -3,7 +3,7 @@
  * Covers feature flag logic, environment overrides, and A/B testing
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest } from 'bun:test';
 import { FeatureFlagManager, featureFlags, type FeatureFlags } from '../features.js';
 
 describe('Feature Flag Manager', () => {
@@ -227,7 +227,7 @@ describe('Feature Flag Manager', () => {
       
       // Mock Math.random to control randomness
       const originalRandom = Math.random;
-      Math.random = vi.fn(() => 0.5); // 50%
+      Math.random = jest.fn(() => 0.5); // 50%
       
       const result = manager.shouldUseBitmapIndex(1000);
       expect(result).toBe(false); // 50% > 0% rollout
@@ -242,7 +242,7 @@ describe('Feature Flag Manager', () => {
       });
       
       const originalRandom = Math.random;
-      Math.random = vi.fn(() => 0.001); // Very small random value
+      Math.random = jest.fn(() => 0.001); // Very small random value
       
       expect(manager.shouldUseBitmapIndex(1000)).toBe(false);
       

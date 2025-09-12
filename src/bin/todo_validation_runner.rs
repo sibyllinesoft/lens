@@ -58,89 +58,25 @@ async fn main() -> Result<()> {
                 min_sla_recall: 0.50,       // SLA-Recall@50 threshold
                 lsp_lift_threshold_pp: 10.0, // ≥10pp LSP lift
                 semantic_lift_threshold_pp: 4.0, // ≥4pp semantic lift
-                calibration_ece_threshold: 0.02, // ≤0.02 ECE (relaxed from 0.015)
-            },
-            attestation: lens_core::benchmark::industry_suites::AttestationConfig {
-                enabled: true,
-                config_fingerprint_required: true,
-                statistical_testing_required: true,
-                witness_coverage_tracking: true,
+                max_ece: 0.02, // ≤0.02 ECE (relaxed from 0.015)
             },
             ..Default::default()
         },
         statistical_testing: StatisticalTestConfig {
-            bootstrap_samples: 10000,
-            permutation_count: 10000,
-            confidence_level: 0.95,
-            alpha: 0.05,
-            apply_holm_correction: true, // Multiple comparison correction per TODO.md
-            min_effect_size: 0.2,
+            significance_level: 0.05,
+            power: 0.8,
+            effect_size: 0.2,
+            sample_size: 10000,
         },
         attestation: AttestationConfig {
-            enable_signing: true,
-            require_witness_validation: true,
-            enable_statistical_validation: true,
-            min_confidence_level: 0.95,
-            enable_config_fingerprint: true,
-            enable_reproducibility_checks: false, // Expensive for demo
+            enabled: true,
+            attestation_key: Some("test-key".to_string()),
+            compliance_standards: vec!["ISO27001".to_string(), "SOC2".to_string()],
         },
         rollout: RolloutConfig {
-            // 1%→5%→25%→100% rollout per TODO.md
-            stages: vec![
-                lens_core::benchmark::rollout::RolloutStage {
-                    name: "Canary".to_string(),
-                    traffic_percentage: 0.01, // 1%
-                    min_duration: Duration::from_secs(10 * 60),
-                    requires_approval: false,
-                    success_criteria: lens_core::benchmark::rollout::StageSuccessCriteria {
-                        min_sla_recall_at_50: 0.48, // Slightly relaxed for early stage
-                        max_p95_latency_ms: 160,
-                        min_success_rate: 0.8,
-                        max_error_rate: 0.05,
-                        min_query_count: 100,
-                    },
-                },
-                lens_core::benchmark::rollout::RolloutStage {
-                    name: "Early".to_string(),
-                    traffic_percentage: 0.05, // 5%
-                    min_duration: Duration::from_secs(15 * 60),
-                    requires_approval: false,
-                    success_criteria: lens_core::benchmark::rollout::StageSuccessCriteria {
-                        min_sla_recall_at_50: 0.49,
-                        max_p95_latency_ms: 155,
-                        min_success_rate: 0.85,
-                        max_error_rate: 0.03,
-                        min_query_count: 500,
-                    },
-                },
-                lens_core::benchmark::rollout::RolloutStage {
-                    name: "Majority".to_string(),
-                    traffic_percentage: 0.25, // 25%
-                    min_duration: Duration::from_secs(30 * 60),
-                    requires_approval: true,
-                    success_criteria: lens_core::benchmark::rollout::StageSuccessCriteria {
-                        min_sla_recall_at_50: 0.50, // Full TODO.md compliance
-                        max_p95_latency_ms: 150,
-                        min_success_rate: 0.9,
-                        max_error_rate: 0.02,
-                        min_query_count: 2000,
-                    },
-                },
-                lens_core::benchmark::rollout::RolloutStage {
-                    name: "Full".to_string(),
-                    traffic_percentage: 1.0, // 100%
-                    min_duration: Duration::from_secs(60 * 60),
-                    requires_approval: true,
-                    success_criteria: lens_core::benchmark::rollout::StageSuccessCriteria {
-                        min_sla_recall_at_50: 0.50,
-                        max_p95_latency_ms: 150,
-                        min_success_rate: 0.95,
-                        max_error_rate: 0.01,
-                        min_query_count: 10000,
-                    },
-                },
-            ],
-            ..Default::default()
+            canary_percentage: 1.0, // 1% canary deployment
+            rollout_duration_minutes: 60,
+            health_check_interval_seconds: 30,
         },
         reporting: ReportingConfig {
             output_formats: vec![
@@ -195,7 +131,7 @@ async fn main() -> Result<()> {
 
     info!("🏃 Executing complete TODO.md validation...");
     
-    match orchestrator.execute_complete_validation().await {
+    match orchestrator.validate_all().await {
         Ok(result) => {
             info!("✅ TODO.md validation completed successfully!");
             print_validation_summary(&result);

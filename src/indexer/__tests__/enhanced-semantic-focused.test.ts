@@ -3,87 +3,87 @@
  * Target high coverage with real API interactions
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, jest, mock } from 'bun:test';
 import { EnhancedSemanticRerankEngine } from '../enhanced-semantic.js';
 import type { Candidate, SearchContext } from '../../types/core.js';
 
 // Mock dependencies
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));
 
-vi.mock('../../storage/segments.js', () => ({
-  SegmentStorage: vi.fn().mockImplementation(() => ({
-    listSegments: vi.fn().mockReturnValue(['semantic_001', 'semantic_002']),
-    openSegment: vi.fn().mockResolvedValue({ size: 1024 }),
-    readFromSegment: vi.fn().mockResolvedValue(Buffer.from(JSON.stringify({
+mock('../../storage/segments.js', () => ({
+  SegmentStorage: jest.fn().mockImplementation(() => ({
+    listSegments: jest.fn().mockReturnValue(['semantic_001', 'semantic_002']),
+    openSegment: jest.fn().mockResolvedValue({ size: 1024 }),
+    readFromSegment: jest.fn().mockResolvedValue(Buffer.from(JSON.stringify({
       vectors: {
         'doc1': [0.1, 0.2, 0.3, 0.4],
         'doc2': [0.5, 0.6, 0.7, 0.8]
       }
     }))),
-    updateConfig: vi.fn().mockResolvedValue(undefined),
-    shutdown: vi.fn().mockResolvedValue(undefined),
+    updateConfig: jest.fn().mockResolvedValue(undefined),
+    shutdown: jest.fn().mockResolvedValue(undefined),
   })),
 }));
 
-vi.mock('../../core/query-classifier.js', () => ({
-  shouldApplySemanticReranking: vi.fn().mockReturnValue(true),
-  explainSemanticDecision: vi.fn().mockReturnValue('Query benefits from semantic reranking'),
+mock('../../core/query-classifier.js', () => ({
+  shouldApplySemanticReranking: jest.fn().mockReturnValue(true),
+  explainSemanticDecision: jest.fn().mockReturnValue('Query benefits from semantic reranking'),
 }));
 
-vi.mock('../../core/isotonic-reranker.js', () => ({
-  IsotonicCalibratedReranker: vi.fn().mockImplementation(() => ({
-    rerank: vi.fn().mockResolvedValue([
+mock('../../core/isotonic-reranker.js', () => ({
+  IsotonicCalibratedReranker: jest.fn().mockImplementation(() => ({
+    rerank: jest.fn().mockResolvedValue([
       { doc_id: 'doc1', score: 0.9 },
       { doc_id: 'doc2', score: 0.8 }
     ]),
-    getStats: vi.fn().mockReturnValue({ calibrated: true }),
-    updateConfig: vi.fn().mockResolvedValue(undefined),
+    getStats: jest.fn().mockReturnValue({ calibrated: true }),
+    updateConfig: jest.fn().mockResolvedValue(undefined),
   })),
 }));
 
-vi.mock('../../core/optimized-hnsw.js', () => ({
-  OptimizedHNSWIndex: vi.fn().mockImplementation(() => ({
-    buildIndex: vi.fn().mockResolvedValue(undefined),
-    search: vi.fn().mockResolvedValue([
+mock('../../core/optimized-hnsw.js', () => ({
+  OptimizedHNSWIndex: jest.fn().mockImplementation(() => ({
+    buildIndex: jest.fn().mockResolvedValue(undefined),
+    search: jest.fn().mockResolvedValue([
       { doc_id: 'doc1', score: 0.85 },
       { doc_id: 'doc2', score: 0.75 }
     ]),
-    tuneEfSearch: vi.fn().mockResolvedValue(64),
-    getStats: vi.fn().mockReturnValue({ nodeCount: 100 }),
-    updateConfig: vi.fn().mockResolvedValue(undefined),
+    tuneEfSearch: jest.fn().mockResolvedValue(64),
+    getStats: jest.fn().mockReturnValue({ nodeCount: 100 }),
+    updateConfig: jest.fn().mockResolvedValue(undefined),
   })),
 }));
 
 // Suppress console output
-vi.spyOn(console, 'log').mockImplementation(() => {});
-vi.spyOn(console, 'warn').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
+jest.spyOn(console, 'warn').mockImplementation(() => {});
 
 describe('EnhancedSemanticRerankEngine', () => {
   let engine: EnhancedSemanticRerankEngine;
   let mockSegmentStorage: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     mockSegmentStorage = {
-      listSegments: vi.fn().mockReturnValue(['semantic_001']),
-      openSegment: vi.fn().mockResolvedValue({ size: 1024 }),
-      readFromSegment: vi.fn().mockResolvedValue(Buffer.from(JSON.stringify({
+      listSegments: jest.fn().mockReturnValue(['semantic_001']),
+      openSegment: jest.fn().mockResolvedValue({ size: 1024 }),
+      readFromSegment: jest.fn().mockResolvedValue(Buffer.from(JSON.stringify({
         vectors: {
           'doc1': [0.1, 0.2, 0.3, 0.4],
           'doc2': [0.5, 0.6, 0.7, 0.8]
         }
       }))),
-      updateConfig: vi.fn().mockResolvedValue(undefined),
-      shutdown: vi.fn().mockResolvedValue(undefined),
+      updateConfig: jest.fn().mockResolvedValue(undefined),
+      shutdown: jest.fn().mockResolvedValue(undefined),
     };
     
     engine = new EnhancedSemanticRerankEngine(mockSegmentStorage);
@@ -129,7 +129,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     });
 
     it('should handle initialization errors gracefully', async () => {
-      mockSegmentStorage.listSegments = vi.fn().mockImplementation(() => {
+      mockSegmentStorage.listSegments = jest.fn().mockImplementation(() => {
         throw new Error('Storage error');
       });
 
@@ -192,7 +192,7 @@ describe('EnhancedSemanticRerankEngine', () => {
 
     it('should handle semantic reranking skip conditions', async () => {
       const { shouldApplySemanticReranking } = await import('../../core/query-classifier.js');
-      vi.mocked(shouldApplySemanticReranking).mockReturnValue(false);
+      mocked(shouldApplySemanticReranking).mockReturnValue(false);
 
       const result = await engine.rerankCandidates(mockCandidates, mockContext);
       
@@ -202,7 +202,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     it('should handle reranking errors gracefully', async () => {
       // Simulate internal error
       const originalEncode = (engine as any).embeddingModel.encode;
-      (engine as any).embeddingModel.encode = vi.fn().mockRejectedValue(new Error('Encoding failed'));
+      (engine as any).embeddingModel.encode = jest.fn().mockRejectedValue(new Error('Encoding failed'));
 
       const result = await engine.rerankCandidates(mockCandidates, mockContext);
       
@@ -246,7 +246,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     it('should handle indexing errors', async () => {
       // Mock encoding failure
       const originalEncode = (engine as any).embeddingModel.encode;
-      (engine as any).embeddingModel.encode = vi.fn().mockRejectedValue(new Error('Encoding failed'));
+      (engine as any).embeddingModel.encode = jest.fn().mockRejectedValue(new Error('Encoding failed'));
 
       await expect(engine.indexDocument('fail_doc', 'content', 'fail.ts'))
         .rejects.toThrow('Encoding failed');

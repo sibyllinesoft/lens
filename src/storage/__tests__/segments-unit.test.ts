@@ -3,45 +3,45 @@
  * Focus on business logic and edge cases with mocked file system operations
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 import { SegmentStorage } from '../segments.js';
 import type { SegmentType, MMapSegment } from '../../types/core.js';
 
 // Mock file system operations to focus on business logic
-vi.mock('fs', () => ({
-  existsSync: vi.fn(),
-  mkdirSync: vi.fn(),
-  openSync: vi.fn(),
-  ftruncateSync: vi.fn(),
-  readSync: vi.fn(),
-  writeSync: vi.fn(),
-  fsyncSync: vi.fn(),
-  closeSync: vi.fn(),
-  readdirSync: vi.fn(),
-  statSync: vi.fn()
+mock('fs', () => ({
+  existsSync: jest.fn(),
+  mkdirSync: jest.fn(),
+  openSync: jest.fn(),
+  ftruncateSync: jest.fn(),
+  readSync: jest.fn(),
+  writeSync: jest.fn(),
+  fsyncSync: jest.fn(),
+  closeSync: jest.fn(),
+  readdirSync: jest.fn(),
+  statSync: jest.fn()
 }));
 
 // Import the mocked fs module
 import * as fs from 'fs';
-const mockFs = vi.mocked(fs);
+const mockFs = fs as any;
 
-vi.mock('path', () => ({
+mock('path', () => ({
   join: (...args: string[]) => args.join('/')
 }));
 
 // Mock telemetry to avoid complexity
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));
 
 // Mock production config
-vi.mock('../../types/config.js', () => ({
+mock('../../types/config.js', () => ({
   PRODUCTION_CONFIG: {
     resources: {
       shard_size_limit_mb: 1024
@@ -54,7 +54,7 @@ describe('SegmentStorage Unit Tests', () => {
   
   beforeEach(() => {
     storage = new SegmentStorage('./test-segments');
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Default mock behaviors
     mockFs.existsSync.mockReturnValue(true);

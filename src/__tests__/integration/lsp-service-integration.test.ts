@@ -3,7 +3,7 @@
  * Tests the 1622-line LSP service with real language server protocol interactions
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'bun:test';
 import { LSPService } from '../../lsp/service.js';
 import type { SearchContext } from '../../types/core.js';
 import type { SupportedLanguage } from '../../types/api.js';

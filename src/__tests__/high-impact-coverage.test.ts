@@ -4,46 +4,46 @@
  * Strategy: Real module imports with comprehensive method execution
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 
 // Mock all external dependencies to isolate testing
-vi.mock('fs');
-vi.mock('path');
-vi.mock('../telemetry/tracer.js');
-vi.mock('../storage/segments.js');
-vi.mock('../indexer/lexical.js');
-vi.mock('../indexer/symbols.js'); 
-vi.mock('../indexer/semantic.js');
-vi.mock('../core/messaging.js');
-vi.mock('../core/ast-cache.js');
-vi.mock('../core/learned-reranker.js');
-vi.mock('../../benchmarks/src/phase-b-comprehensive.js');
-vi.mock('../core/adaptive-fanout.js');
-vi.mock('../core/work-conserving-ann.js');
-vi.mock('../core/precision-optimization.js');
-vi.mock('../core/intent-router.js');
-vi.mock('../core/lsp-stage-b.js');
-vi.mock('../core/lsp-stage-c.js');
+mock('fs');
+mock('path');
+mock('../telemetry/tracer.js');
+mock('../storage/segments.js');
+mock('../indexer/lexical.js');
+mock('../indexer/symbols.js'); 
+mock('../indexer/semantic.js');
+mock('../core/messaging.js');
+mock('../core/ast-cache.js');
+mock('../core/learned-reranker.js');
+mock('../../benchmarks/src/phase-b-comprehensive.js');
+mock('../core/adaptive-fanout.js');
+mock('../core/work-conserving-ann.js');
+mock('../core/precision-optimization.js');
+mock('../core/intent-router.js');
+mock('../core/lsp-stage-b.js');
+mock('../core/lsp-stage-c.js');
 
 // Setup comprehensive mocks
 beforeEach(() => {
   // Mock tracer
   const { LensTracer } = require('../telemetry/tracer.js');
   const mockSpan = {
-    setAttributes: vi.fn(),
-    recordException: vi.fn(),
-    end: vi.fn(),
+    setAttributes: jest.fn(),
+    recordException: jest.fn(),
+    end: jest.fn(),
   };
-  LensTracer.createChildSpan = vi.fn().mockReturnValue(mockSpan);
-  LensTracer.startSearchSpan = vi.fn().mockReturnValue(mockSpan);
-  LensTracer.startStageSpan = vi.fn().mockReturnValue(mockSpan);
-  LensTracer.endStageSpan = vi.fn();
+  LensTracer.createChildSpan = jest.fn().mockReturnValue(mockSpan);
+  LensTracer.startSearchSpan = jest.fn().mockReturnValue(mockSpan);
+  LensTracer.startStageSpan = jest.fn().mockReturnValue(mockSpan);
+  LensTracer.endStageSpan = jest.fn();
 
   // Mock SegmentStorage
   const { SegmentStorage } = require('../storage/segments.js');
   SegmentStorage.mockImplementation(() => ({
-    initialize: vi.fn().mockResolvedValue(undefined),
-    getHealthStatus: vi.fn().mockResolvedValue({
+    initialize: jest.fn().mockResolvedValue(undefined),
+    getHealthStatus: jest.fn().mockResolvedValue({
       status: 'ok',
       shards_healthy: 1,
       shards_total: 1,
@@ -55,50 +55,50 @@ beforeEach(() => {
   // Mock search engines
   const { LexicalSearchEngine } = require('../indexer/lexical.js');
   LexicalSearchEngine.mockImplementation(() => ({
-    initialize: vi.fn().mockResolvedValue(undefined),
-    search: vi.fn().mockResolvedValue([]),
+    initialize: jest.fn().mockResolvedValue(undefined),
+    search: jest.fn().mockResolvedValue([]),
   }));
 
   const { SymbolSearchEngine } = require('../indexer/symbols.js');
   SymbolSearchEngine.mockImplementation(() => ({
-    initialize: vi.fn().mockResolvedValue(undefined),
-    search: vi.fn().mockResolvedValue([]),
+    initialize: jest.fn().mockResolvedValue(undefined),
+    search: jest.fn().mockResolvedValue([]),
   }));
 
   const { SemanticRerankEngine } = require('../indexer/semantic.js');
   SemanticRerankEngine.mockImplementation(() => ({
-    initialize: vi.fn().mockResolvedValue(undefined),
-    rerank: vi.fn().mockResolvedValue([]),
+    initialize: jest.fn().mockResolvedValue(undefined),
+    rerank: jest.fn().mockResolvedValue([]),
   }));
 
   // Mock IndexRegistry
   const { IndexRegistry } = require('../core/index-registry.js');
   IndexRegistry.mockImplementation(() => ({
-    initialize: vi.fn().mockResolvedValue(undefined),
-    hasRepo: vi.fn().mockReturnValue(true),
-    getReader: vi.fn().mockReturnValue({
-      searchLexical: vi.fn().mockResolvedValue([]),
-      searchSymbols: vi.fn().mockResolvedValue([]),
+    initialize: jest.fn().mockResolvedValue(undefined),
+    hasRepo: jest.fn().mockReturnValue(true),
+    getReader: jest.fn().mockReturnValue({
+      searchLexical: jest.fn().mockResolvedValue([]),
+      searchSymbols: jest.fn().mockResolvedValue([]),
     }),
-    getManifest: vi.fn().mockResolvedValue({}),
+    getManifest: jest.fn().mockResolvedValue({}),
   }));
 
   // Mock adaptive fanout
   const { globalAdaptiveFanout } = require('../core/adaptive-fanout.js');
-  globalAdaptiveFanout.isEnabled = vi.fn().mockReturnValue(false);
-  globalAdaptiveFanout.extractFeatures = vi.fn().mockReturnValue({});
-  globalAdaptiveFanout.calculateHardness = vi.fn().mockReturnValue(0.5);
-  globalAdaptiveFanout.getAdaptiveKCandidates = vi.fn().mockReturnValue(100);
+  globalAdaptiveFanout.isEnabled = jest.fn().mockReturnValue(false);
+  globalAdaptiveFanout.extractFeatures = jest.fn().mockReturnValue({});
+  globalAdaptiveFanout.calculateHardness = jest.fn().mockReturnValue(0.5);
+  globalAdaptiveFanout.getAdaptiveKCandidates = jest.fn().mockReturnValue(100);
 
   // Mock fs
   const fs = require('fs');
-  fs.existsSync = vi.fn().mockReturnValue(false);
-  fs.mkdirSync = vi.fn();
-  fs.openSync = vi.fn().mockReturnValue(3);
-  fs.ftruncateSync = vi.fn();
-  fs.writeSync = vi.fn();
-  fs.fsyncSync = vi.fn();
-  fs.closeSync = vi.fn();
+  fs.existsSync = jest.fn().mockReturnValue(false);
+  fs.mkdirSync = jest.fn();
+  fs.openSync = jest.fn().mockReturnValue(3);
+  fs.ftruncateSync = jest.fn();
+  fs.writeSync = jest.fn();
+  fs.fsyncSync = jest.fn();
+  fs.closeSync = jest.fn();
 });
 
 describe('High-Impact Coverage Tests', () => {

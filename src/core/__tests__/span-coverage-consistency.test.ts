@@ -6,7 +6,7 @@
  * and that span calculations are consistent across all code paths.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import {
   normalizeLineEndings,
   getCodePointColumn,

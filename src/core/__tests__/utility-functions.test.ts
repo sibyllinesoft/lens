@@ -3,16 +3,16 @@
  * Focus on pure functions and algorithmic logic for maximum coverage
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, jest, mock } from 'bun:test';
 import type { MatchReason, SearchHit, Candidate, SearchContext } from '../../types/core.js';
 
 // Mock telemetry to avoid complexity
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));

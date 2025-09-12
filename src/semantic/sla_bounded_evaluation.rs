@@ -572,7 +572,7 @@ impl SLABoundedEvaluator {
         let p99_idx = (sorted_times.len() as f32 * 0.99) as usize;
         let p95 = sorted_times[p95_idx.min(sorted_times.len() - 1)] as f32;
         let p99 = sorted_times[p99_idx.min(sorted_times.len() - 1)] as f32;
-        let max = sorted_times.last().unwrap_or(&0) as f32;
+        let max = *sorted_times.last().unwrap_or(&0) as f32;
         let timeout_count = execution_times.iter().filter(|&&t| t > self.config.sla_timeout_ms).count();
 
         ExecutionTimeStats {

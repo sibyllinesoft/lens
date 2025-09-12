@@ -3,25 +3,25 @@
  * Focus on trigram generation, tokenization, and search algorithms
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, mock } from 'bun:test';
 import { LexicalSearchEngine } from '../lexical.js';
 import type { SearchContext, MatchReason } from '../../types/core.js';
 
 // Mock all external dependencies
-vi.mock('../../storage/segments.js', () => ({
-  SegmentStorage: vi.fn().mockImplementation(() => ({
-    createSegment: vi.fn().mockResolvedValue({}),
-    openSegment: vi.fn().mockResolvedValue({}),
-    writeToSegment: vi.fn().mockResolvedValue(undefined),
-    readFromSegment: vi.fn().mockResolvedValue(Buffer.alloc(0))
+mock('../../storage/segments.js', () => ({
+  SegmentStorage: jest.fn().mockImplementation(() => ({
+    createSegment: jest.fn().mockResolvedValue({}),
+    openSegment: jest.fn().mockResolvedValue({}),
+    writeToSegment: jest.fn().mockResolvedValue(undefined),
+    readFromSegment: jest.fn().mockResolvedValue(Buffer.alloc(0))
   }))
 }));
 
-vi.mock('../optimized-trigram-index.js', () => ({
-  OptimizedTrigramIndex: vi.fn().mockImplementation(() => ({
-    indexDocument: vi.fn().mockResolvedValue(undefined),
-    search: vi.fn().mockResolvedValue([]),
-    getStats: vi.fn().mockReturnValue({
+mock('../optimized-trigram-index.js', () => ({
+  OptimizedTrigramIndex: jest.fn().mockImplementation(() => ({
+    indexDocument: jest.fn().mockResolvedValue(undefined),
+    search: jest.fn().mockResolvedValue([]),
+    getStats: jest.fn().mockReturnValue({
       totalDocuments: 0,
       totalTrigrams: 0,
       avgTrigramsPerDoc: 0
@@ -29,17 +29,17 @@ vi.mock('../optimized-trigram-index.js', () => ({
   }))
 }));
 
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));
 
-vi.mock('../../config/features.js', () => ({
+mock('../../config/features.js', () => ({
   featureFlags: {
     optimizedTrigramIndex: true
   }
@@ -51,14 +51,14 @@ describe('LexicalSearchEngine Unit Tests', () => {
 
   beforeEach(() => {
     mockSegmentStorage = {
-      createSegment: vi.fn().mockResolvedValue({}),
-      openSegment: vi.fn().mockResolvedValue({}),
-      writeToSegment: vi.fn().mockResolvedValue(undefined),
-      readFromSegment: vi.fn().mockResolvedValue(Buffer.alloc(0))
+      createSegment: jest.fn().mockResolvedValue({}),
+      openSegment: jest.fn().mockResolvedValue({}),
+      writeToSegment: jest.fn().mockResolvedValue(undefined),
+      readFromSegment: jest.fn().mockResolvedValue(Buffer.alloc(0))
     };
     
     lexicalEngine = new LexicalSearchEngine(mockSegmentStorage);
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('Tokenization Logic', () => {

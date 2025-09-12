@@ -3,6 +3,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use parking_lot::RwLock;
 use anyhow::Result;
+use prometheus::{Registry, Opts, Counter, Histogram, Gauge, register_counter, register_histogram, register_gauge};
+use std::sync::OnceLock;
 
 /// Comprehensive metrics collection for Lens system
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -470,6 +472,102 @@ impl PerformanceGate {
             GateComparison::Equal => (value - self.threshold).abs() < f64::EPSILON,
         };
         self.passed
+    }
+}
+
+/// Global Prometheus metrics registry
+static PROMETHEUS_REGISTRY: OnceLock<PrometheusMetrics> = OnceLock::new();
+
+#[cfg(test)]
+use std::sync::Mutex;
+
+#[cfg(test)]
+static TEST_METRICS_LOCK: Mutex<()> = Mutex::new(());
+
+/// Prometheus metrics for monitoring
+pub struct PrometheusMetrics {
+    pub query_counter: Counter,
+    pub query_duration: Histogram,
+    pub search_latency: Histogram,
+    pub memory_usage: Gauge,
+    pub cpu_utilization: Gauge,
+    pub cache_hit_rate: Gauge,
+}
+
+/// Initialize Prometheus metrics for the Lens system
+pub fn init_prometheus_metrics() -> Result<()> {
+    #[cfg(test)]
+    {
+        // In tests, prevent concurrent initialization
+        let _guard = TEST_METRICS_LOCK.lock().unwrap();
+        
+        // If already initialized in tests, just return success to avoid conflicts
+        if PROMETHEUS_REGISTRY.get().is_some() {
+            tracing::debug!("📊 Prometheus metrics already initialized in tests - reusing");
+            return Ok(());
+        }
+    }
+    let metrics = PrometheusMetrics {
+        query_counter: register_counter!(Opts::new(
+            "lens_queries_total",
+            "Total number of search queries processed"
+        ))?,
+        
+        query_duration: register_histogram!(
+            "lens_query_duration_seconds",
+            "Duration of search queries in seconds",
+            prometheus::exponential_buckets(0.01, 2.0, 10)?
+        )?,
+        
+        search_latency: register_histogram!(
+            "lens_search_latency_seconds", 
+            "Search latency in seconds",
+            prometheus::exponential_buckets(0.001, 2.0, 15)?
+        )?,
+        
+        memory_usage: register_gauge!(Opts::new(
+            "lens_memory_usage_bytes",
+            "Memory usage in bytes"
+        ))?,
+        
+        cpu_utilization: register_gauge!(Opts::new(
+            "lens_cpu_utilization_percent",
+            "CPU utilization percentage"
+        ))?,
+        
+        cache_hit_rate: register_gauge!(Opts::new(
+            "lens_cache_hit_rate_percent",
+            "Cache hit rate percentage"
+        ))?,
+    };
+
+    PROMETHEUS_REGISTRY.set(metrics)
+        .map_err(|_| anyhow::anyhow!("Prometheus metrics already initialized"))?;
+    
+    tracing::info!("✅ Prometheus metrics initialized successfully");
+    Ok(())
+}
+
+/// Get the global Prometheus metrics registry
+pub fn get_prometheus_metrics() -> Option<&'static PrometheusMetrics> {
+    PROMETHEUS_REGISTRY.get()
+}
+
+/// Record a search query in Prometheus metrics
+pub fn record_prometheus_query(duration_secs: f64) {
+    if let Some(metrics) = get_prometheus_metrics() {
+        metrics.query_counter.inc();
+        metrics.query_duration.observe(duration_secs);
+        metrics.search_latency.observe(duration_secs);
+    }
+}
+
+/// Update system resource metrics
+pub fn update_prometheus_system_metrics(memory_bytes: f64, cpu_percent: f64, cache_hit_percent: f64) {
+    if let Some(metrics) = get_prometheus_metrics() {
+        metrics.memory_usage.set(memory_bytes);
+        metrics.cpu_utilization.set(cpu_percent);
+        metrics.cache_hit_rate.set(cache_hit_percent);
     }
 }
 

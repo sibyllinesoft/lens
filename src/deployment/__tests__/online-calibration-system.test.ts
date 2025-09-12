@@ -2,24 +2,24 @@
  * Tests for OnlineCalibrationSystem
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 import { EventEmitter } from 'events';
 import { OnlineCalibrationSystem } from '../online-calibration-system';
 
 // Mock fs operations
-vi.mock('fs', () => ({
-  writeFileSync: vi.fn(),
-  readFileSync: vi.fn(),
-  existsSync: vi.fn(),
-  mkdirSync: vi.fn(),
+mock('fs', () => ({
+  writeFileSync: jest.fn(),
+  readFileSync: jest.fn(),
+  existsSync: jest.fn(),
+  mkdirSync: jest.fn(),
 }));
 
 // Mock path operations
-vi.mock('path', () => ({
-  join: vi.fn((...args) => args.join('/')),
+mock('path', () => ({
+  join: jest.fn((...args) => args.join('/')),
 }));
 
-const mockFs = vi.mocked(await import('fs'));
+const mockFs = mocked(await import('fs'));
 
 describe('OnlineCalibrationSystem', () => {
   let system: OnlineCalibrationSystem;
@@ -27,7 +27,7 @@ describe('OnlineCalibrationSystem', () => {
   let mockIsotonicModel: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Setup default mocks
     mockFs.existsSync.mockReturnValue(false);
@@ -96,7 +96,7 @@ describe('OnlineCalibrationSystem', () => {
       mockFs.existsSync.mockReturnValue(true);
       
       // Clear previous calls from setup
-      vi.clearAllMocks();
+      jest.clearAllMocks();
       mockFs.existsSync.mockReturnValue(true);
       mockFs.readFileSync.mockReturnValue('{}');
       
@@ -177,8 +177,8 @@ describe('OnlineCalibrationSystem', () => {
 
   describe('Online Calibration Lifecycle', () => {
     it('should start online calibration system', async () => {
-      const emitSpy = vi.spyOn(system, 'emit');
-      const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation();
+      const emitSpy = jest.spyOn(system, 'emit');
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
       
       await system.startOnlineCalibration();
       
@@ -190,8 +190,8 @@ describe('OnlineCalibrationSystem', () => {
     });
 
     it('should stop online calibration system', () => {
-      const emitSpy = vi.spyOn(system, 'emit');
-      const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation();
+      const emitSpy = jest.spyOn(system, 'emit');
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
       
       // Start first to have interval to clear
       system.startOnlineCalibration();
@@ -204,7 +204,7 @@ describe('OnlineCalibrationSystem', () => {
     });
 
     it('should handle stopping when not started', () => {
-      const emitSpy = vi.spyOn(system, 'emit');
+      const emitSpy = jest.spyOn(system, 'emit');
       
       system.stopOnlineCalibration();
       
@@ -247,8 +247,8 @@ describe('OnlineCalibrationSystem', () => {
 
   describe('Manual Calibration Override', () => {
     it('should allow manual tau override', async () => {
-      const emitSpy = vi.spyOn(system, 'emit');
-      const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation();
+      const emitSpy = jest.spyOn(system, 'emit');
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
       
       await system.manualCalibrationOverride(0.8, 'emergency adjustment');
       
@@ -340,8 +340,8 @@ describe('OnlineCalibrationSystem', () => {
     });
 
     it('should emit calibration error events', async () => {
-      const emitSpy = vi.spyOn(system, 'emit');
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
+      const emitSpy = jest.spyOn(system, 'emit');
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       
       // Force an error in the calibration update
       const handleCalibrationError = (system as any).handleCalibrationError;

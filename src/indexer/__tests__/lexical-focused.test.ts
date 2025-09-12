@@ -3,35 +3,35 @@
  * Targeting core business logic for maximum coverage impact
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, jest, mock } from 'bun:test';
 import { LexicalSearchEngine } from '../lexical.js';
 import type { SearchContext, Candidate } from '../../types/core.js';
 
 // Mock dependencies
-vi.mock('../../storage/segments.js', () => ({
-  SegmentStorage: vi.fn().mockImplementation(() => ({
-    listSegments: vi.fn().mockReturnValue([]),
-    updateConfig: vi.fn().mockResolvedValue(undefined),
-    shutdown: vi.fn().mockResolvedValue(undefined),
+mock('../../storage/segments.js', () => ({
+  SegmentStorage: jest.fn().mockImplementation(() => ({
+    listSegments: jest.fn().mockReturnValue([]),
+    updateConfig: jest.fn().mockResolvedValue(undefined),
+    shutdown: jest.fn().mockResolvedValue(undefined),
   })),
 }));
 
-vi.mock('../optimized-trigram-index.js', () => ({
-  OptimizedTrigramIndex: vi.fn().mockImplementation(() => ({
-    indexDocument: vi.fn().mockResolvedValue(undefined),
-    search: vi.fn().mockReturnValue([]),
-    getStats: vi.fn().mockReturnValue({ trigram_count: 0 }),
-    clear: vi.fn(),
-    updateConfig: vi.fn().mockResolvedValue(undefined),
+mock('../optimized-trigram-index.js', () => ({
+  OptimizedTrigramIndex: jest.fn().mockImplementation(() => ({
+    indexDocument: jest.fn().mockResolvedValue(undefined),
+    search: jest.fn().mockReturnValue([]),
+    getStats: jest.fn().mockReturnValue({ trigram_count: 0 }),
+    clear: jest.fn(),
+    updateConfig: jest.fn().mockResolvedValue(undefined),
   })),
 }));
 
-vi.mock('../../config/features.js', () => ({
+mock('../../config/features.js', () => ({
   featureFlags: {
-    isEnabled: vi.fn().mockReturnValue(false),
-    isPrefilterEnabled: vi.fn().mockReturnValue(false),
-    isBitmapPerformanceLoggingEnabled: vi.fn().mockReturnValue(false),
-    shouldUseBitmapIndex: vi.fn().mockReturnValue(false),
+    isEnabled: jest.fn().mockReturnValue(false),
+    isPrefilterEnabled: jest.fn().mockReturnValue(false),
+    isBitmapPerformanceLoggingEnabled: jest.fn().mockReturnValue(false),
+    shouldUseBitmapIndex: jest.fn().mockReturnValue(false),
   },
 }));
 
@@ -40,13 +40,13 @@ describe('LexicalSearchEngine', () => {
   let mockSegmentStorage: any;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Create a mock segment storage instance
     mockSegmentStorage = {
-      listSegments: vi.fn().mockReturnValue([]),
-      updateConfig: vi.fn().mockResolvedValue(undefined),
-      shutdown: vi.fn().mockResolvedValue(undefined),
+      listSegments: jest.fn().mockReturnValue([]),
+      updateConfig: jest.fn().mockResolvedValue(undefined),
+      shutdown: jest.fn().mockResolvedValue(undefined),
     };
     
     lexicalEngine = new LexicalSearchEngine(mockSegmentStorage);

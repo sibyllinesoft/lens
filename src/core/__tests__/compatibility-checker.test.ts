@@ -3,7 +3,7 @@
  * Covers Phase A1.2 compatibility checking against nightly bundles, version validation, and schema compatibility
  */
 
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, jest, afterEach, mock } from 'bun:test';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import {
@@ -19,22 +19,22 @@ import {
 } from '../compatibility-checker.js';
 
 // Mock the file system operations
-vi.mock('fs/promises');
-const mockFs = vi.mocked(fs);
+mock('fs/promises');
+const mockFs = mocked(fs);
 
 // Mock the tracer
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      setStatus: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      setStatus: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
 
 // Mock version constants
-vi.mock('../version-manager.js', () => ({
+mock('../version-manager.js', () => ({
   SERVER_API_VERSION: '1.2.3',
   SERVER_INDEX_VERSION: '2.1.0',
   SERVER_POLICY_VERSION: '1.0.5',
@@ -73,11 +73,11 @@ describe('Compatibility Checker', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Bundle Loading', () => {

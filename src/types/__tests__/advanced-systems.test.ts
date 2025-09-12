@@ -3,7 +3,7 @@
  * Tests interfaces, type guards, and utility functions for advanced Lens systems
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import {
   type EnhancedSearchHit,
   type AdvancedSystemsTelemetry,

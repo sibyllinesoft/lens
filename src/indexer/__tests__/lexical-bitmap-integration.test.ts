@@ -3,15 +3,15 @@
  * Tests the integration of bitmap-based trigram indexing with the existing search engine
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, jest, mock } from 'bun:test';
 import { LexicalSearchEngine } from '../lexical.js';
 import { SegmentStorage } from '../../storage/segments.js';
 import { featureFlags } from '../../config/features.js';
 import type { SearchContext, Candidate } from '../../types/core.js';
 
 // Mock the SegmentStorage dependency
-vi.mock('../../storage/segments.js', () => ({
-  SegmentStorage: vi.fn().mockImplementation(() => ({})),
+mock('../../storage/segments.js', () => ({
+  SegmentStorage: jest.fn().mockImplementation(() => ({})),
 }));
 
 describe('LexicalSearchEngine Bitmap Integration', () => {

@@ -192,8 +192,8 @@ pub fn validate_performance_margin(comparison: &PerformanceComparison) -> Result
     
     let key_metrics = vec!["ndcg_at_10", "recall_at_50"];
     
-    for metric_name in key_metrics {
-        if let Some(metric) = comparison.metrics.get(metric_name) {
+    for metric_name in &key_metrics {
+        if let Some(metric) = comparison.metrics.get(*metric_name) {
             if metric.improvement_pp < MINIMUM_MARGIN_PP {
                 tracing::warn!(
                     "Insufficient margin for {}: {:.1}pp < {:.1}pp required",

@@ -2,28 +2,28 @@
  * Tests for OptimizedHNSWIndex
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 import { OptimizedHNSWIndex, type HNSWOptimizationConfig, type HNSWSearchResult, type HNSWPerformanceMetrics } from '../optimized-hnsw';
 
 // Mock the tracer
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn().mockReturnValue({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn().mockReturnValue({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     })
   }
 }));
 
 describe('OptimizedHNSWIndex', () => {
   let index: OptimizedHNSWIndex;
-  let consoleLogSpy: ReturnType<typeof vi.spyOn>;
-  let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
+  let consoleLogSpy: ReturnType<typeof jest.spyOn>;
+  let consoleWarnSpy: ReturnType<typeof jest.spyOn>;
 
   beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation();
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+    consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
     index = new OptimizedHNSWIndex();
   });
 
@@ -122,7 +122,7 @@ describe('OptimizedHNSWIndex', () => {
     });
 
     it('should call progress callback during build', async () => {
-      const progressCallback = vi.fn();
+      const progressCallback = jest.fn();
       const vectors = new Map([
         ['doc1', new Float32Array([0.1, 0.2, 0.3])],
         ['doc2', new Float32Array([0.2, 0.3, 0.4])],

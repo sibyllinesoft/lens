@@ -526,3 +526,338 @@ impl PipelineScheduler {
 }
 
 use tokio::sync::SemaphorePermit;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio::time::{sleep, Duration};
+
+    fn create_test_config() -> SchedulerConfig {
+        let mut priority_weights = HashMap::new();
+        priority_weights.insert(Priority::Critical, 1.0);
+        priority_weights.insert(Priority::High, 0.8);
+        priority_weights.insert(Priority::Normal, 0.6);
+        priority_weights.insert(Priority::Low, 0.4);
+        priority_weights.insert(Priority::Background, 0.2);
+
+        SchedulerConfig {
+            max_concurrent_queries: 4,
+            max_queue_size: 100,
+            worker_count: 2,
+            default_timeout_ms: 5000,
+            priority_weights,
+        }
+    }
+
+    #[test]
+    fn test_priority_ordering() {
+        assert!(Priority::Critical < Priority::High);
+        assert!(Priority::High < Priority::Normal);
+        assert!(Priority::Normal < Priority::Low);
+        assert!(Priority::Low < Priority::Background);
+    }
+
+    #[test]
+    fn test_scheduler_config_creation() {
+        let config = create_test_config();
+        assert_eq!(config.max_concurrent_queries, 4);
+        assert_eq!(config.max_queue_size, 100);
+        assert_eq!(config.worker_count, 2);
+        assert_eq!(config.default_timeout_ms, 5000);
+        assert_eq!(config.priority_weights.len(), 5);
+    }
+
+    #[test]
+    fn test_scheduler_metrics_new() {
+        let metrics = SchedulerMetrics::new();
+        assert_eq!(metrics.total_tasks, 0);
+        assert_eq!(metrics.completed_tasks, 0);
+        assert_eq!(metrics.failed_tasks, 0);
+        assert_eq!(metrics.timeout_tasks, 0);
+        assert_eq!(metrics.queue_sizes.len(), 0);
+        assert_eq!(metrics.average_wait_time_ms, 0.0);
+        assert_eq!(metrics.average_execution_time_ms, 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_query_scheduler_creation() {
+        let config = create_test_config();
+        let scheduler = QueryScheduler::new(config.clone());
+        
+        assert_eq!(scheduler.config.max_concurrent_queries, config.max_concurrent_queries);
+        assert_eq!(scheduler.config.worker_count, config.worker_count);
+        
+        // Check that all priority queues are initialized
+        let queues = scheduler.task_queues.read();
+        assert_eq!(queues.len(), 5);
+        assert!(queues.contains_key(&Priority::Critical));
+        assert!(queues.contains_key(&Priority::High));
+        assert!(queues.contains_key(&Priority::Normal));
+        assert!(queues.contains_key(&Priority::Low));
+        assert!(queues.contains_key(&Priority::Background));
+    }
+
+    #[test]
+    fn test_task_type_variants() {
+        let search = TaskType::Search;
+        let index = TaskType::Index;
+        let benchmark = TaskType::Benchmark;
+        let health_check = TaskType::HealthCheck;
+        let maintenance = TaskType::Maintenance;
+
+        // Just ensure variants exist and can be created
+        assert!(matches!(search, TaskType::Search));
+        assert!(matches!(index, TaskType::Index));
+        assert!(matches!(benchmark, TaskType::Benchmark));
+        assert!(matches!(health_check, TaskType::HealthCheck));
+        assert!(matches!(maintenance, TaskType::Maintenance));
+    }
+
+    #[test]
+    fn test_task_payload_variants() {
+        let search_payload = TaskPayload::Search {
+            query: "test query".to_string(),
+            options: SearchOptions {
+                systems: vec!["lex".to_string()],
+                timeout_ms: 1000,
+                max_results: 10,
+                language_hint: Some("rust".to_string()),
+            },
+        };
+
+        let index_payload = TaskPayload::Index {
+            file_paths: vec!["test.rs".to_string()],
+            incremental: true,
+        };
+
+        let benchmark_payload = TaskPayload::Benchmark {
+            suite_name: "test_suite".to_string(),
+            config: BenchmarkConfig {
+                query_count: 100,
+                timeout_ms: 1000,
+                parallel_queries: 4,
+            },
+        };
+
+        let health_payload = TaskPayload::HealthCheck {
+            component: "search_engine".to_string(),
+        };
+
+        let maintenance_payload = TaskPayload::Maintenance {
+            operation: MaintenanceOperation::CacheClear,
+        };
+
+        assert!(matches!(search_payload, TaskPayload::Search { .. }));
+        assert!(matches!(index_payload, TaskPayload::Index { .. }));
+        assert!(matches!(benchmark_payload, TaskPayload::Benchmark { .. }));
+        assert!(matches!(health_payload, TaskPayload::HealthCheck { .. }));
+        assert!(matches!(maintenance_payload, TaskPayload::Maintenance { .. }));
+    }
+
+    #[test]
+    fn test_maintenance_operations() {
+        let cache_clear = MaintenanceOperation::CacheClear;
+        let index_optimize = MaintenanceOperation::IndexOptimize;
+        let log_rotate = MaintenanceOperation::LogRotate;
+        let metrics_reset = MaintenanceOperation::MetricsReset;
+
+        assert!(matches!(cache_clear, MaintenanceOperation::CacheClear));
+        assert!(matches!(index_optimize, MaintenanceOperation::IndexOptimize));
+        assert!(matches!(log_rotate, MaintenanceOperation::LogRotate));
+        assert!(matches!(metrics_reset, MaintenanceOperation::MetricsReset));
+    }
+
+    #[test]
+    fn test_task_result_variants() {
+        let success_result = TaskResult::Success(TaskOutput::MaintenanceComplete);
+        let error_result = TaskResult::Error("test error".to_string());
+        let timeout_result = TaskResult::Timeout;
+
+        assert!(matches!(success_result, TaskResult::Success(_)));
+        assert!(matches!(error_result, TaskResult::Error(_)));
+        assert!(matches!(timeout_result, TaskResult::Timeout));
+    }
+
+    #[test]
+    fn test_task_output_variants() {
+        let search_output = TaskOutput::SearchResults(vec![]);
+        let index_output = TaskOutput::IndexUpdate { files_processed: 5 };
+        let benchmark_output = TaskOutput::BenchmarkResults { 
+            metrics: BenchmarkMetrics {
+                total_queries: 100,
+                successful_queries: 95,
+                average_latency_ms: 150.0,
+                p95_latency_ms: 300.0,
+            }
+        };
+        let health_output = TaskOutput::HealthStatus { 
+            healthy: true, 
+            details: "All systems operational".to_string() 
+        };
+        let maintenance_output = TaskOutput::MaintenanceComplete;
+
+        assert!(matches!(search_output, TaskOutput::SearchResults(_)));
+        assert!(matches!(index_output, TaskOutput::IndexUpdate { .. }));
+        assert!(matches!(benchmark_output, TaskOutput::BenchmarkResults { .. }));
+        assert!(matches!(health_output, TaskOutput::HealthStatus { .. }));
+        assert!(matches!(maintenance_output, TaskOutput::MaintenanceComplete));
+    }
+
+    #[test]
+    fn test_search_options() {
+        let options = SearchOptions {
+            systems: vec!["lex".to_string(), "symbols".to_string()],
+            timeout_ms: 2000,
+            max_results: 25,
+            language_hint: Some("typescript".to_string()),
+        };
+
+        assert_eq!(options.systems.len(), 2);
+        assert_eq!(options.timeout_ms, 2000);
+        assert_eq!(options.max_results, 25);
+        assert_eq!(options.language_hint, Some("typescript".to_string()));
+    }
+
+    #[test]
+    fn test_benchmark_config() {
+        let config = BenchmarkConfig {
+            query_count: 200,
+            timeout_ms: 5000,
+            parallel_queries: 8,
+        };
+
+        assert_eq!(config.query_count, 200);
+        assert_eq!(config.timeout_ms, 5000);
+        assert_eq!(config.parallel_queries, 8);
+    }
+
+    #[test]
+    fn test_benchmark_metrics() {
+        let metrics = BenchmarkMetrics {
+            total_queries: 100,
+            successful_queries: 98,
+            average_latency_ms: 125.5,
+            p95_latency_ms: 250.0,
+        };
+
+        assert_eq!(metrics.total_queries, 100);
+        assert_eq!(metrics.successful_queries, 98);
+        assert_eq!(metrics.average_latency_ms, 125.5);
+        assert_eq!(metrics.p95_latency_ms, 250.0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_queue_size_tracking() {
+        let config = create_test_config();
+        let scheduler = QueryScheduler::new(config);
+
+        // Initially all queues should be empty
+        assert_eq!(scheduler.get_queue_size(Priority::High), 0);
+        assert_eq!(scheduler.get_queue_size(Priority::Normal), 0);
+        assert_eq!(scheduler.get_queue_size(Priority::Low), 0);
+    }
+
+    #[tokio::test] 
+    async fn test_scheduler_metrics_tracking() {
+        let config = create_test_config();
+        let scheduler = QueryScheduler::new(config);
+
+        let metrics = scheduler.get_metrics();
+        assert_eq!(metrics.total_tasks, 0);
+        assert_eq!(metrics.completed_tasks, 0);
+        assert_eq!(metrics.failed_tasks, 0);
+        assert_eq!(metrics.timeout_tasks, 0);
+    }
+
+    #[test]
+    fn test_pipeline_scheduler_creation() {
+        let scheduler = PipelineScheduler::new(10);
+        assert_eq!(scheduler.available_permits(), 10);
+    }
+
+    #[tokio::test]
+    async fn test_pipeline_scheduler_acquire_release() {
+        let scheduler = PipelineScheduler::new(2);
+        
+        // Should be able to acquire permits
+        let _permit1 = scheduler.acquire().await;
+        assert_eq!(scheduler.available_permits(), 1);
+        
+        let _permit2 = scheduler.acquire().await;
+        assert_eq!(scheduler.available_permits(), 0);
+        
+        // Permits should be released when dropped
+        drop(_permit1);
+        // Note: We can't directly test permit release timing in sync code
+        // but the semaphore will release when the permit is dropped
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_basic_task_scheduling() {
+        let config = create_test_config();
+        let scheduler = QueryScheduler::new(config);
+
+        let payload = TaskPayload::HealthCheck {
+            component: "test_component".to_string(),
+        };
+
+        // Schedule a simple task - this tests the basic scheduling mechanism
+        // Note: The actual task execution would depend on worker implementation
+        // which might not be fully functional in a unit test environment
+        let task_future = scheduler.schedule_task(
+            TaskType::HealthCheck,
+            Priority::Normal,
+            payload,
+            Some(Duration::from_millis(100)),
+        );
+
+        // The task should either complete, timeout, or return an error
+        // We don't assert specific outcomes since worker implementation
+        // may not be fully operational in test environment
+        let _result = task_future.await;
+        
+        // Verify metrics were updated
+        let metrics = scheduler.get_metrics();
+        assert!(metrics.total_tasks > 0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_queue_capacity_limit() {
+        let mut config = create_test_config();
+        config.max_queue_size = 1; // Very small queue for testing
+        let scheduler = QueryScheduler::new(config);
+
+        let payload1 = TaskPayload::HealthCheck {
+            component: "test1".to_string(),
+        };
+        let payload2 = TaskPayload::HealthCheck {
+            component: "test2".to_string(),
+        };
+
+        // First task should be accepted
+        let result1_future = scheduler.schedule_task(
+            TaskType::HealthCheck,
+            Priority::Normal,
+            payload1,
+            Some(Duration::from_millis(100)),
+        );
+
+        // Give a small delay to let the first task start processing
+        sleep(Duration::from_millis(10)).await;
+
+        // Second task might be rejected due to queue capacity
+        let result2_future = scheduler.schedule_task(
+            TaskType::HealthCheck,
+            Priority::Normal,
+            payload2,
+            Some(Duration::from_millis(100)),
+        );
+
+        let _result1 = result1_future.await.unwrap();
+        let _result2 = result2_future.await.unwrap();
+
+        // At least one task should have been processed
+        let metrics = scheduler.get_metrics();
+        assert!(metrics.total_tasks > 0);
+    }
+}

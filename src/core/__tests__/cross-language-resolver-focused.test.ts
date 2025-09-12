@@ -1,33 +1,33 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 
 // Mock all external dependencies BEFORE importing
-vi.mock('perf_hooks', () => ({
+mock('perf_hooks', () => ({
   performance: {
-    now: vi.fn(() => Date.now()),
+    now: jest.fn(() => Date.now()),
   },
 }));
 
-vi.mock('../telemetry/tracer', () => ({
+mock('../telemetry/tracer', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
 
-vi.mock('./advanced-cache-manager', () => ({
+mock('./advanced-cache-manager', () => ({
   globalCacheManager: {
-    get: vi.fn().mockResolvedValue(null),
-    set: vi.fn(),
+    get: jest.fn().mockResolvedValue(null),
+    set: jest.fn(),
   },
 }));
 
-vi.mock('./parallel-processor', () => ({
+mock('./parallel-processor', () => ({
   globalParallelProcessor: {
-    submitTask: vi.fn().mockResolvedValue({ results: [] }),
-    getStats: vi.fn().mockReturnValue({ totalTasks: 0 }),
+    submitTask: jest.fn().mockResolvedValue({ results: [] }),
+    getStats: jest.fn().mockReturnValue({ totalTasks: 0 }),
   },
 }));
 
@@ -38,7 +38,7 @@ describe('CrossLanguageResolver', () => {
   let resolver: CrossLanguageResolver;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     resolver = new CrossLanguageResolver();
   });
 

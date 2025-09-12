@@ -210,7 +210,7 @@ impl EmbeddingService {
         // Simple hash-based mock embedding
         let hash = self.simple_hash(text);
         for (i, val) in embedding.iter_mut().enumerate() {
-            *val = ((hash.wrapping_add(i * 17)) % 1000) as f32 / 1000.0 - 0.5;
+            *val = ((hash.wrapping_add((i * 17) as u32)) % 1000) as f32 / 1000.0 - 0.5;
         }
         
         // Normalize
@@ -382,13 +382,15 @@ impl HybridSearcher {
             popularity_score: 1.0, // Would be calculated from usage statistics
         };
         
+        let document_length = tokens.len();
+        
         Ok(HybridDocument {
             file_path: doc_input.file_path,
             content: doc_input.content,
             language: doc_input.language,
             tokens,
             term_frequencies,
-            document_length: tokens.len(),
+            document_length,
             embedding,
             function_embeddings,
             class_embeddings,

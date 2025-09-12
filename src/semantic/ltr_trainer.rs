@@ -39,7 +39,7 @@ pub struct LTRConfig {
     pub seed: u64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum LTRObjective {
     /// Pairwise logistic regression
     PairwiseLogistic,
@@ -82,7 +82,7 @@ pub struct BoundedLTRModel {
     pub config: LTRConfig,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum MonotonicConstraint {
     Increasing,
     Decreasing,
@@ -441,4 +441,154 @@ pub struct TrainingReport {
     pub total_samples: usize,
     pub hard_negative_count: usize,
     pub weights_stddev: f32,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ltr_config_default() {
+        let config = LTRConfig::default();
+        assert_eq!(config.objective, LTRObjective::PairwiseLogistic);
+        assert_eq!(config.max_log_odds_delta, 0.4);
+        assert_eq!(config.monotonic_increasing, vec!["exact_match".to_string(), "struct_hit".to_string()]);
+        assert!(config.monotonic_decreasing.is_empty());
+        assert_eq!(config.hard_negative_ratio, 4.0);
+        assert_eq!(config.learning_rate, 0.01);
+        assert_eq!(config.l2_lambda, 0.001);
+        assert_eq!(config.max_iterations, 1000);
+        assert_eq!(config.cv_folds, 5);
+        assert_eq!(config.patience, 50);
+        assert_eq!(config.seed, 42);
+    }
+
+    #[test]
+    fn test_ltr_trainer_creation() {
+        let config = LTRConfig::default();
+        let trainer = LTRTrainer::new(config.clone());
+        assert_eq!(trainer.config.max_iterations, config.max_iterations);
+        assert_eq!(trainer.config.learning_rate, config.learning_rate);
+    }
+
+    #[test]
+    fn test_monotonic_constraints_map_building() {
+        let config = LTRConfig::default();
+        let trainer = LTRTrainer::new(config);
+        let feature_names = vec![
+            "exact_match".to_string(),
+            "struct_hit".to_string(), 
+            "lexical_score".to_string(),
+            "semantic_score".to_string(),
+        ];
+
+        let constraints = trainer.build_monotonic_constraints_map(&feature_names);
+        
+        assert_eq!(constraints.get("exact_match"), Some(&MonotonicConstraint::Increasing));
+        assert_eq!(constraints.get("struct_hit"), Some(&MonotonicConstraint::Increasing));
+        assert_eq!(constraints.get("lexical_score"), Some(&MonotonicConstraint::None));
+        assert_eq!(constraints.get("semantic_score"), Some(&MonotonicConstraint::None));
+    }
+
+    #[test]
+    fn test_document_features_creation() {
+        let features = DocumentFeatures {
+            doc_id: "test_doc".to_string(),
+            features: vec![0.8, 0.6, 0.7],
+            feature_names: vec!["f1".to_string(), "f2".to_string(), "f3".to_string()],
+        };
+
+        assert_eq!(features.doc_id, "test_doc");
+        assert_eq!(features.features.len(), 3);
+        assert_eq!(features.feature_names.len(), 3);
+        assert_eq!(features.features[0], 0.8);
+    }
+
+    #[test]
+    fn test_training_sample_creation() {
+        let sample = TrainingSample {
+            query_id: "query_1".to_string(),
+            repo_id: "repo_1".to_string(),
+            intent: "NL".to_string(),
+            language: "python".to_string(),
+            query_text: "find function".to_string(),
+            documents: vec![],
+            relevance_labels: vec![1.0, 0.5],
+        };
+
+        assert_eq!(sample.query_id, "query_1");
+        assert_eq!(sample.repo_id, "repo_1");
+        assert_eq!(sample.intent, "NL");
+        assert_eq!(sample.language, "python");
+        assert_eq!(sample.relevance_labels.len(), 2);
+    }
+
+    #[tokio::test]
+    async fn test_ltr_trainer_mock_training_samples() {
+        let config = LTRConfig::default();
+        let trainer = LTRTrainer::new(config);
+        
+        let samples = trainer.create_mock_training_samples().unwrap();
+        assert_eq!(samples.len(), 10);
+        
+        for sample in samples {
+            assert!(!sample.query_id.is_empty());
+            assert!(!sample.repo_id.is_empty());
+            assert_eq!(sample.intent, "NL");
+            assert_eq!(sample.language, "python");
+            assert_eq!(sample.documents.len(), 2);
+            assert_eq!(sample.relevance_labels.len(), 2);
+            assert!(sample.relevance_labels[0] > sample.relevance_labels[1]); // First doc more relevant
+        }
+    }
+
+    #[tokio::test]
+    async fn test_ltr_trainer_training() {
+        let config = LTRConfig {
+            max_iterations: 50, // Reduce iterations for faster testing
+            ..Default::default()
+        };
+        let trainer = LTRTrainer::new(config);
+        
+        let samples = trainer.create_mock_training_samples().unwrap();
+        let model = trainer.train(&samples).await.unwrap();
+        
+        assert_eq!(model.feature_names.len(), 12); // Expected number of features
+        assert_eq!(model.weights.len(), 12);
+        assert!(!model.metadata.model_hash.is_empty());
+        assert!(!model.metadata.feature_schema_hash.is_empty());
+        assert_eq!(model.metadata.training_samples, 10);
+        assert_eq!(model.metadata.feature_count, 12);
+        
+        // Check that monotonic constraints are applied
+        let exact_match_idx = model.feature_names.iter().position(|n| n == "exact_match");
+        let struct_hit_idx = model.feature_names.iter().position(|n| n == "struct_hit");
+        
+        if let Some(idx) = exact_match_idx {
+            assert!(model.weights[idx] >= 0.0, "exact_match should have non-negative weight");
+        }
+        if let Some(idx) = struct_hit_idx {
+            assert!(model.weights[idx] >= 0.0, "struct_hit should have non-negative weight");
+        }
+        
+        // Check bounds are applied
+        for weight in &model.weights {
+            assert!(weight.abs() <= 0.4, "Weight should be bounded by max_log_odds_delta");
+        }
+    }
+
+    #[tokio::test]
+    async fn test_training_report_generation() {
+        let config = LTRConfig::default();
+        let trainer = LTRTrainer::new(config);
+        
+        let report = trainer.generate_training_report().await.unwrap();
+        
+        assert!(report.final_ndcg > 0.0);
+        assert_eq!(report.feature_count, 12);
+        assert_eq!(report.cv_folds, 5);
+        assert_eq!(report.total_samples, 1000);
+        assert_eq!(report.hard_negative_count, 4000);
+        assert!(report.weights_stddev > 0.0);
+    }
 }

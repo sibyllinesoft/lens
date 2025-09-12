@@ -1,60 +1,60 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 import { EnhancedSemanticRerankEngine } from '../enhanced-semantic.js';
 import type { Candidate, SearchContext } from '../../types/core.js';
 import { SegmentStorage } from '../../storage/segments.js';
 
 // Mock dependencies
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    trace: vi.fn((label, fn) => fn()),
-    traceAsync: vi.fn(async (label, fn) => await fn()),
-    createChildSpan: vi.fn().mockReturnValue({
-      finish: vi.fn(),
-      setTag: vi.fn(),
-      log: vi.fn(),
-      end: vi.fn()
+    trace: jest.fn((label, fn) => fn()),
+    traceAsync: jest.fn(async (label, fn) => await fn()),
+    createChildSpan: jest.fn().mockReturnValue({
+      finish: jest.fn(),
+      setTag: jest.fn(),
+      log: jest.fn(),
+      end: jest.fn()
     })
   }
 }));
 
-vi.mock('../../storage/segments.js', () => ({
-  SegmentStorage: vi.fn().mockImplementation(() => ({
-    loadSegment: vi.fn().mockResolvedValue(new Map()),
-    saveSegment: vi.fn().mockResolvedValue(undefined),
-    getSegmentStats: vi.fn().mockReturnValue({ size: 100, timestamp: Date.now() })
+mock('../../storage/segments.js', () => ({
+  SegmentStorage: jest.fn().mockImplementation(() => ({
+    loadSegment: jest.fn().mockResolvedValue(new Map()),
+    saveSegment: jest.fn().mockResolvedValue(undefined),
+    getSegmentStats: jest.fn().mockReturnValue({ size: 100, timestamp: Date.now() })
   }))
 }));
 
-vi.mock('../../core/query-classifier.js', () => ({
-  shouldApplySemanticReranking: vi.fn().mockReturnValue(true),
-  explainSemanticDecision: vi.fn().mockReturnValue({
+mock('../../core/query-classifier.js', () => ({
+  shouldApplySemanticReranking: jest.fn().mockReturnValue(true),
+  explainSemanticDecision: jest.fn().mockReturnValue({
     shouldApply: true,
     reason: 'Query benefits from semantic analysis',
     confidence: 0.85
   })
 }));
 
-vi.mock('../../core/isotonic-reranker.js', () => ({
-  IsotonicCalibratedReranker: vi.fn().mockImplementation(() => ({
-    rerank: vi.fn().mockResolvedValue([]),
-    updateCalibration: vi.fn().mockResolvedValue(undefined),
-    getConfidenceScore: vi.fn().mockReturnValue(0.8),
-    isCalibrated: vi.fn().mockReturnValue(true)
+mock('../../core/isotonic-reranker.js', () => ({
+  IsotonicCalibratedReranker: jest.fn().mockImplementation(() => ({
+    rerank: jest.fn().mockResolvedValue([]),
+    updateCalibration: jest.fn().mockResolvedValue(undefined),
+    getConfidenceScore: jest.fn().mockReturnValue(0.8),
+    isCalibrated: jest.fn().mockReturnValue(true)
   }))
 }));
 
-vi.mock('../../core/optimized-hnsw.js', () => ({
-  OptimizedHNSWIndex: vi.fn().mockImplementation(() => ({
-    search: vi.fn().mockResolvedValue([]),
-    addVector: vi.fn().mockResolvedValue(undefined),
-    optimize: vi.fn().mockResolvedValue(undefined),
-    getStats: vi.fn().mockReturnValue({ nodeCount: 1000, averageConnections: 16 })
+mock('../../core/optimized-hnsw.js', () => ({
+  OptimizedHNSWIndex: jest.fn().mockImplementation(() => ({
+    search: jest.fn().mockResolvedValue([]),
+    addVector: jest.fn().mockResolvedValue(undefined),
+    optimize: jest.fn().mockResolvedValue(undefined),
+    getStats: jest.fn().mockReturnValue({ nodeCount: 1000, averageConnections: 16 })
   }))
 }));
 
 // Mock console to reduce noise
-const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
 describe('EnhancedSemanticRerankEngine', () => {
   let engine: EnhancedSemanticRerankEngine;
@@ -103,7 +103,7 @@ describe('EnhancedSemanticRerankEngine', () => {
   };
 
   beforeEach(async () => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Setup default config
     mockConfig = {
@@ -175,7 +175,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     it('should handle initialization errors gracefully', async () => {
       // Mock a component initialization failure
       const failingStorage = new SegmentStorage('failing-storage');
-      failingStorage.loadSegment = vi.fn().mockRejectedValue(new Error('Storage failed'));
+      failingStorage.loadSegment = jest.fn().mockRejectedValue(new Error('Storage failed'));
       
       const failingEngine = new EnhancedSemanticRerankEngine(failingStorage, mockConfig);
       
@@ -206,7 +206,7 @@ describe('EnhancedSemanticRerankEngine', () => {
 
     it('should fall back to basic reranking when B3 optimizations fail', async () => {
       // Mock B3 optimization failure
-      engine.applyB3Optimizations = vi.fn().mockRejectedValue(new Error('B3 failed'));
+      engine.applyB3Optimizations = jest.fn().mockRejectedValue(new Error('B3 failed'));
 
       const result = await engine.rerankCandidates(mockCandidates, mockSearchContext);
 
@@ -280,7 +280,7 @@ describe('EnhancedSemanticRerankEngine', () => {
 
     it('should calculate fallback similarity when embedding fails', async () => {
       // Mock embedding failure
-      mockEmbeddingModel.encode = vi.fn().mockRejectedValue(new Error('Encoding failed'));
+      mockEmbeddingModel.encode = jest.fn().mockRejectedValue(new Error('Encoding failed'));
 
       const fallbackScore = engine.calculateFallbackSimilarity('test query', 'test snippet');
 
@@ -314,7 +314,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     it('should handle auto-tuning failure gracefully', async () => {
       // Mock HNSW optimization failure
       if (engine.optimizedHNSW) {
-        engine.optimizedHNSW.optimize = vi.fn().mockRejectedValue(new Error('Auto-tune failed'));
+        engine.optimizedHNSW.optimize = jest.fn().mockRejectedValue(new Error('Auto-tune failed'));
       }
 
       const testQueries = ['test query'];
@@ -338,7 +338,7 @@ describe('EnhancedSemanticRerankEngine', () => {
       expect(mockEmbeddingModel.encode).toHaveBeenCalledWith(query);
       
       // Second call should use cache
-      vi.clearAllMocks();
+      jest.clearAllMocks();
       const embedding2 = await engine.getOrCacheQueryEmbedding(query);
       expect(mockEmbeddingModel.encode).not.toHaveBeenCalled();
       
@@ -357,7 +357,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     });
 
     it('should handle embedding generation failures in cache', async () => {
-      mockEmbeddingModel.encode = vi.fn().mockRejectedValue(new Error('Encoding failed'));
+      mockEmbeddingModel.encode = jest.fn().mockRejectedValue(new Error('Encoding failed'));
       
       await expect(engine.getOrCacheQueryEmbedding('failing query')).rejects.toThrow('Encoding failed');
     });
@@ -384,7 +384,7 @@ describe('EnhancedSemanticRerankEngine', () => {
       // Mock internal embedding failure by making the engine fail
       const originalEncode = engine.embeddingModel?.encode;
       if (engine.embeddingModel) {
-        engine.embeddingModel.encode = vi.fn().mockRejectedValue(new Error('Indexing failed'));
+        engine.embeddingModel.encode = jest.fn().mockRejectedValue(new Error('Indexing failed'));
       }
       
       const document = {
@@ -429,7 +429,7 @@ describe('EnhancedSemanticRerankEngine', () => {
 
     it('should handle segment loading errors', async () => {
       if (engine.segmentStorage) {
-        engine.segmentStorage.loadSegment = vi.fn().mockRejectedValue(new Error('Segment not found'));
+        engine.segmentStorage.loadSegment = jest.fn().mockRejectedValue(new Error('Segment not found'));
       }
 
       const segmentId = 'missing-segment';
@@ -552,7 +552,7 @@ describe('EnhancedSemanticRerankEngine', () => {
     it('should handle embedding model failures gracefully', async () => {
       // Mock internal embedding failure
       if (engine.embeddingModel) {
-        engine.embeddingModel.encode = vi.fn().mockRejectedValue(new Error('Model unavailable'));
+        engine.embeddingModel.encode = jest.fn().mockRejectedValue(new Error('Model unavailable'));
       }
 
       const result = await engine.rerankCandidates(mockCandidates, mockSearchContext);

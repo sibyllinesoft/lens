@@ -3,7 +3,7 @@
  * Tests comprehensive flag management, A/B testing, canary deployment, and rollback functionality
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import {
   FeatureFlagManager,
   globalFeatureFlags,
@@ -15,20 +15,20 @@ import {
 } from '../feature-flags.js';
 
 // Mock telemetry
-vi.mock('../../telemetry/tracer.js', () => ({
+mock('../../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
 
 // Mock console methods to avoid noise during tests
 const mockConsole = {
-  log: vi.fn(),
-  error: vi.fn(),
+  log: jest.fn(),
+  error: jest.fn(),
 };
 
 describe('FeatureFlagManager', () => {
@@ -36,18 +36,18 @@ describe('FeatureFlagManager', () => {
 
   beforeEach(() => {
     // Mock console
-    vi.spyOn(console, 'log').mockImplementation(mockConsole.log);
-    vi.spyOn(console, 'error').mockImplementation(mockConsole.error);
+    jest.spyOn(console, 'log').mockImplementation(mockConsole.log);
+    jest.spyOn(console, 'error').mockImplementation(mockConsole.error);
     
     // Clear mock calls
-    vi.clearAllMocks();
+    jest.clearAllMocks();
 
     // Create fresh manager for each test
     manager = new FeatureFlagManager();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('Constructor', () => {
@@ -123,7 +123,7 @@ describe('FeatureFlagManager', () => {
       
       // Mock an error in the flag checking process by making hashString throw
       const originalHashString = (errorManager as any).hashString;
-      (errorManager as any).hashString = vi.fn(() => {
+      (errorManager as any).hashString = jest.fn(() => {
         throw new Error('Hash error');
       });
 
@@ -719,13 +719,13 @@ describe('FeatureFlagManager', () => {
 
 describe('Global Feature Flag Functions', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.spyOn(console, 'log').mockImplementation(vi.fn());
-    vi.spyOn(console, 'error').mockImplementation(vi.fn());
+    jest.clearAllMocks();
+    jest.spyOn(console, 'log').mockImplementation(jest.fn());
+    jest.spyOn(console, 'error').mockImplementation(jest.fn());
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('isFeatureEnabled', () => {

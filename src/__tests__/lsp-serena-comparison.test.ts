@@ -4,7 +4,7 @@
  * and LSP activation evidence
  */
 
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, test, expect, jest, beforeEach, afterEach, mock } from 'bun:test';
 import { LSPSerenaComparisonTest } from '../../benchmarks/src/lsp-serena-comparison.js';
 import { WorkspaceConfig } from '../core/workspace-config.js';
 import { SearchEngine } from '../api/search-engine.js';
@@ -12,29 +12,29 @@ import { LSPSidecar } from '../core/lsp-sidecar.js';
 import type { Candidate } from '../types/core.js';
 
 // Mock external dependencies
-vi.mock('fs', () => ({
-  readFileSync: vi.fn(),
-  writeFileSync: vi.fn(),
-  existsSync: vi.fn().mockReturnValue(true),
+mock('fs', () => ({
+  readFileSync: jest.fn(),
+  writeFileSync: jest.fn(),
+  existsSync: jest.fn().mockReturnValue(true),
 }));
 
-vi.mock('child_process', () => ({
-  spawn: vi.fn(() => ({
-    stdout: { on: vi.fn(), setEncoding: vi.fn() },
-    stderr: { on: vi.fn(), setEncoding: vi.fn() },
-    stdin: { write: vi.fn(), end: vi.fn() },
-    on: vi.fn(),
-    kill: vi.fn(),
+mock('child_process', () => ({
+  spawn: jest.fn(() => ({
+    stdout: { on: jest.fn(), setEncoding: jest.fn() },
+    stderr: { on: jest.fn(), setEncoding: jest.fn() },
+    stdin: { write: jest.fn(), end: jest.fn() },
+    on: jest.fn(),
+    kill: jest.fn(),
     pid: 12345,
   })),
 }));
 
-vi.mock('../telemetry/tracer.js', () => ({
+mock('../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn(),
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn(),
     })),
   },
 }));
@@ -46,12 +46,12 @@ describe('LSP-Serena Comparison Test', () => {
   const testCorpusPath = '/test/corpus';
   
   beforeEach(async () => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     // Mock workspace config
     mockWorkspaceConfig = {
-      parseWorkspaceConfig: vi.fn().mockResolvedValue(undefined),
-      getStats: vi.fn().mockReturnValue({
+      parseWorkspaceConfig: jest.fn().mockResolvedValue(undefined),
+      getStats: jest.fn().mockReturnValue({
         languages: { typescript: true, rust: true },
         configs_loaded: 2
       })
@@ -68,7 +68,7 @@ describe('LSP-Serena Comparison Test', () => {
     if (comparisonTest) {
       await comparisonTest.cleanup();
     }
-    vi.restoreAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('test initialization', () => {
@@ -99,9 +99,9 @@ describe('LSP-Serena Comparison Test', () => {
     test('detects when LSP servers are not started', async () => {
       // Mock LSP sidecar that fails to start
       const mockLSPSidecar = {
-        initializeLanguageServers: vi.fn().mockRejectedValue(new Error('Server failed')),
-        harvestSymbols: vi.fn().mockResolvedValue([]),
-        shutdown: vi.fn().mockResolvedValue(undefined)
+        initializeLanguageServers: jest.fn().mockRejectedValue(new Error('Server failed')),
+        harvestSymbols: jest.fn().mockResolvedValue([]),
+        shutdown: jest.fn().mockResolvedValue(undefined)
       } as any;
       
       // Use reflection to set the LSP sidecar
@@ -131,9 +131,9 @@ describe('LSP-Serena Comparison Test', () => {
       ];
       
       const mockLSPSidecar = {
-        initializeLanguageServers: vi.fn().mockResolvedValue(undefined),
-        harvestSymbols: vi.fn().mockResolvedValue(mockHints),
-        shutdown: vi.fn().mockResolvedValue(undefined)
+        initializeLanguageServers: jest.fn().mockResolvedValue(undefined),
+        harvestSymbols: jest.fn().mockResolvedValue(mockHints),
+        shutdown: jest.fn().mockResolvedValue(undefined)
       } as any;
       
       (comparisonTest as any).lspSidecar = mockLSPSidecar;
@@ -170,9 +170,9 @@ describe('LSP-Serena Comparison Test', () => {
       ];
 
       const mockSearchEngine = {
-        search: vi.fn().mockResolvedValue(mockCandidates),
-        initializeLSP: vi.fn().mockResolvedValue(undefined),
-        shutdown: vi.fn().mockResolvedValue(undefined)
+        search: jest.fn().mockResolvedValue(mockCandidates),
+        initializeLSP: jest.fn().mockResolvedValue(undefined),
+        shutdown: jest.fn().mockResolvedValue(undefined)
       } as any;
 
       (comparisonTest as any).searchEngine = mockSearchEngine;
@@ -380,9 +380,9 @@ describe('LSP-Serena Comparison Test', () => {
   describe('error handling and edge cases', () => {
     test('handles search engine failures gracefully', async () => {
       const mockSearchEngine = {
-        search: vi.fn().mockRejectedValue(new Error('Search failed')),
-        initializeLSP: vi.fn().mockResolvedValue(undefined),
-        shutdown: vi.fn().mockResolvedValue(undefined)
+        search: jest.fn().mockRejectedValue(new Error('Search failed')),
+        initializeLSP: jest.fn().mockResolvedValue(undefined),
+        shutdown: jest.fn().mockResolvedValue(undefined)
       } as any;
 
       (comparisonTest as any).searchEngine = mockSearchEngine;

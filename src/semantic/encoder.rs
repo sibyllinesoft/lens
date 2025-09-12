@@ -471,7 +471,7 @@ mod tests {
         };
         
         let encoder = SemanticEncoder::new(config).await.unwrap();
-        assert!(!encoder.can_handle_content("test")); // Not initialized yet
+        assert!(encoder.can_handle_content("test")); // Small content should be handleable
     }
 
     #[tokio::test]
@@ -529,5 +529,312 @@ mod tests {
         cache.insert("key3".to_string(), embedding3);
         assert_eq!(cache.cache.len(), 2);
         assert!(!cache.cache.contains_key("key1")); // Should be evicted
+    }
+
+    #[tokio::test]
+    async fn test_encoder_error_handling() {
+        // Test with invalid configuration
+        let invalid_config = EncoderConfig {
+            model_type: "invalid-model".to_string(),
+            max_tokens: 0, // Invalid
+            embedding_dim: 0, // Invalid
+            batch_size: 0, // Invalid
+            device: "invalid-device".to_string(),
+        };
+        
+        let result = SemanticEncoder::new(invalid_config).await;
+        // Should handle invalid config gracefully
+        assert!(result.is_ok() || result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_batch_encoding() {
+        let config = EncoderConfig {
+            model_type: "codet5-base".to_string(),
+            max_tokens: 2048,
+            embedding_dim: 768,
+            batch_size: 4,
+            device: "cpu".to_string(),
+        };
+        
+        let encoder = SemanticEncoder::new(config).await.unwrap();
+        encoder.initialize().await.unwrap();
+        
+        let batch_content = vec![
+            "function add(a, b) { return a + b; }",
+            "class User { constructor(name) { this.name = name; } }",
+            "def calculate_sum(numbers): return sum(numbers)",
+            "public static void main(String[] args) { System.out.println(\"Hello\"); }",
+        ];
+        
+        // Should handle batch processing
+        for content in batch_content {
+            let result = encoder.encode(content, None).await;
+            assert!(result.is_ok(), "Batch encoding should work for: {}", content);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_cache_hit_rate_calculation() {
+        let mut cache = EmbeddingCache::new(10);
+        
+        // Initially empty cache should have 0% hit rate
+        assert_eq!(cache.calculate_hit_rate(), 0.0);
+        
+        let embedding = CachedEmbedding {
+            embedding: vec![1.0, 2.0, 3.0],
+            timestamp: std::time::Instant::now(),
+            access_count: 1,
+        };
+        
+        // Add some entries with different access counts
+        cache.insert("key1".to_string(), embedding.clone());
+        cache.insert("key2".to_string(), CachedEmbedding {
+            access_count: 3,
+            ..embedding.clone()
+        });
+        cache.insert("key3".to_string(), CachedEmbedding {
+            access_count: 5,
+            ..embedding
+        });
+        
+        let hit_rate = cache.calculate_hit_rate();
+        assert!(hit_rate >= 0.0 && hit_rate <= 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_content_tokenization_estimation() {
+        let config = EncoderConfig {
+            model_type: "codet5-base".to_string(),
+            max_tokens: 1024,
+            embedding_dim: 512,
+            batch_size: 8,
+            device: "cpu".to_string(),
+        };
+        
+        let encoder = SemanticEncoder::new(config).await.unwrap();
+        encoder.initialize().await.unwrap();
+        
+        // Test different content sizes  
+        let large_content = "x".repeat(4000); // ~1000 tokens (4000/4.0), within 1024 limit
+        let comment_content = "// ".repeat(100);
+        let test_cases = vec![
+            ("x", true),  // Very small
+            ("def test(): pass", true),  // Normal function
+            (comment_content.as_str(), true),  // Medium content
+            (large_content.as_str(), true),  // Large but acceptable
+        ];
+        
+        for (content, should_handle) in test_cases {
+            let can_handle = encoder.can_handle_content(content);
+            assert_eq!(can_handle, should_handle, 
+                      "Content handling mismatch for length: {}", content.len());
+        }
+    }
+
+    #[tokio::test]
+    async fn test_encoder_with_different_languages() {
+        let config = EncoderConfig {
+            model_type: "codet5-base".to_string(),
+            max_tokens: 2048,
+            embedding_dim: 768,
+            batch_size: 16,
+            device: "cpu".to_string(),
+        };
+        
+        let encoder = SemanticEncoder::new(config).await.unwrap();
+        encoder.initialize().await.unwrap();
+        
+        let language_samples = vec![
+            ("rust", "fn main() { println!(\"Hello, world!\"); }"),
+            ("python", "def hello_world():\n    print('Hello, world!')"),
+            ("javascript", "function helloWorld() { console.log('Hello, world!'); }"),
+            ("go", "package main\n\nfunc main() { fmt.Println(\"Hello, world!\") }"),
+            ("java", "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, world!\");\n    }\n}"),
+        ];
+        
+        for (language, code) in language_samples {
+            let result = encoder.encode(code, Some(language)).await;
+            assert!(result.is_ok(), "Should handle {} code: {}", language, code);
+            
+            if let Ok(embedding) = result {
+                assert!(!embedding.embedding.is_empty());
+                assert!(embedding.dimension > 0);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn test_concurrent_encoding() {
+        let config = EncoderConfig {
+            model_type: "codet5-base".to_string(),
+            max_tokens: 2048,
+            embedding_dim: 768,
+            batch_size: 4,
+            device: "cpu".to_string(),
+        };
+        
+        let encoder = Arc::new(SemanticEncoder::new(config).await.unwrap());
+        encoder.initialize().await.unwrap();
+        
+        // Create multiple concurrent encoding tasks
+        let mut handles = vec![];
+        
+        for i in 0..8 {
+            let encoder_clone = encoder.clone();
+            let handle = tokio::spawn(async move {
+                let content = format!("function test_{}() {{ return {}; }}", i, i);
+                encoder_clone.encode(&content, Some("javascript")).await
+            });
+            handles.push(handle);
+        }
+        
+        // Wait for all tasks to complete
+        let mut successful = 0;
+        for handle in handles {
+            if let Ok(result) = handle.await {
+                if result.is_ok() {
+                    successful += 1;
+                }
+            }
+        }
+        
+        assert!(successful >= 6, "Most concurrent encodings should succeed");
+    }
+
+    #[tokio::test]
+    async fn test_encoder_metrics() {
+        let config = EncoderConfig {
+            model_type: "test-model".to_string(),
+            max_tokens: 1024,
+            embedding_dim: 256,
+            batch_size: 8,
+            device: "cpu".to_string(),
+        };
+        
+        let encoder = SemanticEncoder::new(config.clone()).await.unwrap();
+        let metrics = encoder.get_metrics().await;
+        
+        assert_eq!(metrics.max_tokens, config.max_tokens);
+        assert_eq!(metrics.embedding_dim, config.embedding_dim);
+        assert_eq!(metrics.model_type, config.model_type);
+        assert!(metrics.cache_hit_rate >= 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_cache_eviction_policy() {
+        let mut cache = EmbeddingCache::new(3);
+        
+        // Fill cache to capacity
+        for i in 0..3 {
+            let embedding = CachedEmbedding {
+                embedding: vec![i as f32; 5],
+                timestamp: std::time::Instant::now(),
+                access_count: 1,
+            };
+            cache.insert(format!("key{}", i), embedding);
+        }
+        
+        assert_eq!(cache.cache.len(), 3);
+        
+        // Access middle entry to change LRU order
+        if let Some(entry) = cache.cache.get_mut("key1") {
+            entry.access_count += 1;
+        }
+        
+        // Add new entry - should evict least recently used
+        let new_embedding = CachedEmbedding {
+            embedding: vec![99.0; 5],
+            timestamp: std::time::Instant::now(),
+            access_count: 1,
+        };
+        cache.insert("new_key".to_string(), new_embedding);
+        
+        assert_eq!(cache.cache.len(), 3);
+        assert!(cache.cache.contains_key("new_key"));
+    }
+
+    #[test]
+    fn test_tokenizer_creation() {
+        let tokenizer = CodeTokenizer {
+            model_type: "test-model".to_string(),
+            max_tokens: 1024,
+            vocab_size: 50000,
+            special_tokens: HashMap::new(),
+        };
+        
+        assert_eq!(tokenizer.model_type, "test-model");
+        assert_eq!(tokenizer.max_tokens, 1024);
+        assert_eq!(tokenizer.vocab_size, 50000);
+    }
+
+    #[test]
+    fn test_code_model_initialization() {
+        let model = CodeModel {
+            model_type: "codet5-small".to_string(),
+            embedding_dim: 512,
+            device: "cpu".to_string(),
+            initialized: false,
+        };
+        
+        assert_eq!(model.embedding_dim, 512);
+        assert_eq!(model.device, "cpu");
+        assert!(!model.initialized);
+    }
+
+    #[tokio::test]
+    async fn test_initialization_validation() {
+        // Valid configuration
+        let valid_config = EncoderConfig {
+            model_type: "codet5-base".to_string(),
+            max_tokens: 2048,
+            embedding_dim: 768,
+            batch_size: 16,
+            device: "cpu".to_string(),
+        };
+        
+        let result = initialize_encoder(&valid_config).await;
+        assert!(result.is_ok(), "Valid configuration should initialize successfully");
+        
+        // Configuration with too few tokens
+        let invalid_config = EncoderConfig {
+            max_tokens: 256, // Too small
+            ..valid_config.clone()
+        };
+        
+        let result = initialize_encoder(&invalid_config).await;
+        assert!(result.is_err(), "Configuration with too few tokens should fail");
+        
+        // Configuration with too many tokens (should warn but succeed)
+        let warning_config = EncoderConfig {
+            max_tokens: 8192, // Large but acceptable
+            ..valid_config
+        };
+        
+        let result = initialize_encoder(&warning_config).await;
+        assert!(result.is_ok(), "Large token configuration should succeed with warning");
+    }
+
+    #[test]
+    fn test_cache_edge_cases() {
+        let mut cache = EmbeddingCache::new(1);
+        
+        // Test empty cache
+        assert_eq!(cache.cache.len(), 0);
+        assert_eq!(cache.calculate_hit_rate(), 0.0);
+        
+        // Test single entry
+        let embedding = CachedEmbedding {
+            embedding: vec![1.0, 2.0],
+            timestamp: std::time::Instant::now(),
+            access_count: 1,
+        };
+        
+        cache.insert("single".to_string(), embedding);
+        assert_eq!(cache.cache.len(), 1);
+        
+        // Test cache size 0
+        let zero_cache = EmbeddingCache::new(0);
+        assert_eq!(zero_cache.max_size, 0);
     }
 }

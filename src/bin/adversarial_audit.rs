@@ -16,7 +16,7 @@
 
 use anyhow::{Context, Result};
 use clap::Parser;
-use lens::adversarial::{
+use lens_core::adversarial::{
     AdversarialOrchestrator, AdversarialConfig, validate_adversarial_gates,
     calculate_robustness_score,
 };
@@ -209,7 +209,7 @@ fn create_adversarial_config(args: &Args) -> AdversarialConfig {
     }
 }
 
-async fn execute_adversarial_audit(config: AdversarialConfig) -> Result<lens::adversarial::AdversarialAuditResult> {
+async fn execute_adversarial_audit(config: AdversarialConfig) -> Result<lens_core::adversarial::AdversarialAuditResult> {
     info!("🚀 Starting comprehensive adversarial audit");
     
     let mut orchestrator = AdversarialOrchestrator::new(config);
@@ -222,7 +222,7 @@ async fn execute_adversarial_audit(config: AdversarialConfig) -> Result<lens::ad
 }
 
 async fn generate_json_report(
-    result: &lens::adversarial::AdversarialAuditResult, 
+    result: &lens_core::adversarial::AdversarialAuditResult, 
     output_path: &PathBuf
 ) -> Result<()> {
     let report_path = output_path.join("adversarial_audit_report.json");
@@ -238,7 +238,7 @@ async fn generate_json_report(
 }
 
 async fn generate_markdown_report(
-    result: &lens::adversarial::AdversarialAuditResult,
+    result: &lens_core::adversarial::AdversarialAuditResult,
     output_path: &PathBuf,
     execution_time: std::time::Duration,
 ) -> Result<()> {
@@ -254,7 +254,7 @@ async fn generate_markdown_report(
 }
 
 fn format_markdown_report(
-    result: &lens::adversarial::AdversarialAuditResult,
+    result: &lens_core::adversarial::AdversarialAuditResult,
     execution_time: std::time::Duration,
 ) -> Result<String> {
     let mut report = String::new();
@@ -370,7 +370,7 @@ fn format_markdown_report(
 }
 
 fn log_final_summary(
-    result: &lens::adversarial::AdversarialAuditResult,
+    result: &lens_core::adversarial::AdversarialAuditResult,
     gates_passed: bool,
     robustness_score: f32,
     execution_time: std::time::Duration,

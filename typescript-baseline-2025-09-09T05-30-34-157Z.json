@@ -1,0 +1,139 @@
+{
+  "timestamp": "2025-09-09T05:30:28.843Z",
+  "server": "http://localhost:3000",
+  "system": "TypeScript (Baseline)",
+  "queries": {
+    "function": {
+      "stats": {
+        "count": 50,
+        "min": "1.22",
+        "max": "17.93",
+        "avg": "3.05",
+        "p50": "2.63",
+        "p95": "5.87",
+        "p99": "12.48"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "class": {
+      "stats": {
+        "count": 50,
+        "min": "1.00",
+        "max": "5.73",
+        "avg": "2.45",
+        "p50": "2.33",
+        "p95": "4.53",
+        "p99": "5.60"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "user": {
+      "stats": {
+        "count": 50,
+        "min": "0.90",
+        "max": "5.31",
+        "avg": "2.28",
+        "p50": "2.23",
+        "p95": "3.84",
+        "p99": "5.15"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "async": {
+      "stats": {
+        "count": 50,
+        "min": "0.74",
+        "max": "6.26",
+        "avg": "2.44",
+        "p50": "2.02",
+        "p95": "5.09",
+        "p99": "5.91"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "getUserById": {
+      "stats": {
+        "count": 50,
+        "min": "0.69",
+        "max": "4.66",
+        "avg": "2.35",
+        "p50": "2.33",
+        "p95": "4.12",
+        "p99": "4.57"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "UserService": {
+      "stats": {
+        "count": 50,
+        "min": "0.84",
+        "max": "6.21",
+        "avg": "2.29",
+        "p50": "2.09",
+        "p95": "5.07",
+        "p99": "5.94"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "authentication": {
+      "stats": {
+        "count": 50,
+        "min": "0.62",
+        "max": "19.65",
+        "avg": "2.38",
+        "p50": "2.00",
+        "p95": "3.83",
+        "p99": "12.09"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    },
+    "database connection": {
+      "stats": {
+        "count": 50,
+        "min": "0.71",
+        "max": "6.61",
+        "avg": "2.06",
+        "p50": "1.97",
+        "p95": "3.56",
+        "p99": "5.49"
+      },
+      "success_rate": "100.0",
+      "error_rate": "0.0",
+      "total_requests": 50
+    }
+  },
+  "overall": {
+    "avg_latency": "2.41",
+    "avg_p95": "4.49",
+    "queries_tested": 8
+  },
+  "loadTest": {
+    "concurrent_users": 20,
+    "total_requests": 200,
+    "success_rate": "100.0",
+    "qps": "1727.16",
+    "stats": {
+      "count": 200,
+      "min": "1.07",
+      "max": "16.06",
+      "avg": "6.92",
+      "p50": "6.56",
+      "p95": "14.32",
+      "p99": "15.51"
+    }
+  }
+}

@@ -1,5 +1,59 @@
 # CLAUDE.md - StoryViz Corpus Setup for Lens Benchmarking
 
+## 🚨 IMPORTANT: Tarpaulin Coverage Analysis - CORRECT METHOD
+
+**❌ WRONG WAY (what previous Claude did):**
+```bash
+# These commands are WRONG - produce incomplete/incorrect coverage due to missing --ignore-tests flag
+cargo tarpaulin --workspace --timeout 600 --verbose
+cargo tarpaulin --all-features --workspace --timeout 600 --verbose
+cargo tarpaulin --all-features --workspace --timeout 600 --out Html --output-dir coverage
+```
+**The initial 3.07% coverage report was COMPLETELY WRONG due to improper flags.**
+
+**✅ CORRECT WAY:**
+```bash
+# Run comprehensive coverage analysis (this takes 10-15 minutes)
+cargo tarpaulin --all-features --workspace --ignore-tests --timeout 900 --out Json
+
+# For HTML report with detailed breakdown:
+cargo tarpaulin --all-features --workspace --ignore-tests --timeout 900 --out Html --output-dir coverage
+
+# Key flags explained:
+# --all-features: Enable all feature flags for complete coverage
+# --ignore-tests: Don't include test code in coverage calculation (measure production code only)  
+# --timeout 900: Allow 15 minutes for compilation and instrumentation
+# --out Json: Generate machine-readable coverage data
+```
+
+**ACTUAL COVERAGE (when run correctly):**
+- The project has **MUCH HIGHER** coverage than the false 3.07% initially reported
+- Many core modules have substantial test coverage that wasn't captured with wrong flags
+- Cache module: ~45% coverage, LSP hint module: ~47% coverage (from corrected analysis)
+
+## 🏃‍♂️ STRESS TESTS SEPARATION
+
+**Problem**: Some stress tests take 60+ seconds and cause tarpaulin timeouts, blocking coverage analysis.
+
+**Solution**: Added `stress-tests` feature flag to Cargo.toml and categorized long-running tests:
+
+```bash
+# Run normal unit tests (excludes stress tests by default)
+cargo tarpaulin --workspace --ignore-tests --timeout 600 --out Json
+
+# Run unit tests WITH stress tests if needed
+cargo tarpaulin --workspace --ignore-tests --features stress-tests --timeout 1200 --out Json
+```
+
+**Categorized Tests:**
+- `test_realtime_ece_monitoring_and_alerting` - 1000 calibration operations, 60+ seconds
+- Other performance benchmarks that are now conditional on `stress-tests` feature
+
+**Benefits:**
+- ✅ Faster test runs for coverage analysis (< 10 minutes vs. 20+ minutes)  
+- ✅ Reduced timeout failures in CI/CD pipelines
+- ✅ Separate stress testing when comprehensive validation is needed
+
 ## ✅ CURRENT STATUS (2025-09-01)
 
 **🎯 PROBLEM SOLVED: Golden Dataset Pinning**

@@ -282,7 +282,11 @@ impl NoiseSuite {
         ).await;
         
         let (parsing_time_ms, indexing_success_rate, error_rate) = match parsing_result {
-            Ok((time_ms, success_rate, errors)) => (time_ms, success_rate, errors),
+            Ok(Ok((time_ms, success_rate, errors))) => (time_ms, success_rate, errors),
+            Ok(Err(_)) => {
+                warn!("Parsing error for scenario: {}", scenario_name);
+                (self.config.timeout_seconds * 1000, 0.0, 1.0)
+            },
             Err(_) => {
                 warn!("Parsing timeout for scenario: {}", scenario_name);
                 (self.config.timeout_seconds * 1000, 0.0, 1.0)

@@ -5,7 +5,7 @@
  * Coverage focus: Language server functionality, caching, error handling
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, jest } from 'bun:test';
 import { LSPService } from '../lsp/service.js';
 import { LensTracer } from '../telemetry/tracer.js';
 import type { 
@@ -44,7 +44,7 @@ describe('Comprehensive LSP Service Coverage Tests', () => {
 
   beforeEach(() => {
     // Reset any stateful components between tests
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('Service Initialization and Lifecycle', () => {
@@ -64,7 +64,7 @@ describe('Comprehensive LSP Service Coverage Tests', () => {
       const service = new LSPService();
       
       // Mock initialization failure
-      vi.spyOn(service as any, 'initializeLanguageServers')
+      jest.spyOn(service as any, 'initializeLanguageServers')
         .mockRejectedValueOnce(new Error('Language server init failed'));
       
       await expect(service.initialize())
@@ -561,7 +561,7 @@ describe('Comprehensive LSP Service Coverage Tests', () => {
     it('should handle network/connection failures', async () => {
       // Mock connection failure
       const originalGetDefinition = lspService.getDefinition.bind(lspService);
-      vi.spyOn(lspService, 'getDefinition')
+      jest.spyOn(lspService, 'getDefinition')
         .mockRejectedValueOnce(new Error('Connection failed'));
 
       const request: LSPDefinitionRequest = {

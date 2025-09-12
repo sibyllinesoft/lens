@@ -9,7 +9,7 @@
  * 5. Cross-system orchestration
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest } from 'bun:test';
 import type { QueryIntent } from '../../types/core.js';
 
 import { SessionAwareRetrievalSystem } from '../session-aware-retrieval.js';
@@ -26,7 +26,7 @@ describe('Session-Aware Retrieval System', () => {
   });
 
   afterEach(() => {
-    vi.clearAllTimers();
+    jest.clearAllTimers();
   });
 
   describe('Session Management', () => {

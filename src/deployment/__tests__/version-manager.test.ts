@@ -1,21 +1,21 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { VersionManager, type ConfigFingerprint } from '../version-manager.js';
 import { existsSync, rmSync } from 'fs';
 
 // Mock fs module
-vi.mock('fs', () => ({
-  writeFileSync: vi.fn(),
-  readFileSync: vi.fn(),
-  existsSync: vi.fn(),
-  mkdirSync: vi.fn(),
-  rmSync: vi.fn()
+mock('fs', () => ({
+  writeFileSync: jest.fn(),
+  readFileSync: jest.fn(),
+  existsSync: jest.fn(),
+  mkdirSync: jest.fn(),
+  rmSync: jest.fn()
 }));
 
 // Mock crypto module
-vi.mock('crypto', () => ({
-  createHash: vi.fn(() => ({
-    update: vi.fn().mockReturnThis(),
-    digest: vi.fn(() => 'mock-hash-123456')
+mock('crypto', () => ({
+  createHash: jest.fn(() => ({
+    update: jest.fn().mockReturnThis(),
+    digest: jest.fn(() => 'mock-hash-123456')
   }))
 }));
 
@@ -25,7 +25,7 @@ describe('VersionManager', () => {
   const testVersionPath = '/tmp/test_versions';
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
     
     versionManager = new VersionManager(testVersionPath);
 
@@ -301,7 +301,7 @@ describe('VersionManager', () => {
 
     it('should get latest version', () => {
       const versions = ['1.0.0', '1.1.0', '2.0.0', '1.2.3'];
-      vi.spyOn(versionManager, 'listVersions').mockReturnValue(versions);
+      jest.spyOn(versionManager, 'listVersions').mockReturnValue(versions);
 
       const latest = versionManager.getLatestVersion();
 
@@ -309,7 +309,7 @@ describe('VersionManager', () => {
     });
 
     it('should handle empty version list', () => {
-      vi.spyOn(versionManager, 'listVersions').mockReturnValue([]);
+      jest.spyOn(versionManager, 'listVersions').mockReturnValue([]);
 
       expect(() => {
         versionManager.getLatestVersion();
@@ -374,7 +374,7 @@ describe('VersionManager', () => {
 
     it('should get version history', () => {
       const versions = ['1.0.0', '1.1.0', '1.2.0', '1.2.3'];
-      vi.spyOn(versionManager, 'listVersions').mockReturnValue(versions);
+      jest.spyOn(versionManager, 'listVersions').mockReturnValue(versions);
 
       const history = versionManager.getVersionHistory();
 
@@ -383,7 +383,7 @@ describe('VersionManager', () => {
 
     it('should get version history with limit', () => {
       const versions = ['1.0.0', '1.1.0', '1.2.0', '1.2.3', '2.0.0'];
-      vi.spyOn(versionManager, 'listVersions').mockReturnValue(versions);
+      jest.spyOn(versionManager, 'listVersions').mockReturnValue(versions);
 
       const history = versionManager.getVersionHistory(3);
 
@@ -413,7 +413,7 @@ describe('VersionManager', () => {
     });
 
     it('should validate rollback target exists', () => {
-      vi.spyOn(versionManager, 'versionExists').mockReturnValue(false);
+      jest.spyOn(versionManager, 'versionExists').mockReturnValue(false);
 
       expect(() => {
         versionManager.createRollbackPlan('1.2.3', '9.9.9');
@@ -452,7 +452,7 @@ describe('VersionManager', () => {
       };
 
       // Mock a failing step
-      vi.spyOn(versionManager as any, 'executeRollbackStep')
+      jest.spyOn(versionManager as any, 'executeRollbackStep')
         .mockRejectedValue(new Error('Step failed'));
 
       const result = await versionManager.executeRollback(failingRollbackPlan);
@@ -653,7 +653,7 @@ describe('VersionManager', () => {
     });
 
     it('should handle corrupted version directory', () => {
-      vi.spyOn(versionManager, 'listVersions').mockImplementation(() => {
+      jest.spyOn(versionManager, 'listVersions').mockImplementation(() => {
         throw new Error('Cannot read directory');
       });
 
@@ -666,10 +666,10 @@ describe('VersionManager', () => {
       const { readFileSync } = require('fs');
       
       // Mock file system to return malformed files
-      vi.spyOn(versionManager as any, 'getVersionFiles')
+      jest.spyOn(versionManager as any, 'getVersionFiles')
         .mockReturnValue(['valid_1.0.0.json', 'invalid.txt', 'malformed_version.json']);
 
-      vi.spyOn(versionManager, 'listVersions').mockImplementation(() => {
+      jest.spyOn(versionManager, 'listVersions').mockImplementation(() => {
         return ['1.0.0']; // Only valid versions
       });
 

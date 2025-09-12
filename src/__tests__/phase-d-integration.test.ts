@@ -4,26 +4,26 @@
  * three-night validation, and monitoring systems
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, mock, jest, mock } from 'bun:test';
 import { globalFeatureFlags } from '../core/feature-flags.js';
 import { globalQualityGates, runQualityGates } from '../core/quality-gates.js';
 import { globalThreeNightValidation, runNightlyValidation } from '../core/three-night-validation.js';
 import { globalDashboard, updateDashboardMetrics } from '../monitoring/phase-d-dashboards.js';
 
 // Mock external dependencies
-vi.mock('fs', () => ({
-  writeFileSync: vi.fn(),
-  readFileSync: vi.fn(() => '{"current_night":0,"consecutive_passes":0,"nights_data":[],"sign_off_eligible":false}'),
-  existsSync: vi.fn(() => false),
-  mkdirSync: vi.fn()
+mock('fs', () => ({
+  writeFileSync: jest.fn(),
+  readFileSync: jest.fn(() => '{"current_night":0,"consecutive_passes":0,"nights_data":[],"sign_off_eligible":false}'),
+  existsSync: jest.fn(() => false),
+  mkdirSync: jest.fn()
 }));
 
-vi.mock('../telemetry/tracer.js', () => ({
+mock('../telemetry/tracer.js', () => ({
   LensTracer: {
-    createChildSpan: vi.fn(() => ({
-      setAttributes: vi.fn(),
-      recordException: vi.fn(),
-      end: vi.fn()
+    createChildSpan: jest.fn(() => ({
+      setAttributes: jest.fn(),
+      recordException: jest.fn(),
+      end: jest.fn()
     }))
   }
 }));
@@ -121,7 +121,7 @@ describe('Phase D - Canary Deployment System', () => {
   describe('Progressive Rollout Logic', () => {
     it('should enforce prerequisite checks before progression', () => {
       // Mock unhealthy conditions (in production, would check actual metrics)
-      const mockUnhealthyCondition = vi.fn(() => false);
+      const mockUnhealthyCondition = jest.fn(() => false);
       
       // This would typically check performance metrics, error rates, etc.
       // For now, we test the progression logic works correctly

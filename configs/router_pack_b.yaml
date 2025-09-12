@@ -1,0 +1,282 @@
+# Router Pack B: 2x2x2 Grid Configuration  
+# tau ∈ {0.58, 0.62}
+# spend_cap_ms ∈ {4, 6}
+# min_conf_gain ∈ {0.03, 0.05}
+#
+# This configuration defines 8 system variants for router threshold optimization
+# with promotion gates focused on "hard NL" slice improvements and upshift targeting.
+
+systems:
+  # tau = 0.58, spend_cap_ms = 4
+  - name: "router_0.58_4_0.03"
+    description: "Router thresholds: tau=0.58, spend=4ms, gain=0.03"
+    config:
+      base_system: "lens_v22" 
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20  # Baseline lexical settings
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.58
+        spend_cap_ms: 4
+        min_conf_gain: 0.03
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64  # Baseline ANN settings  
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "router_0.58_4_0.05"
+    description: "Router thresholds: tau=0.58, spend=4ms, gain=0.05"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22" 
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.58
+        spend_cap_ms: 4
+        min_conf_gain: 0.05
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "router_0.58_6_0.03"
+    description: "Router thresholds: tau=0.58, spend=6ms, gain=0.03"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.58
+        spend_cap_ms: 6
+        min_conf_gain: 0.03
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "router_0.58_6_0.05"
+    description: "Router thresholds: tau=0.58, spend=6ms, gain=0.05"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.58
+        spend_cap_ms: 6
+        min_conf_gain: 0.05
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  # tau = 0.62, spend_cap_ms = 4  
+  - name: "router_0.62_4_0.03"
+    description: "Router thresholds: tau=0.62, spend=4ms, gain=0.03"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.62
+        spend_cap_ms: 4
+        min_conf_gain: 0.03
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "router_0.62_4_0.05"
+    description: "Router thresholds: tau=0.62, spend=4ms, gain=0.05"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.62
+        spend_cap_ms: 4
+        min_conf_gain: 0.05
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "router_0.62_6_0.03"
+    description: "Router thresholds: tau=0.62, spend=6ms, gain=0.03"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.62
+        spend_cap_ms: 6
+        min_conf_gain: 0.03
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "router_0.62_6_0.05"
+    description: "Router thresholds: tau=0.62, spend=6ms, gain=0.05"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.62
+        spend_cap_ms: 6
+        min_conf_gain: 0.05
+        confidence_threshold: 0.7
+        semantic_boost_factor: 1.5
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 48
+      sla_enforcement: true
+      max_latency_ms: 150
+
+# Pack B Promotion Rules (STRICT ENFORCEMENT)
+promotion_rules:
+  uplift_gates:
+    fraction_upshifted: "5% ± 2 pp"  # Upshift target: 5% ± 2 percentage points
+    upshift_metric: "lex_to_semantic_transitions"
+    measurement_window: "all_queries"
+    
+  quality_gates:
+    primary_metric: "ndcg_at_10_span_only"
+    hard_nl_slice:
+      minimum_improvement_pp: 1.0     # +≥1.0 pp on "hard NL" slice
+      slice_definition: "natural_language_query AND complex_intent"
+      minimum_queries: 200            # Ensure sufficient queries in slice
+    overall_quality:
+      minimum_improvement_pp: 0.0     # Overall Δ ≥ 0.0 pp (no regression)
+      
+  cost_gates:
+    p95_requirement: "Δ ≤ +0.0ms"    # p95 flat cost (Δ ≤ +0.0ms)
+    p99_requirement: "≤ baseline"     # p99 ≤ baseline
+    spend_budget_compliance: true     # Must respect spend_cap_ms limits
+    
+  reliability_gates:
+    ece_unchanged: "≤ 0.02"           # ECE ≤ 0.02
+    p99_p95_ratio: "≤ 2.0"           # p99/p95 ≤ 2.0
+    router_success_rate: "≥ 98%"     # Router decision success rate
+    
+  safety_gates:
+    calibration_version: "CALIB_V22"  # Must use CALIB_V22, no retraining
+    file_credit_span_only: "≤ 5%"    # file-credit ≤ 5% (span-only policy)
+
+# Router Decision Logging (MANDATORY)
+logging_requirements:
+  per_query:
+    required_fields:
+      - "query_id"
+      - "sla_ms"
+      - "lat_ms"
+      - "within_sla"  
+      - "why_mix_lex"
+      - "why_mix_struct"
+      - "why_mix_sem"
+      - "router_decision"
+      - "spend_ms"
+      - "router_confidence"
+    router_specific:
+      - "tau_threshold_met"
+      - "min_conf_gain_achieved"
+      - "spend_cap_enforced"
+  
+  per_shard:
+    required_fields:
+      - "issued_ts"
+      - "first_byte_ts"
+      - "cancel_ts" 
+      - "probe_id"
+      
+  counters:
+    required_metrics:
+      - "clamp_rate"
+      - "merged_bin_rate"
+      - "upshift_transitions"
+      - "router_decision_latency_p95"
+
+# Artifact Requirements  
+artifacts:
+  required:
+    - "agg.parquet"
+    - "hits.parquet"
+    - "tables/hero_span_v22.csv"
+    - "pool_counts_by_system.csv"
+    - "plots/*"
+    - "attestation.json"
+    - "router_decisions.ndjson"  # Router-specific logging
+  attestation_includes:
+    - config_fingerprints
+    - promotion_gate_results
+    - upshift_measurement_proof
+    - router_logging_verification
+    - calibration_verification

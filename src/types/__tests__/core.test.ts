@@ -3,7 +3,7 @@
  * Tests all interfaces, types, and type compatibility for the Lens search system core types
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'bun:test';
 import type {
   // Re-export
   SearchHit,

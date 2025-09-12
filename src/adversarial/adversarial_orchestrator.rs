@@ -11,6 +11,7 @@
 //! - Gate compliance verification
 
 use anyhow::{Context, Result};
+use futures::future;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
@@ -25,6 +26,15 @@ use super::{
     validate_adversarial_gates, AdversarialAuditResult, OverallMetrics, GateValidation,
     StressProfile, RiskLevel, calculate_robustness_score,
 };
+
+/// Common result type for all adversarial tests
+#[derive(Debug, Clone)]
+pub enum AdversarialTestResult {
+    Clone(CloneResult),
+    Bloat(BloatResult),
+    Noise(NoiseResult),
+    Stress(StressResult),
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AdversarialConfig {
@@ -183,14 +193,15 @@ impl AdversarialOrchestrator {
     async fn execute_parallel_audit(&mut self) -> Result<AdversarialAuditResult> {
         info!("⚡ Executing parallel adversarial testing");
         
-        let mut tasks = Vec::new();
+        let mut tasks: Vec<tokio::task::JoinHandle<Result<AdversarialTestResult>>> = Vec::new();
         
         // Spawn clone testing task
         if self.config.enable_clone_testing {
             let clone_config = self.create_clone_config();
             tasks.push(tokio::spawn(async move {
                 let mut suite = CloneSuite::new(clone_config);
-                suite.execute().await
+                let result = suite.execute().await?;
+                Ok(AdversarialTestResult::Clone(result))
             }));
         }
         
@@ -199,7 +210,8 @@ impl AdversarialOrchestrator {
             let bloat_config = self.create_bloat_config();
             tasks.push(tokio::spawn(async move {
                 let mut suite = BloatSuite::new(bloat_config);
-                suite.execute().await
+                let result = suite.execute().await?;
+                Ok(AdversarialTestResult::Bloat(result))
             }));
         }
         
@@ -208,7 +220,8 @@ impl AdversarialOrchestrator {
             let noise_config = self.create_noise_config();
             tasks.push(tokio::spawn(async move {
                 let mut suite = NoiseSuite::new(noise_config);
-                suite.execute().await
+                let result = suite.execute().await?;
+                Ok(AdversarialTestResult::Noise(result))
             }));
         }
         
@@ -216,15 +229,28 @@ impl AdversarialOrchestrator {
         let timeout_duration = Duration::from_secs(self.config.timeout_minutes * 60);
         
         let results = timeout(timeout_duration, async {
-            futures::future::join_all(tasks).await
+            future::join_all(tasks).await
         }).await
         .context("Parallel execution timeout")?;
         
-        // Process results (simplified for parallel case)
-        let clone_results = CloneResult::default();
-        let bloat_results = BloatResult::default();
-        let noise_results = NoiseResult::default();
+        // Process results from parallel tasks
+        let mut clone_results = CloneResult::default();
+        let mut bloat_results = BloatResult::default();
+        let mut noise_results = NoiseResult::default();
         let stress_results = StressResult::default();
+        
+        for task_result in results {
+            match task_result {
+                Ok(Ok(AdversarialTestResult::Clone(result))) => clone_results = result,
+                Ok(Ok(AdversarialTestResult::Bloat(result))) => bloat_results = result,
+                Ok(Ok(AdversarialTestResult::Noise(result))) => noise_results = result,
+                Ok(Ok(AdversarialTestResult::Stress(result))) => {
+                    // Handle stress result if needed
+                },
+                Ok(Err(e)) => warn!("Adversarial task failed: {}", e),
+                Err(e) => warn!("Task join error: {}", e),
+            }
+        }
         
         self.aggregate_results(clone_results, bloat_results, noise_results, stress_results).await
     }

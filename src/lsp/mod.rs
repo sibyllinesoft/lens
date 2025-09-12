@@ -186,6 +186,20 @@ pub struct LspSearchResponse {
     pub intent: QueryIntent,
 }
 
+impl Default for LspSearchResponse {
+    fn default() -> Self {
+        Self {
+            lsp_results: Vec::new(),
+            fallback_results: Vec::new(),
+            total_time_ms: 0,
+            lsp_time_ms: 0,
+            cache_hit_rate: 0.0,
+            server_types_used: Vec::new(),
+            intent: QueryIntent::TextSearch,
+        }
+    }
+}
+
 /// Configuration for LSP integration
 #[derive(Debug, Clone)]
 pub struct LspConfig {

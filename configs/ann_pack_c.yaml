@@ -1,0 +1,333 @@
+# ANN Pack C: 4x2 Sweep Configuration
+# efSearch ∈ {32, 48, 64, 96}  
+# pq.refine_topk ∈ {32, 64, 96} (when pq.enable=true)
+#
+# This configuration defines 8 system variants for ANN hygiene optimization
+# with promotion gates focused on NL slice improvements and dense path latency.
+
+systems:
+  # efSearch = 32
+  - name: "ann_32_32"
+    description: "ANN hygiene: efSearch=32, pq_refine=32"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20  # Baseline lexical settings
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true       # Baseline router settings
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 32
+        pq:
+          enable: true
+          refine_topk: 32
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "ann_32_64"
+    description: "ANN hygiene: efSearch=32, pq_refine=64"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 32
+        pq:
+          enable: true
+          refine_topk: 64
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  # efSearch = 48
+  - name: "ann_48_32"
+    description: "ANN hygiene: efSearch=48, pq_refine=32"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 48
+        pq:
+          enable: true
+          refine_topk: 32
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "ann_48_64"
+    description: "ANN hygiene: efSearch=48, pq_refine=64"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 48
+        pq:
+          enable: true
+          refine_topk: 64
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  # efSearch = 64 (baseline)
+  - name: "ann_64_32"
+    description: "ANN hygiene: efSearch=64, pq_refine=32"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 32
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "ann_64_96"
+    description: "ANN hygiene: efSearch=64, pq_refine=96"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 64
+        pq:
+          enable: true
+          refine_topk: 96
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  # efSearch = 96
+  - name: "ann_96_64"
+    description: "ANN hygiene: efSearch=96, pq_refine=64"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 96
+        pq:
+          enable: true
+          refine_topk: 64
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+  - name: "ann_96_96"
+    description: "ANN hygiene: efSearch=96, pq_refine=96"
+    config:
+      base_system: "lens_v22"
+      calibration: "CALIB_V22"
+      lexical:
+        phrase_boost: 1.20
+        window_tokens: 16
+        proximity_weight: 0.8
+      router:
+        enabled: true
+        tau: 0.60
+        spend_cap_ms: 5
+        min_conf_gain: 0.04
+      ann:
+        efSearch: 96
+        pq:
+          enable: true
+          refine_topk: 96
+          num_bits: 8
+          compression_ratio: 0.25
+        hnsw:
+          max_connections: 16
+          ef_construction: 200
+        dense_path_optimization: true
+      sla_enforcement: true
+      max_latency_ms: 150
+
+# Pack C Promotion Rules (STRICT ENFORCEMENT)
+promotion_rules:
+  quality_gates:
+    primary_metric: "ndcg_at_10_span_only"
+    nl_slice:
+      minimum_improvement_pp: 0.3     # NL slice +≥0.3 pp
+      slice_definition: "natural_language_query"
+      minimum_queries: 500            # Ensure sufficient NL queries
+    overall_quality:
+      minimum_improvement_pp: 0.0     # Overall Δ ≥ 0.0 pp (no regression)
+      
+  latency_gates:
+    dense_path_p95:
+      improvement_ms: "-1 to -2"      # Dense path p95: -1 to -2ms improvement
+      path_definition: "semantic_search_queries"
+    p99_requirement: "≤ baseline"     # p99 ≤ baseline  
+    p99_p95_ratio: "≤ 2.0"           # p99/p95 ≤ 2.0
+    
+  cost_gates:
+    cpu_utilization: "≤ baseline + 5%" # CPU/utilization within +5%
+    memory_footprint: "≤ baseline + 10%" # Memory usage control
+    ann_search_efficiency: "≥ baseline" # Maintain search efficiency
+    
+  safety_gates:
+    ece_unchanged: "≤ 0.02"           # ECE ≤ 0.02
+    calibration_version: "CALIB_V22"  # Must use CALIB_V22, no retraining
+    file_credit_span_only: "≤ 5%"    # file-credit ≤ 5% (span-only policy)
+
+# ANN-Specific Logging (MANDATORY)
+logging_requirements:
+  per_query:
+    required_fields:
+      - "query_id"
+      - "sla_ms"
+      - "lat_ms"
+      - "within_sla"
+      - "ann_efSearch"
+      - "ann_visited_nodes"
+      - "pq_refine_hits"
+      - "dense_path_used"
+      - "panic_exactifier_used"
+    ann_specific:
+      - "hnsw_search_ms"
+      - "pq_refine_ms"  
+      - "vector_comparisons"
+      - "early_termination_triggered"
+  
+  per_shard:
+    required_fields:
+      - "issued_ts"
+      - "first_byte_ts" 
+      - "cancel_ts"
+      - "probe_id"
+      - "shard_ann_config"
+      
+  counters:
+    required_metrics:
+      - "ann_visited_nodes"
+      - "reuse_hits"
+      - "pq_refine_hits"
+      - "panic_exactifier_rate"
+      - "dense_path_utilization"
+
+# Performance Measurement Requirements
+performance_measurement:
+  dense_path_isolation:
+    enabled: true
+    measurement_queries: "semantic_search_only"  
+    exclude_lexical: true
+    exclude_mixed_queries: true
+  
+  baseline_comparison:
+    reference_system: "lens_v22"
+    reference_efSearch: 64
+    reference_pq_refine: 48
+  
+  cpu_profiling:
+    enabled: true
+    sample_rate: "1%"
+    focus_areas: ["ann_search", "pq_refine", "vector_ops"]
+
+# Artifact Requirements
+artifacts:
+  required:
+    - "agg.parquet"
+    - "hits.parquet"
+    - "tables/hero_span_v22.csv"
+    - "pool_counts_by_system.csv" 
+    - "plots/*"
+    - "attestation.json"
+    - "ann_performance.ndjson"  # ANN-specific performance data
+  attestation_includes:
+    - config_fingerprints
+    - promotion_gate_results  
+    - dense_path_measurement_proof
+    - cpu_utilization_verification
+    - calibration_verification

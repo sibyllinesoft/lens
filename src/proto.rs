@@ -13,6 +13,6 @@ pub mod lens {
 // Re-export common types for convenience
 pub use lens::v1::*;
 
-// File descriptor set for reflection
-pub const FILE_DESCRIPTOR_SET: &[u8] = 
-    tonic::include_file_descriptor_set!("lens_search_descriptor");
+// File descriptor set for reflection (temporarily disabled)
+// pub const FILE_DESCRIPTOR_SET: &[u8] = 
+//     tonic::include_file_descriptor_set!("lens_search_descriptor");

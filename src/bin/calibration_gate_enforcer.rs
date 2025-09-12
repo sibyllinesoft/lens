@@ -320,7 +320,7 @@ impl CalibrationGateEnforcer {
                 threshold: self.config.min_ndcg10_delta_nl_pp,
                 severity: ViolationSeverity::Critical,
                 timestamp: chrono::Utc::now(),
-                error_message: error_msg,
+                error_message: error_msg.clone(),
             });
             
             GateResult {
@@ -529,4 +529,16 @@ mod tests {
         let failing_metrics = create_failing_metrics();
         assert!(!enforcer.is_deployment_ready(&failing_metrics).unwrap());
     }
+}
+
+fn main() {
+    println!("🛡️ Calibration Gate Enforcer - Production-ready ECE validation");
+    println!("📊 Enforces strict ECE ≤ 0.02 and ΔnDCG@10 ≥ 0 gates");
+    
+    // Create enforcer instance
+    let enforcer = CalibrationGateEnforcer::new(GateConfig::default());
+    
+    // Example usage
+    println!("✅ Gate enforcer initialized with strict ECE ≤ 0.02 threshold");
+    println!("🎯 Ready for production deployment validation");
 }

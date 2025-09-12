@@ -774,21 +774,25 @@ mod tests {
         let mut stats = CacheStats::default();
         
         // No requests yet
-        assert_eq!(stats.hit_rate(), 0.0);
+        stats.update_hit_rate();
+        assert_eq!(stats.hit_rate, 0.0);
         
         // All misses
         stats.misses = 5;
-        assert_eq!(stats.hit_rate(), 0.0);
+        stats.update_hit_rate();
+        assert_eq!(stats.hit_rate, 0.0);
         
         // Mixed hits and misses
         stats.hits = 3;
         stats.misses = 7;
-        assert_eq!(stats.hit_rate(), 0.3);
+        stats.update_hit_rate();
+        assert_eq!(stats.hit_rate, 0.3);
         
         // All hits
         stats.hits = 10;
         stats.misses = 0;
-        assert_eq!(stats.hit_rate(), 1.0);
+        stats.update_hit_rate();
+        assert_eq!(stats.hit_rate, 1.0);
     }
 
     #[tokio::test]

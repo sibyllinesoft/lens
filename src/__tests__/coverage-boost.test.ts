@@ -3,7 +3,7 @@
  * Target: Quick coverage wins for critical files using proven patterns
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, jest } from 'bun:test';
 
 // Test key imports to ensure coverage of main entry points
 describe('Coverage Boost for Key Files', () => {
@@ -11,9 +11,9 @@ describe('Coverage Boost for Key Files', () => {
     it('should test server initialization logic', async () => {
       // Mock the server module to test initialization paths
       const mockServer = {
-        listen: vi.fn().mockResolvedValue(undefined),
-        register: vi.fn().mockResolvedValue(undefined),
-        setErrorHandler: vi.fn(),
+        listen: jest.fn().mockResolvedValue(undefined),
+        register: jest.fn().mockResolvedValue(undefined),
+        setErrorHandler: jest.fn(),
       };
 
       // Test error handler logic

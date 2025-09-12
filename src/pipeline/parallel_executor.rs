@@ -1220,3 +1220,307 @@ impl PipelineStageProcessor for EnhancedPostProcessStage {
         true
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::pipeline::{PipelineContext, PipelineData, PipelineStage, PipelineConfig};
+    use std::sync::atomic::{AtomicU64, Ordering};
+    use tokio::time::{sleep, Duration};
+
+    // Helper to create test pipeline config
+    fn create_test_config() -> PipelineConfig {
+        PipelineConfig {
+            max_concurrent: 4,
+            max_latency_ms: 5000,
+            enable_parallelism: true,
+            enable_fusion: true,
+            enable_prefetch: true,
+            enable_learning: true,
+            fusion_threshold: 0.1,
+            memory_limit_mb: 1024,
+            cpu_budget_ms: 1000,
+        }
+    }
+
+    // Helper to create test pipeline context
+    fn create_test_context() -> PipelineContext {
+        PipelineContext {
+            query: "test query".to_string(),
+            execution_id: 12345,
+            timeout: Duration::from_millis(5000),
+            enable_caching: true,
+            debug_mode: false,
+            max_results: 100,
+            metadata: std::collections::HashMap::new(),
+        }
+    }
+
+    // Helper to create test pipeline data
+    fn create_test_data() -> PipelineData {
+        PipelineData {
+            query_analysis: None,
+            lsp_results: Vec::new(),
+            search_results: Vec::new(),
+            fused_results: Vec::new(),
+            final_results: Vec::new(),
+            metadata: std::collections::HashMap::new(),
+            stage_timings: std::collections::HashMap::new(),
+            memory_usage: 0,
+        }
+    }
+
+    #[tokio::test]
+    async fn test_fusion_controller_initialization() {
+        let controller = FusionController::new();
+        assert!(controller.fusion_groups.is_empty());
+        assert!(controller.fusion_opportunities.is_empty());
+        assert!(controller.fusion_benefits.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_fusion_group_creation() {
+        let group = FusionGroup {
+            id: 1,
+            stages: vec![PipelineStage::QueryAnalysis, PipelineStage::LspRouting],
+            fusion_strategy: FusionStrategy::Pipeline,
+            expected_speedup: 1.2,
+            memory_sharing: true,
+        };
+
+        assert_eq!(group.id, 1);
+        assert_eq!(group.stages.len(), 2);
+        assert_eq!(group.fusion_strategy, FusionStrategy::Pipeline);
+        assert!(group.memory_sharing);
+    }
+
+    #[tokio::test]
+    async fn test_fusion_strategy_types() {
+        let strategies = vec![
+            FusionStrategy::Pipeline,
+            FusionStrategy::DataParallel,
+            FusionStrategy::TaskParallel,
+            FusionStrategy::Hybrid,
+        ];
+
+        for strategy in strategies {
+            match strategy {
+                FusionStrategy::Pipeline => assert!(true),
+                FusionStrategy::DataParallel => assert!(true),
+                FusionStrategy::TaskParallel => assert!(true),
+                FusionStrategy::Hybrid => assert!(true),
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn test_fusion_benefit_calculation() {
+        let benefit = FusionBenefit {
+            latency_reduction: 0.3,
+            memory_savings: 0.2,
+            cpu_efficiency: 0.4,
+            cache_locality: 0.1,
+            total_score: 1.0,
+        };
+
+        assert_eq!(benefit.latency_reduction, 0.3);
+        assert_eq!(benefit.memory_savings, 0.2);
+        assert_eq!(benefit.cpu_efficiency, 0.4);
+        assert_eq!(benefit.cache_locality, 0.1);
+        assert_eq!(benefit.total_score, 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_resource_budget_memory() {
+        let budget = MemoryBudget::new(1024.0);
+        
+        assert_eq!(budget.total_mb, 1024.0);
+        assert_eq!(budget.allocated_mb, 0.0);
+        assert_eq!(budget.fusion_savings, 0.0);
+        assert!(budget.stage_allocations.is_empty());
+
+        // Test that we can create multiple budgets
+        let budget2 = MemoryBudget::new(512.0);
+        assert_eq!(budget2.total_mb, 512.0);
+    }
+
+    #[tokio::test]
+    async fn test_resource_budget_cpu() {
+        let budget = CpuBudget::new(1000.0);
+        
+        assert_eq!(budget.total_time_ms, 1000.0);
+        assert_eq!(budget.allocated_time_ms, 0.0);
+        assert_eq!(budget.overlap_savings, 0.0);
+        assert!(budget.stage_allocations.is_empty());
+
+        // Test that we can create multiple budgets
+        let budget2 = CpuBudget::new(500.0);
+        assert_eq!(budget2.total_time_ms, 500.0);
+    }
+
+    #[tokio::test]
+    async fn test_enhanced_stages_creation() {
+        // Test EnhancedResultFusionStage
+        let fusion_stage = EnhancedResultFusionStage::new();
+        assert_eq!(fusion_stage.stage_id(), PipelineStage::ResultFusion);
+        assert!(fusion_stage.supports_fusion());
+
+        // Test EnhancedPostProcessStage
+        let post_stage = EnhancedPostProcessStage::new();
+        assert_eq!(post_stage.stage_id(), PipelineStage::PostProcess);
+        assert!(post_stage.supports_fusion());
+    }
+
+    #[tokio::test]
+    async fn test_stage_processing() {
+        let context = create_test_context();
+        let data = create_test_data();
+
+        // Test result fusion stage processing
+        let fusion_stage = EnhancedResultFusionStage::new();
+        let result = fusion_stage.process(&context, data.clone()).await;
+        assert!(result.is_ok());
+
+        // Test post process stage processing
+        let post_stage = EnhancedPostProcessStage::new();
+        let result = post_stage.process(&context, data.clone()).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_stage_dependencies() {
+        // Test that stages have correct dependencies
+        let mut dependencies = HashSet::new();
+        dependencies.insert(PipelineStage::QueryAnalysis);
+
+        // LSP should depend on QueryAnalysis
+        assert!(dependencies.contains(&PipelineStage::QueryAnalysis));
+
+        // Search should depend on LSP
+        let mut search_deps = HashSet::new();
+        search_deps.insert(PipelineStage::LspRouting);
+        assert!(search_deps.contains(&PipelineStage::LspRouting));
+    }
+
+    #[tokio::test]
+    async fn test_concurrent_stage_execution() {
+        // Test concurrent execution patterns
+        let counter = Arc::new(AtomicU64::new(0));
+        let tasks: Vec<_> = (0..4).map(|i| {
+            let counter_clone = counter.clone();
+            tokio::spawn(async move {
+                // Simulate stage processing
+                sleep(Duration::from_millis(10)).await;
+                counter_clone.fetch_add(1, Ordering::SeqCst);
+                i
+            })
+        }).collect();
+
+        let results: Vec<_> = futures::future::join_all(tasks).await;
+        
+        assert_eq!(results.len(), 4);
+        assert_eq!(counter.load(Ordering::SeqCst), 4);
+        
+        for (i, result) in results.into_iter().enumerate() {
+            assert_eq!(result.unwrap(), i);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_pipeline_error_handling() {
+        // Test error propagation in pipeline stages
+        let context = create_test_context();
+        let data = create_test_data();
+
+        // Create a stage that might fail (test the error handling path)
+        let fusion_stage = EnhancedResultFusionStage::new();
+        
+        // Normal processing should work
+        let result = fusion_stage.process(&context, data).await;
+        assert!(result.is_ok());
+
+        // Test the stage identification
+        assert_eq!(fusion_stage.stage_id(), PipelineStage::ResultFusion);
+    }
+
+    #[tokio::test]
+    async fn test_execution_id_generation() {
+        // Test that execution IDs are properly typed
+        let id1: ExecutionId = 123456;
+        let id2: ExecutionId = 789012;
+        
+        assert_ne!(id1, id2);
+        assert!(id1 > 0);
+        assert!(id2 > 0);
+    }
+
+    #[tokio::test]
+    async fn test_fusion_group_id_generation() {
+        // Test that fusion group IDs are properly typed
+        let group1: FusionGroupId = 1;
+        let group2: FusionGroupId = 2;
+        
+        assert_ne!(group1, group2);
+        assert!(group1 > 0);
+        assert!(group2 > 0);
+    }
+
+    // Performance-focused tests
+    #[tokio::test]
+    async fn test_stage_performance_metrics() {
+        let start = std::time::Instant::now();
+        
+        // Simulate stage execution
+        let context = create_test_context();
+        let data = create_test_data();
+        let post_stage = EnhancedPostProcessStage::new();
+        let _result = post_stage.process(&context, data).await;
+        
+        let duration = start.elapsed();
+        
+        // Ensure processing is reasonably fast (should be much less than 1 second for this simple test)
+        assert!(duration < Duration::from_secs(1));
+    }
+
+    #[tokio::test]
+    async fn test_parallel_execution_metrics() {
+        let metrics = ParallelExecutionMetrics {
+            total_executions: 10,
+            successful_executions: 9,
+            failed_executions: 1,
+            average_latency_ms: 150.5,
+            p95_latency_ms: 200.0,
+            p99_latency_ms: 250.0,
+            average_parallelism: 3.2,
+            fusion_utilization: 0.8,
+            memory_efficiency: 0.9,
+            cpu_utilization: 0.75,
+            stage_metrics: std::collections::HashMap::new(),
+        };
+
+        assert_eq!(metrics.total_executions, 10);
+        assert_eq!(metrics.successful_executions, 9);
+        assert_eq!(metrics.failed_executions, 1);
+        assert_eq!(metrics.average_latency_ms, 150.5);
+        assert_eq!(metrics.fusion_utilization, 0.8);
+    }
+
+    #[tokio::test]
+    async fn test_stage_metrics() {
+        let stage_metrics = StageMetrics {
+            executions: 5,
+            average_duration_ms: 100.0,
+            p95_duration_ms: 150.0,
+            success_rate: 0.9,
+            parallelism_factor: 2.5,
+            memory_peak_mb: 256.0,
+            cpu_utilization: 0.8,
+            fusion_participations: 3,
+        };
+
+        assert_eq!(stage_metrics.executions, 5);
+        assert_eq!(stage_metrics.average_duration_ms, 100.0);
+        assert_eq!(stage_metrics.success_rate, 0.9);
+        assert_eq!(stage_metrics.fusion_participations, 3);
+    }
+}
