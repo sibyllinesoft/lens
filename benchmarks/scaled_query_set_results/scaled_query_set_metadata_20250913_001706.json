@@ -1,0 +1,62 @@
+{
+  "version": "scaled-20250913-001706",
+  "created_at": "2025-09-13T00:17:06.641058",
+  "total_queries": 470,
+  "distribution": {
+    "pydantic/pydantic": {
+      "locate": 30,
+      "extract": 30,
+      "explain": 30,
+      "compose": 30,
+      "transform": 30
+    },
+    "fastapi/fastapi": {
+      "locate": 30,
+      "extract": 30,
+      "explain": 30,
+      "compose": 30,
+      "transform": 30
+    },
+    "pallets/flask": {
+      "locate": 30,
+      "extract": 30,
+      "explain": 30,
+      "compose": 30,
+      "transform": 30
+    }
+  },
+  "negative_controls": [
+    "negative_shuffled_000",
+    "negative_shuffled_001",
+    "negative_shuffled_002",
+    "negative_shuffled_003",
+    "negative_shuffled_004",
+    "negative_off_corpus_005",
+    "negative_off_corpus_006",
+    "negative_off_corpus_007",
+    "negative_off_corpus_008",
+    "negative_off_corpus_009",
+    "negative_nonsensical_010",
+    "negative_nonsensical_011",
+    "negative_nonsensical_012",
+    "negative_nonsensical_013",
+    "negative_nonsensical_014",
+    "negative_nonsensical_015",
+    "negative_nonsensical_016",
+    "negative_nonsensical_017",
+    "negative_nonsensical_018",
+    "negative_nonsensical_019"
+  ],
+  "quality_metadata": {
+    "per_operation_counts": {
+      "locate": 94,
+      "extract": 95,
+      "explain": 96,
+      "compose": 91,
+      "transform": 94
+    },
+    "repositories_covered": 3,
+    "negative_control_percentage": 4.25531914893617,
+    "average_queries_per_repo_op": 31.333333333333332
+  }
+}

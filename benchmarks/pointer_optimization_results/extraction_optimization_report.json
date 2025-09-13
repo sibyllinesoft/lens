@@ -1,0 +1,19 @@
+{
+  "pre_optimization": {
+    "total_queries": 7,
+    "failures": 0,
+    "success_rate": 1.0
+  },
+  "optimizations_applied": [],
+  "post_optimization": {
+    "total_queries": 7,
+    "successful_extractions": 7,
+    "failures": 0,
+    "success_rate": 1.0
+  },
+  "improvement": {
+    "success_rate_delta": 0.0,
+    "failures_eliminated": 0
+  },
+  "failure_analysis": []
+}

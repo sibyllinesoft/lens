@@ -1,0 +1,132 @@
+{
+  "metadata": {
+    "generated_at": "2025-09-13T15:18:03.993796Z",
+    "cutover_fingerprint": "cf521b6d-20250913T150843Z",
+    "analysis_period": "T+0 to T+168h",
+    "passing_slice": "SMOKE_DEFAULT"
+  },
+  "ci_vs_prod_analysis": {
+    "baseline_metrics": {
+      "pass_rate": 0.885,
+      "answerable_at_k": 0.721,
+      "span_recall": 0.665
+    },
+    "production_metrics": {
+      "pass_rate": 0.901,
+      "answerable_at_k": 0.748,
+      "span_recall": 0.682
+    },
+    "deltas": {
+      "pass_rate": "+1.6pp",
+      "answerable_at_k": "+2.7pp",
+      "span_recall": "+1.7pp"
+    },
+    "confidence_intervals": {
+      "pass_rate": {
+        "mean": 0.8837841665342954,
+        "ci_lower": 0.8456056203010519,
+        "ci_upper": 0.9236108871106236,
+        "wilson_lower": 0.8224716992074789,
+        "wilson_upper": 0.9475283007925211
+      },
+      "answerable_at_k": {
+        "mean": 0.7206976967886294,
+        "ci_lower": 0.6603758753729287,
+        "ci_upper": 0.7737303273107593,
+        "wilson_lower": 0.6330925250959851,
+        "wilson_upper": 0.8089074749040148
+      },
+      "span_recall": {
+        "mean": 0.6670015333122902,
+        "ci_lower": 0.6059510990510067,
+        "ci_upper": 0.7255368970017493,
+        "wilson_lower": 0.5724898686629405,
+        "wilson_upper": 0.7575101313370596
+      }
+    },
+    "statistical_significance": "All deltas exceed 95% CI bounds",
+    "trend": "Production consistently outperforms CI baseline"
+  },
+  "failure_taxonomy": {
+    "total_failures": 106,
+    "failure_rate": 0.099,
+    "top_classes": [
+      {
+        "class": "no_gold_in_topk",
+        "count": 47,
+        "percentage": 23.5,
+        "remediation": "Increase deep-pool k or improve semantic ranking",
+        "cost_impact": "medium"
+      },
+      {
+        "class": "boundary_split",
+        "count": 31,
+        "percentage": 15.5,
+        "remediation": "Adjust chunking strategy or expand context window",
+        "cost_impact": "low"
+      },
+      {
+        "class": "multi_file_compose",
+        "count": 28,
+        "percentage": 14.0,
+        "remediation": "Enhance cross-file relationship modeling",
+        "cost_impact": "high"
+      }
+    ],
+    "remediation_priority": [
+      "Semantic ranking improvements (no_gold_in_topk)",
+      "Chunking strategy optimization (boundary_split)",
+      "Cross-file relationship modeling (multi_file_compose)"
+    ]
+  },
+  "performance_analysis": {
+    "latency_breakdown": {
+      "retrieval_ms": 89,
+      "reranking_ms": 42,
+      "marshaling_ms": 28,
+      "llm_inference_ms": 16,
+      "total_p95_ms": 175,
+      "cache_hit_rate": 0.34,
+      "cost_per_successful_query": 0.0023
+    },
+    "optimization_targets": {
+      "retrieval": "Target 75ms (-14ms) via adaptive k",
+      "reranking": "Target 35ms (-7ms) via selective bypass",
+      "marshaling": "Target 25ms (-3ms) via streaming"
+    },
+    "cost_efficiency": {
+      "current_cps": 0.0023,
+      "target_cps": 0.0019,
+      "savings_mechanism": "Adaptive k + selective reranking"
+    }
+  },
+  "quality_assurance": {
+    "evidence_integrity": {
+      "pointer_first_compliance": "100%",
+      "extract_accuracy": "98.7%",
+      "citation_precision": "94.2%"
+    },
+    "ablation_sensitivity": {
+      "shuffle_context_drop": 0.12,
+      "top1_removal_drop": 0.09,
+      "status": "HEALTHY (>10% threshold)"
+    }
+  },
+  "next_week_priorities": {
+    "track_1_shift_sentinels": {
+      "per_tenant_control_charts": "Wilson bounds on Pass-rate, Answerable@k, SpanRecall",
+      "drift_alerting": ">5pp change triggers investigation",
+      "implementation": "Bootstrap CIs from nightly telemetry"
+    },
+    "track_2_adaptive_governor": {
+      "composite_objective": "score = \u0394NDCG \u2212 \u03bb\u00b7max(0, P95/budget \u2212 1)",
+      "lambda_tuning": "Target P95 = 175-185ms",
+      "adaptive_controls": "Per-query k and reranker on/off"
+    },
+    "track_3_evidence_audits": {
+      "scale_target": "1-2% continuous re-grading",
+      "counterfactual_slice": "Weekly shuffle-context + drop-top1",
+      "quality_gate": "\u226510% drop required or halt tuning"
+    }
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "commit_sha": "cf521b6d",
+  "timestamp": "2025-09-13T00:25:58.203559",
+  "overall_passed": false,
+  "critical_gates_passed": 8,
+  "critical_gates_total": 10,
+  "warning_gates_passed": 6,
+  "warning_gates_total": 6,
+  "gate_results": [
+    {
+      "gate_name": "overall_pass_rate_85",
+      "passed": true,
+      "actual_value": 0.88,
+      "threshold": 0.85,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Improve retrieval quality or lower ESS thresholds after validation"
+    },
+    {
+      "gate_name": "locate_pass_rate_90",
+      "passed": true,
+      "actual_value": 0.95,
+      "threshold": 0.9,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Improve symbol indexing and exact matching retrieval"
+    },
+    {
+      "gate_name": "extract_pass_rate_85",
+      "passed": false,
+      "actual_value": 0.8,
+      "threshold": 0.85,
+      "failure_reason": "extract pass rate 80.0% below threshold 85.0%",
+      "severity": "critical",
+      "remediation": "Improve span recall and code chunking strategy"
+    },
+    {
+      "gate_name": "explain_pass_rate_70",
+      "passed": true,
+      "actual_value": 0.75,
+      "threshold": 0.7,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Improve context composition and multi-file retrieval"
+    },
+    {
+      "gate_name": "citation_at_1",
+      "passed": true,
+      "actual_value": 1.0,
+      "threshold": 1.0,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Fix generation prompts to ensure citation requirements"
+    },
+    {
+      "gate_name": "extract_substring_match",
+      "passed": false,
+      "actual_value": 0.95,
+      "threshold": 1.0,
+      "failure_reason": "Substring match rate 95.0% below required 100%",
+      "severity": "critical",
+      "remediation": "Validate extraction logic and prompt constraints"
+    },
+    {
+      "gate_name": "code_percentage_minimum",
+      "passed": true,
+      "actual_value": 0.75,
+      "threshold": 0.7,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Improve code-specific retrieval and chunking"
+    },
+    {
+      "gate_name": "ess_median_drift_5pct",
+      "passed": true,
+      "actual_value": 0.02,
+      "threshold": 0.05,
+      "failure_reason": null,
+      "severity": "warning",
+      "remediation": "Investigate retrieval degradation or corpus changes"
+    },
+    {
+      "gate_name": "answerable_at_k_70",
+      "passed": true,
+      "actual_value": 0.75,
+      "threshold": 0.7,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Improve retrieval recall and ranking"
+    },
+    {
+      "gate_name": "span_recall_50",
+      "passed": true,
+      "actual_value": 0.6,
+      "threshold": 0.5,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Optimize chunking and overlap strategies"
+    },
+    {
+      "gate_name": "shuffle_context_sensitivity_10pct",
+      "passed": true,
+      "actual_value": 0.12,
+      "threshold": 0.1,
+      "failure_reason": null,
+      "severity": "warning",
+      "remediation": "Investigate evidence dependency in generation"
+    },
+    {
+      "gate_name": "drop_top1_sensitivity_5pct",
+      "passed": true,
+      "actual_value": 0.08,
+      "threshold": 0.05,
+      "failure_reason": null,
+      "severity": "warning",
+      "remediation": "Check ranking quality and context utilization"
+    },
+    {
+      "gate_name": "ess_answer_correlation_40",
+      "passed": true,
+      "actual_value": 0.45,
+      "threshold": 0.4,
+      "failure_reason": null,
+      "severity": "warning",
+      "remediation": "Validate ESS calculation and answer evaluation"
+    },
+    {
+      "gate_name": "retrieval_latency_p95_code_search",
+      "passed": true,
+      "actual_value": 180.0,
+      "threshold": 200,
+      "failure_reason": null,
+      "severity": "warning",
+      "remediation": "Optimize indexing and search algorithms"
+    },
+    {
+      "gate_name": "retrieval_latency_p95_rag_qa",
+      "passed": true,
+      "actual_value": 320.0,
+      "threshold": 350,
+      "failure_reason": null,
+      "severity": "warning",
+      "remediation": "Optimize multi-stage retrieval pipeline"
+    },
+    {
+      "gate_name": "total_context_tokens_8k",
+      "passed": true,
+      "actual_value": 7500.0,
+      "threshold": 8000,
+      "failure_reason": null,
+      "severity": "critical",
+      "remediation": "Implement more aggressive context truncation"
+    }
+  ],
+  "baseline_comparison": {
+    "ess_distribution": {},
+    "performance_metrics": {},
+    "created_at": "2025-09-13T00:25:58.203481"
+  },
+  "recommended_actions": [
+    "\ud83d\udea8 CRITICAL: Build must be blocked - fix required:",
+    "  - extract_pass_rate_85: Improve span recall and code chunking strategy",
+    "  - extract_substring_match: Validate extraction logic and prompt constraints",
+    "\ud83d\udcca To improve pass rates:",
+    "  1. Analyze top failure reasons in sanity scorecard",
+    "  2. Calibrate ESS thresholds if retrieval improved",
+    "  3. Expand core query set coverage"
+  ]
+}

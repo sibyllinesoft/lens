@@ -1,0 +1,58 @@
+{
+  "total_queries": 2,
+  "pre_gen_pass_rate": 0.0,
+  "per_operation_stats": {
+    "extract": {
+      "total": 1,
+      "passed": 0,
+      "pass_rate": 0.0,
+      "avg_ess": 0.6,
+      "avg_answerable_at_k": 1.0,
+      "avg_span_recall": 0.0
+    },
+    "explain": {
+      "total": 1,
+      "passed": 0,
+      "pass_rate": 0.0,
+      "avg_ess": 0.54,
+      "avg_answerable_at_k": 1.0,
+      "avg_span_recall": 0.0
+    }
+  },
+  "ess_distribution": {
+    "extract": [
+      0.6
+    ],
+    "explain": [
+      0.54
+    ]
+  },
+  "top_failure_reasons": [
+    [
+      "ESS 0.60 < threshold 0.75",
+      1
+    ],
+    [
+      "ESS 0.54 < threshold 0.6",
+      1
+    ]
+  ],
+  "ablation_deltas": {
+    "shuffle_context_f1_drop": 0.12,
+    "drop_top1_f1_drop": 0.08,
+    "ess_answer_correlation": 0.65
+  },
+  "latency_p95_ms": 250.0,
+  "hard_gates_status": {
+    "overall_pass_rate_85": false,
+    "locate_pass_rate_90": true,
+    "extract_pass_rate_85": false,
+    "explain_pass_rate_70": false,
+    "citation_at_1": true,
+    "extract_substring_match": true,
+    "ess_drift_within_5pct": true,
+    "ablation_sensitivity_10pct": true,
+    "answerable_at_k_70": true,
+    "span_recall_50": false
+  }
+}

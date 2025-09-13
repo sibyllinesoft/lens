@@ -1,0 +1,258 @@
+{
+  "timestamp": "2025-09-13T15:19:24.664050Z",
+  "batch_size": 312,
+  "tenants_processed": 4,
+  "alerts_generated": 4,
+  "tenant_summaries": {
+    "tenant_a": {
+      "current_metrics": {
+        "tenant_id": "tenant_a",
+        "timestamp": "2025-09-13T15:19:24.663346Z",
+        "pass_rate_core": 0.93,
+        "answerable_at_k": 0.7531214584383202,
+        "span_recall": 0.6749494290609497,
+        "query_count": 100,
+        "p95_latency_ms": 213.2048238417543
+      },
+      "control_charts": {
+        "pass_rate_core": {
+          "metric_name": "pass_rate_core",
+          "tenant_id": "tenant_a",
+          "baseline_mean": 0.8957142857142858,
+          "wilson_lower": 0.8204943557606605,
+          "wilson_upper": 0.9416554680369038,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "answerable_at_k": {
+          "metric_name": "answerable_at_k",
+          "tenant_id": "tenant_a",
+          "baseline_mean": 0.7489112160755221,
+          "wilson_lower": 0.655789640433475,
+          "wilson_upper": 0.8236159466829064,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "span_recall": {
+          "metric_name": "span_recall",
+          "tenant_id": "tenant_a",
+          "baseline_mean": 0.6802758423893654,
+          "wilson_lower": 0.5836572935427784,
+          "wilson_upper": 0.7635558510724152,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "p95_latency_ms": {
+          "metric_name": "p95_latency_ms",
+          "tenant_id": "tenant_a",
+          "baseline_mean": 210.50133625534383,
+          "wilson_lower": 205.33477278339305,
+          "wilson_upper": 215.6678997272946,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        }
+      },
+      "alerts": 1,
+      "status": "ALERT"
+    },
+    "tenant_b": {
+      "current_metrics": {
+        "tenant_id": "tenant_b",
+        "timestamp": "2025-09-13T15:19:24.663567Z",
+        "pass_rate_core": 0.8,
+        "answerable_at_k": 0.7483407780272954,
+        "span_recall": 0.6759928032581948,
+        "query_count": 100,
+        "p95_latency_ms": 213.1135583980322
+      },
+      "control_charts": {
+        "pass_rate_core": {
+          "metric_name": "pass_rate_core",
+          "tenant_id": "tenant_b",
+          "baseline_mean": 0.8185714285714285,
+          "wilson_lower": 0.7317320948929271,
+          "wilson_upper": 0.8818397849152201,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "answerable_at_k": {
+          "metric_name": "answerable_at_k",
+          "tenant_id": "tenant_b",
+          "baseline_mean": 0.7485734610321559,
+          "wilson_lower": 0.6554287191521053,
+          "wilson_upper": 0.8233263482431504,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "span_recall": {
+          "metric_name": "span_recall",
+          "tenant_id": "tenant_b",
+          "baseline_mean": 0.6807854704929378,
+          "wilson_lower": 0.584184515242033,
+          "wilson_upper": 0.7640101783931533,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "p95_latency_ms": {
+          "metric_name": "p95_latency_ms",
+          "tenant_id": "tenant_b",
+          "baseline_mean": 211.38378577956726,
+          "wilson_lower": 207.3561714805555,
+          "wilson_upper": 215.41140007857902,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        }
+      },
+      "alerts": 1,
+      "status": "ALERT"
+    },
+    "tenant_c": {
+      "current_metrics": {
+        "tenant_id": "tenant_c",
+        "timestamp": "2025-09-13T15:19:24.663778Z",
+        "pass_rate_core": 0.9,
+        "answerable_at_k": 0.7502138723532507,
+        "span_recall": 0.6857538450827363,
+        "query_count": 100,
+        "p95_latency_ms": 215.07867561035016
+      },
+      "control_charts": {
+        "pass_rate_core": {
+          "metric_name": "pass_rate_core",
+          "tenant_id": "tenant_c",
+          "baseline_mean": 0.8914285714285715,
+          "wilson_lower": 0.8153832468785835,
+          "wilson_upper": 0.9385122466973465,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "answerable_at_k": {
+          "metric_name": "answerable_at_k",
+          "tenant_id": "tenant_c",
+          "baseline_mean": 0.7479176648000715,
+          "wilson_lower": 0.6547281239638822,
+          "wilson_upper": 0.8227638730779034,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "span_recall": {
+          "metric_name": "span_recall",
+          "tenant_id": "tenant_c",
+          "baseline_mean": 0.6810158053144086,
+          "wilson_lower": 0.5844228404004825,
+          "wilson_upper": 0.7642154804928947,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "p95_latency_ms": {
+          "metric_name": "p95_latency_ms",
+          "tenant_id": "tenant_c",
+          "baseline_mean": 212.81907218051998,
+          "wilson_lower": 202.98984913126924,
+          "wilson_upper": 222.64829522977072,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        }
+      },
+      "alerts": 1,
+      "status": "ALERT"
+    },
+    "tenant_small": {
+      "current_metrics": {
+        "tenant_id": "tenant_small",
+        "timestamp": "2025-09-13T15:19:24.663951Z",
+        "pass_rate_core": 0.9166666666666666,
+        "answerable_at_k": 0.7608731055350823,
+        "span_recall": 0.6837821956701161,
+        "query_count": 12,
+        "p95_latency_ms": 203.0850205015384
+      },
+      "control_charts": {
+        "pass_rate_core": {
+          "metric_name": "pass_rate_core",
+          "tenant_id": "tenant_small",
+          "baseline_mean": 0.9166666666666666,
+          "wilson_lower": 0.6461140782014047,
+          "wilson_upper": 0.9851352905492264,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "answerable_at_k": {
+          "metric_name": "answerable_at_k",
+          "tenant_id": "tenant_small",
+          "baseline_mean": 0.7463442589715344,
+          "wilson_lower": 0.464169936509414,
+          "wilson_upper": 0.9090412426212815,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "span_recall": {
+          "metric_name": "span_recall",
+          "tenant_id": "tenant_small",
+          "baseline_mean": 0.6728838301485567,
+          "wilson_lower": 0.39615138814622125,
+          "wilson_upper": 0.8657673526101014,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        },
+        "p95_latency_ms": {
+          "metric_name": "p95_latency_ms",
+          "tenant_id": "tenant_small",
+          "baseline_mean": 207.46107760170025,
+          "wilson_lower": 193.7213325366308,
+          "wilson_upper": 221.2008226667697,
+          "drift_threshold": 0.05,
+          "alert_consecutive": 3
+        }
+      },
+      "alerts": 1,
+      "status": "ALERT"
+    }
+  },
+  "alerts": [
+    {
+      "timestamp": "2025-09-13T15:19:24.663346Z",
+      "tenant_id": "tenant_a",
+      "metric": "p95_latency_ms",
+      "recent_average": 211.5116952333995,
+      "baseline_mean": 210.50133625534383,
+      "drift_magnitude": 1.0103589780556774,
+      "severity": "HIGH",
+      "alert_type": "SUSTAINED_DRIFT",
+      "recommendation": "Performance improved - monitor for stability"
+    },
+    {
+      "timestamp": "2025-09-13T15:19:24.663567Z",
+      "tenant_id": "tenant_b",
+      "metric": "p95_latency_ms",
+      "recent_average": 212.05648932874243,
+      "baseline_mean": 211.38378577956726,
+      "drift_magnitude": 0.6727035491751678,
+      "severity": "HIGH",
+      "alert_type": "SUSTAINED_DRIFT",
+      "recommendation": "Performance improved - monitor for stability"
+    },
+    {
+      "timestamp": "2025-09-13T15:19:24.663778Z",
+      "tenant_id": "tenant_c",
+      "metric": "p95_latency_ms",
+      "recent_average": 213.60839389698722,
+      "baseline_mean": 212.81907218051998,
+      "drift_magnitude": 0.7893217164672421,
+      "severity": "HIGH",
+      "alert_type": "SUSTAINED_DRIFT",
+      "recommendation": "Performance improved - monitor for stability"
+    },
+    {
+      "timestamp": "2025-09-13T15:19:24.663951Z",
+      "tenant_id": "tenant_small",
+      "metric": "p95_latency_ms",
+      "recent_average": 205.32777846322978,
+      "baseline_mean": 207.46107760170025,
+      "drift_magnitude": 2.133299138470477,
+      "severity": "HIGH",
+      "alert_type": "SUSTAINED_DRIFT",
+      "recommendation": "Performance degraded - check resource utilization or query complexity"
+    }
+  ]
+}

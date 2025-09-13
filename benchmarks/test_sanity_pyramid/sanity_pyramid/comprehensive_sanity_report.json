@@ -1,0 +1,26 @@
+{
+  "error": "No trace data found",
+  "recommendations": [],
+  "ci_gates": {
+    "overall_pass_rate_threshold": 0.85,
+    "operation_specific_thresholds": {
+      "locate": 0.8,
+      "extract": 0.8,
+      "explain": 0.6,
+      "compose": 0.7,
+      "transform": 0.7
+    },
+    "ess_score_minimums": {
+      "locate": 0.8,
+      "extract": 0.8,
+      "explain": 0.6,
+      "compose": 0.7,
+      "transform": 0.7
+    },
+    "failure_conditions": [
+      "Any operation with pass rate < 50%",
+      "Overall pass rate < 85%",
+      "More than 20% of queries with ESS < 0.5"
+    ]
+  }
+}

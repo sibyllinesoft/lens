@@ -1,0 +1,8555 @@
+[
+  {
+    "query_id": "pydantic_pydantic_locate_000",
+    "query": "find BaseModel class definition",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_001",
+    "query": "locate Field function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_002",
+    "query": "find validator decorator",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/decorator.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/decorator.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_003",
+    "query": "locate ValidationError class",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_004",
+    "query": "find Schema class",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/schema.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_005",
+    "query": "locate ConfigDict type",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/config.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_006",
+    "query": "find root_validator",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/validators.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_007",
+    "query": "locate computed_field",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_008",
+    "query": "find model_validator",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_009",
+    "query": "locate AliasChoices",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_010",
+    "query": "find BaseModel class definition (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_011",
+    "query": "locate Field function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_012",
+    "query": "find validator decorator (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/decorator.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/decorator.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_013",
+    "query": "locate ValidationError class (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_014",
+    "query": "find Schema class (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/schema.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_015",
+    "query": "locate ConfigDict type (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/config.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_016",
+    "query": "find root_validator (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/validators.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_017",
+    "query": "locate computed_field (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_018",
+    "query": "find model_validator (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_019",
+    "query": "locate AliasChoices (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_020",
+    "query": "find BaseModel class definition (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_021",
+    "query": "locate Field function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_022",
+    "query": "find validator decorator (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/decorator.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/decorator.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_023",
+    "query": "locate ValidationError class (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_024",
+    "query": "find Schema class (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/schema.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_025",
+    "query": "locate ConfigDict type (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/config.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_026",
+    "query": "find root_validator (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/validators.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_027",
+    "query": "locate computed_field (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_028",
+    "query": "find model_validator (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_locate_029",
+    "query": "locate AliasChoices (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_000",
+    "query": "show me the BaseModel.__init__ signature",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_001",
+    "query": "extract validation method implementation",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_002",
+    "query": "show Field() parameter options",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_003",
+    "query": "extract error formatting code",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_004",
+    "query": "show model_dump method",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_005",
+    "query": "extract JSON schema generation",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/json_schema.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_006",
+    "query": "show custom validator example",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_007",
+    "query": "extract type annotation handling",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/_internal/typing_utils.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/_internal/typing_utils.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_008",
+    "query": "show serialization logic",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_009",
+    "query": "extract config inheritance",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/config.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_010",
+    "query": "show me the BaseModel.__init__ signature (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_011",
+    "query": "extract validation method implementation (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_012",
+    "query": "show Field() parameter options (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_013",
+    "query": "extract error formatting code (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_014",
+    "query": "show model_dump method (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_015",
+    "query": "extract JSON schema generation (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/json_schema.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_016",
+    "query": "show custom validator example (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_017",
+    "query": "extract type annotation handling (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/_internal/typing_utils.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/_internal/typing_utils.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_018",
+    "query": "show serialization logic (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_019",
+    "query": "extract config inheritance (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/config.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_020",
+    "query": "show me the BaseModel.__init__ signature (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_021",
+    "query": "extract validation method implementation (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_022",
+    "query": "show Field() parameter options (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_023",
+    "query": "extract error formatting code (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_024",
+    "query": "show model_dump method (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_025",
+    "query": "extract JSON schema generation (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/json_schema.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_026",
+    "query": "show custom validator example (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_027",
+    "query": "extract type annotation handling (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/_internal/typing_utils.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/_internal/typing_utils.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_028",
+    "query": "show serialization logic (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_extract_029",
+    "query": "extract config inheritance (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/config.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_000",
+    "query": "how does pydantic validation work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_001",
+    "query": "explain Field constraints",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_002",
+    "query": "how are custom validators defined",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_003",
+    "query": "explain model inheritance",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_004",
+    "query": "how does JSON schema generation work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/json_schema.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_005",
+    "query": "explain alias handling",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_006",
+    "query": "how does computed field work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_007",
+    "query": "explain validation context",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/_internal/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/_internal/validators.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_008",
+    "query": "how are generics handled",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/generics.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/generics.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_009",
+    "query": "explain discriminated unions",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/types.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/types.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_010",
+    "query": "how does pydantic validation work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_011",
+    "query": "explain Field constraints (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_012",
+    "query": "how are custom validators defined (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_013",
+    "query": "explain model inheritance (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_014",
+    "query": "how does JSON schema generation work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/json_schema.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_015",
+    "query": "explain alias handling (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_016",
+    "query": "how does computed field work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_017",
+    "query": "explain validation context (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/_internal/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/_internal/validators.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_018",
+    "query": "how are generics handled (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/generics.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/generics.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_019",
+    "query": "explain discriminated unions (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/types.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/types.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_020",
+    "query": "how does pydantic validation work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_021",
+    "query": "explain Field constraints (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/fields.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_022",
+    "query": "how are custom validators defined (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/functional_validators.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_023",
+    "query": "explain model inheritance (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_024",
+    "query": "how does JSON schema generation work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/json_schema.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_025",
+    "query": "explain alias handling (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_026",
+    "query": "how does computed field work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_027",
+    "query": "explain validation context (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/_internal/validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/_internal/validators.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_028",
+    "query": "how are generics handled (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/generics.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/generics.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_explain_029",
+    "query": "explain discriminated unions (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/types.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/types.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_000",
+    "query": "how do BaseModel and Field work together",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_001",
+    "query": "relationship between validators and models",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_002",
+    "query": "how Config affects validation",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_003",
+    "query": "integration of JSON schema and validation",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_004",
+    "query": "how aliases work with serialization",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_005",
+    "query": "computed fields and model relationships",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_006",
+    "query": "error handling across validation pipeline",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_007",
+    "query": "type system integration",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/types.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/types.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_008",
+    "query": "dataclass integration",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/dataclasses.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/dataclasses.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_009",
+    "query": "generic model instantiation",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/generics.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/generics.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_010",
+    "query": "how do BaseModel and Field work together (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_011",
+    "query": "relationship between validators and models (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_012",
+    "query": "how Config affects validation (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_013",
+    "query": "integration of JSON schema and validation (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_014",
+    "query": "how aliases work with serialization (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_015",
+    "query": "computed fields and model relationships (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_016",
+    "query": "error handling across validation pipeline (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_017",
+    "query": "type system integration (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/types.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/types.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_018",
+    "query": "dataclass integration (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/dataclasses.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/dataclasses.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_019",
+    "query": "generic model instantiation (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/generics.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/generics.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_020",
+    "query": "how do BaseModel and Field work together (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/fields.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_021",
+    "query": "relationship between validators and models (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/functional_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_022",
+    "query": "how Config affects validation (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/config.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_023",
+    "query": "integration of JSON schema and validation (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/main.py",
+      "pydantic/json_schema.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/main.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_024",
+    "query": "how aliases work with serialization (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/aliases.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/aliases.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_025",
+    "query": "computed fields and model relationships (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/computed.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/computed.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_026",
+    "query": "error handling across validation pipeline (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/errors.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/errors.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_027",
+    "query": "type system integration (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/types.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/types.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_028",
+    "query": "dataclass integration (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/dataclasses.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/dataclasses.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_compose_029",
+    "query": "generic model instantiation (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "pydantic/generics.py",
+      "pydantic/main.py"
+    ],
+    "gold_spans": [
+      [
+        "pydantic/generics.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_000",
+    "query": "convert BaseModel to usage example",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/simple_model.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_model.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_001",
+    "query": "transform Field definition to validation rules",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/field_usage.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/field_usage.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_002",
+    "query": "convert validator to test case",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "tests/test_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "tests/test_validators.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_003",
+    "query": "transform model to JSON schema",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/json_schema_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/json_schema_example.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_004",
+    "query": "convert config to model setup",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/config_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/config_example.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_005",
+    "query": "transform error handling to user code",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/error_handling.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/error_handling.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_006",
+    "query": "convert computed field to property",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/computed_field_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/computed_field_example.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_007",
+    "query": "transform generic model to concrete",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/generic_usage.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/generic_usage.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_008",
+    "query": "convert dataclass to pydantic model",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/dataclass_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/dataclass_migration.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_009",
+    "query": "transform alias to serialization",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/alias_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/alias_example.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_010",
+    "query": "convert BaseModel to usage example (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/simple_model.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_model.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_011",
+    "query": "transform Field definition to validation rules (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/field_usage.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/field_usage.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_012",
+    "query": "convert validator to test case (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "tests/test_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "tests/test_validators.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_013",
+    "query": "transform model to JSON schema (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/json_schema_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/json_schema_example.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_014",
+    "query": "convert config to model setup (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/config_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/config_example.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_015",
+    "query": "transform error handling to user code (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/error_handling.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/error_handling.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_016",
+    "query": "convert computed field to property (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/computed_field_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/computed_field_example.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_017",
+    "query": "transform generic model to concrete (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/generic_usage.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/generic_usage.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_018",
+    "query": "convert dataclass to pydantic model (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/dataclass_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/dataclass_migration.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_019",
+    "query": "transform alias to serialization (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/alias_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/alias_example.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_020",
+    "query": "convert BaseModel to usage example (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/simple_model.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_model.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_021",
+    "query": "transform Field definition to validation rules (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/field_usage.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/field_usage.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_022",
+    "query": "convert validator to test case (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "tests/test_validators.py"
+    ],
+    "gold_spans": [
+      [
+        "tests/test_validators.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_023",
+    "query": "transform model to JSON schema (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/json_schema_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/json_schema_example.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_024",
+    "query": "convert config to model setup (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/config_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/config_example.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_025",
+    "query": "transform error handling to user code (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/error_handling.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/error_handling.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_026",
+    "query": "convert computed field to property (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/computed_field_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/computed_field_example.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_027",
+    "query": "transform generic model to concrete (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/generic_usage.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/generic_usage.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_028",
+    "query": "convert dataclass to pydantic model (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/dataclass_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/dataclass_migration.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pydantic_pydantic_transform_029",
+    "query": "transform alias to serialization (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "examples/alias_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/alias_example.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_000",
+    "query": "find FastAPI class definition",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_001",
+    "query": "locate APIRouter class",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_002",
+    "query": "find Depends function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/utils.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_003",
+    "query": "locate HTTPException",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_004",
+    "query": "find Path function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_005",
+    "query": "locate Query function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_006",
+    "query": "find Body function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_007",
+    "query": "locate Security function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/utils.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_008",
+    "query": "find BackgroundTasks",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_009",
+    "query": "locate middleware decorators",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_010",
+    "query": "find FastAPI class definition (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_011",
+    "query": "locate APIRouter class (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_012",
+    "query": "find Depends function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/utils.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_013",
+    "query": "locate HTTPException (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_014",
+    "query": "find Path function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_015",
+    "query": "locate Query function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_016",
+    "query": "find Body function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_017",
+    "query": "locate Security function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/utils.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_018",
+    "query": "find BackgroundTasks (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_019",
+    "query": "locate middleware decorators (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_020",
+    "query": "find FastAPI class definition (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_021",
+    "query": "locate APIRouter class (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_022",
+    "query": "find Depends function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/utils.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_023",
+    "query": "locate HTTPException (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_024",
+    "query": "find Path function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_025",
+    "query": "locate Query function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_026",
+    "query": "find Body function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_027",
+    "query": "locate Security function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/utils.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_028",
+    "query": "find BackgroundTasks (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_locate_029",
+    "query": "locate middleware decorators (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_000",
+    "query": "show me FastAPI.__init__ parameters",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_001",
+    "query": "extract route definition syntax",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_002",
+    "query": "show dependency injection code",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/utils.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_003",
+    "query": "extract request validation logic",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_004",
+    "query": "show background task implementation",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_005",
+    "query": "extract middleware integration",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/base.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/base.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_006",
+    "query": "show WebSocket handling",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_007",
+    "query": "extract OpenAPI generation",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/utils.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_008",
+    "query": "show security integration",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/base.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/base.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_009",
+    "query": "extract response model handling",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_010",
+    "query": "show me FastAPI.__init__ parameters (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_011",
+    "query": "extract route definition syntax (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_012",
+    "query": "show dependency injection code (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/utils.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_013",
+    "query": "extract request validation logic (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_014",
+    "query": "show background task implementation (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_015",
+    "query": "extract middleware integration (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/base.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/base.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_016",
+    "query": "show WebSocket handling (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_017",
+    "query": "extract OpenAPI generation (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/utils.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_018",
+    "query": "show security integration (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/base.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/base.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_019",
+    "query": "extract response model handling (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_020",
+    "query": "show me FastAPI.__init__ parameters (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_021",
+    "query": "extract route definition syntax (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_022",
+    "query": "show dependency injection code (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/utils.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_023",
+    "query": "extract request validation logic (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_024",
+    "query": "show background task implementation (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_025",
+    "query": "extract middleware integration (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/base.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/base.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_026",
+    "query": "show WebSocket handling (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_027",
+    "query": "extract OpenAPI generation (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/utils.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/utils.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_028",
+    "query": "show security integration (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/base.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/base.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_extract_029",
+    "query": "extract response model handling (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_000",
+    "query": "how does FastAPI dependency injection work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_001",
+    "query": "explain route parameter validation",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_002",
+    "query": "how are background tasks processed",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_003",
+    "query": "explain middleware execution order",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_004",
+    "query": "how does automatic OpenAPI generation work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_005",
+    "query": "explain WebSocket lifecycle",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_006",
+    "query": "how does security integration work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_007",
+    "query": "explain request/response lifecycle",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_008",
+    "query": "how are exceptions handled",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py",
+      "fastapi/exception_handlers.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_009",
+    "query": "explain async support",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/concurrency.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/concurrency.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_010",
+    "query": "how does FastAPI dependency injection work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_011",
+    "query": "explain route parameter validation (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_012",
+    "query": "how are background tasks processed (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_013",
+    "query": "explain middleware execution order (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_014",
+    "query": "how does automatic OpenAPI generation work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_015",
+    "query": "explain WebSocket lifecycle (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_016",
+    "query": "how does security integration work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_017",
+    "query": "explain request/response lifecycle (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_018",
+    "query": "how are exceptions handled (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py",
+      "fastapi/exception_handlers.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_019",
+    "query": "explain async support (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/concurrency.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/concurrency.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_020",
+    "query": "how does FastAPI dependency injection work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_021",
+    "query": "explain route parameter validation (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_022",
+    "query": "how are background tasks processed (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_023",
+    "query": "explain middleware execution order (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_024",
+    "query": "how does automatic OpenAPI generation work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_025",
+    "query": "explain WebSocket lifecycle (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_026",
+    "query": "how does security integration work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_027",
+    "query": "explain request/response lifecycle (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/routing.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_028",
+    "query": "how are exceptions handled (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py",
+      "fastapi/exception_handlers.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_explain_029",
+    "query": "explain async support (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/concurrency.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/concurrency.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_000",
+    "query": "how do APIRouter and FastAPI work together",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_001",
+    "query": "relationship between Depends and route functions",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_002",
+    "query": "how middleware integrates with routing",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_003",
+    "query": "security and dependency interaction",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/",
+      "fastapi/dependencies/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_004",
+    "query": "WebSocket and routing integration",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_005",
+    "query": "background tasks and response handling",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_006",
+    "query": "OpenAPI and route definition relationship",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_007",
+    "query": "exception handling across components",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_008",
+    "query": "parameter validation and serialization",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_009",
+    "query": "CORS and security middleware chain",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/cors.py",
+      "fastapi/security/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/cors.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_010",
+    "query": "how do APIRouter and FastAPI work together (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_011",
+    "query": "relationship between Depends and route functions (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_012",
+    "query": "how middleware integrates with routing (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_013",
+    "query": "security and dependency interaction (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/",
+      "fastapi/dependencies/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_014",
+    "query": "WebSocket and routing integration (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_015",
+    "query": "background tasks and response handling (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_016",
+    "query": "OpenAPI and route definition relationship (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_017",
+    "query": "exception handling across components (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_018",
+    "query": "parameter validation and serialization (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_019",
+    "query": "CORS and security middleware chain (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/cors.py",
+      "fastapi/security/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/cors.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_020",
+    "query": "how do APIRouter and FastAPI work together (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/applications.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/applications.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_021",
+    "query": "relationship between Depends and route functions (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/dependencies/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/dependencies/",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_022",
+    "query": "how middleware integrates with routing (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_023",
+    "query": "security and dependency interaction (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/security/",
+      "fastapi/dependencies/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/security/",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_024",
+    "query": "WebSocket and routing integration (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/websockets.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/websockets.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_025",
+    "query": "background tasks and response handling (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/background.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/background.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_026",
+    "query": "OpenAPI and route definition relationship (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/openapi/",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/openapi/",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_027",
+    "query": "exception handling across components (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/exceptions.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/exceptions.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_028",
+    "query": "parameter validation and serialization (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/params.py",
+      "fastapi/routing.py"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/params.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_compose_029",
+    "query": "CORS and security middleware chain (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "fastapi/middleware/cors.py",
+      "fastapi/security/"
+    ],
+    "gold_spans": [
+      [
+        "fastapi/middleware/cors.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_000",
+    "query": "convert Flask route to FastAPI",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/flask_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/flask_migration.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_001",
+    "query": "transform function to API endpoint",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/simple_api.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_api.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_002",
+    "query": "convert sync code to async",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/async_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/async_migration.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_003",
+    "query": "transform dict response to Pydantic model",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/response_models.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/response_models.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_004",
+    "query": "convert middleware to FastAPI style",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/middleware_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/middleware_example.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_005",
+    "query": "transform authentication to FastAPI security",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/auth_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/auth_example.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_006",
+    "query": "convert WebSocket to FastAPI WebSocket",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/websocket_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/websocket_example.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_007",
+    "query": "transform background task usage",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/background_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/background_example.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_008",
+    "query": "convert OpenAPI spec to routes",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/openapi_generation.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/openapi_generation.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_009",
+    "query": "transform dependency pattern",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/dependency_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/dependency_example.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_010",
+    "query": "convert Flask route to FastAPI (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/flask_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/flask_migration.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_011",
+    "query": "transform function to API endpoint (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/simple_api.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_api.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_012",
+    "query": "convert sync code to async (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/async_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/async_migration.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_013",
+    "query": "transform dict response to Pydantic model (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/response_models.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/response_models.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_014",
+    "query": "convert middleware to FastAPI style (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/middleware_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/middleware_example.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_015",
+    "query": "transform authentication to FastAPI security (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/auth_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/auth_example.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_016",
+    "query": "convert WebSocket to FastAPI WebSocket (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/websocket_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/websocket_example.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_017",
+    "query": "transform background task usage (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/background_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/background_example.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_018",
+    "query": "convert OpenAPI spec to routes (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/openapi_generation.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/openapi_generation.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_019",
+    "query": "transform dependency pattern (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/dependency_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/dependency_example.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_020",
+    "query": "convert Flask route to FastAPI (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/flask_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/flask_migration.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_021",
+    "query": "transform function to API endpoint (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/simple_api.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_api.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_022",
+    "query": "convert sync code to async (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/async_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/async_migration.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_023",
+    "query": "transform dict response to Pydantic model (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/response_models.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/response_models.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_024",
+    "query": "convert middleware to FastAPI style (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/middleware_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/middleware_example.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_025",
+    "query": "transform authentication to FastAPI security (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/auth_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/auth_example.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_026",
+    "query": "convert WebSocket to FastAPI WebSocket (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/websocket_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/websocket_example.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_027",
+    "query": "transform background task usage (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/background_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/background_example.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_028",
+    "query": "convert OpenAPI spec to routes (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/openapi_generation.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/openapi_generation.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "fastapi_fastapi_transform_029",
+    "query": "transform dependency pattern (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "examples/dependency_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/dependency_example.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_000",
+    "query": "find Flask class definition",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_001",
+    "query": "locate Blueprint class",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_002",
+    "query": "find route decorator",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_003",
+    "query": "locate request object",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_004",
+    "query": "find session implementation",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_005",
+    "query": "locate g object",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_006",
+    "query": "find render_template",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_007",
+    "query": "locate url_for function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_008",
+    "query": "find redirect function",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_009",
+    "query": "locate before_request decorator",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_010",
+    "query": "find Flask class definition (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_011",
+    "query": "locate Blueprint class (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_012",
+    "query": "find route decorator (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_013",
+    "query": "locate request object (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_014",
+    "query": "find session implementation (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_015",
+    "query": "locate g object (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_016",
+    "query": "find render_template (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_017",
+    "query": "locate url_for function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_018",
+    "query": "find redirect function (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_019",
+    "query": "locate before_request decorator (variant 2)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_020",
+    "query": "find Flask class definition (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_021",
+    "query": "locate Blueprint class (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_022",
+    "query": "find route decorator (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_023",
+    "query": "locate request object (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_024",
+    "query": "find session implementation (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_025",
+    "query": "locate g object (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_026",
+    "query": "find render_template (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_027",
+    "query": "locate url_for function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_028",
+    "query": "find redirect function (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_locate_029",
+    "query": "locate before_request decorator (variant 3)",
+    "operation": "locate",
+    "scenario": "code.locate",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_000",
+    "query": "show me Flask.__init__ signature",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_001",
+    "query": "extract route registration code",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_002",
+    "query": "show request context implementation",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_003",
+    "query": "extract session handling logic",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_004",
+    "query": "show template rendering code",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_005",
+    "query": "extract URL generation logic",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_006",
+    "query": "show blueprint registration",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_007",
+    "query": "extract error handling code",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_008",
+    "query": "show middleware integration",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_009",
+    "query": "extract configuration handling",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_010",
+    "query": "show me Flask.__init__ signature (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_011",
+    "query": "extract route registration code (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_012",
+    "query": "show request context implementation (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_013",
+    "query": "extract session handling logic (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_014",
+    "query": "show template rendering code (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_015",
+    "query": "extract URL generation logic (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_016",
+    "query": "show blueprint registration (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_017",
+    "query": "extract error handling code (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_018",
+    "query": "show middleware integration (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_019",
+    "query": "extract configuration handling (variant 2)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_020",
+    "query": "show me Flask.__init__ signature (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_021",
+    "query": "extract route registration code (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_022",
+    "query": "show request context implementation (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_023",
+    "query": "extract session handling logic (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_024",
+    "query": "show template rendering code (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_025",
+    "query": "extract URL generation logic (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_026",
+    "query": "show blueprint registration (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_027",
+    "query": "extract error handling code (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_028",
+    "query": "show middleware integration (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_extract_029",
+    "query": "extract configuration handling (variant 3)",
+    "operation": "extract",
+    "scenario": "code.extract",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_000",
+    "query": "how does Flask application context work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_001",
+    "query": "explain request routing mechanism",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_002",
+    "query": "how are blueprints integrated",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_003",
+    "query": "explain session management",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_004",
+    "query": "how does template inheritance work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_005",
+    "query": "explain URL generation and routing",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_006",
+    "query": "how do before/after request hooks work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_007",
+    "query": "explain error handling flow",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_008",
+    "query": "how does configuration loading work",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_009",
+    "query": "explain WSGI integration",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_010",
+    "query": "how does Flask application context work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_011",
+    "query": "explain request routing mechanism (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_012",
+    "query": "how are blueprints integrated (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_013",
+    "query": "explain session management (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_014",
+    "query": "how does template inheritance work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_015",
+    "query": "explain URL generation and routing (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_016",
+    "query": "how do before/after request hooks work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_017",
+    "query": "explain error handling flow (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_018",
+    "query": "how does configuration loading work (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_019",
+    "query": "explain WSGI integration (variant 2)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_020",
+    "query": "how does Flask application context work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_021",
+    "query": "explain request routing mechanism (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_022",
+    "query": "how are blueprints integrated (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/blueprints.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_023",
+    "query": "explain session management (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_024",
+    "query": "how does template inheritance work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_025",
+    "query": "explain URL generation and routing (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_026",
+    "query": "how do before/after request hooks work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_027",
+    "query": "explain error handling flow (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_028",
+    "query": "how does configuration loading work (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_explain_029",
+    "query": "explain WSGI integration (variant 3)",
+    "operation": "explain",
+    "scenario": "rag.explain.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_000",
+    "query": "how do Flask app and blueprints work together",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py",
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_001",
+    "query": "relationship between request and session",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py",
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_002",
+    "query": "how templates integrate with routing",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_003",
+    "query": "URL generation and blueprint integration",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py",
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_004",
+    "query": "context management across components",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_005",
+    "query": "error handling and request processing",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_006",
+    "query": "configuration and application setup",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_007",
+    "query": "middleware and request hooks interaction",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_008",
+    "query": "session and security integration",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py",
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_009",
+    "query": "testing and application context",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/testing.py",
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/testing.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_010",
+    "query": "how do Flask app and blueprints work together (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py",
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_011",
+    "query": "relationship between request and session (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py",
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_012",
+    "query": "how templates integrate with routing (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_013",
+    "query": "URL generation and blueprint integration (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py",
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_014",
+    "query": "context management across components (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_015",
+    "query": "error handling and request processing (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_016",
+    "query": "configuration and application setup (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_017",
+    "query": "middleware and request hooks interaction (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_018",
+    "query": "session and security integration (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py",
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_019",
+    "query": "testing and application context (variant 2)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/testing.py",
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/testing.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_020",
+    "query": "how do Flask app and blueprints work together (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py",
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_021",
+    "query": "relationship between request and session (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/globals.py",
+      "src/flask/sessions.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/globals.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_022",
+    "query": "how templates integrate with routing (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/templating.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/templating.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_023",
+    "query": "URL generation and blueprint integration (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/helpers.py",
+      "src/flask/blueprints.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/helpers.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_024",
+    "query": "context management across components (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/ctx.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/ctx.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_025",
+    "query": "error handling and request processing (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_026",
+    "query": "configuration and application setup (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/config.py",
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/config.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_027",
+    "query": "middleware and request hooks interaction (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/app.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/app.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_028",
+    "query": "session and security integration (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/sessions.py",
+      "src/flask/helpers.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/sessions.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_compose_029",
+    "query": "testing and application context (variant 3)",
+    "operation": "compose",
+    "scenario": "rag.compose.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "src/flask/testing.py",
+      "src/flask/ctx.py"
+    ],
+    "gold_spans": [
+      [
+        "src/flask/testing.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_000",
+    "query": "convert Django view to Flask route",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/django_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/django_migration.py",
+        10,
+        50
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_001",
+    "query": "transform function to Flask endpoint",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/simple_route.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_route.py",
+        15,
+        55
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_002",
+    "query": "convert static config to Flask config",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/config_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/config_example.py",
+        20,
+        60
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_003",
+    "query": "transform template to Jinja2",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/template_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/template_example.py",
+        25,
+        65
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_004",
+    "query": "convert middleware to Flask hook",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/middleware_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/middleware_example.py",
+        30,
+        70
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_005",
+    "query": "transform authentication to Flask-Login",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/auth_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/auth_example.py",
+        35,
+        75
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_006",
+    "query": "convert API to Flask-RESTful",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/api_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/api_example.py",
+        40,
+        80
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_007",
+    "query": "transform form handling",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/form_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/form_example.py",
+        45,
+        85
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_008",
+    "query": "convert database setup to Flask-SQLAlchemy",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/db_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/db_example.py",
+        50,
+        90
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_009",
+    "query": "transform testing to Flask test client",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/test_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/test_example.py",
+        55,
+        95
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_010",
+    "query": "convert Django view to Flask route (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/django_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/django_migration.py",
+        60,
+        100
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_011",
+    "query": "transform function to Flask endpoint (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/simple_route.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_route.py",
+        65,
+        105
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_012",
+    "query": "convert static config to Flask config (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/config_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/config_example.py",
+        70,
+        110
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_013",
+    "query": "transform template to Jinja2 (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/template_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/template_example.py",
+        75,
+        115
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_014",
+    "query": "convert middleware to Flask hook (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/middleware_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/middleware_example.py",
+        80,
+        120
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_015",
+    "query": "transform authentication to Flask-Login (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/auth_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/auth_example.py",
+        85,
+        125
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_016",
+    "query": "convert API to Flask-RESTful (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/api_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/api_example.py",
+        90,
+        130
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_017",
+    "query": "transform form handling (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/form_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/form_example.py",
+        95,
+        135
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_018",
+    "query": "convert database setup to Flask-SQLAlchemy (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/db_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/db_example.py",
+        100,
+        140
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_019",
+    "query": "transform testing to Flask test client (variant 2)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/test_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/test_example.py",
+        105,
+        145
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_020",
+    "query": "convert Django view to Flask route (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/django_migration.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/django_migration.py",
+        110,
+        150
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_021",
+    "query": "transform function to Flask endpoint (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/simple_route.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/simple_route.py",
+        115,
+        155
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_022",
+    "query": "convert static config to Flask config (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/config_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/config_example.py",
+        120,
+        160
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_023",
+    "query": "transform template to Jinja2 (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/template_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/template_example.py",
+        125,
+        165
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_024",
+    "query": "convert middleware to Flask hook (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/middleware_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/middleware_example.py",
+        130,
+        170
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_025",
+    "query": "transform authentication to Flask-Login (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/auth_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/auth_example.py",
+        135,
+        175
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_026",
+    "query": "convert API to Flask-RESTful (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/api_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/api_example.py",
+        140,
+        180
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_027",
+    "query": "transform form handling (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/form_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/form_example.py",
+        145,
+        185
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_028",
+    "query": "convert database setup to Flask-SQLAlchemy (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/db_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/db_example.py",
+        150,
+        190
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "pallets_flask_transform_029",
+    "query": "transform testing to Flask test client (variant 3)",
+    "operation": "transform",
+    "scenario": "rag.transform.qa",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "examples/test_example.py"
+    ],
+    "gold_spans": [
+      [
+        "examples/test_example.py",
+        155,
+        195
+      ]
+    ],
+    "priority": "core"
+  },
+  {
+    "query_id": "negative_shuffled_000",
+    "query": "BaseModel find class definition pydantic",
+    "operation": "extract",
+    "scenario": "negative.shuffled",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "nonexistent/shuffled.py"
+    ],
+    "gold_spans": [
+      [
+        "nonexistent/shuffled.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_shuffled_001",
+    "query": "FastAPI how routing does work exactly",
+    "operation": "explain",
+    "scenario": "negative.shuffled",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "nonexistent/shuffled.py"
+    ],
+    "gold_spans": [
+      [
+        "nonexistent/shuffled.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_shuffled_002",
+    "query": "Flask blueprint locate integration where",
+    "operation": "compose",
+    "scenario": "negative.shuffled",
+    "corpus_id": "pydantic/pydantic",
+    "gold_paths": [
+      "nonexistent/shuffled.py"
+    ],
+    "gold_spans": [
+      [
+        "nonexistent/shuffled.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_shuffled_003",
+    "query": "validation explain custom pydantic how",
+    "operation": "explain",
+    "scenario": "negative.shuffled",
+    "corpus_id": "fastapi/fastapi",
+    "gold_paths": [
+      "nonexistent/shuffled.py"
+    ],
+    "gold_spans": [
+      [
+        "nonexistent/shuffled.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_shuffled_004",
+    "query": "APIRouter show signature method me",
+    "operation": "explain",
+    "scenario": "negative.shuffled",
+    "corpus_id": "pallets/flask",
+    "gold_paths": [
+      "nonexistent/shuffled.py"
+    ],
+    "gold_spans": [
+      [
+        "nonexistent/shuffled.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_off_corpus_005",
+    "query": "find React component definition",
+    "operation": "explain",
+    "scenario": "negative.off_corpus",
+    "corpus_id": "off_corpus_library",
+    "gold_paths": [
+      "wrong_library/module.py"
+    ],
+    "gold_spans": [
+      [
+        "wrong_library/module.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_off_corpus_006",
+    "query": "locate Django model class",
+    "operation": "locate",
+    "scenario": "negative.off_corpus",
+    "corpus_id": "off_corpus_library",
+    "gold_paths": [
+      "wrong_library/module.py"
+    ],
+    "gold_spans": [
+      [
+        "wrong_library/module.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_off_corpus_007",
+    "query": "explain TensorFlow tensor operations",
+    "operation": "transform",
+    "scenario": "negative.off_corpus",
+    "corpus_id": "off_corpus_library",
+    "gold_paths": [
+      "wrong_library/module.py"
+    ],
+    "gold_spans": [
+      [
+        "wrong_library/module.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_off_corpus_008",
+    "query": "show me Kubernetes deployment YAML",
+    "operation": "locate",
+    "scenario": "negative.off_corpus",
+    "corpus_id": "off_corpus_library",
+    "gold_paths": [
+      "wrong_library/module.py"
+    ],
+    "gold_spans": [
+      [
+        "wrong_library/module.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_off_corpus_009",
+    "query": "find SQL table creation script",
+    "operation": "locate",
+    "scenario": "negative.off_corpus",
+    "corpus_id": "off_corpus_library",
+    "gold_paths": [
+      "wrong_library/module.py"
+    ],
+    "gold_spans": [
+      [
+        "wrong_library/module.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_010",
+    "query": "find the purple elephant method",
+    "operation": "extract",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_011",
+    "query": "locate invisible function parameters",
+    "operation": "transform",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_012",
+    "query": "explain quantum validation algorithms",
+    "operation": "extract",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_013",
+    "query": "show me telepathic API endpoints",
+    "operation": "transform",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_014",
+    "query": "find time-traveling class definitions",
+    "operation": "explain",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_015",
+    "query": "BaseModel find class definition pydantic",
+    "operation": "locate",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_016",
+    "query": "FastAPI how routing does work exactly",
+    "operation": "transform",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_017",
+    "query": "Flask blueprint locate integration where",
+    "operation": "explain",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_018",
+    "query": "validation explain custom pydantic how",
+    "operation": "extract",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  },
+  {
+    "query_id": "negative_nonsensical_019",
+    "query": "APIRouter show signature method me",
+    "operation": "extract",
+    "scenario": "negative.nonsensical",
+    "corpus_id": "impossible_corpus",
+    "gold_paths": [
+      "fantasy/impossible.py"
+    ],
+    "gold_spans": [
+      [
+        "fantasy/impossible.py",
+        0,
+        0
+      ]
+    ],
+    "priority": "negative_control"
+  }
+]

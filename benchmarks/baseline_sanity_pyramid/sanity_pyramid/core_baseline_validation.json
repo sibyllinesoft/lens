@@ -1,0 +1,177 @@
+{
+  "total_core_queries": 15,
+  "contract_met_count": 0,
+  "ready_for_generation_count": 0,
+  "contract_pass_rate": 0.0,
+  "generation_ready_rate": 0.0,
+  "by_operation": {
+    "locate": {
+      "total": 10,
+      "contract_met": 0,
+      "ready_for_generation": 0,
+      "contract_pass_rate": 0.0,
+      "generation_ready_rate": 0.0,
+      "avg_ess_score": 0.5066666666666666
+    },
+    "explain": {
+      "total": 5,
+      "contract_met": 0,
+      "ready_for_generation": 0,
+      "contract_pass_rate": 0.0,
+      "generation_ready_rate": 0.0,
+      "avg_ess_score": 0.5
+    }
+  },
+  "detailed_results": [
+    {
+      "query_id": "lens_main_code.func_0",
+      "operation": "locate",
+      "scenario": "code.func",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.func_1",
+      "operation": "locate",
+      "scenario": "code.func",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.func_2",
+      "operation": "locate",
+      "scenario": "code.func",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.func_3",
+      "operation": "locate",
+      "scenario": "code.func",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.func_4",
+      "operation": "locate",
+      "scenario": "code.func",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.symbol_0",
+      "operation": "locate",
+      "scenario": "code.symbol",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.symbol_1",
+      "operation": "locate",
+      "scenario": "code.symbol",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.symbol_2",
+      "operation": "locate",
+      "scenario": "code.symbol",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.symbol_3",
+      "operation": "locate",
+      "scenario": "code.symbol",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_code.symbol_4",
+      "operation": "locate",
+      "scenario": "code.symbol",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5666666666666667,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.567 below threshold 0.8"
+    },
+    {
+      "query_id": "lens_main_rag.code.qa_0",
+      "operation": "explain",
+      "scenario": "rag.code.qa",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.6"
+    },
+    {
+      "query_id": "lens_main_rag.code.qa_1",
+      "operation": "explain",
+      "scenario": "rag.code.qa",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.6"
+    },
+    {
+      "query_id": "lens_main_rag.code.qa_2",
+      "operation": "explain",
+      "scenario": "rag.code.qa",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.6"
+    },
+    {
+      "query_id": "lens_main_rag.code.qa_3",
+      "operation": "explain",
+      "scenario": "rag.code.qa",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.6"
+    },
+    {
+      "query_id": "lens_main_rag.code.qa_4",
+      "operation": "explain",
+      "scenario": "rag.code.qa",
+      "corpus_id": "lens_main",
+      "ess_score": 0.5,
+      "contract_met": false,
+      "ready_for_generation": false,
+      "failure_reason": "ESS score 0.500 below threshold 0.6"
+    }
+  ]
+}

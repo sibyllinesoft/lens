@@ -1,0 +1,58 @@
+release: v2.1.4
+fingerprint: "cf521b6d-20250913T150843Z"
+budgets:
+  code_search_p95_ms: 200
+  rag_p95_ms: 350
+metrics: [pass_rate_core, answerable_at_k, span_recall, ndcg_10, mrr_10, success_1, p95_latency_ms, cost_per_query]
+scenarios:
+  - name: code.func
+    tenants: [all]         # per-tenant also computed
+    matrix:
+      k: [150, 300, 400]
+      rrf_k0: [30, 60]
+      z_sparse: [0.5, 0.6]
+      z_dense:  [0.4, 0.5]
+      z_symbol: [0.2, 0.4]
+      reranker: [on, off]
+      group_mode: [file, chunk]
+  - name: code.symbol
+    matrix:
+      k: [150, 300]
+      rrf_k0: [30, 60]
+      z_sparse: [0.6]
+      z_dense:  [0.4]
+      z_symbol: [0.4]
+      reranker: [off, on]
+      group_mode: [file]
+  - name: rag.code.qa
+    matrix:
+      k: [200, 400, 600]
+      rrf_k0: [60]
+      z_sparse: [0.5]
+      z_dense:  [0.5]
+      z_symbol: [0.2]
+      reranker: [on]
+      group_mode: [file, chunk]
+promotion_gates:
+  composite_improvement_pct: ">= +1.0"     # composite defined below  
+  p95_regression_pct:       "<= +10.0"
+  quality_preservation_pct: ">= 95.0"
+  ablation_sensitivity_drop_pct: ">= 8.0"
+  sanity_pass_rate_core_pct: ">= 80.0"
+  extract_substring_pct: "== 100.0"
+reporting:
+  out_dir: "reports/{{YYYY-MM-DD_HHMMSS}}_v{{VERSION}}/"
+  structure_version: "2.0"
+  use_timestamped_subfolders: true
+  make_pdf: true
+  make_html: true
+  make_marketing_deck: true
+  create_index: true
+  backward_compatibility: true
+  subfolder_organization:
+    executive: ["one_pager.pdf", "kpi_dashboard.html", "summary_metrics.json"]
+    technical: ["detailed_brief.html", "performance_analysis.html", "statistical_validation.html", "methodology.md"]
+    marketing: ["presentation_deck.pdf", "performance_highlights.html", "before_after_charts.png", "social_media_assets/"]
+    operational: ["promotion_decisions.json", "ci_vs_prod_delta.json", "integrity_manifest.json", "green_fingerprint_note.md", "rollup.csv"]
+    artifacts: ["experiment_configs/", "raw_metrics/", "stage_timings/", "validation_results/"]
+    metadata: ["run_summary.json", "version_info.json", "generation_log.txt"]

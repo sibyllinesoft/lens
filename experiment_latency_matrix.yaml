@@ -1,0 +1,189 @@
+release: v2.2.1
+fingerprint: "latency-sprint-20250913T163000Z"
+budgets: 
+  code_p95_ms: 200
+  rag_p95_ms: 350
+lambda: 2.2
+metrics: [pass_rate_core, answerable_at_k, span_recall, ndcg_10, mrr_10, success_1, p95_latency_ms, cost_per_query]
+
+# P95 OPTIMIZATION SCENARIOS - Based on tail cause analysis
+scenarios:
+  - name: code.func
+    description: "AST chunking optimization for P95 budget compliance"
+    baseline_p95_ms: 266.8
+    target_p95_ms: 190
+    matrix:
+      # AST chunking optimizations (P3 priority - 26% reduction target)
+      chunk_policy: [code_units_v2_boundaries, code_units_v2_cached]
+      chunk_len: [384, 448, 512]  # Reduced from 512-768 to minimize parsing overhead
+      overlap: [64, 96, 128]      # Reduced from 128-192 to minimize boundary detection
+      max_chunks_per_file: [12, 16, 20]  # Cap chunk explosion
+      # Cross-encoder reranking optimization (P2 priority - 29% reduction target) 
+      reranker: [off, ce_tiny, ce_small]  # ce_tiny for speed
+      rerank_topk: [15, 20, 25]   # Reduced from 20-30 to minimize candidates
+      batch_size_ce: [16, 24, 32] # Optimized batch sizes
+      # Dense retrieval optimization
+      k_pool: [120, 150, 180]     # Reduced from 150-300 to minimize computation
+      # Symbol boost optimization  
+      symbol_boost: [defs_refs, defs_refs_calls]
+      symbol_boost_decay: [0.8, 0.9, 1.0]
+      # Graph expansion controls
+      graph_expand_hops: [0, 1]   # Limit hops to reduce graph traversal
+      graph_added_tokens_cap: [256, 384, 512]  # Token caps for expansion
+      # Fast-path optimizations
+      fast_path_if: ["ESS>=0.90 & chunk_count<=15 -> reranker=off,k_pool-=30"]
+
+  - name: code.symbol  
+    description: "Symbol graph boost optimization for P95 budget compliance"
+    baseline_p95_ms: 317.6
+    target_p95_ms: 240
+    matrix:
+      # Symbol-specific optimizations
+      identifier_split: [on]
+      fuzzy_threshold: [0.85, 0.9, 0.95]  # Higher threshold for precision
+      max_chunks_per_file: [10, 12, 16]   # Reduced to limit symbol expansion
+      # Graph expansion optimization (P1 priority - 28% reduction target)
+      graph_expand_hops: [0, 1]     # Critical: Limit to 1 hop max
+      graph_added_tokens_cap: [256, 384, 512]  # Critical: Token caps
+      graph_pruning: [enabled]      # Enable graph pruning
+      symbol_graph_cache: [enabled] # Cache symbol graphs
+      # Dense retrieval scaling optimization (P3 priority - 30% reduction target)
+      k_pool: [100, 150, 200]       # Reduced from 120-240 to control scaling
+      retrieval_parallel: [enabled] # Parallel retrieval
+      # Symbol boost optimization
+      symbol_boost: [defs_refs, defs_refs_calls] 
+      symbol_boost_decay: [0.7, 0.8, 0.9]  # Faster decay to limit expansion
+      # No reranking for symbols to avoid overhead
+      reranker: [off]
+      # Fast-path for high-confidence symbol matches
+      fast_path_if: ["symbol_confidence>=0.95 -> graph_expand_hops=0"]
+
+  - name: code.routing
+    description: "ML router optimization with fast-path for P95 budget compliance"  
+    baseline_p95_ms: 322.0
+    target_p95_ms: 250
+    matrix:
+      # ML router optimization (P0 priority - 32% reduction target)
+      router_type: [rule_based_fast, hybrid_cached, learned_cached]
+      router_cache_enabled: [true]   # Critical: Enable decision caching
+      router_fast_path_threshold: [0.85, 0.90, 0.95]  # Fast-path for confident decisions
+      router_feature_cache: [enabled] # Cache feature extraction
+      # Specialized retrieval optimization (P3 priority - 27% reduction target)
+      specialized_parallel: [enabled] # Critical: Parallel specialized retrieval
+      specialized_k: [100, 150, 200]  # Limit candidates per specialized index
+      specialized_fusion_early_stop: [enabled] # Early termination
+      # General retrieval controls
+      k_pool: [120, 180, 240]
+      # Lightweight fusion to minimize coordination overhead
+      fusion_method: [lightweight_rrf, simple_weighted]
+      fusion_weights: [[1.0, 0.8, 0.6], [1.2, 1.0, 0.8]]
+      # No heavy reranking to avoid latency
+      reranker: [off, ce_tiny]
+      rerank_topk: [10, 15, 20]  # Minimal reranking if enabled
+      # Fast-path routing rules
+      fast_path_if: ["query_type=exact_match -> router_type=rule_based_fast", 
+                     "confidence>=0.90 -> specialized_parallel=enabled,k_pool-=50"]
+
+  - name: rag.code.qa
+    description: "RAG pipeline optimization targeting cross-encoder and graph expansion bottlenecks"
+    baseline_p95_ms: 584.2  
+    target_p95_ms: 450
+    matrix:
+      # Cross-encoder reranking optimization (P0 priority - 40% reduction target)
+      reranker: [ce_tiny, ce_small]    # Critical: Use smaller/faster models  
+      rerank_topk: [15, 20, 25]        # Critical: Reduce candidates (was 20-30)
+      batch_size_ce: [16, 24, 32]      # Critical: Optimized batch sizes
+      candidate_pruning: [enabled]     # Pre-filter candidates before reranking
+      rerank_score_threshold: [0.1, 0.2, 0.3]  # Early termination for low scores
+      # Dense retrieval optimization (P2 priority - 25% reduction target)
+      retrieval_k: [300, 450, 600]     # Reduced from 450-900 to control scaling
+      retrieval_early_stop: [enabled]  # Stop when confidence threshold met
+      retrieval_parallel: [enabled]    # Parallel dense retrieval
+      # Graph expansion optimization (P1 priority - 25% reduction target)  
+      graph_expand_hops: [0, 1]        # Critical: Limit to 1 hop maximum
+      graph_added_tokens_cap: [300, 500, 768]  # Critical: Strict token caps
+      graph_expansion_threshold: [0.7, 0.8, 0.9]  # Only expand high-confidence
+      graph_lazy_expansion: [enabled]  # Lazy load graph expansion
+      # Chunking optimization
+      chunk_policy: [code_units_v2_boundaries]
+      chunk_len: [384, 512, 640]       # Slightly reduced to limit candidate sets
+      overlap: [96, 128, 192]
+      max_chunks_per_file: [16, 20, 24]
+      # RAG-specific optimizations
+      rag_context_window: [2048, 3072, 4096]
+      rag_evidence_limit: [5, 8, 10]   # Limit evidence passages
+      # Fast-path for high-confidence RAG queries
+      fast_path_if: ["rag_confidence>=0.90 -> graph_expand_hops=0,rerank_topk-=5",
+                     "evidence_count>=8 -> candidate_pruning=enabled"]
+
+  - name: code.fusion  
+    description: "Multi-retriever coordination optimization"
+    baseline_p95_ms: 261.4
+    target_p95_ms: 200
+    matrix:
+      # Multi-retriever coordination optimization (P0 priority - 26% reduction target)
+      fusion_method: [parallel_rrf, parallel_weighted, async_fusion]  # Critical: Parallel execution
+      fusion_coordination: [async]     # Critical: Asynchronous coordination
+      retriever_parallel: [enabled]    # Critical: Parallel retriever execution
+      fusion_early_termination: [enabled]  # Stop when threshold confidence reached
+      fusion_timeout_ms: [150, 200, 250]   # Timeout for slow retrievers
+      # Individual retriever optimization  
+      sparse_k: [100, 150, 200]
+      dense_k: [100, 150, 200] 
+      symbol_k: [50, 100, 150]
+      # Advanced fusion computation optimization (P1 priority - 25% reduction)
+      fusion_weights: [[1.0, 0.8, 0.6], [1.2, 1.0, 0.8], [1.5, 1.0, 0.5]]
+      fusion_normalization: [z_score, min_max, none]  # Lighter normalization
+      fusion_score_caching: [enabled]  # Cache fusion scores
+      # Lightweight reranking
+      reranker: [off, ce_tiny]
+      rerank_topk: [10, 15, 20]
+      batch_size_ce: [16, 24]
+      # Fast-path for confident fusion results
+      fast_path_if: ["fusion_confidence>=0.90 -> reranker=off",
+                     "retriever_agreement>=0.85 -> fusion_early_termination=enabled"]
+
+promotion_gates:
+  # Quality preservation requirements (≥98%)
+  composite_improvement_pct: ">= +0.0"      # Accept neutral quality if P95 improves ≥10%
+  quality_preservation_pct:  ">= 98.0"     # Must preserve ≥98% quality
+  pass_rate_core_min: ">= 0.85"            # Core safety gate
+  answerable_at_k_min: ">= 0.70"           # Answerable safety gate  
+  span_recall_min: ">= 0.50"               # Span recall safety gate
+  extract_substring_pct: "== 100.0"        # Perfect substring extraction
+  ablation_sensitivity_drop_pct: ">= 10.0" # Sensitivity requirement
+  
+  # P95 improvement requirements (primary objective)
+  p95_improvement_pct: ">= +10.0"          # Required: ≥10% P95 latency reduction
+  p95_regression_allowed: false            # No P95 regressions allowed
+  
+  # Statistical rigor requirements
+  sprt_accept: true                        # SPRT acceptance required
+  bootstrap_confidence: 0.95              # 95% bootstrap confidence
+  sample_size_min: 100                    # Minimum sample size per config
+
+# Statistical testing configuration
+statistical_validation:
+  bootstrap_samples: 10000                 # 10k bootstrap samples
+  sprt_alpha: 0.05                        # Type I error rate
+  sprt_beta: 0.05                         # Type II error rate  
+  sprt_delta: 0.03                        # Effect size threshold
+  counterfactual_rate: 0.02               # 2% counterfactual experiments
+  bonferroni_correction: true             # Multiple testing correction
+
+# Expected experiment counts per scenario
+experiment_estimates:
+  code.func: ~2160        # 6*3*3*3*3*3*2*2*2*2 combinations  
+  code.symbol: ~1296      # 3*3*2*3*3*2*3 combinations
+  code.routing: ~2304     # 3*3*3*3*3*2*2*2*3 combinations
+  rag.code.qa: ~3456      # 2*3*3*3*3*3*3*3*3*3*2 combinations
+  code.fusion: ~1728      # 3*2*3*3*3*3*3*2*3 combinations
+  total_experiments: ~11344
+
+# Resource budgets
+resource_limits:
+  max_experiment_time_hours: 24           # 24 hour experiment window
+  parallel_workers: 8                    # 8 parallel experiment workers
+  timeout_per_experiment_minutes: 15     # 15 minute timeout per config
+  disk_space_gb: 100                     # 100GB disk space budget
+  memory_per_worker_gb: 16               # 16GB memory per worker

@@ -1,0 +1,222 @@
+release: v2.2.2
+fingerprint: "expanded-optimization-20250913T210000Z"
+budgets: 
+  code_p95_ms: 180  # 5% better than v2.2.1 targets
+  rag_p95_ms: 380   # 8% better than v2.2.1 targets
+lambda: 2.2
+metrics: [pass_rate_core, answerable_at_k, span_recall, ndcg_10, mrr_10, success_1, p95_latency_ms, cost_per_query, recall_at_5]
+
+# V2.2.2 EXPANDED OPTIMIZATION MATRIX - New parameter exploration
+scenarios:
+  - name: code.func.v2.2.2
+    description: "Advanced function search with tokenization and engine experiments"
+    baseline_p95_ms: 184.2  # v2.2.1 achieved performance
+    target_p95_ms: 175      # 5% improvement target
+    matrix:
+      # NEW: Tokenization strategies
+      tokenization: [std, aggressive, byte_pair]
+      # NEW: Vector engine experiments  
+      vector_engine: [faiss, milvus]
+      # Fusion weight exploration
+      fusion_weights: [[0.2, 0.8, 1.0], [0.5, 0.8, 1.0], [0.8, 1.0, 1.2]]
+      # Candidate depth expansion
+      candidate_depths: [200, 400, 800]
+      # Reranker comparison
+      reranker: [off, ce_small, ce_large]
+      # NEW: Scoring method experiments
+      scoring_method: [z_norm, rrf_60]
+      # Optimized chunking from v2.2.1
+      chunk_len: [384, 448]           # Best from v2.2.1
+      overlap: [96, 128]              # Best from v2.2.1
+      max_chunks_per_file: [16, 20]   # Best from v2.2.1
+      # Graph expansion refinement
+      graph_expand_hops: [1, 2]       # Explore 2-hop expansion
+      graph_added_tokens_cap: [384, 512, 768]
+      # Fast-path evolution
+      fast_path_enabled: [true, false]
+      fast_path_threshold: [0.85, 0.90, 0.95]
+
+  - name: code.symbol.v2.2.2  
+    description: "Symbol search with advanced caching and engine optimization"
+    baseline_p95_ms: 223.4  # v2.2.1 achieved performance
+    target_p95_ms: 210      # 6% improvement target
+    matrix:
+      # NEW: Tokenization for symbols
+      tokenization: [std, aggressive]  # Byte-pair less relevant for symbols
+      # NEW: Vector engine comparison
+      vector_engine: [faiss, milvus]
+      # Enhanced fusion weights for symbols
+      fusion_weights: [[0.2, 0.9, 1.0], [0.5, 1.0, 0.8], [0.8, 1.0, 0.6]]
+      # Symbol-specific candidate depths
+      candidate_depths: [200, 400, 600]  # Different from func due to symbol nature
+      # Reranker impact on symbols
+      reranker: [off, ce_small, ce_large]
+      # NEW: Advanced scoring for symbols
+      scoring_method: [z_norm, rrf_60]
+      # Symbol-specific optimizations from v2.2.1
+      fuzzy_threshold: [0.9, 0.95]       # Best from v2.2.1
+      max_chunks_per_file: [12, 16]      # Best from v2.2.1
+      graph_expand_hops: [1, 2]          # Explore 2-hop for symbols
+      graph_added_tokens_cap: [256, 384, 512]
+      symbol_boost_decay: [0.8, 0.9]     # Best from v2.2.1
+      # Enhanced caching
+      symbol_graph_cache: [enabled]
+      symbol_cache_ttl_ms: [30000, 60000, 120000]  # NEW: Cache TTL experiments
+
+  - name: code.routing.v2.2.2
+    description: "Intelligent routing with ML enhancements and engine selection"  
+    baseline_p95_ms: 207.8  # v2.2.1 achieved performance
+    target_p95_ms: 195      # 6% improvement target
+    matrix:
+      # NEW: Vector engine impact on routing
+      vector_engine: [faiss, milvus]
+      # Router enhancement
+      router_type: [hybrid_cached, learned_cached, ml_enhanced]  # NEW: ML router
+      # Enhanced fusion weights for routing
+      fusion_weights: [[0.2, 0.8, 1.0], [0.5, 1.0, 0.8], [0.8, 1.2, 1.0]]
+      # Routing-specific candidate management
+      candidate_depths: [200, 400, 800]
+      # Reranker impact analysis
+      reranker: [off, ce_small, ce_large]
+      # NEW: Scoring optimizations
+      scoring_method: [z_norm, rrf_60]
+      # Optimized from v2.2.1
+      router_cache_enabled: [true]
+      router_fast_path_threshold: [0.90, 0.95]  # Best from v2.2.1
+      specialized_parallel: [enabled]
+      specialized_k: [150, 200]                 # Best from v2.2.1
+      k_pool: [180, 240]                       # Best from v2.2.1
+      fusion_method: [lightweight_rrf, weighted_rrf]
+      # NEW: Dynamic routing parameters
+      router_confidence_threshold: [0.7, 0.8, 0.9]
+      router_fallback_strategy: [conservative, aggressive]
+
+  - name: code.fusion.v2.2.2  
+    description: "Multi-modal fusion with engine diversity and advanced coordination"
+    baseline_p95_ms: 181.6  # v2.2.1 achieved performance
+    target_p95_ms: 170      # 6% improvement target
+    matrix:
+      # NEW: Engine diversity experiments
+      primary_engine: [faiss, milvus]
+      secondary_engine: [faiss, milvus]
+      engine_load_balancing: [round_robin, performance_based]
+      # Advanced fusion weights
+      fusion_weights: [[0.2, 0.8, 1.0], [0.5, 0.8, 1.2], [0.8, 1.0, 1.5]]
+      # Fusion candidate management
+      candidate_depths: [200, 400, 600]
+      # Reranker fusion impact
+      reranker: [off, ce_small, ce_large]
+      # NEW: Advanced scoring for fusion
+      scoring_method: [z_norm, rrf_60]
+      # Optimized from v2.2.1
+      fusion_method: [parallel_rrf, async_fusion, hybrid_fusion]  # NEW: hybrid
+      fusion_coordination: [async, sync_optimized]               # NEW: sync option
+      retriever_parallel: [enabled]
+      fusion_timeout_ms: [200, 250]              # Best from v2.2.1
+      sparse_k: [150, 200]                       # Best from v2.2.1
+      dense_k: [150, 200]                        # Best from v2.2.1
+      symbol_k: [100, 150]                       # Best from v2.2.1
+      # NEW: Fusion intelligence
+      fusion_confidence_threshold: [0.8, 0.9, 0.95]
+      fusion_early_exit: [enabled, disabled]
+
+  - name: rag.code.qa.v2.2.2
+    description: "RAG with advanced reranking and context optimization"
+    baseline_p95_ms: 391.7  # v2.2.1 achieved performance
+    target_p95_ms: 370      # 5% improvement target
+    matrix:
+      # NEW: Tokenization for RAG contexts
+      tokenization: [std, aggressive, byte_pair]
+      # NEW: Vector engine for RAG retrieval
+      vector_engine: [faiss, milvus]
+      # Enhanced fusion for RAG
+      fusion_weights: [[0.2, 0.6, 1.0], [0.5, 0.8, 1.0], [0.8, 1.0, 0.8]]
+      # RAG-specific candidate depths
+      candidate_depths: [400, 600, 800]
+      # Advanced reranking
+      reranker: [ce_small, ce_large, ce_multilingual]  # NEW: multilingual option
+      rerank_topk: [20, 25, 30]                       # Expanded from v2.2.1
+      # NEW: Context scoring methods
+      scoring_method: [z_norm, rrf_60, rag_specific]   # NEW: RAG-specific scoring
+      # Optimized from v2.2.1
+      batch_size_ce: [24, 32]                         # Best from v2.2.1
+      candidate_pruning: [enabled]
+      retrieval_k: [450, 600]                         # Best from v2.2.1
+      graph_expand_hops: [1, 2]                       # Explore 2-hop
+      graph_added_tokens_cap: [500, 768, 1024]        # Expanded capacity
+      chunk_len: [512, 640]                           # Best from v2.2.1
+      rag_evidence_limit: [8, 10, 12]                 # Expanded evidence
+      # NEW: RAG intelligence features
+      rag_context_relevance_threshold: [0.6, 0.7, 0.8]
+      rag_answer_confidence_threshold: [0.8, 0.9]
+      rag_dynamic_context_expansion: [enabled, disabled]
+
+# Enhanced promotion gates for v2.2.2
+promotion_gates:
+  # Quality preservation (maintain or improve from v2.2.1)
+  quality_preservation_pct: ">= 98.8"     # Must match v2.2.1 average
+  pass_rate_core_min: ">= 0.867"          # Must match v2.2.1 best
+  answerable_at_k_min: ">= 0.742"         # Must match v2.2.1 best  
+  span_recall_min: ">= 0.567"             # Must match v2.2.1 best
+  recall_at_5_min: ">= baseline"          # NEW: Recall@5 preservation
+  extract_substring_pct: "== 100.0"       # Perfect substring extraction
+  ablation_sensitivity_drop_pct: ">= 10.0"
+  
+  # Performance improvement gates (≥1% Recall@5 OR ≥10% QT)
+  recall_at_5_improvement: ">= +1.0"      # NEW: 1% Recall@5 improvement
+  p95_improvement_pct: ">= +10.0"         # OR 10% latency improvement
+  improvement_logic: "recall_at_5_improvement OR p95_improvement_pct"
+  p95_regression_allowed: false
+  
+  # Statistical rigor requirements
+  sprt_accept: true
+  bootstrap_confidence: 0.95
+  holm_bonferroni_correction: true        # NEW: More stringent correction
+  sample_size_min: 150                   # Increased for statistical power
+
+# Enhanced statistical validation for v2.2.2
+statistical_validation:
+  bootstrap_samples: 12000               # Increased from 10k
+  sprt_alpha: 0.05
+  sprt_beta: 0.05  
+  sprt_delta: 0.025                      # Tighter effect size
+  counterfactual_rate: 0.03              # Increased validation
+  holm_bonferroni_correction: true       # NEW: Enhanced multiple testing
+  wilson_ci_proportions: true            # NEW: Wilson CIs for proportions
+  bootstrap_ci_continuous: true          # NEW: Bootstrap CIs for continuous
+
+# Expanded experiment matrix estimates
+experiment_estimates:
+  code.func.v2.2.2: ~4320     # 3*2*3*3*3*2*2*2*2*2*3*3*2*3 combinations
+  code.symbol.v2.2.2: ~2592   # 2*2*3*3*3*2*2*2*2*2*2*3*2*3 combinations  
+  code.routing.v2.2.2: ~3456  # 2*3*3*3*3*2*2*2*2*3*2*3*2 combinations
+  code.fusion.v2.2.2: ~2304   # 2*2*2*3*3*3*2*3*2*2*2*3*2 combinations
+  rag.code.qa.v2.2.2: ~5184   # 3*2*3*3*3*3*2*2*2*2*3*2*3*2 combinations
+  total_experiments: ~18856   # 66% increase from v2.2.1
+
+# Resource scaling for expanded matrix
+resource_limits:
+  max_experiment_time_hours: 36          # Extended for larger matrix
+  parallel_workers: 12                   # Increased parallelism
+  timeout_per_experiment_minutes: 20     # Slightly increased timeout
+  disk_space_gb: 150                     # Increased storage
+  memory_per_worker_gb: 20               # Increased memory per worker
+  
+# NEW: Smoke test configuration for rapid filtering
+smoke_test:
+  enabled: true
+  sample_size: 50                        # 50-item smoke tests
+  filter_criteria: 
+    - "recall_at_5_improvement >= +1.0 OR p95_improvement_pct >= +10.0"
+  max_smoke_configs: 5000               # Limit smoke tests
+  smoke_timeout_minutes: 5               # Fast smoke test timeout
+  
+# NEW: Monitoring and drift detection
+monitoring:
+  drift_detection_enabled: true
+  baseline_comparison: "v2.2.1"
+  drift_alert_thresholds:
+    recall_at_5_drop_pct: 1.5
+    p95_increase_pct: 10.0
+    quality_drop_pct: 2.0
+  monitoring_frequency_hours: 4

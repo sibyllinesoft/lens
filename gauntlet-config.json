@@ -1,0 +1,47 @@
+{
+  "description": "Production readiness gauntlet configuration for ML deployment validation",
+  "version": "1.0.0",
+  "sprt": {
+    "alpha": 0.05,
+    "beta": 0.05,
+    "baseline_p0": 0.90,
+    "min_detectable_delta": 0.03
+  },
+  "slo": {
+    "pass_rate_core_min": 0.95,
+    "answerable_at_k_min": 0.85,
+    "span_recall_min": 0.80,
+    "p95_latency_max_ms": 200,
+    "error_budget_window_days": 28,
+    "burn_rate_threshold": 1.0,
+    "consecutive_burn_minutes": 30
+  },
+  "chaos_tests": {
+    "vector_db_timeout_seconds": 30,
+    "index_corruption_recovery_seconds": 60,
+    "llm_outage_graceful_degrade": true,
+    "memory_pressure_threshold_mb": 512
+  },
+  "dr_requirements": {
+    "rpo_max_seconds": 900,
+    "rto_max_seconds": 1800,
+    "backup_retention_days": 30,
+    "restore_test_queries": 1000
+  },
+  "security_limits": {
+    "max_fanout_per_query": 100,
+    "rate_limit_per_minute": 60,
+    "repo_path_allowlist": ["src/", "lib/", "docs/"],
+    "ablation_endpoint_rate_limit": 10
+  },
+  "observability": {
+    "required_dashboards": [
+      "slo_overview",
+      "canary_gates", 
+      "failure_taxonomy",
+      "performance_trends"
+    ],
+    "min_ablation_sensitivity": 0.10,
+    "failure_taxonomy_categories": 5
+  }
+}

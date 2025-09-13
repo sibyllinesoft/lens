@@ -1,0 +1,196 @@
+release: v2.2.0
+fingerprint: "algo-sprint-20250913T150000Z"
+description: "Comprehensive algorithmic optimization sprint - Advanced chunking, symbol boosting, fusion methods, query routing"
+
+# Enhanced safety gates for algorithmic experiments
+safety_gates:
+  composite_improvement_pct: ">= +2.0"       # Higher threshold for algo changes
+  p95_regression_pct: "<= +5.0"              # Tighter latency control
+  quality_preservation_pct: ">= 98.0"        # Higher quality bar
+  extract_substring_pct: "== 100.0"          # Perfect substring extraction
+  sanity_pass_rate_core_pct: ">= 85.0"       # Maintain sanity
+  ablation_sensitivity_min: ">= 10.0"        # Strong evidence requirement
+
+budgets:
+  code_search_p95_ms: 200                    # Baseline budget
+  rag_p95_ms: 350                           # RAG budget
+  symbol_graph_p95_ms: 250                   # Symbol-enhanced budget
+  cross_encoder_p95_ms: 400                  # Cross-encoder budget
+
+metrics: 
+  - pass_rate_core
+  - answerable_at_k 
+  - span_recall
+  - ndcg_10
+  - mrr_10
+  - success_1
+  - p95_latency_ms
+  - cost_per_query
+  - extract_substring_rate
+  - ablation_sensitivity_drop
+  - symbol_coverage
+  - graph_expansion_hits
+  - fusion_gain
+  - router_accuracy
+
+# Advanced algorithmic scenarios
+scenarios:
+  # Advanced chunking strategies
+  - name: code.func.chunking_v2
+    description: "Advanced code chunking with AST boundaries and dynamic overlap"
+    matrix:
+      chunking_method: [code_units_v2_boundaries, fn_scope, hybrid_ast]
+      overlap_strategy: [static_20pct, dynamic_ast, semantic_boundary]
+      chunk_size_tokens: [256, 512, 768]
+      k: [200, 300, 400]
+      z_sparse: [0.5, 0.6]
+      z_dense: [0.4, 0.5] 
+      z_symbol: [0.2, 0.3, 0.4]
+      reranker: [off, cross_encoder]
+      group_mode: [chunk, file]
+
+  # Symbol graph boosting experiments  
+  - name: code.symbol.graph_boost
+    description: "Symbol graph integration with LSIF/SCIP and call graph expansion"
+    matrix:
+      symbol_source: [lsif, scip, treesitter]
+      graph_expansion: [off, one_hop, two_hop]
+      symbol_boost_factor: [1.2, 1.5, 2.0]
+      call_graph_weight: [0.1, 0.2, 0.3]
+      def_ref_balance: [0.5, 0.6, 0.7]  # def vs ref weighting
+      k: [200, 300]
+      z_sparse: [0.4, 0.5]
+      z_dense: [0.3, 0.4] 
+      z_symbol: [0.4, 0.5, 0.6]
+      reranker: [off, on]
+
+  # Advanced fusion methods
+  - name: code.fusion.advanced
+    description: "Advanced fusion methods beyond basic RRF"
+    matrix:
+      fusion_method: [weighted_rrf, qsf, learned_fusion]
+      rrf_weights: [[1.0, 1.0, 1.0], [1.2, 1.0, 0.8], [0.8, 1.2, 1.0]]
+      qsf_alpha: [0.3, 0.5, 0.7]  # Query-score fusion mixing
+      z_score_normalization: [off, per_source, global]
+      k: [300, 400]
+      rrf_k0: [30, 60, 90]
+      z_sparse: [0.5]
+      z_dense: [0.4] 
+      z_symbol: [0.3]
+      reranker: [off, on]
+
+  # Query routing system
+  - name: code.routing.specialized  
+    description: "Query routing to specialized retrieval pipelines"
+    matrix:
+      router_type: [rule_based, learned, hybrid]
+      route_targets: [lexical, semantic, symbol, hybrid]
+      routing_confidence_threshold: [0.6, 0.7, 0.8]
+      fallback_strategy: [uniform_blend, weighted_cascade, ensemble]
+      k_per_route: [100, 150, 200]
+      final_k: [300, 400]
+      reranker: [off, cross_encoder]
+      
+  # Cross-encoder and graph expansion for RAG
+  - name: rag.code.advanced
+    description: "RAG with cross-encoder reranking and graph expansion" 
+    matrix:
+      initial_retrieval_k: [400, 600, 800]
+      cross_encoder_k: [50, 100, 150]
+      graph_expand_mode: [off, file_neighbors, symbol_neighbors, both]
+      expand_hops: [1, 2]
+      expand_weight_decay: [0.7, 0.8, 0.9]
+      final_context_k: [20, 30, 40]
+      z_sparse: [0.5]
+      z_dense: [0.5]
+      z_symbol: [0.2, 0.3]
+      reranker: [cross_encoder]
+      group_mode: [chunk, file]
+
+# Promotion gates and thresholds
+promotion_gates:
+  composite_improvement_pct: ">= +2.0"
+  p95_regression_pct: "<= +5.0" 
+  quality_preservation_pct: ">= 98.0"
+  ablation_sensitivity_drop_pct: ">= 10.0"
+  sanity_pass_rate_core_pct: ">= 85.0"
+  extract_substring_pct: "== 100.0"
+  symbol_coverage_min: ">= 70.0"          # Symbol index coverage
+  graph_expansion_gain_min: ">= 5.0"       # Graph expansion effectiveness
+  fusion_gain_min: ">= 3.0"               # Fusion improvement over individual
+  router_accuracy_min: ">= 80.0"          # Query routing accuracy
+
+# Statistical rigor configuration
+statistical_config:
+  bootstrap_samples: 10000                 # Bootstrap confidence intervals
+  sprt_alpha: 0.05                        # Type I error rate
+  sprt_beta: 0.05                         # Type II error rate  
+  sprt_delta: 0.03                        # Minimum detectable effect
+  confidence_level: 0.95                  # CI confidence level
+  multiple_testing_correction: bonferroni  # Control family-wise error
+
+# Reporting configuration
+reporting:
+  out_dir: "reports/{{YYYY-MM-DD_HHMMSS}}_v{{VERSION}}/"
+  structure_version: "2.0"
+  use_timestamped_subfolders: true
+  make_pdf: true
+  make_html: true
+  make_marketing_deck: true
+  create_index: true
+  backward_compatibility: true
+  integrity_verification: true             # SHA256 manifest generation
+  
+  # Multi-audience reporting requirements mapped to new structure
+  audiences:
+    executive:
+      format: pdf
+      focus: [kpi_dashboard, traffic_lights, roi_analysis]
+      max_pages: 2
+      subfolder: "executive"
+      files: ["one_pager.pdf", "kpi_dashboard.html", "summary_metrics.json"]
+    marketing: 
+      format: pdf
+      focus: [big_numbers, competitive_advantage, customer_impact]
+      slides: 8
+      subfolder: "marketing"
+      files: ["presentation_deck.pdf", "performance_highlights.html", "competitive_analysis.pdf"]
+    technical:
+      format: html
+      focus: [implementation_details, statistical_analysis, ablation_studies]
+      include_code: true
+      subfolder: "technical"
+      files: ["detailed_brief.html", "algorithmic_analysis.html", "implementation_guide.html"]
+    operational:
+      subfolder: "operational"
+      files: ["promotion_decisions.json", "algo_deployment_manifest.json", "performance_delta.json"]
+
+# Algorithm implementation modules to create
+implementation_modules:
+  chunking:
+    module: "chunking/code_chunkers.py"
+    classes: [CodeUnitsV2Chunker, FnScopeChunker, HybridASTChunker]
+    
+  symbol_graph:
+    module: "indexing/build_symbol_graph.py" 
+    classes: [LSIFGraphBuilder, SCIPGraphBuilder, CallGraphExpander]
+    
+  fusion:
+    module: "retrieval/fusion_methods.py"
+    classes: [WeightedRRFFusion, QSFFusion, LearnedFusion]
+    
+  routing:
+    module: "routers/train_query_router.py"
+    classes: [RuleBasedRouter, LearnedRouter, HybridRouter]
+    
+  reranking:
+    module: "ltr/offline_train_ltr.py"
+    classes: [CrossEncoderReranker, GraphExpandReranker]
+
+# Version control and integrity
+integrity:
+  version: "2.2.0"
+  algorithm_focus: true
+  pointer_extract_substring: 100.0         # Non-negotiable requirement
+  strict_live_execution: true              # No mocks allowed
+  sha256_verification: true                # Full integrity chain

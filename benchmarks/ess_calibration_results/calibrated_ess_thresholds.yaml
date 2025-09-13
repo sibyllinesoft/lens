@@ -1,0 +1,39 @@
+calibration_metadata:
+  calibration_date: /home/nathan/Projects/lens/benchmarks
+  calibration_quality:
+    explain:
+      balanced_accuracy: 1.0
+      samples: 8
+    extract:
+      balanced_accuracy: 1.0
+      samples: 8
+    locate:
+      balanced_accuracy: 1.0
+      samples: 8
+  total_labeled_samples: 24
+ess_thresholds:
+  explain: !!python/object/apply:numpy.core.multiarray.scalar
+  - &id001 !!python/object/apply:numpy.dtype
+    args:
+    - f8
+    - false
+    - true
+    state: !!python/tuple
+    - 3
+    - <
+    - null
+    - null
+    - null
+    - -1
+    - -1
+    - 0
+  - !!binary |
+    pHA9Ctej0D8=
+  extract: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    7FG4HoXr4T8=
+  locate: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    NDMzMzMzwz8=

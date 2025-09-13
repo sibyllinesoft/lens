@@ -1,0 +1,626 @@
+{
+  "system": "bm25+rm3",
+  "benchmark": "msmarco_dev",
+  "run_id": "2beefea8-3924-4917-93e1-36e49a32f9c1",
+  "configuration": {
+    "id": "bm25+rm3",
+    "name": "BM25+RM3",
+    "impl": "elasticsearch_prf",
+    "required": false,
+    "frozen": false,
+    "params": {
+      "fb_docs": 10,
+      "fb_terms": 20
+    },
+    "api_key_env": null,
+    "endpoint_url": null,
+    "availability_checks": [],
+    "on_unavailable": {
+      "action": "quarantine_row",
+      "emit_placeholder_metrics": false
+    }
+  },
+  "results": [
+    {
+      "query_id": "msmarco_dev_q000",
+      "ndcg_10": 0.43502219036824497,
+      "recall_50": 0.519787296299841,
+      "latency_ms": 92.84654164199438,
+      "jaccard_10": 0.5680705164431015,
+      "aece": 0.008810119299720764,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q001",
+      "ndcg_10": 0.27560831700682253,
+      "recall_50": 0.4150091251049128,
+      "latency_ms": 85.52138471081453,
+      "jaccard_10": 0.729997388451473,
+      "aece": 0.02944932133844866,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q002",
+      "ndcg_10": 0.39596446497236765,
+      "recall_50": 0.5624854418264091,
+      "latency_ms": 115.0200412908559,
+      "jaccard_10": 0.4956671752334842,
+      "aece": 0.03077340804286567,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q003",
+      "ndcg_10": 0.3163483235135802,
+      "recall_50": 0.48908393136511885,
+      "latency_ms": 104.28528494507543,
+      "jaccard_10": 0.8549126420530724,
+      "aece": 0.015859151089695985,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q004",
+      "ndcg_10": 0.3772631699638145,
+      "recall_50": 0.5819131726223348,
+      "latency_ms": 97.85372907683922,
+      "jaccard_10": 1.0,
+      "aece": 0.04006195072990943,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q005",
+      "ndcg_10": 0.25297202262622104,
+      "recall_50": 0.33675639167293603,
+      "latency_ms": 75.26010852072372,
+      "jaccard_10": 0.7830729467238866,
+      "aece": 0.011789443692371759,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q006",
+      "ndcg_10": 0.19067303529699717,
+      "recall_50": 0.25703185758662983,
+      "latency_ms": 75.08707960855791,
+      "jaccard_10": 0.670573629008629,
+      "aece": 0.05212410225466429,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q007",
+      "ndcg_10": 0.3682556343990238,
+      "recall_50": 0.4833979668178542,
+      "latency_ms": 123.88066051526722,
+      "jaccard_10": 0.5933128193418664,
+      "aece": 0.022917813326644706,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q008",
+      "ndcg_10": 0.3095478393113507,
+      "recall_50": 0.4202429792092808,
+      "latency_ms": 77.7011961301805,
+      "jaccard_10": 0.6816696428399729,
+      "aece": 0.03827811914795948,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q009",
+      "ndcg_10": 0.2964161784756856,
+      "recall_50": 0.46150745226042406,
+      "latency_ms": 99.39452319312576,
+      "jaccard_10": 0.9692073477793302,
+      "aece": 0.03512584893555736,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q010",
+      "ndcg_10": 0.6516237799856466,
+      "recall_50": 0.7071954874095793,
+      "latency_ms": 82.67035981986247,
+      "jaccard_10": 0.6902398944861375,
+      "aece": 0.07707584099964952,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q011",
+      "ndcg_10": 0.17998987624516927,
+      "recall_50": 0.26638028348351783,
+      "latency_ms": 78.30287761467596,
+      "jaccard_10": 0.4204802739259307,
+      "aece": 0.007319009363863448,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q012",
+      "ndcg_10": 0.28376418924673763,
+      "recall_50": 0.481567190781937,
+      "latency_ms": 90.83719705419955,
+      "jaccard_10": 0.6592356601311711,
+      "aece": 0.0851887778656931,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q013",
+      "ndcg_10": 0.32742861246967286,
+      "recall_50": 0.42072441673806477,
+      "latency_ms": 123.54827879996988,
+      "jaccard_10": 0.7564663116244503,
+      "aece": 0.013416766704345997,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q014",
+      "ndcg_10": 0.4837701239511889,
+      "recall_50": 0.6593891103840144,
+      "latency_ms": 73.15855366868456,
+      "jaccard_10": 0.6872422171886351,
+      "aece": 0.06129520586287681,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q015",
+      "ndcg_10": 0.15940509090443977,
+      "recall_50": 0.24814060262342058,
+      "latency_ms": 83.20390622930772,
+      "jaccard_10": 0.5412971927558785,
+      "aece": 0.02797727317073095,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q016",
+      "ndcg_10": 0.22019241635578657,
+      "recall_50": 0.33183555235703893,
+      "latency_ms": 68.5042411701385,
+      "jaccard_10": 0.5920797213977143,
+      "aece": 0.038323605446494255,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q017",
+      "ndcg_10": 0.4672710314681616,
+      "recall_50": 0.6663279718522099,
+      "latency_ms": 69.27439948111608,
+      "jaccard_10": 0.6734587636698344,
+      "aece": 0.042984581154063575,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q018",
+      "ndcg_10": 0.4202389892040535,
+      "recall_50": 0.49543501276988605,
+      "latency_ms": 122.92603816586356,
+      "jaccard_10": 0.7465564481096088,
+      "aece": 0.17050219876619543,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q019",
+      "ndcg_10": 0.4393932791920159,
+      "recall_50": 0.5228773270867483,
+      "latency_ms": 67.1821442261452,
+      "jaccard_10": 0.6449720444658159,
+      "aece": 0.011970482161441134,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q020",
+      "ndcg_10": 0.3404755699182367,
+      "recall_50": 0.4615332685578047,
+      "latency_ms": 107.11994856799372,
+      "jaccard_10": 0.7394017389031718,
+      "aece": 0.04205162676774236,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q021",
+      "ndcg_10": 0.5443747152816669,
+      "recall_50": 0.7327210917341891,
+      "latency_ms": 79.56302836057706,
+      "jaccard_10": 0.7145794745450578,
+      "aece": 0.014398518652066187,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q022",
+      "ndcg_10": 0.28281876184958427,
+      "recall_50": 0.41330521075729754,
+      "latency_ms": 76.8657896034971,
+      "jaccard_10": 0.6448345631995192,
+      "aece": 0.022713837898965538,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q023",
+      "ndcg_10": 0.16432601068113964,
+      "recall_50": 0.3282027305556723,
+      "latency_ms": 81.43826971631148,
+      "jaccard_10": 0.567624755044729,
+      "aece": 0.02560747170839783,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q024",
+      "ndcg_10": 0.38192027997230915,
+      "recall_50": 0.4597639876613195,
+      "latency_ms": 79.96223049897786,
+      "jaccard_10": 0.5921080692494938,
+      "aece": 0.005385897417930463,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q025",
+      "ndcg_10": 0.42495704135707496,
+      "recall_50": 0.4902610201818966,
+      "latency_ms": 93.67744531602543,
+      "jaccard_10": 0.5537385155973465,
+      "aece": 0.03615849685178401,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q026",
+      "ndcg_10": 0.16193823969091975,
+      "recall_50": 0.38445569233567467,
+      "latency_ms": 68.11835790125002,
+      "jaccard_10": 0.6228783306882633,
+      "aece": 0.02515635657408966,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q027",
+      "ndcg_10": 0.29321397914765174,
+      "recall_50": 0.4607002721671942,
+      "latency_ms": 133.2231242467185,
+      "jaccard_10": 0.6906686029779354,
+      "aece": 0.05229264514026325,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q028",
+      "ndcg_10": 0.24134842174361298,
+      "recall_50": 0.3832707885057763,
+      "latency_ms": 78.2829310487549,
+      "jaccard_10": 0.42170834332738916,
+      "aece": 0.030269576548804876,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "msmarco_dev_q029",
+      "ndcg_10": 0.37528470838243577,
+      "recall_50": 0.5408116063104866,
+      "latency_ms": 93.30592631158432,
+      "jaccard_10": 0.5826522118667979,
+      "aece": 0.021491333245324037,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    }
+  ],
+  "generated_at": 1757718966.11962
+}

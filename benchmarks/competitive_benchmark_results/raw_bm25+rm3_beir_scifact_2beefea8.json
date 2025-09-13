@@ -1,0 +1,926 @@
+{
+  "system": "bm25+rm3",
+  "benchmark": "beir_scifact",
+  "run_id": "2beefea8-3924-4917-93e1-36e49a32f9c1",
+  "configuration": {
+    "id": "bm25+rm3",
+    "name": "BM25+RM3",
+    "impl": "elasticsearch_prf",
+    "required": false,
+    "frozen": false,
+    "params": {
+      "fb_docs": 10,
+      "fb_terms": 20
+    },
+    "api_key_env": null,
+    "endpoint_url": null,
+    "availability_checks": [],
+    "on_unavailable": {
+      "action": "quarantine_row",
+      "emit_placeholder_metrics": false
+    }
+  },
+  "results": [
+    {
+      "query_id": "beir_scifact_q000",
+      "ndcg_10": 0.25587481019093794,
+      "recall_50": 0.3107963634134796,
+      "latency_ms": 71.88694166239729,
+      "jaccard_10": 0.6582953642844576,
+      "aece": 0.029955198787996275,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q001",
+      "ndcg_10": 0.07381783924250895,
+      "recall_50": 0.2474426797456401,
+      "latency_ms": 77.85236853703962,
+      "jaccard_10": 0.7598621319501552,
+      "aece": 0.021267968361008683,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q002",
+      "ndcg_10": 0.1487146088784154,
+      "recall_50": 0.2695046339909226,
+      "latency_ms": 72.54639381845357,
+      "jaccard_10": 0.6342066262446612,
+      "aece": 0.02343955861179765,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q003",
+      "ndcg_10": 0.3626528503011636,
+      "recall_50": 0.4761014234402967,
+      "latency_ms": 83.633661200426,
+      "jaccard_10": 0.5339080658622627,
+      "aece": 0.060773872074063186,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q004",
+      "ndcg_10": 0.5619574530862034,
+      "recall_50": 0.7649998493150336,
+      "latency_ms": 100.07345575130307,
+      "jaccard_10": 0.7444529973420349,
+      "aece": 0.01825490108274666,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q005",
+      "ndcg_10": 0.42398883659839104,
+      "recall_50": 0.5743089878867834,
+      "latency_ms": 71.96825797635083,
+      "jaccard_10": 0.5680521281473059,
+      "aece": 0.05200052227305977,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q006",
+      "ndcg_10": 0.7152372333909351,
+      "recall_50": 0.9312987679357303,
+      "latency_ms": 74.83306274710719,
+      "jaccard_10": 0.7194105267694313,
+      "aece": 0.03347143475456725,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q007",
+      "ndcg_10": 0.3241235117463059,
+      "recall_50": 0.44477912551046733,
+      "latency_ms": 97.70564555749377,
+      "jaccard_10": 0.5688173599080054,
+      "aece": 0.02039861760334259,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q008",
+      "ndcg_10": 0.24081575996884164,
+      "recall_50": 0.3497890077341777,
+      "latency_ms": 102.30712793687294,
+      "jaccard_10": 0.8095232967996273,
+      "aece": 0.05104055783775252,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q009",
+      "ndcg_10": 0.20895535727393993,
+      "recall_50": 0.2846662523771295,
+      "latency_ms": 86.59885067841343,
+      "jaccard_10": 0.7076921836535275,
+      "aece": 0.14936817116974335,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q010",
+      "ndcg_10": 0.1583413612894288,
+      "recall_50": 0.2936773557983625,
+      "latency_ms": 91.21141618266881,
+      "jaccard_10": 0.5760613892984809,
+      "aece": 0.047319654147415985,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q011",
+      "ndcg_10": 0.46534451477014604,
+      "recall_50": 0.5392870187337553,
+      "latency_ms": 89.47306177969953,
+      "jaccard_10": 0.7181212902604487,
+      "aece": 0.02733546363098352,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q012",
+      "ndcg_10": 0.38316904550707004,
+      "recall_50": 0.4796086389934256,
+      "latency_ms": 74.12154136288667,
+      "jaccard_10": 0.6353687142518225,
+      "aece": 0.025472439518996196,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q013",
+      "ndcg_10": 0.30692755567793306,
+      "recall_50": 0.549040153061827,
+      "latency_ms": 77.22114045933132,
+      "jaccard_10": 0.795946619033338,
+      "aece": 0.04985642877236213,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q014",
+      "ndcg_10": 0.14501636479833876,
+      "recall_50": 0.37181693980663577,
+      "latency_ms": 96.58465324217076,
+      "jaccard_10": 0.7273717900506634,
+      "aece": 0.04502323794437667,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q015",
+      "ndcg_10": 0.4028412911906096,
+      "recall_50": 0.6455313644141847,
+      "latency_ms": 98.52080269424903,
+      "jaccard_10": 0.6035677801214749,
+      "aece": 0.0056914537583562875,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q016",
+      "ndcg_10": 0.14191916516018552,
+      "recall_50": 0.333048485154515,
+      "latency_ms": 80.58618379525142,
+      "jaccard_10": 0.7054616570400338,
+      "aece": 0.04116556761961283,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q017",
+      "ndcg_10": 0.39202482484228063,
+      "recall_50": 0.5284584588474085,
+      "latency_ms": 69.32100450037132,
+      "jaccard_10": 0.760122041343252,
+      "aece": 0.03867574144002117,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q018",
+      "ndcg_10": 0.12176462049003278,
+      "recall_50": 0.2518243129681227,
+      "latency_ms": 73.491164555418,
+      "jaccard_10": 0.6426593643999949,
+      "aece": 0.015308758443814111,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q019",
+      "ndcg_10": 0.6202891010134259,
+      "recall_50": 0.6967084436161969,
+      "latency_ms": 67.23640319035088,
+      "jaccard_10": 0.6161421274010457,
+      "aece": 0.0039679372552403665,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q020",
+      "ndcg_10": 0.4007995971079379,
+      "recall_50": 0.5510106496889411,
+      "latency_ms": 67.69523690440668,
+      "jaccard_10": 0.6166557758657265,
+      "aece": 0.045942727728667414,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q021",
+      "ndcg_10": 0.21953366042762723,
+      "recall_50": 0.39485718356174504,
+      "latency_ms": 80.18724253201643,
+      "jaccard_10": 0.5720705718964687,
+      "aece": 0.03716509357589123,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q022",
+      "ndcg_10": 0.3462767432516858,
+      "recall_50": 0.4183392449091505,
+      "latency_ms": 89.11042328350263,
+      "jaccard_10": 0.8410166697936661,
+      "aece": 0.02396182804996762,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q023",
+      "ndcg_10": 0.38098245688598814,
+      "recall_50": 0.5969687199383279,
+      "latency_ms": 119.31899625162242,
+      "jaccard_10": 0.9688826554096519,
+      "aece": 0.0317671671124389,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q024",
+      "ndcg_10": 0.6296337555185145,
+      "recall_50": 0.8703764210694271,
+      "latency_ms": 72.48750005118973,
+      "jaccard_10": 0.5679684137552787,
+      "aece": 0.03147406798174389,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q025",
+      "ndcg_10": 0.2254947823587793,
+      "recall_50": 0.4414533687342454,
+      "latency_ms": 107.98851115486099,
+      "jaccard_10": 0.7601968560824125,
+      "aece": 0.03178476923069228,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q026",
+      "ndcg_10": 0.33757729598527586,
+      "recall_50": 0.45642974764929695,
+      "latency_ms": 72.91211506296108,
+      "jaccard_10": 0.6695204434358305,
+      "aece": 0.023210751754788324,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q027",
+      "ndcg_10": 0.35268536124681826,
+      "recall_50": 0.42711011030787716,
+      "latency_ms": 72.57050774711496,
+      "jaccard_10": 0.5949863964702087,
+      "aece": 0.022076478202304226,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q028",
+      "ndcg_10": 0.4806014139899055,
+      "recall_50": 0.5846151661405602,
+      "latency_ms": 93.73686676635924,
+      "jaccard_10": 0.7121383473175967,
+      "aece": 0.025155831000967074,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q029",
+      "ndcg_10": 0.35454620117607916,
+      "recall_50": 0.43722529623188633,
+      "latency_ms": 73.79901149410293,
+      "jaccard_10": 0.6453179019689335,
+      "aece": 0.014809966068684052,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q030",
+      "ndcg_10": 0.6549633138444844,
+      "recall_50": 0.8068022215967031,
+      "latency_ms": 81.39694895806144,
+      "jaccard_10": 0.5605794804734229,
+      "aece": 0.04359265865025012,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q031",
+      "ndcg_10": 0.21966653439428022,
+      "recall_50": 0.32131879690120135,
+      "latency_ms": 68.56721901103342,
+      "jaccard_10": 0.5632413632953758,
+      "aece": 0.008044716079340377,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q032",
+      "ndcg_10": 0.25948235800921915,
+      "recall_50": 0.3738872056153336,
+      "latency_ms": 73.03461010846185,
+      "jaccard_10": 0.7368206181952205,
+      "aece": 0.04705176214539729,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q033",
+      "ndcg_10": 0.12443984690811763,
+      "recall_50": 0.21168535272359046,
+      "latency_ms": 69.91988334279195,
+      "jaccard_10": 0.5728169287713437,
+      "aece": 0.012620003161427933,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q034",
+      "ndcg_10": 0.3753622478459907,
+      "recall_50": 0.4594773849551758,
+      "latency_ms": 73.40326890591109,
+      "jaccard_10": 0.6401644741330057,
+      "aece": 0.008577726470850637,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q035",
+      "ndcg_10": 0.4285804012178953,
+      "recall_50": 0.6464541135318249,
+      "latency_ms": 81.75400683170801,
+      "jaccard_10": 0.7858129278070559,
+      "aece": 0.013154923933150214,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q036",
+      "ndcg_10": 0.47643715633631667,
+      "recall_50": 0.7183738754888487,
+      "latency_ms": 73.68945796118344,
+      "jaccard_10": 0.6898967523114335,
+      "aece": 0.08639606554193187,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q037",
+      "ndcg_10": 0.08060259095972072,
+      "recall_50": 0.20149524890604226,
+      "latency_ms": 81.68563122888114,
+      "jaccard_10": 0.6941264134786215,
+      "aece": 0.032006291163526525,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q038",
+      "ndcg_10": 0.11200479196789634,
+      "recall_50": 0.1780930784886668,
+      "latency_ms": 79.5736876257497,
+      "jaccard_10": 0.5080002025895991,
+      "aece": 0.037542161739768404,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q039",
+      "ndcg_10": 0.09152269601455618,
+      "recall_50": 0.23635691541803253,
+      "latency_ms": 67.55311840034265,
+      "jaccard_10": 0.8096362539163936,
+      "aece": 0.04354508289002191,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q040",
+      "ndcg_10": 0.22689742659782025,
+      "recall_50": 0.45932527580686294,
+      "latency_ms": 67.53421559574159,
+      "jaccard_10": 0.7942393023232834,
+      "aece": 0.0107017713076512,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q041",
+      "ndcg_10": 0.49629843049775324,
+      "recall_50": 0.7179264202064581,
+      "latency_ms": 84.5492886632155,
+      "jaccard_10": 0.7520616805601444,
+      "aece": 0.009698661299703816,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q042",
+      "ndcg_10": 0.3292966729646276,
+      "recall_50": 0.4559494178197613,
+      "latency_ms": 76.5958918283747,
+      "jaccard_10": 0.8061393866716755,
+      "aece": 0.026754898225545217,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q043",
+      "ndcg_10": 0.22229707218670547,
+      "recall_50": 0.38357721464920236,
+      "latency_ms": 80.65929949084997,
+      "jaccard_10": 0.8524741042463788,
+      "aece": 0.05662417088882815,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    },
+    {
+      "query_id": "beir_scifact_q044",
+      "ndcg_10": 0.08773837505240026,
+      "recall_50": 0.17117824615221056,
+      "latency_ms": 72.64037812593074,
+      "jaccard_10": 0.70038055471087,
+      "aece": 0.017249138134441268,
+      "retrieved_docs": [
+        "doc_0",
+        "doc_1",
+        "doc_2",
+        "doc_3",
+        "doc_4",
+        "doc_5",
+        "doc_6",
+        "doc_7",
+        "doc_8",
+        "doc_9"
+      ]
+    }
+  ],
+  "generated_at": 1757718966.1157942
+}
