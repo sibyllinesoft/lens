@@ -1,13 +1,15 @@
 [package]
 name = "lens-core"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 authors = ["Nathan Rice <nathan.alexander.rice@gmail.com>"]
-description = "High-performance code search engine with LSP integration and benchmarking"
+description = "Production-ready code search engine with hero-aligned defaults, LSP integration, and validated performance parity"
 license = "MIT"
 repository = "https://github.com/sibyllinesoft/lens"
 homepage = "https://github.com/sibyllinesoft/lens"
 documentation = "https://docs.rs/lens-core"
+keywords = ["search", "code-search", "lsp", "rust", "lens"]
+categories = ["algorithms", "command-line-utilities", "development-tools"]
 exclude = [
     "reports/",
     "benchmarks/",
@@ -191,6 +193,11 @@ tracing-test = "0.2"
 [[bin]]
 name = "lens"
 path = "src/main.rs"
+
+# Hero validation binary
+[[bin]]
+name = "hero_validation_runner"
+path = "src/bin/hero_validation_runner.rs"
 
 # Temporarily disabled while fixing compilation issues
 # [[bin]]

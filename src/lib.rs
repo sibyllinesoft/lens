@@ -48,6 +48,13 @@ pub mod search;
 pub mod semantic;
 pub mod server;
 
+// Hero validation module for end-to-end validation
+pub mod hero_validation;
+
+// Test modules for comprehensive testing
+#[cfg(test)]
+pub mod tests;
+
 use anyhow::Result;
 
 // Build-time information for anti-fraud
@@ -125,23 +132,9 @@ impl Default for LensConfig {
 }
 
 #[cfg(test)]
-mod tests {
+mod extra_tests {
     use super::*;
     use std::env;
-
-    #[tokio::test]
-    async fn test_lens_config_default() {
-        let config = LensConfig::default();
-        
-        assert_eq!(config.server_port, 50051);
-        assert_eq!(config.index_path, "./index");
-        assert!(config.lsp_enabled);
-        assert_eq!(config.cache_ttl_hours, 24);
-        assert_eq!(config.max_results, 50);
-        assert_eq!(config.performance_target_ms, 150);
-        assert!(config.attestation_enabled);
-        assert!(config.enable_pinned_datasets);
-    }
 
     #[test]
     fn test_lens_config_clone() {

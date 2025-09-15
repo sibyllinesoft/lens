@@ -29,16 +29,30 @@ fi
 echo "✅ Manifest signature verified"
 
 # Verify rollback image availability
+echo "🔧 DEBUG: Checking baseline image: $BASELINE_IMAGE"
 if ! docker inspect "$BASELINE_IMAGE" &>/dev/null; then
-    echo "❌ ABORT: Baseline rollback image not available"
-    exit 1
+    echo "❌ First attempt failed, retrying Docker inspect for: $BASELINE_IMAGE"
+    sleep 2
+    if ! docker inspect "$BASELINE_IMAGE" &>/dev/null; then
+        echo "❌ ABORT: Baseline rollback image not available"
+        echo "🔧 DEBUG: Available Docker images:"
+        docker images | grep lens-production || echo "No lens-production images found"
+        exit 1
+    fi
 fi
 echo "✅ Rollback image confirmed available"
 
 # Verify candidate image readiness
+echo "🔧 DEBUG: Checking candidate image: $CANDIDATE_IMAGE"
 if ! docker inspect "$CANDIDATE_IMAGE" &>/dev/null; then
-    echo "❌ ABORT: Candidate image not found"
-    exit 1
+    echo "❌ First attempt failed, retrying Docker inspect for: $CANDIDATE_IMAGE"
+    sleep 2
+    if ! docker inspect "$CANDIDATE_IMAGE" &>/dev/null; then
+        echo "❌ ABORT: Candidate image not found"
+        echo "🔧 DEBUG: Available Docker images:"
+        docker images | grep lens-production || echo "No lens-production images found"
+        exit 1
+    fi
 fi
 echo "✅ Candidate image confirmed ready"
 

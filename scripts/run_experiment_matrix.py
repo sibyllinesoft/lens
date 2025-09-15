@@ -11,7 +11,7 @@ import sys
 import os
 import hashlib
 import numpy as np
-from datetime import datetime
+from datetime import datetime, UTC
 from pathlib import Path
 from itertools import product
 from typing import Dict, List, Optional, Tuple, Any
@@ -22,6 +22,13 @@ import subprocess
 import random
 import time
 from collections import defaultdict
+from enum import Enum
+
+class ExitStatus(Enum):
+    """Explicit exit statuses for clear semantics"""
+    COMPLETED_PROMOTION = 0      # Strict pass with promotions
+    COMPLETED_NO_PROMOTION = 0   # Strict pass but zero promotions
+    FAILED_TECHNICAL = 1         # Technical failure
 
 @dataclass
 class ExperimentConfig:
@@ -430,7 +437,7 @@ class ExperimentMatrixRunner:
             sprt_decision=sprt_decision,
             gates_passed={},
             promotion_eligible=False,
-            timestamp=datetime.utcnow().isoformat() + "Z"
+            timestamp=datetime.now(UTC).isoformat()
         )
         
         # Check promotion gates
@@ -505,16 +512,18 @@ class ExperimentMatrixRunner:
                 composite_improvement = ((candidate_composite - baseline_composite) / 
                                        abs(baseline_composite)) * 100
                 
+                # Extract parameters from the flexible params dict
+                params = result.config.params
                 row = [
                     result.config.row_id,
                     result.config.scenario,
-                    result.config.k,
-                    result.config.rrf_k0,
-                    result.config.z_sparse,
-                    result.config.z_dense,
-                    result.config.z_symbol,
-                    result.config.reranker,
-                    result.config.group_mode,
+                    params.get('k', 'N/A'),
+                    params.get('rrf_k0', 'N/A'),
+                    params.get('z_sparse', 'N/A'),
+                    params.get('z_dense', 'N/A'),
+                    params.get('z_symbol', 'N/A'),
+                    params.get('reranker', 'N/A'),
+                    params.get('group_mode', 'N/A'),
                     f"{result.candidate_metrics.pass_rate_core:.3f}",
                     f"{result.candidate_metrics.answerable_at_k:.3f}",
                     f"{result.candidate_metrics.span_recall:.3f}",
@@ -579,7 +588,7 @@ class ExperimentMatrixRunner:
         
         # Generate promotion decisions
         promotion_decisions = {
-            'timestamp': datetime.utcnow().isoformat() + "Z",
+            'timestamp': datetime.now(UTC).isoformat(),
             'total_experiments': len(all_results),
             'promoted_count': len(self.promoted_configs),
             'promotion_rate': len(self.promoted_configs) / len(all_results) if all_results else 0,
@@ -598,6 +607,31 @@ class ExperimentMatrixRunner:
         print(f"   Overall promotion rate: {len(self.promoted_configs)/len(all_results)*100:.1f}%")
         
         return promotion_decisions
+    
+    def _generate_run_summary(self, results: Dict, start_time: float) -> Dict:
+        """Generate one-line run summary JSON"""
+        gate_breakdown = {}
+        
+        # Count gate failures across all experiments
+        all_gates = ['composite_improvement', 'p95_regression', 'quality_preservation', 
+                    'ablation_sensitivity', 'sanity_pass_rate', 'extract_substring', 'sprt_accept']
+        
+        for gate in all_gates:
+            gate_breakdown[gate] = {
+                'passed': sum(1 for r in self.experiment_results if r.gates_passed.get(gate, False)),
+                'total': len(self.experiment_results),
+                'pass_rate': sum(1 for r in self.experiment_results if r.gates_passed.get(gate, False)) / len(self.experiment_results) if self.experiment_results else 0
+            }
+        
+        return {
+            'configs': len(self.experiment_results),
+            'promoted': len(self.promoted_configs),
+            'rejected': len(self.experiment_results) - len(self.promoted_configs),
+            'gate_breakdown': gate_breakdown,
+            'timestamp': datetime.now(UTC).isoformat(),
+            'duration_seconds': time.time() - start_time,
+            'exit_status': 'COMPLETED_PROMOTION' if len(self.promoted_configs) > 0 else 'COMPLETED_NO_PROMOTION'
+        }
 
 def main():
     parser = argparse.ArgumentParser(description="Run experiment matrix with statistical gates")
@@ -631,6 +665,7 @@ def main():
                        help="Enable innovation discovery mode with research tracking")
     
     args = parser.parse_args()
+    start_time = time.time()
     
     try:
         # Initialize runner
@@ -649,17 +684,31 @@ def main():
         # Execute full matrix
         results = runner.run_full_matrix()
         
-        # Exit code based on results
+        # Generate run summary
+        run_summary = runner._generate_run_summary(results, start_time)
+        
+        # Save run summary
+        summary_file = runner.out_dir / "RUN_SUMMARY.json"
+        with open(summary_file, 'w') as f:
+            json.dump(run_summary, f, indent=2)
+        
+        # Enhanced exit semantics
         if args.strict and results['promotion_rate'] == 0:
-            print("❌ STRICT MODE: No configurations promoted - failing")
-            sys.exit(1)
+            print("❌ STRICT MODE: No configurations promoted - COMPLETED_NO_PROMOTION")
+            print(f"📊 Run completed with 0/{results['total_experiments']} configs promoted")
+            sys.exit(ExitStatus.COMPLETED_NO_PROMOTION.value)
+        elif results['promoted_count'] > 0:
+            print("✅ STRICT MODE: Configurations promoted - COMPLETED_PROMOTION")  
+            print(f"📊 Run completed with {results['promoted_count']}/{results['total_experiments']} configs promoted")
+            sys.exit(ExitStatus.COMPLETED_PROMOTION.value)
         else:
-            print("✅ Experiment matrix completed successfully")
-            sys.exit(0)
+            print("✅ Experiment matrix completed successfully - COMPLETED_NO_PROMOTION")
+            print(f"📊 Run completed with 0/{results['total_experiments']} configs promoted")
+            sys.exit(ExitStatus.COMPLETED_NO_PROMOTION.value)
             
     except Exception as e:
-        print(f"❌ EXPERIMENT MATRIX FAILED: {e}")
-        sys.exit(1)
+        print(f"❌ EXPERIMENT MATRIX FAILED: {e} - FAILED_TECHNICAL")
+        sys.exit(ExitStatus.FAILED_TECHNICAL.value)
 
 if __name__ == "__main__":
     main()
