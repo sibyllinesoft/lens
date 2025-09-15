@@ -34,7 +34,8 @@ pub mod attestation;
 pub mod baseline;
 pub mod benchmark;
 pub mod cache;
-pub mod calibration;
+// Temporarily disabled calibration module due to complex dependencies
+// pub mod calibration;
 pub mod config;
 pub mod grpc;
 pub mod lang;

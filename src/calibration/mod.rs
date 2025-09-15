@@ -8,6 +8,13 @@ pub mod chaos_engineering;
 pub mod quarterly_governance;
 pub mod isotonic;
 pub mod platt;
+// Temporarily disabled modules with dependency issues
+// pub mod manifest;
+// pub mod fingerprint_publisher;
+// pub mod sla_monitoring;
+// pub mod feature_flags;
+// pub mod attestation;
+// pub mod slo_system;
 
 // CALIB_V22 Production Activation Modules - Phases 1-4
 pub mod production_activation;
@@ -135,13 +142,13 @@ impl Calib22System {
         
         info!("🎯 Initializing Production Activation Phase Components");
         
-        // Phase 1: D0 24-Hour Canary Controller
-        let sla_monitor = Arc::new(
-            crate::calibration::sla_monitoring::SlaMonitor::new()
-                .map_err(|e| Calib22Error::InitializationError(format!("SLA monitor failed: {}", e)))?
-        );
-        let fingerprint_publisher = crate::calibration::fingerprint_publisher::FingerprintPublisher::new()
-            .map_err(|e| Calib22Error::InitializationError(format!("Fingerprint publisher failed: {}", e)))?;
+        // Phase 1: D0 24-Hour Canary Controller (temporarily disabled)
+        // let sla_monitor = Arc::new(
+        //     crate::calibration::sla_monitoring::SlaMonitor::new()
+        //         .map_err(|e| Calib22Error::InitializationError(format!("SLA monitor failed: {}", e)))?
+        // );
+        // let fingerprint_publisher = crate::calibration::fingerprint_publisher::FingerprintPublisher::new()
+        //     .map_err(|e| Calib22Error::InitializationError(format!("Fingerprint publisher failed: {}", e)))?;
         
         let activation_controller = ProductionActivationController::new(
             CanaryConfig::default(),

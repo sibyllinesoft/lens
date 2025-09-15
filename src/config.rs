@@ -11,6 +11,9 @@ pub struct LensConfig {
     /// Search engine configuration
     pub search: SearchConfig,
     
+    /// Context selection engine configuration
+    pub context_engine: ContextEngineConfig,
+    
     /// LSP manager configuration
     pub lsp: LspConfig,
     
@@ -300,6 +303,73 @@ pub struct BenchmarkConfig {
     pub enable_attestation: bool,
 }
 
+/// Context selection engine configuration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContextEngineConfig {
+    /// Enable hero defaults from promoted configurations
+    pub enable_hero_defaults: bool,
+    
+    /// Hero configuration lock file path
+    pub hero_lock_path: PathBuf,
+    
+    /// Context selection strategy
+    pub strategy: ContextStrategy,
+    
+    /// Hero parameters for optimized context selection
+    pub hero_params: HeroParams,
+}
+
+/// Context selection strategy
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum ContextStrategy {
+    /// Use hero defaults for optimal performance
+    Hero,
+    /// Use adaptive configuration based on query type
+    Adaptive,
+    /// Use legacy configuration for backwards compatibility
+    Legacy,
+}
+
+/// Hero parameters derived from promoted configuration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HeroParams {
+    /// Fusion strategy (e.g., "aggressive_milvus")
+    pub fusion: String,
+    
+    /// Chunk policy (e.g., "ce_large")
+    pub chunk_policy: String,
+    
+    /// Chunk length in tokens
+    pub chunk_len: u32,
+    
+    /// Overlap between chunks
+    pub overlap: u32,
+    
+    /// Retrieval K parameter 
+    pub retrieval_k: u32,
+    
+    /// RRF K0 parameter for ranking fusion
+    pub rrf_k0: u32,
+    
+    /// Reranker type (e.g., "cross_encoder")
+    pub reranker: String,
+    
+    /// Router type (e.g., "ml_v2")
+    pub router: String,
+    
+    /// Maximum chunks per file
+    pub max_chunks_per_file: u32,
+    
+    /// Symbol boost factor
+    pub symbol_boost: f64,
+    
+    /// Graph expansion hops
+    pub graph_expand_hops: u32,
+    
+    /// Graph added tokens cap
+    pub graph_added_tokens_cap: u32,
+}
+
 impl Default for LensConfig {
     fn default() -> Self {
         Self {
@@ -345,6 +415,25 @@ impl Default for LensConfig {
                         boosts.insert("javascript".to_string(), 1.0);
                         boosts
                     },
+                },
+            },
+            context_engine: ContextEngineConfig {
+                enable_hero_defaults: true,
+                hero_lock_path: PathBuf::from("./release/hero.lock.json"),
+                strategy: ContextStrategy::Hero,
+                hero_params: HeroParams {
+                    fusion: "aggressive_milvus".to_string(),
+                    chunk_policy: "ce_large".to_string(),
+                    chunk_len: 384,
+                    overlap: 128,
+                    retrieval_k: 20,
+                    rrf_k0: 60,
+                    reranker: "cross_encoder".to_string(),
+                    router: "ml_v2".to_string(),
+                    max_chunks_per_file: 50,
+                    symbol_boost: 1.2,
+                    graph_expand_hops: 2,
+                    graph_added_tokens_cap: 256,
                 },
             },
             lsp: LspConfig {
@@ -402,6 +491,68 @@ impl Default for LensConfig {
                 results_path: PathBuf::from("./benchmark-results"),
                 enable_attestation: true,
             },
+        }
+    }
+}
+
+impl ContextEngineConfig {
+    /// Load hero parameters from hero lock file
+    pub async fn load_hero_params(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        if !self.enable_hero_defaults {
+            return Ok(());
+        }
+
+        let content = tokio::fs::read_to_string(&self.hero_lock_path).await?;
+        let hero_data: serde_json::Value = serde_json::from_str(&content)?;
+        
+        if let Some(params) = hero_data.get("params") {
+            if let Some(fusion) = params.get("fusion").and_then(|v| v.as_str()) {
+                self.hero_params.fusion = fusion.to_string();
+            }
+            if let Some(chunk_policy) = params.get("chunk_policy").and_then(|v| v.as_str()) {
+                self.hero_params.chunk_policy = chunk_policy.to_string();
+            }
+            if let Some(chunk_len) = params.get("chunk_len").and_then(|v| v.as_u64()) {
+                self.hero_params.chunk_len = chunk_len as u32;
+            }
+            if let Some(overlap) = params.get("overlap").and_then(|v| v.as_u64()) {
+                self.hero_params.overlap = overlap as u32;
+            }
+            if let Some(retrieval_k) = params.get("retrieval_k").and_then(|v| v.as_u64()) {
+                self.hero_params.retrieval_k = retrieval_k as u32;
+            }
+            if let Some(rrf_k0) = params.get("rrf_k0").and_then(|v| v.as_u64()) {
+                self.hero_params.rrf_k0 = rrf_k0 as u32;
+            }
+            if let Some(reranker) = params.get("reranker").and_then(|v| v.as_str()) {
+                self.hero_params.reranker = reranker.to_string();
+            }
+            if let Some(router) = params.get("router").and_then(|v| v.as_str()) {
+                self.hero_params.router = router.to_string();
+            }
+            if let Some(max_chunks_per_file) = params.get("max_chunks_per_file").and_then(|v| v.as_u64()) {
+                self.hero_params.max_chunks_per_file = max_chunks_per_file as u32;
+            }
+            if let Some(symbol_boost) = params.get("symbol_boost").and_then(|v| v.as_f64()) {
+                self.hero_params.symbol_boost = symbol_boost;
+            }
+            if let Some(graph_expand_hops) = params.get("graph_expand_hops").and_then(|v| v.as_u64()) {
+                self.hero_params.graph_expand_hops = graph_expand_hops as u32;
+            }
+            if let Some(graph_added_tokens_cap) = params.get("graph_added_tokens_cap").and_then(|v| v.as_u64()) {
+                self.hero_params.graph_added_tokens_cap = graph_added_tokens_cap as u32;
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Get the current configuration strategy label for metrics
+    pub fn strategy_label(&self) -> &str {
+        match self.strategy {
+            ContextStrategy::Hero => "hero",
+            ContextStrategy::Adaptive => "adaptive", 
+            ContextStrategy::Legacy => "legacy",
         }
     }
 }
@@ -961,5 +1112,110 @@ mod tests {
         let loaded = loaded_config.unwrap();
         assert_eq!(loaded.server.host, original_config.server.host);
         assert_eq!(loaded.search.max_results, original_config.search.max_results);
+    }
+
+    #[test]
+    fn test_context_engine_config() {
+        let hero_params = HeroParams {
+            fusion: "aggressive_milvus".to_string(),
+            chunk_policy: "ce_large".to_string(),
+            chunk_len: 384,
+            overlap: 128,
+            retrieval_k: 20,
+            rrf_k0: 60,
+            reranker: "cross_encoder".to_string(),
+            router: "ml_v2".to_string(),
+            max_chunks_per_file: 50,
+            symbol_boost: 1.2,
+            graph_expand_hops: 2,
+            graph_added_tokens_cap: 256,
+        };
+
+        let config = ContextEngineConfig {
+            enable_hero_defaults: true,
+            hero_lock_path: PathBuf::from("./release/hero.lock.json"),
+            strategy: ContextStrategy::Hero,
+            hero_params,
+        };
+
+        assert!(config.enable_hero_defaults);
+        assert_eq!(config.hero_lock_path, PathBuf::from("./release/hero.lock.json"));
+        assert_eq!(config.strategy_label(), "hero");
+        assert_eq!(config.hero_params.fusion, "aggressive_milvus");
+        assert_eq!(config.hero_params.chunk_len, 384);
+        assert_eq!(config.hero_params.symbol_boost, 1.2);
+    }
+
+    #[test]
+    fn test_context_strategy_labels() {
+        let mut config = ContextEngineConfig {
+            enable_hero_defaults: true,
+            hero_lock_path: PathBuf::from("./release/hero.lock.json"),
+            strategy: ContextStrategy::Hero,
+            hero_params: HeroParams {
+                fusion: "aggressive_milvus".to_string(),
+                chunk_policy: "ce_large".to_string(),
+                chunk_len: 384,
+                overlap: 128,
+                retrieval_k: 20,
+                rrf_k0: 60,
+                reranker: "cross_encoder".to_string(),
+                router: "ml_v2".to_string(),
+                max_chunks_per_file: 50,
+                symbol_boost: 1.2,
+                graph_expand_hops: 2,
+                graph_added_tokens_cap: 256,
+            },
+        };
+
+        assert_eq!(config.strategy_label(), "hero");
+        
+        config.strategy = ContextStrategy::Adaptive;
+        assert_eq!(config.strategy_label(), "adaptive");
+        
+        config.strategy = ContextStrategy::Legacy;
+        assert_eq!(config.strategy_label(), "legacy");
+    }
+
+    #[test]
+    fn test_hero_params_serialization() {
+        let hero_params = HeroParams {
+            fusion: "aggressive_milvus".to_string(),
+            chunk_policy: "ce_large".to_string(),
+            chunk_len: 384,
+            overlap: 128,
+            retrieval_k: 20,
+            rrf_k0: 60,
+            reranker: "cross_encoder".to_string(),
+            router: "ml_v2".to_string(),
+            max_chunks_per_file: 50,
+            symbol_boost: 1.2,
+            graph_expand_hops: 2,
+            graph_added_tokens_cap: 256,
+        };
+
+        // Test serialization
+        let serialized = serde_json::to_string(&hero_params).unwrap();
+        assert!(!serialized.is_empty());
+        assert!(serialized.contains("aggressive_milvus"));
+        assert!(serialized.contains("cross_encoder"));
+
+        // Test deserialization
+        let deserialized: HeroParams = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(deserialized.fusion, hero_params.fusion);
+        assert_eq!(deserialized.chunk_len, hero_params.chunk_len);
+        assert_eq!(deserialized.symbol_boost, hero_params.symbol_boost);
+    }
+
+    #[test]
+    fn test_default_config_includes_context_engine() {
+        let config = LensConfig::default();
+        
+        assert!(config.context_engine.enable_hero_defaults);
+        assert_eq!(config.context_engine.hero_lock_path, PathBuf::from("./release/hero.lock.json"));
+        assert_eq!(config.context_engine.strategy_label(), "hero");
+        assert_eq!(config.context_engine.hero_params.fusion, "aggressive_milvus");
+        assert_eq!(config.context_engine.hero_params.retrieval_k, 20);
+        assert_eq!(config.context_engine.hero_params.rrf_k0, 60);
     }
 }

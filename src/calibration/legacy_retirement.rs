@@ -748,7 +748,7 @@ pub enum RetirementError {
 /// CLI binary for running legacy retirement checks
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tracing_subscriber::init();
+    tracing_subscriber::fmt::init();
     
     let args: Vec<String> = std::env::args().collect();
     let project_root = args.get(1)
