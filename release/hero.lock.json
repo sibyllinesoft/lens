@@ -1,0 +1,40 @@
+{
+  "fingerprint": "v2.2.2-20250913-152035",
+  "config_id": "func_aggressive_milvus_ce_large_384_2hop",
+  "scenario": "code.func.v2.2.2",
+  "rank": 1,
+  "composite_score": 4.2,
+  "metrics": {
+    "p95_improvement_pct": 22.1,
+    "ndcg_improvement_pct": 3.4,
+    "pass_rate_core": 0.891,
+    "answerable_at_k": 0.751,
+    "span_recall": 0.567,
+    "quality_preservation_pct": 99.3
+  },
+  "params": {
+    "fusion": "aggressive_milvus",
+    "chunk_policy": "ce_large",
+    "chunk_len": 384,
+    "overlap": 128,
+    "retrieval_k": 20,
+    "rrf_k0": 60,
+    "reranker": "cross_encoder",
+    "router": "ml_v2",
+    "max_chunks_per_file": 50,
+    "symbol_boost": 1.2,
+    "graph_expand_hops": 2,
+    "graph_added_tokens_cap": 256
+  },
+  "health_gates": {
+    "preflight_gates": "PASS",
+    "retrieval_services": "HEALTHY",
+    "index_integrity": "HEALTHY", 
+    "telemetry_stream": "HEALTHY",
+    "capacity_adequate_for_rollout": true,
+    "proceed_to_rollout": true,
+    "risk_level": "LOW",
+    "confidence_score": 0.97,
+    "validated_at": "2025-09-13T20:05:27Z"
+  }
+}

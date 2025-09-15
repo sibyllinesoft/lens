@@ -1,0 +1,100 @@
+release: v2.3.0-hero
+fingerprint: "v2.2.2-20250913-152035-hero"
+budgets:
+  code_p95_ms: 200
+  rag_p95_ms: 350
+lambda: 2.2
+metrics:
+  - pass_rate_core
+  - answerable_at_k  
+  - span_recall
+  - ndcg_10
+  - mrr_10
+  - success_1
+  - p95_latency_ms
+  - cost_per_query
+
+# Hero Configuration from release/hero.lock.json
+hero_baseline:
+  config_id: "func_aggressive_milvus_ce_large_384_2hop"
+  params:
+    fusion: "aggressive_milvus"
+    chunk_policy: "ce_large" 
+    chunk_len: 384
+    overlap: 128
+    retrieval_k: 20
+    rrf_k0: 60
+    reranker: "cross_encoder"
+    router: "ml_v2"
+    max_chunks_per_file: 50
+    symbol_boost: 1.2
+    graph_expand_hops: 2
+    graph_added_tokens_cap: 256
+
+scenarios:
+  - name: hero.validation
+    matrix:
+      # Test hero configuration exactly
+      fusion: 
+        - aggressive_milvus
+      chunk_policy:
+        - ce_large
+      chunk_len:
+        - 384
+      overlap:
+        - 128
+      retrieval_k:
+        - 20
+      rrf_k0:
+        - 60
+      reranker:
+        - cross_encoder
+      router:
+        - ml_v2
+      symbol_boost:
+        - 1.2
+      graph_expand_hops:
+        - 2
+      graph_added_tokens_cap:
+        - 256
+
+  - name: hero.variants
+    matrix:
+      # Test variations around hero config
+      fusion:
+        - aggressive_milvus
+      chunk_policy:
+        - ce_large
+        - ce_medium
+      chunk_len:
+        - 384
+        - 512
+      retrieval_k:
+        - 20
+        - 25
+      reranker:
+        - cross_encoder
+      router:
+        - ml_v2
+
+promotion_gates:
+  floors_v2_2_2: "no degradation vs v2.2.2 in SLOs and quality"
+  composite_improvement_pct: ">= +3.0"
+  p95_regression_pct: "<= +5.0"
+  quality_preservation_pct: ">= 98.0"
+  ablation_sensitivity_drop_pct: ">= 10.0"
+  sanity_pass_rate_core_pct: ">= 85.0"
+  extract_substring_pct: "== 100.0"
+
+validation:
+  expected_performance:
+    pass_rate_core: ">= 0.891"
+    answerable_at_k: ">= 0.751" 
+    span_recall: ">= 0.567"
+    p95_improvement_pct: ">= 20.0"
+    ndcg_improvement_pct: ">= 3.0"
+  health_gates:
+    preflight_gates: "PASS"
+    proceed_to_rollout: true
+    risk_level: "LOW"
+    confidence_score: ">= 0.95"
