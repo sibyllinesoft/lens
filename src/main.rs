@@ -79,6 +79,9 @@ enum Commands {
     Serve,
     /// Start the gRPC server (legacy)
     ServeGrpc,
+    /// Start the MCP (Model Context Protocol) server
+    #[cfg(feature = "mcp")]
+    ServeMcp,
     /// Run benchmarks
     Benchmark {
         /// Dataset name to benchmark
@@ -138,6 +141,11 @@ async fn main() -> Result<()> {
         Commands::ServeGrpc => {
             info!("🚀 Starting Lens gRPC server (legacy mode)");
             serve_grpc(config, cli.bind, cli.port, cli.enable_semantic).await
+        }
+        #[cfg(feature = "mcp")]
+        Commands::ServeMcp => {
+            info!("🔌 Starting Lens MCP server with Model Context Protocol");
+            serve_mcp(config, cli.enable_semantic).await
         }
         Commands::Benchmark { dataset, limit, smoke, reports } => {
             info!("🧪 Running benchmark suite for dataset: {}", dataset);
@@ -479,6 +487,45 @@ async fn check_health(config: LensConfig) -> Result<()> {
     info!("🏗️ Build info: {} ({})", 
         lens_core::built_info::GIT_VERSION.unwrap_or("unknown"),
         env!("BUILD_TIMESTAMP", "unknown"));
+
+    Ok(())
+}
+
+/// Start the MCP (Model Context Protocol) server
+#[cfg(feature = "mcp")]
+async fn serve_mcp(
+    config: LensConfig,
+    enable_semantic: bool,
+) -> Result<()> {
+    info!("Initializing MCP server components...");
+
+    // Create SearchConfig from LensConfig
+    let search_config = lens_core::search::SearchConfig {
+        index_path: config.index_path.clone(),
+        max_results_default: config.max_results,
+        sla_target_ms: config.performance_target_ms,
+        lsp_routing_rate: if config.lsp_enabled { 0.5 } else { 0.0 },
+        enable_fusion_pipeline: false,
+        enable_semantic_search: enable_semantic,
+        enable_lsp: config.lsp_enabled,
+        context_lines: 3,
+        
+        // Dataset configuration from LensConfig
+        dataset_path: config.dataset_path.clone(),
+        enable_pinned_datasets: config.enable_pinned_datasets,
+        default_dataset_version: config.default_dataset_version.clone(),
+        enable_corpus_validation: config.enable_corpus_validation,
+    };
+
+    // Initialize search engine with dataset support
+    let search_engine = SearchEngine::with_config(&config.index_path, search_config).await
+        .map_err(|e| anyhow::anyhow!("Failed to create search engine: {}", e))?;
+
+    let search_engine = Arc::new(search_engine);
+
+    // Create and start MCP server
+    info!("🔌 Starting MCP server over stdio");
+    lens_core::mcp::create_mcp_server(search_engine).await?;
 
     Ok(())
 }

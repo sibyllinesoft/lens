@@ -99,6 +99,9 @@ Thumbs.db
 *.tmp
 *.temp
 
+# Indexed content for corpus testing
+indexed-content/
+
 # Docker
 .dockerignore
 Dockerfile.dev

@@ -92,6 +92,11 @@ hostname = "0.3"
 # Date/time handling
 chrono = { version = "0.4", features = ["serde"] }
 
+# MCP (Model Context Protocol) support
+jsonrpc-core = "18.0"
+jsonrpc-stdio-server = "18.0"
+futures = "0.3"
+
 [build-dependencies]
 built = { version = "0.7", features = ["git2", "chrono"] }
 chrono = "0.4"
@@ -108,6 +113,7 @@ default = ["simd"]
 simd = []
 ann = ["hnsw_rs", "ndarray"]
 lsp = ["tower-lsp"]
+mcp = []
 
 [[bench]]
 name = "search_benchmarks"

@@ -40,6 +40,8 @@ pub mod config;
 pub mod grpc;
 pub mod lang;
 pub mod lsp;
+#[cfg(feature = "mcp")]
+pub mod mcp;
 pub mod metrics;
 pub mod pipeline;
 pub mod proto;
