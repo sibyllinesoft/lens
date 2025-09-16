@@ -41,7 +41,7 @@ class MCPTestClient:
             )
         
         self.process = subprocess.Popen(
-            [str(binary_path), '--mode', 'real', '--mcp'],
+            [str(binary_path), '--mcp'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

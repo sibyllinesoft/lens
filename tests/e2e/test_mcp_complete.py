@@ -20,7 +20,7 @@ class MCPClient:
         """Start the MCP server process."""
         print("🚀 Starting MCP server...")
         self.process = subprocess.Popen(
-            ['./rust-core/target/release/lens-core', '--mode', 'real', '--mcp'],
+            ['./rust-core/target/release/lens-core', '--mcp'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

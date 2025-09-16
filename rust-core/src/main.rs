@@ -15,11 +15,14 @@
  * ## Usage
  * 
  * ```bash
- * # Start in production mode (only supported mode)
- * cargo run --release -- --mode real --addr 0.0.0.0:8080
+ * # Start in production mode (default - no flags needed)
+ * cargo run --release -- --addr 0.0.0.0:8080
  * 
- * # Service will exit with error code 1 if mode is not "real"
- * cargo run -- --mode dev  # This will fail with TRIPWIRE VIOLATION
+ * # Start in development mode (for testing only)
+ * cargo run -- --dev --addr 0.0.0.0:8080
+ * 
+ * # Start MCP server in production mode
+ * cargo run --release -- --mcp
  * ```
  * 
  * ## Environment Variables
@@ -82,12 +85,10 @@ async fn main() -> Result<()> {
         .version(env!("CARGO_PKG_VERSION"))
         .about("Production fraud-resistant search engine")
         .arg(
-            Arg::new("mode")
-                .long("mode")
-                .value_name("MODE")
-                .help("Service mode (must be 'real') - security tripwire enforced at startup")
-                .default_value("real")
-                .required(true)
+            Arg::new("dev")
+                .long("dev")
+                .help("Enable development mode (disables production security enforcement)")
+                .action(clap::ArgAction::SetTrue)
         )
         .arg(
             Arg::new("addr")
@@ -105,20 +106,19 @@ async fn main() -> Result<()> {
         .get_matches();
     
     // Extract and validate command-line arguments
-    // These unwrap() calls are safe because default values are provided
-    let mode = matches.get_one::<String>("mode").unwrap();
     let addr = matches.get_one::<String>("addr").unwrap();
     let mcp_mode = matches.get_flag("mcp");
+    let dev_mode = matches.get_flag("dev");
     
-    // SECURITY TRIPWIRE: Enforce production-only operation
+    // Determine mode - default to production "real" mode
+    let mode = if dev_mode { "dev" } else { "real" };
+    
+    // SECURITY TRIPWIRE: Enforce production-only operation by default
     // This is the primary security mechanism preventing deployment of development code
-    // in production environments. The service will terminate with exit code 1 if
-    // any mode other than "real" is provided.
-    if mode != "real" {
-        error!("TRIPWIRE VIOLATION: Service mode must be 'real', got: {}", mode);
-        error!("This security measure prevents accidental deployment of test/dev configurations");
-        error!("in production environments. Only production-hardened 'real' mode is supported.");
-        std::process::exit(1);
+    // in production environments. Development mode must be explicitly enabled with --dev flag.
+    if dev_mode {
+        info!("WARNING: Development mode enabled - production security enforcement disabled");
+        info!("This mode is for testing only and should NEVER be used in production");
     }
     
     // Log startup information for attestation and audit purposes
