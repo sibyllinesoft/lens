@@ -1,9 +1,0 @@
-{
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "pass_rate_core": 0.892,
-  "answerable_at_k": 0.734,
-  "span_recall": 0.678,
-  "p95_latency_ms": 185,
-  "queries_processed": 150,
-  "status": "BASELINE_ESTABLISHED"
-}

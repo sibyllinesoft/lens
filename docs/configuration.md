@@ -59,6 +59,17 @@ port = 3000
 enable_cors = false
 request_timeout_secs = 30
 max_body_size = 1048576
+
+[http.auth]
+enabled = false
+header_name = "Authorization"
+bearer_prefix = "Bearer "
+tokens = []
+
+[telemetry]
+enabled = false
+service_name = "lens"
+# otlp_endpoint = "http://127.0.0.1:4317"
 ```
 
 ## Settings Reference
@@ -105,3 +116,20 @@ max_body_size = 1048576
 | `enable_cors` | Allow cross-origin requests (uses permissive CORS). |
 | `request_timeout_secs` | Request timeout applied by Tower HTTP middleware. |
 | `max_body_size` | Maximum size in bytes for request bodies. |
+
+### `[http.auth]`
+
+| Field | Description |
+| ----- | ----------- |
+| `enabled` | Require tokens for every HTTP request. |
+| `header_name` | Header used to read the credential (defaults to `Authorization`). |
+| `bearer_prefix` | Optional prefix removed from the header value (defaults to `Bearer `). |
+| `tokens` | Static credential list. Populate via config or `LENS_HTTP__AUTH__TOKENS` env var. |
+
+### `[telemetry]`
+
+| Field | Description |
+| ----- | ----------- |
+| `enabled` | Enable OpenTelemetry export. |
+| `service_name` | Service identifier recorded in spans. |
+| `otlp_endpoint` | Optional OTLP collector endpoint (for example `http://127.0.0.1:4317`). |

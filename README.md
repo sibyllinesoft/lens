@@ -13,27 +13,34 @@ packages/
   search-engine/    # Tantivy indexing/search library
   lsp-server/       # tower-lsp implementation
   lens-common/      # shared data types and utilities
-archive/            # Legacy scripts and documentation retained for reference
+experiments/        # Historical experiment matrices kept for reference
+archive/            # Legacy docs from the retired TypeScript prototype
 ```
 
 ## Getting Started
 
 1. Install the Rust toolchain (`rustup default stable`).
-2. Build the project:
+2. Build the release binary:
    ```bash
    cargo build --release
    ```
-3. Index a repository:
+3. Index a repository using the compiled binary:
    ```bash
-   cargo run -- index /path/to/project
+   ./target/release/lens index /path/to/project
    ```
-4. Start the HTTP API:
+4. Configure an API token. Either set an environment variable:
    ```bash
-   cargo run -- serve --bind 127.0.0.1 --port 3000
+   export LENS_HTTP__AUTH__ENABLED=true
+   export LENS_HTTP__AUTH__TOKENS=my-local-token
    ```
-5. Start the LSP server (stdio mode):
+   or edit `lens.toml` (see below).
+5. Start the HTTP API with the release binary:
    ```bash
-   cargo run -- lsp
+   ./target/release/lens serve --bind 127.0.0.1 --port 3000
+   ```
+6. Start the LSP server (stdio mode):
+   ```bash
+   ./target/release/lens lsp
    ```
 
 The CLI exposes additional commands; run `lens --help` for a full list.
@@ -44,6 +51,23 @@ Lens loads settings from `lens.toml`. Generate a starter file with
 `lens config init` and review the [configuration reference](docs/configuration.md)
 for all available options. Environment variables prefixed with `LENS_` override
 file values.
+
+### HTTP Authentication
+
+The HTTP API is protected by a lightweight token-based middleware. Configure it
+with either environment variables (`LENS_HTTP__AUTH__TOKENS`) or the `[http.auth]`
+section in `lens.toml`. Provide at least one token before starting the server;
+requests must send it via the `Authorization: Bearer <token>` header.
+
+### Telemetry
+
+Tracing is wired through `tracing` + OpenTelemetry. Toggle OTLP export with the
+`[telemetry]` section. When enabled the CLI installs a Tokio batch exporter so
+spans and LSP/HTTP handler instrumentation are emitted to your collector.
+
+Prometheus-compatible metrics are exposed on `/metrics` once the HTTP server is
+running. Point your Prometheus scrape configuration at the Lens instance to
+collect request counters, latency histograms, and index statistics.
 
 ## HTTP API
 
@@ -63,7 +87,9 @@ HTTP API. Documentation and integration tips are available in
 - Run tests: `cargo test`
 - Lint (clippy): `cargo clippy --workspace`
 
-Pull requests are welcome. Please keep new code documented and covered by unit
+Legacy Python and Node-based simulators have been removed. Operational tooling
+should now be implemented against the real Rust surface area (HTTP API + CLI).
+Pull requests are welcome—please keep new code documented and covered by unit
 or integration tests.
 
 ## License

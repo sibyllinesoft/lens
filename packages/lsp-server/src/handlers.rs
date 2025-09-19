@@ -8,9 +8,14 @@ use lens_common::ProgrammingLanguage;
 use lens_search_engine::{QueryBuilder, SearchEngine};
 use lsp_types::*;
 use std::path::Path;
-use tracing::{debug, info};
+use tracing::{debug, info, instrument};
 
 /// Handler for workspace symbol requests
+#[instrument(
+    name = "lsp.workspace_symbol",
+    skip(search_engine, params),
+    fields(query = %params.query, max_results = max_results)
+)]
 pub async fn handle_workspace_symbol(
     search_engine: &SearchEngine,
     params: WorkspaceSymbolParams,
@@ -85,6 +90,11 @@ pub async fn handle_workspace_symbol(
 }
 
 /// Handler for go-to-definition requests
+#[instrument(
+    name = "lsp.goto_definition",
+    skip(search_engine, document_text, document_uri, position),
+    fields(uri = %document_uri, line = position.line, column = position.character, max_results = max_results)
+)]
 pub async fn handle_goto_definition(
     search_engine: &SearchEngine,
     document_text: &str,
@@ -145,6 +155,11 @@ pub async fn handle_goto_definition(
 }
 
 /// Handler for find references requests
+#[instrument(
+    name = "lsp.find_references",
+    skip(search_engine, document_text, position),
+    fields(line = position.line, column = position.character, include_declaration = include_declaration, max_results = max_results)
+)]
 pub async fn handle_find_references(
     search_engine: &SearchEngine,
     document_text: &str,
@@ -188,6 +203,11 @@ pub async fn handle_find_references(
 }
 
 /// Handler for completion requests
+#[instrument(
+    name = "lsp.completion",
+    skip(search_engine, document_text, position, language_id),
+    fields(line = position.line, column = position.character, language = language_id, max_results = max_results)
+)]
 pub async fn handle_completion(
     search_engine: &SearchEngine,
     document_text: &str,

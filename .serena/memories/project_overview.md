@@ -1,32 +1,35 @@
 # Lens Project Overview
 
 ## Purpose
-Lens is a high-performance, local sharded code search system with three-layer processing pipeline:
-1. **Layer 1 - Lexical+Fuzzy**: N-gram/trigram inverted index + FST-based fuzzy search (2-8ms target)
-2. **Layer 2 - Symbol/AST**: Definitions/references via universal-ctags and LSIF + tree-sitter parsing (3-10ms target)  
-3. **Layer 3 - Semantic Rerank**: Optional ColBERT-v2/SPLADE-v2 reranking of top-K candidates (5-15ms target)
+Lens is a single-binary, Rust-first code search platform. It provides a
+Tantivy-backed indexer, an Axum HTTP API, and a `tower-lsp` language server for
+editor integrations. The repository previously contained a large TypeScript
+prototype and simulated Python/Node tooling; those artifacts have now been
+removed to keep the workspace focused on the production Rust implementation.
 
-Overall p95 latency target: <20ms
+## Key Components
+- **apps/lens-core** — CLI entry point plus the Axum HTTP service
+- **packages/search-engine** — Tantivy-based indexing and query execution
+- **packages/lsp-server** — `tower-lsp` handlers that route against the shared
+  search engine library
+- **packages/lens-common / lens-config** — shared data types and configuration
 
-## Key Features
-- Sharded trigram+FST index with fuzzy search (≤2-edit distance)
-- Symbol/AST analysis with structural selectors
-- Optional semantic reranking with vector search
-- NATS/JetStream work distribution
-- Memory-mapped append-only segments with compaction
-- Full OpenTelemetry observability integration
-- Paper-grade benchmarking system
+Supporting material (experiment matrices, legacy docs) lives in `experiments/`
+and `archive/` respectively. Generated artifacts should be written to
+`artifacts/` or `reports/` (ignored by git).
 
-## Architecture Constraints
-The system is validated by Arbiter through `architecture.cue` which enforces:
-- Performance SLAs (stage timing, overall p95)
-- Resource boundaries (memory, concurrency limits)  
-- API contract validation
-- Technology stack consistency
+## Production Concerns
+- **Authentication** — Incoming HTTP requests must present a configured token in
+  the `Authorization` header. Tokens are managed via `[http.auth]` in
+  `lens.toml` or environment overrides.
+- **Telemetry** — `tracing` spans are emitted for all HTTP/LSP handlers.
+  Optional OpenTelemetry export is available through the `[telemetry]`
+  configuration (OTLP via tonic runtime).
+- **Resource limits** — `lens-config` exposes knobs for request timeouts, body
+  limits, Tantivy heap sizing, and LSP result caps.
 
-## Current Implementation Status
-- Basic TypeScript foundation with Fastify server
-- Core types and interfaces defined
-- OpenTelemetry tracing integration started
-- Modular architecture with separate indexer, storage, API layers
-- Ready for benchmarking system implementation per TODO.md specifications
+## Status
+- Rust workspace is production-ready; simulations have been purged.
+- HTTP and LSP surfaces instrumented with real tracing spans.
+- Repository is clean of fabricated monitoring/benchmark scripts; new tooling
+  should be implemented directly against the Rust API surface.

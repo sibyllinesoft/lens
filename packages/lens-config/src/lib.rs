@@ -22,6 +22,8 @@ pub struct LensConfig {
     pub lsp: LspServerConfig,
     /// HTTP server configuration
     pub http: HttpConfig,
+    /// Telemetry and observability configuration
+    pub telemetry: TelemetryConfig,
     /// General application settings
     pub app: AppConfig,
 }
@@ -39,6 +41,8 @@ pub struct HttpConfig {
     pub request_timeout_secs: u64,
     /// Maximum request body size (bytes)
     pub max_body_size: usize,
+    /// Authentication controls for the public HTTP API
+    pub auth: HttpAuthConfig,
 }
 
 impl Default for HttpConfig {
@@ -49,6 +53,52 @@ impl Default for HttpConfig {
             enable_cors: false,
             request_timeout_secs: 30,
             max_body_size: 1024 * 1024, // 1MB
+            auth: HttpAuthConfig::default(),
+        }
+    }
+}
+
+/// HTTP authentication settings for protecting the API.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HttpAuthConfig {
+    /// When true, all endpoints require an authentication token
+    pub enabled: bool,
+    /// Header that carries the credential, defaults to `Authorization`
+    pub header_name: String,
+    /// Optional prefix stripped from the header value (e.g. `Bearer `)
+    pub bearer_prefix: Option<String>,
+    /// Static tokens accepted for access
+    pub tokens: Vec<String>,
+}
+
+impl Default for HttpAuthConfig {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            header_name: "Authorization".to_string(),
+            bearer_prefix: Some("Bearer ".to_string()),
+            tokens: Vec::new(),
+        }
+    }
+}
+
+/// Telemetry configuration shared across Lens components.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TelemetryConfig {
+    /// Enable OpenTelemetry trace export
+    pub enabled: bool,
+    /// Optional OTLP endpoint (http(s)://host:port). Uses default agent if unset.
+    pub otlp_endpoint: Option<String>,
+    /// Service name used when reporting traces
+    pub service_name: String,
+}
+
+impl Default for TelemetryConfig {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            otlp_endpoint: None,
+            service_name: "lens".to_string(),
         }
     }
 }
@@ -164,6 +214,9 @@ mod tests {
         assert_eq!(config.http.port, 3000);
         assert_eq!(config.app.log_level, "info");
         assert!(config.lsp.max_search_results > 0);
+        assert!(!config.http.auth.enabled);
+        assert_eq!(config.http.auth.header_name, "Authorization");
+        assert!(!config.telemetry.enabled);
     }
 
     #[test]

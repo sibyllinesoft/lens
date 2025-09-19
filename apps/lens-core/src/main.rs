@@ -18,8 +18,15 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use config::LensConfig;
 use lens_search_engine::SearchEngine;
+use opentelemetry::{global, KeyValue};
+use opentelemetry_otlp::WithExportConfig;
+use opentelemetry_sdk::{
+    propagation::TraceContextPropagator, runtime::Tokio, trace as sdktrace, Resource,
+};
 use std::{path::PathBuf, sync::Arc};
 use tracing::info;
+use tracing_opentelemetry::OpenTelemetryLayer;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 #[derive(Parser)]
 #[command(name = "lens")]
@@ -141,7 +148,6 @@ enum ConfigAction {
 async fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    // Load configuration
     let config = if let Some(config_path) = &cli.config {
         LensConfig::load_from_file(config_path)
             .map_err(|e| anyhow::anyhow!("Failed to load config from {:?}: {}", config_path, e))?
@@ -152,7 +158,6 @@ async fn main() -> Result<()> {
         })
     };
 
-    // Initialize logging with config
     let log_level = if cli.debug {
         "debug"
     } else if cli.verbose {
@@ -161,12 +166,7 @@ async fn main() -> Result<()> {
         &config.app.log_level
     };
 
-    tracing_subscriber::fmt()
-        .with_env_filter(format!(
-            "lens={},lens_search_engine={}",
-            log_level, log_level
-        ))
-        .init();
+    let telemetry_enabled = init_tracing(&config, log_level)?;
 
     info!("Starting Lens v{}", env!("CARGO_PKG_VERSION"));
     info!(
@@ -174,14 +174,12 @@ async fn main() -> Result<()> {
         config.search.index_path, config.lsp.max_search_results, config.http.port
     );
 
-    // Use config values, but allow CLI overrides
     let effective_index_path = cli
         .index_path
         .clone()
         .unwrap_or_else(|| config.search.index_path.clone());
 
-    // Execute the selected command
-    match cli.command {
+    let command_result = match cli.command {
         Commands::Lsp { tcp, port } => {
             let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             let lsp_config = config.lsp_server_config();
@@ -193,7 +191,13 @@ async fn main() -> Result<()> {
         }
         Commands::Serve { bind, port, cors } => {
             let search_config = config.search_engine_config(Some(effective_index_path.clone()));
-            cli::start_http_server(search_config, bind, port, cors).await
+            let mut http_cfg = config.http.clone();
+            http_cfg.bind = bind;
+            http_cfg.port = port;
+            if cors {
+                http_cfg.enable_cors = true;
+            }
+            cli::start_http_server(search_config, http_cfg).await
         }
         Commands::Index {
             directory,
@@ -251,6 +255,62 @@ async fn main() -> Result<()> {
             cli::clear_index(engine, &index_path, yes).await
         }
         Commands::Config { action } => handle_config_action(action, &config).await,
+    };
+
+    if telemetry_enabled {
+        global::shutdown_tracer_provider();
+    }
+
+    command_result
+}
+
+fn init_tracing(config: &LensConfig, log_level: &str) -> Result<bool> {
+    let env_filter = std::env::var("RUST_LOG").unwrap_or_else(|_| {
+        format!(
+            "lens={},lens_search_engine={},lens_lsp_server={}",
+            log_level, log_level, log_level
+        )
+    });
+    let env_filter = EnvFilter::try_new(env_filter)?;
+
+    let fmt_layer = tracing_subscriber::fmt::layer().with_target(true);
+
+    if config.telemetry.enabled {
+        global::set_text_map_propagator(TraceContextPropagator::new());
+
+        let exporter = {
+            let mut builder = opentelemetry_otlp::new_exporter().tonic();
+            if let Some(endpoint) = &config.telemetry.otlp_endpoint {
+                builder = builder.with_endpoint(endpoint.clone());
+            }
+            builder
+        };
+
+        let tracer = opentelemetry_otlp::new_pipeline()
+            .tracing()
+            .with_exporter(exporter)
+            .with_trace_config(
+                sdktrace::Config::default().with_resource(Resource::new(vec![KeyValue::new(
+                    "service.name",
+                    config.telemetry.service_name.clone(),
+                )])),
+            )
+            .install_batch(Tokio)?;
+
+        tracing_subscriber::registry()
+            .with(env_filter)
+            .with(fmt_layer)
+            .with(OpenTelemetryLayer::new(tracer))
+            .init();
+
+        Ok(true)
+    } else {
+        tracing_subscriber::registry()
+            .with(env_filter)
+            .with(fmt_layer)
+            .init();
+
+        Ok(false)
     }
 }
 
@@ -322,6 +382,21 @@ async fn handle_config_action(action: ConfigAction, config: &LensConfig) -> Resu
                 config.http.request_timeout_secs
             );
             println!("max_body_size = {}", config.http.max_body_size);
+            println!("auth.enabled = {}", config.http.auth.enabled);
+            println!("auth.header_name = \"{}\"", config.http.auth.header_name);
+            if let Some(prefix) = &config.http.auth.bearer_prefix {
+                println!("auth.bearer_prefix = \"{}\"", prefix);
+            }
+            println!("auth.tokens = {}", config.http.auth.tokens.len());
+            println!();
+
+            // Telemetry settings
+            println!("[telemetry]");
+            println!("enabled = {}", config.telemetry.enabled);
+            if let Some(endpoint) = &config.telemetry.otlp_endpoint {
+                println!("otlp_endpoint = \"{}\"", endpoint);
+            }
+            println!("service_name = \"{}\"", config.telemetry.service_name);
         }
         ConfigAction::Init { output } => {
             if output.exists() {

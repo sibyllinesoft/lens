@@ -4,6 +4,10 @@ The `lens serve` command exposes a REST API for searching, indexing, and
 monitoring the code index. The default base URL is
 `http://127.0.0.1:3000`.
 
+> **Authentication**: Every request must include an
+> `Authorization: Bearer <token>` header. Configure tokens in `lens.toml` under
+> `[http.auth]` or via the `LENS_HTTP__AUTH__TOKENS` environment variable.
+
 All responses are JSON. Errors use the structured [`LensError`](../packages/lens-common/src/error.rs)
 format. For example:
 
@@ -37,7 +41,9 @@ Query parameters:
 Example:
 
 ```bash
-curl "http://127.0.0.1:3000/search?q=async+fn&limit=5"
+curl \
+  -H 'Authorization: Bearer my-local-token' \
+  "http://127.0.0.1:3000/search?q=async+fn&limit=5"
 ```
 
 ### `GET /search/fuzzy`
@@ -100,6 +106,14 @@ languages.
 
 Return a lightweight health summary including server version, uptime seconds,
 and index readiness flag.
+
+### `GET /metrics`
+
+Expose Prometheus-formatted metrics for the Lens service. The payload uses the
+standard `text/plain; version=0.0.4` format and includes counters for HTTP
+traffic, histograms for request/search latency, and gauges describing the
+current index document count. Configure Prometheus or another compatible
+scraper to poll this endpoint at your desired interval.
 
 ## Error Responses
 

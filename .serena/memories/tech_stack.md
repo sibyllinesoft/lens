@@ -1,31 +1,25 @@
 # Technology Stack
 
-## Languages (Validated in architecture.cue)
-- **TypeScript** (Primary) - Modern ES2022, strict typing, NodeNext modules
-- **Python** - For analysis/ML components  
-- **Rust** - For performance-critical components
-- **Bash** - For scripts and utilities
+## Languages
+- **Rust** — Primary implementation language for the CLI, HTTP API, and LSP server
+- **TOML** — Configuration format (`lens.toml`)
+- **Shell** — Thin helper scripts (build/CI)
 
 ## Core Dependencies
-- **Fastify** - Web framework with CORS support
-- **NATS** - Message streaming for work distribution
-- **OpenTelemetry** - Full observability (tracing, metrics, instrumentation)
-- **Pino** - Structured logging
-- **Zod** - Runtime type validation
-- **UUID** - Trace ID generation
-- **fast-fuzzy** - Fuzzy string matching
+- **Tantivy** — Inverted index powering search and filtering
+- **Axum + Tower HTTP** — HTTP routing, CORS, tracing layers, middleware stack
+- **tower-lsp** — Language Server Protocol plumbing backed by the same search engine
+- **Tracing + OpenTelemetry** — Structured logging and optional OTLP export
+- **Tokio** — Async runtime used across all binaries and libraries
 
-## Development Tools
-- **TypeScript 5.9.2** with strict configuration
-- **Vitest** - Testing framework with coverage (85% thresholds)
-- **ESLint** - TypeScript linting
-- **Prettier** - Code formatting
-- **tsx** - Development server with hot reload
-- **CUE** - Architecture validation and constraints
+## Configuration & Instrumentation
+- **lens-config** — Shared loader using the `config` crate with environment overrides
+- **Telemetry** — `tracing` spans instrument all HTTP/LSP handlers; optional OTLP exporter via `opentelemetry_otlp`
+- **Authentication** — Static token middleware enforced by Axum before all APIs
 
-## Key Architecture Decisions
-- **Memory-mapped segments** for storage (append-only with compaction)
-- **NATS/JetStream** for work unit distribution
-- **OpenTelemetry** for all observability
-- **ColBERT-v2/SPLADE-v2** for semantic models
-- **HNSW** for vector search in rerank stage
+## Tooling
+- **cargo fmt / clippy / test** — Standard Rust formatting, linting, and testing
+- **experiments/** — Versioned YAML matrices retained for reference (no fake metrics scripts)
+- **artifacts/** (ignored) — Recommended output directory for reports or benchmarking data
+
+The repository no longer depends on Fastify, NATS, or simulated Python ML stacks; any operational automation should call the real Rust services directly.

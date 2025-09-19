@@ -6,20 +6,38 @@
 
 use anyhow::Result;
 use axum::{
+    body::Body,
     extract::{Query, State},
-    http::StatusCode,
-    response::Json,
+    http::{
+        header::{HeaderName, CONTENT_TYPE},
+        HeaderMap, Method, Request, StatusCode,
+    },
+    middleware::{from_fn, Next},
+    response::{IntoResponse, Json, Response},
     routing::{get, post},
     Router,
 };
 use lens_common::{LensError, ProgrammingLanguage};
+use lens_config::HttpAuthConfig;
 use lens_search_engine::{
     parse_full_query, QueryBuilder, QueryType, SearchConfig as EngineSearchConfig, SearchEngine,
 };
+use prometheus::{
+    exponential_buckets, Encoder, HistogramOpts, HistogramVec, IntCounterVec, IntGauge, Opts,
+    Registry, TextEncoder,
+};
 use serde::{Deserialize, Serialize};
-use std::{path::PathBuf, sync::Arc, time::Instant};
-use tower_http::cors::CorsLayer;
-use tracing::{error, info, warn};
+use std::{
+    collections::HashSet,
+    path::PathBuf,
+    sync::Arc,
+    time::{Duration, Instant},
+};
+use tower_http::{
+    cors::CorsLayer,
+    trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
+};
+use tracing::{error, info, warn, Level};
 
 /// HTTP server configuration
 #[derive(Debug, Clone)]
@@ -29,6 +47,7 @@ pub struct ServerConfig {
     pub enable_cors: bool,
     pub index_path: PathBuf,
     pub search_config: EngineSearchConfig,
+    pub auth: HttpAuthConfig,
 }
 
 impl Default for ServerConfig {
@@ -40,6 +59,7 @@ impl Default for ServerConfig {
             enable_cors: true,
             index_path: search_config.index_path.clone(),
             search_config,
+            auth: HttpAuthConfig::default(),
         }
     }
 }
@@ -50,6 +70,232 @@ pub struct ServerState {
     pub search_engine: Arc<SearchEngine>,
     pub started_at: Instant,
     pub index_path: PathBuf,
+    pub metrics: Arc<ServerMetrics>,
+}
+
+pub struct ServerMetrics {
+    registry: Registry,
+    http_requests_total: IntCounterVec,
+    http_request_duration_seconds: HistogramVec,
+    search_queries_total: IntCounterVec,
+    search_duration_seconds: HistogramVec,
+    index_operations_total: IntCounterVec,
+    index_operation_duration_seconds: HistogramVec,
+    index_documents_total: IntGauge,
+}
+
+impl ServerMetrics {
+    fn new() -> Result<Self> {
+        let registry = Registry::new();
+
+        let http_requests_total = IntCounterVec::new(
+            Opts::new(
+                "http_requests_total",
+                "Total number of HTTP requests handled by the Lens HTTP server",
+            ),
+            &["method", "path", "status"],
+        )?;
+        registry.register(Box::new(http_requests_total.clone()))?;
+
+        let http_duration_buckets = exponential_buckets(0.005, 2.0, 12)?;
+        let http_request_duration_seconds = HistogramVec::new(
+            HistogramOpts::new(
+                "http_request_duration_seconds",
+                "Latency distribution for HTTP requests handled by the server",
+            )
+            .buckets(http_duration_buckets.clone()),
+            &["method", "path"],
+        )?;
+        registry.register(Box::new(http_request_duration_seconds.clone()))?;
+
+        let search_queries_total = IntCounterVec::new(
+            Opts::new(
+                "search_queries_total",
+                "Count of search queries processed by the Lens search engine",
+            ),
+            &["outcome"],
+        )?;
+        registry.register(Box::new(search_queries_total.clone()))?;
+
+        let search_duration_seconds = HistogramVec::new(
+            HistogramOpts::new(
+                "search_queries_duration_seconds",
+                "Latency distribution for search queries processed by the Lens search engine",
+            )
+            .buckets(http_duration_buckets.clone()),
+            &["outcome"],
+        )?;
+        registry.register(Box::new(search_duration_seconds.clone()))?;
+
+        let index_operations_total = IntCounterVec::new(
+            Opts::new(
+                "index_operations_total",
+                "Count of index maintenance operations executed by the Lens server",
+            ),
+            &["operation", "outcome"],
+        )?;
+        registry.register(Box::new(index_operations_total.clone()))?;
+
+        let index_operation_duration_seconds = HistogramVec::new(
+            HistogramOpts::new(
+                "index_operation_duration_seconds",
+                "Latency distribution for index operations (index, clear, optimize)",
+            )
+            .buckets(http_duration_buckets),
+            &["operation", "outcome"],
+        )?;
+        registry.register(Box::new(index_operation_duration_seconds.clone()))?;
+
+        let index_documents_total = IntGauge::new(
+            "index_documents_total",
+            "Current number of documents tracked in the Lens search index",
+        )?;
+        registry.register(Box::new(index_documents_total.clone()))?;
+
+        Ok(Self {
+            registry,
+            http_requests_total,
+            http_request_duration_seconds,
+            search_queries_total,
+            search_duration_seconds,
+            index_operations_total,
+            index_operation_duration_seconds,
+            index_documents_total,
+        })
+    }
+
+    fn observe_http(&self, method: &Method, path: &str, status: StatusCode, duration: Duration) {
+        let status_label = status.as_u16().to_string();
+        let method_label = method.as_str();
+        let path_label = sanitize_path(path);
+
+        self.http_requests_total
+            .with_label_values(&[method_label, path_label.as_str(), status_label.as_str()])
+            .inc();
+        self.http_request_duration_seconds
+            .with_label_values(&[method_label, path_label.as_str()])
+            .observe(duration.as_secs_f64());
+    }
+
+    fn observe_search(&self, outcome: &str, duration: Duration) {
+        self.search_queries_total
+            .with_label_values(&[outcome])
+            .inc();
+        self.search_duration_seconds
+            .with_label_values(&[outcome])
+            .observe(duration.as_secs_f64());
+    }
+
+    fn record_index_operation(&self, operation: &str, outcome: &str, duration: Duration) {
+        self.index_operations_total
+            .with_label_values(&[operation, outcome])
+            .inc();
+        self.index_operation_duration_seconds
+            .with_label_values(&[operation, outcome])
+            .observe(duration.as_secs_f64());
+    }
+
+    fn set_index_documents(&self, count: usize) {
+        self.index_documents_total.set(count as i64);
+    }
+
+    fn gather(&self) -> Result<String> {
+        let metric_families = self.registry.gather();
+        let mut buffer = Vec::new();
+        TextEncoder::default().encode(&metric_families, &mut buffer)?;
+        Ok(String::from_utf8(buffer)?)
+    }
+}
+
+fn sanitize_path(path: &str) -> String {
+    let base = path.split('?').next().unwrap_or("/").trim();
+    if base.is_empty() || base == "/" {
+        return "/".to_string();
+    }
+
+    let normalized = base.trim_end_matches('/');
+    if normalized.starts_with('/') {
+        normalized.to_string()
+    } else {
+        format!("/{}", normalized)
+    }
+}
+
+#[derive(Clone, Debug)]
+struct AuthState {
+    header_name: HeaderName,
+    bearer_prefix: Option<String>,
+    tokens: HashSet<String>,
+}
+
+impl AuthState {
+    fn is_authorized(&self, headers: &HeaderMap) -> bool {
+        let raw_value = match headers.get(&self.header_name) {
+            Some(value) => match value.to_str() {
+                Ok(v) => v.trim(),
+                Err(_) => return false,
+            },
+            None => return false,
+        };
+
+        let candidate = if let Some(prefix) = &self.bearer_prefix {
+            raw_value
+                .strip_prefix(prefix)
+                .map(str::trim)
+                .unwrap_or(raw_value)
+        } else {
+            raw_value
+        };
+
+        self.tokens.contains(candidate)
+    }
+}
+
+fn build_auth_state(config: HttpAuthConfig) -> Result<Option<Arc<AuthState>>> {
+    if !config.enabled {
+        return Ok(None);
+    }
+
+    let HttpAuthConfig {
+        enabled: _,
+        header_name,
+        bearer_prefix,
+        tokens,
+    } = config;
+
+    let header_name_str = header_name.trim().to_string();
+    let header_name = header_name_str.parse::<HeaderName>().map_err(|err| {
+        anyhow::anyhow!(
+            "Invalid http.auth.header_name '{}': {}",
+            header_name_str,
+            err
+        )
+    })?;
+
+    let normalized_tokens: HashSet<String> = tokens
+        .into_iter()
+        .map(|token| token.trim().to_string())
+        .filter(|token| !token.is_empty())
+        .collect();
+
+    if normalized_tokens.is_empty() {
+        anyhow::bail!("HTTP authentication is enabled but no tokens are configured");
+    }
+
+    let normalized_prefix = bearer_prefix.and_then(|value| {
+        let trimmed = value.trim();
+        if trimmed.is_empty() {
+            None
+        } else {
+            Some(trimmed.to_string())
+        }
+    });
+
+    Ok(Some(Arc::new(AuthState {
+        header_name,
+        bearer_prefix: normalized_prefix,
+        tokens: normalized_tokens,
+    })))
 }
 
 /// Start the HTTP server with real search functionality
@@ -60,6 +306,7 @@ pub async fn start_server(config: ServerConfig) -> Result<()> {
         enable_cors,
         index_path,
         search_config,
+        auth,
     } = config;
 
     info!(
@@ -69,16 +316,25 @@ pub async fn start_server(config: ServerConfig) -> Result<()> {
 
     let search_engine = Arc::new(SearchEngine::with_config(search_config).await?);
     let started_at = Instant::now();
+    let metrics = Arc::new(ServerMetrics::new()?);
+
+    let auth_state = build_auth_state(auth)?;
+    if let Some(auth) = auth_state.as_ref() {
+        info!(header = %auth.header_name, "HTTP authentication enabled");
+    } else {
+        info!("HTTP authentication disabled");
+    }
 
     // Create server state
     let state = ServerState {
         search_engine,
         started_at,
         index_path: index_path.clone(),
+        metrics: metrics.clone(),
     };
 
     // Create the router with real endpoints
-    let app = create_router(state, enable_cors);
+    let app = create_router(state, enable_cors, auth_state, metrics);
 
     // Start the server
     let listener = tokio::net::TcpListener::bind(format!("{}:{}", bind, port)).await?;
@@ -102,8 +358,15 @@ pub async fn start_server(config: ServerConfig) -> Result<()> {
 }
 
 /// Create the router with all API endpoints
-fn create_router(state: ServerState, enable_cors: bool) -> Router {
+fn create_router(
+    state: ServerState,
+    enable_cors: bool,
+    auth_state: Option<Arc<AuthState>>,
+    metrics: Arc<ServerMetrics>,
+) -> Router {
     let mut app = Router::new()
+        .route("/metrics", get(metrics_handler))
+        .route("/api/metrics", get(metrics_handler))
         // Core search endpoints (replaces simulation)
         .route("/search", get(search_handler))
         .route("/search", post(search_handler))
@@ -130,19 +393,94 @@ fn create_router(state: ServerState, enable_cors: bool) -> Router {
         .route("/api/search/exact", get(exact_search_handler))
         .with_state(state);
 
+    let trace_layer = TraceLayer::new_for_http()
+        .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
+        .on_response(DefaultOnResponse::new().level(Level::INFO));
+
+    app = app.layer(trace_layer);
+
     // Add CORS if enabled
     if enable_cors {
         app = app.layer(CorsLayer::permissive());
     }
 
+    if let Some(auth) = auth_state {
+        let auth_for_layer = auth.clone();
+        app = app.layer(from_fn(move |request, next| {
+            let auth = auth_for_layer.clone();
+            async move { auth_middleware(auth, request, next).await }
+        }));
+    }
+
+    let metrics_for_layer = metrics.clone();
+    app = app.layer(from_fn(move |request, next| {
+        let metrics = metrics_for_layer.clone();
+        async move { metrics_middleware(metrics, request, next).await }
+    }));
+
     app
+}
+
+async fn metrics_middleware(
+    metrics: Arc<ServerMetrics>,
+    request: Request<Body>,
+    next: Next,
+) -> Response {
+    let method = request.method().clone();
+    let path = request.uri().path().to_string();
+    let start = Instant::now();
+
+    let response = next.run(request).await;
+    let status = response.status();
+
+    metrics.observe_http(&method, &path, status, start.elapsed());
+
+    response
+}
+
+async fn auth_middleware(
+    auth_state: Arc<AuthState>,
+    request: Request<Body>,
+    next: Next,
+) -> std::result::Result<Response, StatusCode> {
+    let method = request.method().clone();
+    let uri = request.uri().clone();
+
+    if method == Method::OPTIONS {
+        return Ok(next.run(request).await);
+    }
+
+    if !auth_state.is_authorized(request.headers()) {
+        warn!(method = %method, path = %uri, "Rejected unauthorized request");
+        return Err(StatusCode::UNAUTHORIZED);
+    }
+
+    Ok(next.run(request).await)
+}
+
+async fn metrics_handler(State(state): State<ServerState>) -> Response {
+    match state.metrics.gather() {
+        Ok(payload) => (
+            [(CONTENT_TYPE, "text/plain; version=0.0.4; charset=utf-8")],
+            payload,
+        )
+            .into_response(),
+        Err(error) => {
+            error!("Failed to gather Prometheus metrics: {}", error);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to collect metrics",
+            )
+                .into_response()
+        }
+    }
 }
 
 // ============================================================================
 // Request/Response Types (replacing simulation types)
 // ============================================================================
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct SearchParams {
     pub q: String,
     #[serde(default = "default_limit")]
@@ -232,11 +570,26 @@ pub struct HealthResponse {
 // ============================================================================
 
 /// Main search handler - replaces JavaScript simulation entirely
+#[tracing::instrument(
+    name = "http.search",
+    skip(state, params),
+    fields(
+        query = %params.q,
+        limit = params.limit,
+        offset = params.offset.unwrap_or(0),
+        fuzzy = params.fuzzy,
+        symbols = params.symbols
+    )
+)]
 async fn search_handler(
     State(state): State<ServerState>,
     Query(params): Query<SearchParams>,
 ) -> Result<Json<SearchResponse>, (StatusCode, Json<LensError>)> {
+    let metrics = state.metrics.clone();
+    let start = Instant::now();
+
     if params.q.trim().is_empty() {
+        metrics.observe_search("client_error", start.elapsed());
         return Err(api_error(
             StatusCode::BAD_REQUEST,
             LensError::search_with_query("Query cannot be empty", params.q.clone()),
@@ -244,6 +597,7 @@ async fn search_handler(
     }
 
     if params.limit == 0 || params.limit > MAX_SEARCH_LIMIT {
+        metrics.observe_search("client_error", start.elapsed());
         return Err(api_error(
             StatusCode::BAD_REQUEST,
             LensError::config_with_field(
@@ -259,6 +613,7 @@ async fn search_handler(
     let limit = params.limit;
     let offset = params.offset.unwrap_or(0);
     if offset > MAX_SEARCH_OFFSET {
+        metrics.observe_search("client_error", start.elapsed());
         return Err(api_error(
             StatusCode::BAD_REQUEST,
             LensError::config_with_field(
@@ -342,11 +697,15 @@ async fn search_handler(
             // Get real index stats
             let stats = state.search_engine.get_stats().await.map_err(|e| {
                 error!("Failed to get index stats: {}", e);
+                metrics.observe_search("server_error", start.elapsed());
                 api_error(
                     StatusCode::INTERNAL_SERVER_ERROR,
                     LensError::index_with_details("Failed to get index statistics", e.to_string()),
                 )
             })?;
+
+            metrics.set_index_documents(stats.total_documents);
+            metrics.observe_search("success", start.elapsed());
 
             Ok(Json(SearchResponse {
                 query: params.q,
@@ -369,6 +728,7 @@ async fn search_handler(
         }
         Err(e) => {
             error!("Search failed: {}", e);
+            metrics.observe_search("server_error", start.elapsed());
             Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 LensError::search_with_query(
@@ -381,6 +741,7 @@ async fn search_handler(
 }
 
 /// Fuzzy search handler
+#[tracing::instrument(name = "http.search.fuzzy", skip(state, params))]
 async fn fuzzy_search_handler(
     State(state): State<ServerState>,
     Query(mut params): Query<SearchParams>,
@@ -390,6 +751,7 @@ async fn fuzzy_search_handler(
 }
 
 /// Symbol search handler
+#[tracing::instrument(name = "http.search.symbol", skip(state, params))]
 async fn symbol_search_handler(
     State(state): State<ServerState>,
     Query(mut params): Query<SearchParams>,
@@ -399,6 +761,7 @@ async fn symbol_search_handler(
 }
 
 /// Exact search handler
+#[tracing::instrument(name = "http.search.exact", skip(state, params))]
 async fn exact_search_handler(
     State(state): State<ServerState>,
     Query(params): Query<SearchParams>,
@@ -408,13 +771,21 @@ async fn exact_search_handler(
 }
 
 /// Index directory handler - real indexing, not simulation
+#[tracing::instrument(
+    name = "http.index",
+    skip(state, request),
+    fields(directory = %request.directory, force = request.force, recursive = request.recursive)
+)]
 async fn index_handler(
     State(state): State<ServerState>,
     Json(request): Json<IndexRequest>,
 ) -> Result<Json<IndexResponse>, (StatusCode, Json<LensError>)> {
+    let metrics = state.metrics.clone();
+    let start = Instant::now();
     let directory = PathBuf::from(&request.directory);
 
     if !directory.exists() {
+        metrics.record_index_operation("bulk_index", "client_error", start.elapsed());
         return Err(api_error(
             StatusCode::BAD_REQUEST,
             LensError::io_with_path("Directory does not exist", directory.display().to_string()),
@@ -427,6 +798,7 @@ async fn index_handler(
         info!("Force reindex requested; clearing existing index first");
         if let Err(e) = state.search_engine.clear_index().await {
             error!("Failed to clear index before reindexing: {}", e);
+            metrics.record_index_operation("bulk_index", "error", start.elapsed());
             return Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 LensError::index_with_details(
@@ -442,17 +814,25 @@ async fn index_handler(
     }
 
     match state.search_engine.index_directory(&directory).await {
-        Ok(stats) => Ok(Json(IndexResponse {
-            success: true,
-            message: "Directory indexed successfully".to_string(),
-            files_indexed: stats.files_indexed,
-            files_failed: stats.files_failed,
-            lines_indexed: stats.lines_indexed,
-            symbols_extracted: stats.symbols_extracted,
-            duration_ms: stats.indexing_duration.as_millis() as u64,
-        })),
+        Ok(stats) => {
+            if let Ok(latest) = state.search_engine.get_stats().await {
+                metrics.set_index_documents(latest.total_documents);
+            }
+            metrics.record_index_operation("bulk_index", "success", start.elapsed());
+
+            Ok(Json(IndexResponse {
+                success: true,
+                message: "Directory indexed successfully".to_string(),
+                files_indexed: stats.files_indexed,
+                files_failed: stats.files_failed,
+                lines_indexed: stats.lines_indexed,
+                symbols_extracted: stats.symbols_extracted,
+                duration_ms: stats.indexing_duration.as_millis() as u64,
+            }))
+        }
         Err(e) => {
             error!("Indexing failed: {}", e);
+            metrics.record_index_operation("bulk_index", "error", start.elapsed());
             Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 LensError::index_with_details("Indexing failed", e.to_string()),
@@ -462,16 +842,24 @@ async fn index_handler(
 }
 
 /// Optimize index handler
+#[tracing::instrument(name = "http.optimize", skip(state))]
 async fn optimize_handler(
     State(state): State<ServerState>,
 ) -> Result<Json<serde_json::Value>, (StatusCode, Json<LensError>)> {
+    let metrics = state.metrics.clone();
+    let start = Instant::now();
+
     match state.search_engine.optimize().await {
-        Ok(_) => Ok(Json(serde_json::json!({
-            "success": true,
-            "message": "Index optimized successfully"
-        }))),
+        Ok(_) => {
+            metrics.record_index_operation("optimize", "success", start.elapsed());
+            Ok(Json(serde_json::json!({
+                "success": true,
+                "message": "Index optimized successfully"
+            })))
+        }
         Err(e) => {
             error!("Optimization failed: {}", e);
+            metrics.record_index_operation("optimize", "error", start.elapsed());
             Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 LensError::index_with_details("Index optimization failed", e.to_string()),
@@ -481,14 +869,20 @@ async fn optimize_handler(
 }
 
 /// Clear index handler
+#[tracing::instrument(name = "http.clear", skip(state))]
 async fn clear_handler(
     State(state): State<ServerState>,
 ) -> Result<Json<serde_json::Value>, (StatusCode, Json<LensError>)> {
     info!("Clear index endpoint called");
 
+    let metrics = state.metrics.clone();
+    let start = Instant::now();
+
     match state.search_engine.clear_index().await {
         Ok(()) => {
             info!("Index cleared successfully");
+            metrics.set_index_documents(0);
+            metrics.record_index_operation("clear", "success", start.elapsed());
             Ok(Json(serde_json::json!({
                 "success": true,
                 "message": "Index cleared successfully"
@@ -496,6 +890,7 @@ async fn clear_handler(
         }
         Err(e) => {
             error!("Failed to clear index: {}", e);
+            metrics.record_index_operation("clear", "error", start.elapsed());
             Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 LensError::index_with_details("Failed to clear index", e.to_string()),
@@ -505,18 +900,22 @@ async fn clear_handler(
 }
 
 /// Stats handler - real statistics, not simulation
+#[tracing::instrument(name = "http.stats", skip(state))]
 async fn stats_handler(
     State(state): State<ServerState>,
 ) -> Result<Json<IndexStatsResponse>, (StatusCode, Json<LensError>)> {
     match state.search_engine.get_stats().await {
-        Ok(stats) => Ok(Json(IndexStatsResponse {
-            total_documents: stats.total_documents,
-            index_size_bytes: stats.index_size_bytes,
-            index_size_human: stats.human_readable_size(),
-            supported_languages: stats.supported_languages,
-            last_updated: Some(format!("{:?}", stats.last_updated)),
-            average_document_size: stats.average_document_size(),
-        })),
+        Ok(stats) => {
+            state.metrics.set_index_documents(stats.total_documents);
+            Ok(Json(IndexStatsResponse {
+                total_documents: stats.total_documents,
+                index_size_bytes: stats.index_size_bytes,
+                index_size_human: stats.human_readable_size(),
+                supported_languages: stats.supported_languages,
+                last_updated: Some(format!("{:?}", stats.last_updated)),
+                average_document_size: stats.average_document_size(),
+            }))
+        }
         Err(e) => {
             error!("Failed to get stats: {}", e);
             Err(api_error(
@@ -528,9 +927,15 @@ async fn stats_handler(
 }
 
 /// Health check handler - real system status
+#[tracing::instrument(name = "http.health", skip(state))]
 async fn health_handler(State(state): State<ServerState>) -> Json<HealthResponse> {
     // Test if search engine is responsive
-    let search_engine_ready = state.search_engine.get_stats().await.is_ok();
+    let stats_result = state.search_engine.get_stats().await;
+    let search_engine_ready = stats_result.is_ok();
+
+    if let Ok(stats) = stats_result {
+        state.metrics.set_index_documents(stats.total_documents);
+    }
 
     Json(HealthResponse {
         status: if search_engine_ready {
@@ -632,10 +1037,12 @@ mod tests {
     async fn test_search_handler_rejects_invalid_limit() {
         let index_dir = TempDir::new().unwrap();
         let engine = SearchEngine::new(index_dir.path()).await.unwrap();
+        let metrics = Arc::new(ServerMetrics::new().unwrap());
         let state = ServerState {
             search_engine: Arc::new(engine),
             started_at: Instant::now(),
             index_path: index_dir.path().to_path_buf(),
+            metrics,
         };
 
         let params = SearchParams {
@@ -658,10 +1065,12 @@ mod tests {
     async fn test_search_handler_rejects_invalid_offset() {
         let index_dir = TempDir::new().unwrap();
         let engine = SearchEngine::new(index_dir.path()).await.unwrap();
+        let metrics = Arc::new(ServerMetrics::new().unwrap());
         let state = ServerState {
             search_engine: Arc::new(engine),
             started_at: Instant::now(),
             index_path: index_dir.path().to_path_buf(),
+            metrics,
         };
 
         let params = SearchParams {
@@ -697,10 +1106,12 @@ mod tests {
             .await
             .expect("indexing should succeed");
 
+        let metrics = Arc::new(ServerMetrics::new().unwrap());
         let state = ServerState {
             search_engine: Arc::new(engine),
             started_at: Instant::now(),
             index_path: index_dir.path().to_path_buf(),
+            metrics,
         };
 
         let params_first = SearchParams {
