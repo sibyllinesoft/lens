@@ -1,11 +1,15 @@
 //! Clear command implementation
 
 use anyhow::Result;
-use lens_search_engine::{SearchConfig as EngineSearchConfig, SearchEngine};
+use lens_search_engine::SearchEngine;
+use std::{path::Path, sync::Arc};
 
 /// Clear the search index
-pub async fn clear_index(search_config: EngineSearchConfig, skip_confirmation: bool) -> Result<()> {
-    let index_path = search_config.index_path.clone();
+pub async fn clear_index(
+    search_engine: Option<Arc<SearchEngine>>,
+    index_path: &Path,
+    skip_confirmation: bool,
+) -> Result<()> {
     if !skip_confirmation {
         println!(
             "This will delete the entire search index at: {:?}",
@@ -22,13 +26,14 @@ pub async fn clear_index(search_config: EngineSearchConfig, skip_confirmation: b
         }
     }
 
-    // Create search engine and use its proper clear_index method
-    if index_path.exists() {
-        let search_engine = SearchEngine::with_config(search_config).await?;
-        search_engine.clear_index().await?;
-        println!("Index cleared and properly reinitialized: {:?}", index_path);
-    } else {
-        println!("Index directory does not exist: {:?}", index_path);
+    match search_engine {
+        Some(engine) => {
+            engine.clear_index().await?;
+            println!("Index cleared and properly reinitialized: {:?}", index_path);
+        }
+        None => {
+            println!("Index directory does not exist: {:?}", index_path);
+        }
     }
 
     Ok(())

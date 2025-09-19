@@ -1,12 +1,11 @@
 //! Stats command implementation
 
 use anyhow::Result;
-use lens_search_engine::{SearchConfig as EngineSearchConfig, SearchEngine};
+use lens_search_engine::SearchEngine;
+use std::{path::Path, sync::Arc};
 
 /// Show index statistics
-pub async fn show_stats(search_config: EngineSearchConfig) -> Result<()> {
-    let index_path = search_config.index_path.clone();
-    let search_engine = SearchEngine::with_config(search_config).await?;
+pub async fn show_stats(search_engine: Arc<SearchEngine>, index_path: &Path) -> Result<()> {
     let stats = search_engine.get_stats().await?;
 
     println!("Index Statistics ({:?}):", index_path);

@@ -1,13 +1,11 @@
 //! Optimize command implementation
 
 use anyhow::Result;
-use lens_search_engine::{SearchConfig as EngineSearchConfig, SearchEngine};
+use lens_search_engine::SearchEngine;
+use std::{path::Path, sync::Arc};
 
 /// Optimize the search index
-pub async fn optimize_index(search_config: EngineSearchConfig) -> Result<()> {
-    let index_path = search_config.index_path.clone();
-    let search_engine = SearchEngine::with_config(search_config).await?;
-
+pub async fn optimize_index(search_engine: Arc<SearchEngine>, index_path: &Path) -> Result<()> {
     println!("Optimizing search index at {:?}...", index_path);
     let start = std::time::Instant::now();
 

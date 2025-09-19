@@ -17,7 +17,8 @@ mod http_server;
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use config::LensConfig;
-use std::path::PathBuf;
+use lens_search_engine::SearchEngine;
+use std::{path::PathBuf, sync::Arc};
 use tracing::info;
 
 #[derive(Parser)]
@@ -212,8 +213,9 @@ async fn main() -> Result<()> {
             file_pattern,
         } => {
             let search_config = config.search_engine_config(Some(effective_index_path.clone()));
+            let search_engine = Arc::new(SearchEngine::with_config(search_config).await?);
             cli::search_index(
-                search_config,
+                Arc::clone(&search_engine),
                 query,
                 cli::SearchCommandOptions {
                     limit,
@@ -228,15 +230,25 @@ async fn main() -> Result<()> {
         }
         Commands::Stats => {
             let search_config = config.search_engine_config(Some(effective_index_path.clone()));
-            cli::show_stats(search_config).await
+            let index_path = search_config.index_path.clone();
+            let search_engine = Arc::new(SearchEngine::with_config(search_config).await?);
+            cli::show_stats(search_engine, &index_path).await
         }
         Commands::Optimize => {
             let search_config = config.search_engine_config(Some(effective_index_path.clone()));
-            cli::optimize_index(search_config).await
+            let index_path = search_config.index_path.clone();
+            let search_engine = Arc::new(SearchEngine::with_config(search_config).await?);
+            cli::optimize_index(search_engine, &index_path).await
         }
         Commands::Clear { yes } => {
             let search_config = config.search_engine_config(Some(effective_index_path.clone()));
-            cli::clear_index(search_config, yes).await
+            let index_path = search_config.index_path.clone();
+            let engine = if index_path.exists() {
+                Some(Arc::new(SearchEngine::with_config(search_config).await?))
+            } else {
+                None
+            };
+            cli::clear_index(engine, &index_path, yes).await
         }
         Commands::Config { action } => handle_config_action(action, &config).await,
     }

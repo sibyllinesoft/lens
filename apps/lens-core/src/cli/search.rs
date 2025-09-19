@@ -2,9 +2,9 @@
 
 use anyhow::Result;
 use lens_search_engine::{
-    parse_full_query, ProgrammingLanguage, QueryBuilder, QueryType,
-    SearchConfig as EngineSearchConfig, SearchEngine,
+    parse_full_query, ProgrammingLanguage, QueryBuilder, QueryType, SearchEngine,
 };
+use std::sync::Arc;
 
 /// Options that influence how search queries are executed from the CLI.
 #[derive(Debug, Clone)]
@@ -19,7 +19,7 @@ pub struct SearchCommandOptions {
 
 /// Search the index
 pub async fn search_index(
-    search_config: EngineSearchConfig,
+    search_engine: Arc<SearchEngine>,
     query: String,
     options: SearchCommandOptions,
 ) -> Result<()> {
@@ -31,9 +31,6 @@ pub async fn search_index(
         language,
         file_pattern,
     } = options;
-
-    // Create search engine
-    let search_engine = SearchEngine::with_config(search_config).await?;
 
     let parsed_query =
         parse_full_query(&query).unwrap_or_else(|_| QueryBuilder::new(&query).build());
