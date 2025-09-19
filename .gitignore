@@ -106,3 +106,4 @@ indexed-content/
 .dockerignore
 Dockerfile.dev
 docker-compose.override.yml
+index/
