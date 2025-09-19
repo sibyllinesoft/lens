@@ -352,10 +352,10 @@ impl LanguageServer for LensLspServer {
         if let Some(mut doc) = self.document_cache.get_mut(&params.text_document.uri) {
             doc.version = params.text_document.version;
 
-            // Apply changes (simplified - assumes full document replacement)
             for change in params.content_changes {
-                if change.range.is_none() {
-                    // Full document update
+                if let Some(range) = change.range {
+                    apply_text_change(&mut doc.text, range, &change.text);
+                } else {
                     doc.text = change.text;
                 }
             }
@@ -738,6 +738,75 @@ fn extract_symbol_from_content(content: &str) -> String {
         first_word.to_string()
     } else {
         String::new()
+    }
+}
+
+fn position_to_offset(text: &str, position: Position) -> usize {
+    let mut current_line = 0usize;
+    let mut current_col = 0usize;
+
+    for (idx, ch) in text.char_indices() {
+        if current_line == position.line as usize && current_col == position.character as usize {
+            return idx;
+        }
+
+        if ch == '\n' {
+            current_line += 1;
+            current_col = 0;
+        } else {
+            current_col += 1;
+        }
+    }
+
+    // If the requested position is at the very end of the document, return len
+    if current_line == position.line as usize && current_col == position.character as usize {
+        return text.len();
+    }
+
+    text.len()
+}
+
+fn apply_text_change(text: &mut String, range: Range, replacement: &str) {
+    let start = position_to_offset(text, range.start);
+    let end = position_to_offset(text, range.end);
+
+    if start <= end && end <= text.len() {
+        text.replace_range(start..end, replacement);
+    } else {
+        // Fallback to full replacement if the range is inconsistent
+        text.clear();
+        text.push_str(replacement);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn position_to_offset_basic() {
+        let text = "hello\nworld";
+        assert_eq!(position_to_offset(text, Position::new(0, 0)), 0);
+        assert_eq!(position_to_offset(text, Position::new(0, 5)), 5);
+        assert_eq!(position_to_offset(text, Position::new(1, 0)), 6);
+        assert_eq!(position_to_offset(text, Position::new(1, 3)), 9);
+        assert_eq!(position_to_offset(text, Position::new(1, 5)), text.len());
+    }
+
+    #[test]
+    fn apply_text_change_replaces_range() {
+        let mut text = "hello\nworld".to_string();
+        let range = Range::new(Position::new(0, 0), Position::new(0, 5));
+        apply_text_change(&mut text, range, "hey");
+        assert_eq!(text, "hey\nworld");
+    }
+
+    #[test]
+    fn apply_text_change_insert_middle_line() {
+        let mut text = "hello\nworld".to_string();
+        let range = Range::new(Position::new(1, 3), Position::new(1, 3));
+        apply_text_change(&mut text, range, "wide");
+        assert_eq!(text, "hello\nworwideld");
     }
 }
 
