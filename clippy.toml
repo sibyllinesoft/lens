@@ -1,0 +1,67 @@
+# Clippy configuration for Lens
+# Enforce high code quality standards
+
+# Complexity limits
+cognitive-complexity-threshold = 30
+type-complexity-threshold = 250
+too-many-arguments-threshold = 7
+too-many-lines-threshold = 100
+large-type-threshold = 600
+verbose-bit-mask-threshold = 1
+
+# Documentation requirements
+missing-docs-in-crate-items = true
+
+# Performance lints
+avoid-breaking-exported-api = false
+msrv = "1.70.0"
+
+# Allow some clippy lints that may be too strict for our codebase
+# (These will be warnings instead of errors)
+allow = [
+    # Sometimes we need many arguments for configuration
+    "too_many_arguments",
+    # Module inception is sometimes necessary for organization
+    "module_inception",
+    # Single match expressions can be clearer than if-let sometimes
+    "single_match",
+    # Large enum variants are sometimes unavoidable
+    "large_enum_variant",
+]
+
+# Deny certain lints to maintain code quality
+deny = [
+    # Memory safety
+    "mem_forget",
+    "mem_replace_with_uninit",
+    
+    # Logic errors
+    "logic_bug",
+    "suspicious",
+    
+    # Performance issues
+    "perf",
+    "clone_on_ref_ptr",
+    "redundant_clone",
+    
+    # Code style consistency
+    "style",
+    "redundant_field_names",
+    "redundant_static_lifetimes",
+    
+    # Potential bugs
+    "correctness",
+    "suspicious_else_formatting",
+    "suspicious_op_assign_impl",
+]
+
+# Warn on these to encourage good practices
+warn = [
+    "complexity",
+    "cognitive_complexity",
+    "type_complexity",
+    "cyclomatic_complexity",
+    "missing_docs_in_private_items",
+    "undocumented_unsafe_blocks",
+    "multiple_unsafe_ops_per_block",
+]

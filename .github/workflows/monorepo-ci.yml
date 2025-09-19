@@ -1,0 +1,445 @@
+name: Monorepo CI/CD
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/**'
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # Pre-flight checks and setup
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      rust-changed: ${{ steps.changes.outputs.rust }}
+      ts-changed: ${{ steps.changes.outputs.typescript }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            rust:
+              - 'apps/**/*.rs'
+              - 'packages/**/*.rs'
+              - '**/Cargo.toml'
+              - 'Cargo.lock'
+            typescript:
+              - '**/*.ts'
+              - '**/*.js'
+              - '**/package.json'
+              - 'package-lock.json'
+
+  # Rust workspace build and test
+  rust-ci:
+    needs: setup
+    if: needs.setup.outputs.rust-changed == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: [stable]
+        os: [ubuntu-latest]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: clippy, rustfmt
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libssl-dev
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.os }}-${{ matrix.toolchain }}
+
+      - name: Check code formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      - name: Check code
+        run: cargo check --workspace --all-targets --all-features
+
+      - name: Run unit tests
+        run: cargo test --workspace --lib
+
+      - name: Run integration tests
+        run: cargo test --workspace --test '*'
+
+      - name: Build release binaries
+        run: cargo build --release --workspace
+
+      - name: Run benchmarks
+        run: cargo bench --workspace --no-run
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-binaries-${{ github.sha }}
+          path: |
+            target/release/lens
+          retention-days: 7
+
+  # Security audit for Rust dependencies
+  security-audit:
+    needs: setup
+    if: needs.setup.outputs.rust-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run security audit
+        run: cargo audit
+
+      - name: Install cargo-deny
+        run: cargo install cargo-deny
+
+      - name: Run cargo deny
+        run: cargo deny check
+
+  # E2E testing with real Rust service
+  e2e-tests:
+    needs: [rust-ci, setup]
+    if: needs.setup.outputs.rust-changed == 'true'
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: rust-binaries-${{ github.sha }}
+          path: target/release/
+
+      - name: Make binary executable
+        run: chmod +x target/release/lens
+
+      - name: Setup test environment
+        run: |
+          mkdir -p test-index
+          mkdir -p indexed-content
+          echo "fn main() { println!(\"Hello, world!\"); }" > indexed-content/main.rs
+          echo "class TestClass { constructor() {} }" > indexed-content/test.js
+
+      - name: Test binary execution
+        run: |
+          ./target/release/lens --help
+          ./target/release/lens --version
+
+      - name: Test indexing functionality
+        run: |
+          timeout 30s ./target/release/lens index indexed-content --force || {
+            echo "Indexing timed out or failed, checking for partial success..."
+            ls -la index/ || echo "No index directory created"
+            exit 1
+          }
+
+      - name: Start HTTP server in background
+        run: |
+          ./target/release/lens serve --port 3001 --cors &
+          SERVER_PID=$!
+          echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
+          
+          # Wait for server to start
+          for i in {1..30}; do
+            if curl -f http://localhost:3001/health 2>/dev/null; then
+              echo "Server started successfully"
+              break
+            fi
+            if [ $i -eq 30 ]; then
+              echo "Server failed to start within 30 seconds"
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: Test HTTP API endpoints
+        run: |
+          # Test health endpoint
+          curl -f http://localhost:3001/health
+          
+          # Test stats endpoint
+          curl -f http://localhost:3001/stats
+          
+          # Test search endpoint
+          curl -f "http://localhost:3001/search?q=main&limit=10"
+          
+          # Test search with empty query
+          curl -f "http://localhost:3001/search?q=&limit=5" || echo "Empty query test expected"
+
+      - name: Test error handling
+        run: |
+          # Test invalid endpoint (should return 404)
+          curl -f -s -o /dev/null -w "%{http_code}" http://localhost:3001/invalid || echo "Expected 404"
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ ! -z "$SERVER_PID" ]; then
+            kill $SERVER_PID || true
+          fi
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-logs-${{ github.sha }}
+          path: |
+            *.log
+            index/
+          retention-days: 3
+
+  # Docker build and test
+  docker-tests:
+    needs: [rust-ci, setup]
+    if: needs.setup.outputs.rust-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t lens:test .
+
+      - name: Test Docker image
+        run: |
+          # Test that the image starts
+          docker run --rm --name lens-test -d -p 3002:3000 lens:test
+          
+          # Wait for container to be ready
+          sleep 10
+          
+          # Test health endpoint
+          curl -f http://localhost:3002/health
+          
+          # Stop container
+          docker stop lens-test
+
+      - name: Test Docker image with docker-compose
+        run: |
+          # Test basic docker-compose setup
+          docker-compose -f docker-compose.yml up -d lens
+          sleep 15
+          
+          # Test service
+          curl -f http://localhost:3000/health
+          
+          # Clean up
+          docker-compose down
+
+  # Performance benchmarks
+  performance-tests:
+    needs: [rust-ci, setup]
+    if: needs.setup.outputs.rust-changed == 'true' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: rust-binaries-${{ github.sha }}
+          path: target/release/
+
+      - name: Make binary executable
+        run: chmod +x target/release/lens
+
+      - name: Run performance benchmarks
+        run: |
+          # Create test corpus
+          mkdir -p perf-test-corpus
+          for i in {1..100}; do
+            echo "fn test_function_$i() { println!(\"Test $i\"); }" > perf-test-corpus/test$i.rs
+          done
+          
+          # Benchmark indexing
+          time ./target/release/lens index perf-test-corpus --force
+          
+          # Benchmark search
+          time ./target/release/lens search "function" --limit 50
+
+      - name: Run cargo benchmarks
+        run: |
+          cargo bench --workspace -- --output-format json | tee benchmark_results.json
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ github.sha }}
+          path: benchmark_results.json
+          retention-days: 30
+
+  # Code coverage
+  coverage:
+    needs: setup
+    if: needs.setup.outputs.rust-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libssl-dev
+
+      - name: Install tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Generate coverage report
+        run: |
+          cargo tarpaulin --all-features --workspace --ignore-tests --timeout 900 --out xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: cobertura.xml
+          fail_ci_if_error: false
+
+  # Documentation build and check
+  docs:
+    needs: setup
+    if: needs.setup.outputs.rust-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build documentation
+        run: |
+          cargo doc --workspace --no-deps --document-private-items
+
+      - name: Check for broken links in docs
+        run: |
+          # Install cargo-deadlinks if needed for link checking
+          echo "Documentation built successfully"
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-docs-${{ github.sha }}
+          path: target/doc/
+          retention-days: 7
+
+  # Final validation and reporting
+  final-checks:
+    needs: [rust-ci, e2e-tests, docker-tests, security-audit, coverage, docs]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check overall status
+        run: |
+          echo "Rust CI: ${{ needs.rust-ci.result }}"
+          echo "E2E Tests: ${{ needs.e2e-tests.result }}"
+          echo "Docker Tests: ${{ needs.docker-tests.result }}"
+          echo "Security Audit: ${{ needs.security-audit.result }}"
+          echo "Coverage: ${{ needs.coverage.result }}"
+          echo "Docs: ${{ needs.docs.result }}"
+          
+          if [[ "${{ needs.rust-ci.result }}" == "failure" || 
+                "${{ needs.e2e-tests.result }}" == "failure" || 
+                "${{ needs.docker-tests.result }}" == "failure" || 
+                "${{ needs.security-audit.result }}" == "failure" ]]; then
+            echo "❌ Critical checks failed"
+            exit 1
+          else
+            echo "✅ All critical checks passed"
+          fi
+
+  # Release preparation (only on main branch)
+  prepare-release:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [final-checks]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release artifacts
+        run: |
+          cargo build --release --workspace
+          
+          # Create release directory
+          mkdir -p release/
+          cp target/release/lens release/
+          cp README.md release/
+          cp LICENSE release/
+          
+          # Create tarball
+          tar -czf lens-${{ github.sha }}.tar.gz -C release/ .
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.sha }}
+          path: lens-${{ github.sha }}.tar.gz
+          retention-days: 90

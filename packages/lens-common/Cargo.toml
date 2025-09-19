@@ -1,0 +1,18 @@
+[package]
+name = "lens-common"
+version = "1.1.0"
+edition = "2021"
+authors = ["Nathan Rice <nathan.alexander.rice@gmail.com>"]
+description = "Common types and utilities shared across lens packages"
+license = "MIT"
+
+[dependencies]
+# Core serialization support
+serde = { workspace = true }
+anyhow = { workspace = true }
+
+# Time handling for results
+chrono = { workspace = true, features = ["serde"] }
+
+[features]
+default = []

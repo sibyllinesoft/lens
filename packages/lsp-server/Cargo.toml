@@ -1,0 +1,36 @@
+[package]
+name = "lens-lsp-server"
+version = "1.1.0"
+edition = "2021"
+authors = ["Nathan Rice <nathan.alexander.rice@gmail.com>"]
+description = "LSP server for Lens code search with real language server integration"
+license = "MIT"
+
+[dependencies]
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+tower-lsp = { workspace = true }
+lsp-types = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
+dashmap = { workspace = true }
+parking_lot = { workspace = true }
+futures = { workspace = true }
+futures-util = { workspace = true }
+
+# File pattern matching
+globset = { workspace = true }
+
+# Search engine integration
+lens-search-engine = { path = "../search-engine" }
+
+# Common types and utilities
+lens-common = { path = "../lens-common" }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+tracing-test = { workspace = true }

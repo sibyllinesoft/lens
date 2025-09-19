@@ -1,0 +1,8 @@
+packages:
+  # TypeScript/JavaScript packages
+  - 'packages/*'
+  - 'apps/*'
+  - 'tools/*'
+  # Include docs and examples
+  - 'docs/*'
+  - 'examples/*'

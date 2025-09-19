@@ -1,1 +1,0 @@
-[{"file_path": "indexed-content/test-file.js", "content": "console.log(\"Test file for corpus\");\nfunction testFunction() {\n  return \"Hello World\";\n}\nmodule.exports = { testFunction };", "language": "javascript", "size": 128}]

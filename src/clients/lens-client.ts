@@ -8,28 +8,42 @@ import { LensEndpointConfig } from '../config/data-source-config.js';
 export interface LensSearchRequest {
   query: string;
   limit?: number;
-  context_lines?: number;
+  offset?: number;
   language?: string;
+  file_pattern?: string;
+  fuzzy?: boolean;
+  symbols?: boolean;
 }
 
-export interface LensHit {
+export interface LensSearchHit {
   file_path: string;
-  line_start: number;
-  line_end: number;
-  score: number;
-  why: 'lex' | 'struct' | 'sem';
+  line_number: number;
   content: string;
-  span_start?: number;
-  span_end?: number;
+  score: number;
+  language?: string;
+  matched_terms: string[];
+  context_lines?: string[];
+}
+
+export interface LensIndexStats {
+  total_documents: number;
+  index_size_bytes: number;
+  index_size_human: string;
+  supported_languages: number;
+  average_document_size: number;
+  last_updated?: string;
 }
 
 export interface LensSearchResponse {
-  query_id: string;
-  hits: LensHit[];
-  shard_id: string;
-  latency_ms: number;
-  total_hits: number;
-  truncated: boolean;
+  query: string;
+  query_type: string;
+  total: number;
+  limit: number;
+  offset: number;
+  duration_ms: number;
+  from_cache: boolean;
+  results: LensSearchHit[];
+  index_stats: LensIndexStats;
 }
 
 export interface LensClientMetrics {
@@ -41,11 +55,13 @@ export interface LensClientMetrics {
   success: boolean;
   error_code?: string;
   retry_count: number;
+  from_cache: boolean;
 }
 
 export class LensClient {
   private readonly config: LensEndpointConfig;
   private readonly abortController = new AbortController();
+  private lastRequestUrl: string | null = null;
 
   constructor(config: LensEndpointConfig) {
     this.config = config;
@@ -65,17 +81,18 @@ export class LensClient {
       try {
         const response = await this.performSearch(request, req_ts, attempt);
         const lat_ms = Date.now() - req_ts;
-        
+
         return {
           response,
           metrics: {
             req_ts,
             lat_ms,
             within_sla: lat_ms <= this.config.timeout,
-            endpoint_url: this.config.baseUrl,
-            shard: response.shard_id,
+            endpoint_url: this.lastRequestUrl ?? this.config.baseUrl,
+            shard: 'default',
             success: true,
-            retry_count
+            retry_count,
+            from_cache: response.from_cache
           }
         };
       } catch (error) {
@@ -101,11 +118,12 @@ export class LensClient {
         req_ts,
         lat_ms,
         within_sla: lat_ms <= this.config.timeout,
-        endpoint_url: this.config.baseUrl,
+        endpoint_url: this.lastRequestUrl ?? this.config.baseUrl,
         shard: 'unknown',
         success: false,
         error_code: this.getErrorCode(lastError),
-        retry_count
+        retry_count,
+        from_cache: false
       }
     };
   }
@@ -120,15 +138,42 @@ export class LensClient {
       throw new Error('SLA_TIMEOUT_EXCEEDED');
     }
 
-    const searchUrl = `${this.config.baseUrl}/search`;
+    const params = new URLSearchParams();
+    params.set('q', request.query);
+
+    if (typeof request.limit === 'number') {
+      params.set('limit', request.limit.toString());
+    }
+
+    if (typeof request.offset === 'number') {
+      params.set('offset', request.offset.toString());
+    }
+
+    if (request.language) {
+      params.set('language', request.language);
+    }
+
+    if (request.file_pattern) {
+      params.set('file_pattern', request.file_pattern);
+    }
+
+    if (request.fuzzy) {
+      params.set('fuzzy', 'true');
+    }
+
+    if (request.symbols) {
+      params.set('symbols', 'true');
+    }
+
+    const searchUrl = `${this.config.baseUrl}/search?${params.toString()}`;
+    this.lastRequestUrl = searchUrl;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), remainingTime);
 
     try {
       const response = await fetch(searchUrl, {
-        method: 'POST',
+        method: 'GET',
         headers: this.config.headers,
-        body: JSON.stringify(request),
         signal: controller.signal
       });
 
@@ -139,13 +184,12 @@ export class LensClient {
       }
 
       const contentType = response.headers.get('content-type');
-      if (contentType?.includes('application/x-ndjson')) {
-        return await this.parseNDJSONResponse(response);
-      } else if (contentType?.includes('application/json')) {
-        return await response.json();
-      } else {
+      if (!contentType?.includes('application/json')) {
         throw new Error('INVALID_RESPONSE_CONTENT_TYPE');
       }
+
+      const payload = await response.json();
+      return payload as LensSearchResponse;
     } catch (error) {
       clearTimeout(timeoutId);
       
@@ -155,41 +199,6 @@ export class LensClient {
       
       throw error;
     }
-  }
-
-  private async parseNDJSONResponse(response: Response): Promise<LensSearchResponse> {
-    const text = await response.text();
-    const lines = text.trim().split('\n');
-    
-    if (lines.length === 0) {
-      throw new Error('EMPTY_NDJSON_RESPONSE');
-    }
-
-    try {
-      // Parse the first line which should contain metadata
-      const metadata = JSON.parse(lines[0]);
-      
-      // Parse remaining lines as hits
-      const hits: LensHit[] = lines.slice(1).map(line => {
-        if (!line.trim()) return null;
-        return JSON.parse(line);
-      }).filter(hit => hit !== null);
-
-      return {
-        query_id: metadata.query_id || this.generateQueryId(),
-        hits,
-        shard_id: metadata.shard_id || 'unknown',
-        latency_ms: metadata.latency_ms || 0,
-        total_hits: hits.length,
-        truncated: metadata.truncated || false
-      };
-    } catch (parseError) {
-      throw new Error(`NDJSON_PARSE_ERROR: ${parseError}`);
-    }
-  }
-
-  private generateQueryId(): string {
-    return `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   private isNonRetryableError(error: any): boolean {

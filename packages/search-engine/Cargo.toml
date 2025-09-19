@@ -1,0 +1,53 @@
+[package]
+name = "lens-search-engine"
+version = "1.1.0"
+edition = "2021"
+authors = ["Nathan Rice <nathan.alexander.rice@gmail.com>"]
+description = "High-performance search engine using Tantivy"
+license = "MIT"
+
+[dependencies]
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+tantivy = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
+regex = { workspace = true }
+walkdir = { workspace = true }
+dashmap = { workspace = true }
+moka = { workspace = true }
+parking_lot = { workspace = true }
+indexmap = { workspace = true }
+smallvec = { workspace = true }
+bytes = { workspace = true }
+fastrand = { workspace = true }
+futures = { workspace = true }
+chrono = { workspace = true }
+futures-util = { workspace = true }
+ignore = { workspace = true }
+globset = { workspace = true }
+notify = { workspace = true }
+tempfile = { workspace = true }
+tree-sitter = { workspace = true }
+tree-sitter-typescript = { workspace = true }
+tree-sitter-python = { workspace = true }
+tree-sitter-rust = { workspace = true }
+tree-sitter-go = { workspace = true }
+tree-sitter-javascript = { workspace = true }
+
+# Common types and utilities
+lens-common = { path = "../lens-common" }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+criterion = { workspace = true }
+tracing-test = { workspace = true }
+
+[[bench]]
+name = "search_performance"
+harness = false

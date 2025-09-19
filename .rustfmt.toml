@@ -1,0 +1,59 @@
+# Lens Rust Formatting Configuration
+# Based on Rust 2021 edition best practices
+
+# Basic formatting
+edition = "2021"
+max_width = 100
+hard_tabs = false
+tab_spaces = 4
+
+# Import formatting
+imports_granularity = "Crate"
+imports_layout = "Horizontal"
+group_imports = "StdExternalCrate"
+reorder_imports = true
+
+# Code style
+fn_args_layout = "Tall"
+fn_call_width = 60
+where_single_line = true
+force_multiline_blocks = false
+spaces_around_ranges = false
+binop_separator = "Front"
+
+# Comments and documentation
+normalize_comments = true
+normalize_doc_attributes = true
+wrap_comments = true
+comment_width = 80
+doc_comment_code_block_width = 100
+
+# Trailing elements
+trailing_comma = "Vertical"
+trailing_semicolon = true
+match_block_trailing_comma = false
+
+# Newlines
+newline_style = "Unix"
+blank_lines_upper_bound = 1
+blank_lines_lower_bound = 0
+
+# Control flow
+control_brace_style = "AlwaysSameLine"
+brace_style = "SameLineWhere"
+
+# Chains and arrays
+chain_width = 60
+single_line_if_else_max_width = 50
+array_width = 60
+attr_fn_like_width = 70
+
+# Strings and literals
+format_strings = true
+format_macro_matchers = true
+format_macro_bodies = true
+
+# Stability options (may not be available in stable rustfmt)
+# unstable_features = true
+# format_code_in_doc_comments = true
+# condense_wildcard_suffixes = true
