@@ -13,6 +13,7 @@ use chrono::Utc;
 use dashmap::DashMap;
 use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
 use regex::escape;
+use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -69,7 +70,7 @@ pub struct SchemaFields {
 }
 
 /// Search engine configuration
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SearchConfig {
     pub index_path: PathBuf,
     pub max_results: usize,

@@ -22,14 +22,12 @@ clap = { workspace = true }
 axum = { workspace = true }
 tower = { workspace = true }
 tower-http = { workspace = true }
-config = { workspace = true }
-toml = { workspace = true }
-dirs = { workspace = true }
 
 # Local packages
 lens-search-engine = { path = "../../packages/search-engine" }
 lens-lsp-server = { path = "../../packages/lsp-server" }
 lens-common = { path = "../../packages/lens-common" }
+lens-config = { path = "../../packages/lens-config" }
 
 [dev-dependencies]
 tempfile = { workspace = true }

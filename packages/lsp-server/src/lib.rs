@@ -8,6 +8,7 @@ use anyhow::Result;
 use dashmap::DashMap;
 use lens_search_engine::{QueryBuilder, SearchEngine};
 use lsp_types::*;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -33,7 +34,7 @@ pub struct LensLspServer {
 }
 
 /// Configuration for the LSP server
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LspServerConfig {
     /// Maximum number of search results to return
     pub max_search_results: usize,

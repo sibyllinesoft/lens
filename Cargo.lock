@@ -1453,9 +1453,8 @@ dependencies = [
  "anyhow",
  "axum",
  "clap",
- "config",
- "dirs",
  "lens-common",
+ "lens-config",
  "lens-lsp-server",
  "lens-search-engine",
  "serde",
@@ -1463,7 +1462,6 @@ dependencies = [
  "tempfile",
  "thiserror 1.0.69",
  "tokio",
- "toml",
  "tower 0.4.13",
  "tower-http",
  "tracing",
@@ -1478,6 +1476,20 @@ dependencies = [
  "anyhow",
  "chrono",
  "serde",
+]
+
+[[package]]
+name = "lens-config"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "config",
+ "dirs",
+ "lens-lsp-server",
+ "lens-search-engine",
+ "serde",
+ "tempfile",
+ "toml",
 ]
 
 [[package]]

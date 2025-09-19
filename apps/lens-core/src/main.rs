@@ -182,23 +182,16 @@ async fn main() -> Result<()> {
     // Execute the selected command
     match cli.command {
         Commands::Lsp { tcp, port } => {
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
+            let lsp_config = config.lsp_server_config();
             if tcp {
-                cli::start_lsp_tcp_server(
-                    config.search.to_engine_config(effective_index_path.clone()),
-                    config.lsp.to_server_config(),
-                    port,
-                )
-                .await
+                cli::start_lsp_tcp_server(search_config, lsp_config, port).await
             } else {
-                cli::start_lsp_stdio_server(
-                    config.search.to_engine_config(effective_index_path.clone()),
-                    config.lsp.to_server_config(),
-                )
-                .await
+                cli::start_lsp_stdio_server(search_config, lsp_config).await
             }
         }
         Commands::Serve { bind, port, cors } => {
-            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             cli::start_http_server(search_config, bind, port, cors).await
         }
         Commands::Index {
@@ -206,7 +199,7 @@ async fn main() -> Result<()> {
             force,
             progress,
         } => {
-            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             cli::index_directory(search_config, directory, force, progress).await
         }
         Commands::Search {
@@ -218,7 +211,7 @@ async fn main() -> Result<()> {
             language,
             file_pattern,
         } => {
-            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             cli::search_index(
                 search_config,
                 query,
@@ -234,15 +227,15 @@ async fn main() -> Result<()> {
             .await
         }
         Commands::Stats => {
-            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             cli::show_stats(search_config).await
         }
         Commands::Optimize => {
-            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             cli::optimize_index(search_config).await
         }
         Commands::Clear { yes } => {
-            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            let search_config = config.search_engine_config(Some(effective_index_path.clone()));
             cli::clear_index(search_config, yes).await
         }
         Commands::Config { action } => handle_config_action(action, &config).await,

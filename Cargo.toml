@@ -5,6 +5,7 @@ members = [
     "packages/search-engine",
     "packages/lsp-server",
     "packages/lens-common",
+    "packages/lens-config",
 ]
 
 [workspace.dependencies]
