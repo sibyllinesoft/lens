@@ -33,8 +33,8 @@ struct Cli {
     debug: bool,
 
     /// Index directory path
-    #[arg(long, global = true, default_value = "./index")]
-    index_path: PathBuf,
+    #[arg(long, global = true)]
+    index_path: Option<PathBuf>,
 
     /// Enable verbose output
     #[arg(long, short, global = true)]
@@ -174,25 +174,41 @@ async fn main() -> Result<()> {
     );
 
     // Use config values, but allow CLI overrides
-    let effective_index_path = cli.index_path.clone();
+    let effective_index_path = cli
+        .index_path
+        .clone()
+        .unwrap_or_else(|| config.search.index_path.clone());
 
     // Execute the selected command
     match cli.command {
         Commands::Lsp { tcp, port } => {
             if tcp {
-                cli::start_lsp_tcp_server(effective_index_path, port).await
+                cli::start_lsp_tcp_server(
+                    config.search.to_engine_config(effective_index_path.clone()),
+                    config.lsp.to_server_config(),
+                    port,
+                )
+                .await
             } else {
-                cli::start_lsp_stdio_server(effective_index_path).await
+                cli::start_lsp_stdio_server(
+                    config.search.to_engine_config(effective_index_path.clone()),
+                    config.lsp.to_server_config(),
+                )
+                .await
             }
         }
         Commands::Serve { bind, port, cors } => {
-            cli::start_http_server(effective_index_path, bind, port, cors).await
+            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            cli::start_http_server(search_config, bind, port, cors).await
         }
         Commands::Index {
             directory,
             force,
             progress,
-        } => cli::index_directory(effective_index_path, directory, force, progress).await,
+        } => {
+            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            cli::index_directory(search_config, directory, force, progress).await
+        }
         Commands::Search {
             query,
             limit,
@@ -202,26 +218,38 @@ async fn main() -> Result<()> {
             language,
             file_pattern,
         } => {
+            let search_config = config.search.to_engine_config(effective_index_path.clone());
             cli::search_index(
-                effective_index_path,
+                search_config,
                 query,
-                limit,
-                offset,
-                fuzzy,
-                symbols,
-                language,
-                file_pattern,
+                cli::SearchCommandOptions {
+                    limit,
+                    offset,
+                    fuzzy,
+                    symbols,
+                    language,
+                    file_pattern,
+                },
             )
             .await
         }
-        Commands::Stats => cli::show_stats(effective_index_path).await,
-        Commands::Optimize => cli::optimize_index(effective_index_path).await,
-        Commands::Clear { yes } => cli::clear_index(effective_index_path, yes).await,
-        Commands::Config { action } => handle_config_command(action, &config).await,
+        Commands::Stats => {
+            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            cli::show_stats(search_config).await
+        }
+        Commands::Optimize => {
+            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            cli::optimize_index(search_config).await
+        }
+        Commands::Clear { yes } => {
+            let search_config = config.search.to_engine_config(effective_index_path.clone());
+            cli::clear_index(search_config, yes).await
+        }
+        Commands::Config { action } => handle_config_action(action, &config).await,
     }
 }
 
-async fn handle_config_command(action: ConfigAction, config: &LensConfig) -> Result<()> {
+async fn handle_config_action(action: ConfigAction, config: &LensConfig) -> Result<()> {
     match action {
         ConfigAction::Show => {
             println!("Current Configuration:");
@@ -250,6 +278,14 @@ async fn handle_config_command(action: ConfigAction, config: &LensConfig) -> Res
                 "supported_extensions = {:?}",
                 config.search.supported_extensions
             );
+            println!(
+                "ignored_directories = {:?}",
+                config.search.ignored_directories
+            );
+            println!(
+                "ignored_file_patterns = {:?}",
+                config.search.ignored_file_patterns
+            );
             println!();
 
             // LSP settings
@@ -264,6 +300,10 @@ async fn handle_config_command(action: ConfigAction, config: &LensConfig) -> Res
             println!(
                 "enable_result_caching = {}",
                 config.lsp.enable_result_caching
+            );
+            println!(
+                "workspace_exclude_patterns = {:?}",
+                config.lsp.workspace_exclude_patterns
             );
             println!();
 

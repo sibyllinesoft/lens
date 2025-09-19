@@ -5,7 +5,7 @@
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use lens_search_engine::{QueryBuilder, SearchEngine};
-use std::time::Duration;
+use std::{sync::Arc, time::Duration};
 use tempfile::TempDir;
 use tokio::runtime::Runtime;
 
@@ -162,57 +162,48 @@ fn benchmark_indexing(c: &mut Criterion) {
 fn benchmark_concurrent_searches(c: &mut Criterion) {
     let rt = Runtime::new().unwrap();
 
-    // Set up test data
     let temp_dir = TempDir::new().unwrap();
+    let index_path = temp_dir.path().join("index");
     let test_files_dir = temp_dir.path().join("test_files");
     std::fs::create_dir_all(&test_files_dir).unwrap();
 
-    // Create test files
     for i in 0..50 {
         let content = format!(
-            "pub fn function_{}() {{\n    // Function implementation {}\n}}",
+            "pub fn function_{}() {{
+    // Function implementation {}
+}}",
             i, i
         );
         std::fs::write(test_files_dir.join(format!("test_{}.rs", i)), content).unwrap();
     }
 
-    // Create search engine in the benchmark itself to avoid lifetime issues
+    let search_engine = rt.block_on(async {
+        let engine = SearchEngine::new(&index_path).await.unwrap();
+        engine.index_directory(&test_files_dir).await.unwrap();
+        engine
+    });
+    let search_engine = Arc::new(search_engine);
+    let queries = Arc::new(vec![
+        QueryBuilder::new("function").build(),
+        QueryBuilder::new("pub").build(),
+        QueryBuilder::new("fn").symbol().build(),
+    ]);
+
     c.bench_function("concurrent_searches", |b| {
-        b.to_async(&rt).iter(|| async {
-            let temp_dir = TempDir::new().unwrap();
-            let test_files_dir = temp_dir.path().join("test_files");
-            std::fs::create_dir_all(&test_files_dir).unwrap();
-
-            // Create minimal test files for concurrent benchmark
-            for i in 0..10 {
-                let content = format!("pub fn function_{}() {{}}", i);
-                std::fs::write(test_files_dir.join(format!("test_{}.rs", i)), content).unwrap();
+        let engine = Arc::clone(&search_engine);
+        let queries = Arc::clone(&queries);
+        b.to_async(&rt).iter(move || {
+            let engine = Arc::clone(&engine);
+            let queries = Arc::clone(&queries);
+            async move {
+                let futures = queries.iter().cloned().map(|query| {
+                    let engine = Arc::clone(&engine);
+                    async move { engine.search(&query).await.unwrap() }
+                });
+                let results = futures::future::join_all(futures).await;
+                black_box(results)
             }
-
-            let search_engine = SearchEngine::new(temp_dir.path().join("index"))
-                .await
-                .unwrap();
-            search_engine
-                .index_directory(&test_files_dir)
-                .await
-                .unwrap();
-
-            let queries = vec![
-                QueryBuilder::new("function").build(),
-                QueryBuilder::new("pub").build(),
-                QueryBuilder::new("fn").symbol().build(),
-            ];
-
-            let mut handles = Vec::new();
-            for query in queries {
-                let engine_clone = &search_engine;
-                let query_clone = query.clone(); // Assuming QueryBuilder result is cloneable
-                handles.push(async move { engine_clone.search(&query_clone).await.unwrap() });
-            }
-
-            let results = futures::future::join_all(handles).await;
-            black_box(results)
-        })
+        });
     });
 }
 

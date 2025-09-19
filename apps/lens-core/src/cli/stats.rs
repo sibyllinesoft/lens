@@ -1,15 +1,15 @@
 //! Stats command implementation
 
 use anyhow::Result;
-use lens_search_engine::SearchEngine;
-use std::path::PathBuf;
+use lens_search_engine::{SearchConfig as EngineSearchConfig, SearchEngine};
 
 /// Show index statistics
-pub async fn show_stats(index_path: PathBuf) -> Result<()> {
-    let search_engine = SearchEngine::new(&index_path).await?;
+pub async fn show_stats(search_config: EngineSearchConfig) -> Result<()> {
+    let index_path = search_config.index_path.clone();
+    let search_engine = SearchEngine::with_config(search_config).await?;
     let stats = search_engine.get_stats().await?;
 
-    println!("Index Statistics:");
+    println!("Index Statistics ({:?}):", index_path);
     println!("  Total documents: {}", stats.total_documents);
     println!("  Index size: {}", stats.human_readable_size());
     println!("  Supported languages: {}", stats.supported_languages);

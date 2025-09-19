@@ -1,17 +1,18 @@
 //! Index command implementation
 
 use anyhow::{anyhow, Result};
-use lens_search_engine::SearchEngine;
+use lens_search_engine::{SearchConfig as EngineSearchConfig, SearchEngine};
 use std::path::PathBuf;
 use tracing::info;
 
 /// Index a directory
 pub async fn index_directory(
-    index_path: PathBuf,
+    search_config: EngineSearchConfig,
     directory: PathBuf,
     _force: bool,
     show_progress: bool,
 ) -> Result<()> {
+    let index_path = search_config.index_path.clone();
     info!("Indexing directory: {:?} -> {:?}", directory, index_path);
 
     if !directory.exists() {
@@ -19,7 +20,7 @@ pub async fn index_directory(
     }
 
     // Create search engine
-    let search_engine = SearchEngine::new(&index_path).await?;
+    let search_engine = SearchEngine::with_config(search_config).await?;
 
     // Show progress if requested
     if show_progress {

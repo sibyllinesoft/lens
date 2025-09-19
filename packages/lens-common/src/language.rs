@@ -3,7 +3,7 @@
 //! Shared types for language detection and AST parsing
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt};
 
 /// Supported programming languages
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -19,19 +19,21 @@ pub enum ProgrammingLanguage {
     Unknown,
 }
 
-impl ToString for ProgrammingLanguage {
-    fn to_string(&self) -> String {
-        match self {
-            ProgrammingLanguage::Rust => "rust".to_string(),
-            ProgrammingLanguage::Python => "python".to_string(),
-            ProgrammingLanguage::TypeScript => "typescript".to_string(),
-            ProgrammingLanguage::JavaScript => "javascript".to_string(),
-            ProgrammingLanguage::Go => "go".to_string(),
-            ProgrammingLanguage::Java => "java".to_string(),
-            ProgrammingLanguage::Cpp => "cpp".to_string(),
-            ProgrammingLanguage::C => "c".to_string(),
-            ProgrammingLanguage::Unknown => "unknown".to_string(),
-        }
+impl fmt::Display for ProgrammingLanguage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let value = match self {
+            ProgrammingLanguage::Rust => "rust",
+            ProgrammingLanguage::Python => "python",
+            ProgrammingLanguage::TypeScript => "typescript",
+            ProgrammingLanguage::JavaScript => "javascript",
+            ProgrammingLanguage::Go => "go",
+            ProgrammingLanguage::Java => "java",
+            ProgrammingLanguage::Cpp => "cpp",
+            ProgrammingLanguage::C => "c",
+            ProgrammingLanguage::Unknown => "unknown",
+        };
+
+        f.write_str(value)
     }
 }
 

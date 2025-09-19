@@ -1,170 +1,71 @@
-# Lens 🔍
-## **Production-Ready Code Search with Advanced Semantic Understanding**
+# Lens
 
-[![npm version](https://img.shields.io/npm/v/@sibyllinesoft/lens.svg)](https://www.npmjs.com/package/@sibyllinesoft/lens)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node->=18.0.0-brightgreen.svg)](https://nodejs.org/)
+Lens is a Rust-based code search platform that combines a high-performance
+Tantivy index, a CLI, an HTTP API, and a production-ready Language Server. It
+replaces the earlier TypeScript prototype with a cohesive Rust workspace.
 
-> **Production-ready code search that actually understands your code.** Lens combines lightning-fast text search with intelligent code analysis, delivering high-quality search results with sub-millisecond response times.
+## Workspace Layout
 
-**🎯 Production Status:** `@sibyllinesoft/lens@1.0.0-rc.2` - Enterprise-ready with comprehensive monitoring and proven performance improvements.
-
-## 🚀 Quick Start
-
-```bash
-# Install
-npm install -g @sibyllinesoft/lens
-
-# Start the search engine
-lens start
-
-# Search your codebase
-lens search "authentication logic"
+```
+apps/
+  lens-core/        # CLI binary and Axum HTTP server
+packages/
+  search-engine/    # Tantivy indexing/search library
+  lsp-server/       # tower-lsp implementation
+  lens-common/      # shared data types and utilities
+archive/            # Legacy scripts and documentation retained for reference
 ```
 
-## 📁 Repository Structure
+## Getting Started
 
-This repository is organized for maintainability and clarity:
+1. Install the Rust toolchain (`rustup default stable`).
+2. Build the project:
+   ```bash
+   cargo build --release
+   ```
+3. Index a repository:
+   ```bash
+   cargo run -- index /path/to/project
+   ```
+4. Start the HTTP API:
+   ```bash
+   cargo run -- serve --bind 127.0.0.1 --port 3000
+   ```
+5. Start the LSP server (stdio mode):
+   ```bash
+   cargo run -- lsp
+   ```
 
-### 📂 **Core Directories**
-- **[`/src`](./src/)** - Main application source code (TypeScript/Rust)
-- **[`/docs`](./docs/)** - Complete technical documentation and guides
-- **[`/benchmarks`](./benchmarks/)** - Performance benchmarking suites and analysis
-- **[`/scripts`](./scripts/)** - Utility scripts for development and operations
-- **[`/configs`](./configs/)** - Configuration files and settings
-- **[`/tools`](./tools/)** - Development tools and utilities
-- **[`/infra`](./infra/)** - Infrastructure as code (Docker, CI/CD, deployment)
-- **[`/replication-kit`](./replication-kit/)** - External validation and reproducibility package
-- **[`/artifacts`](./artifacts/)** - Generated reports and analysis outputs (git-ignored)
+The CLI exposes additional commands; run `lens --help` for a full list.
 
-### 📝 **Key Files**
-- **[`README.md`](./README.md)** - This overview and getting started guide
-- **[`CLAUDE.md`](./CLAUDE.md)** - Project development notes and context
-- **[`TODO.md`](./TODO.md)** - Current development tasks and planning
-- **[`package.json`](./package.json)** - Node.js dependencies and scripts
-- **[`Cargo.toml`](./Cargo.toml)** - Rust dependencies and configuration
+## Configuration
 
-## 🏆 **Performance & Features**
+Lens loads settings from `lens.toml`. Generate a starter file with
+`lens config init` and review the [configuration reference](docs/configuration.md)
+for all available options. Environment variables prefixed with `LENS_` override
+file values.
 
-### **Proven Search Quality**
-- **High Relevance**: Advanced semantic understanding for code search
-- **Fast Response**: Sub-millisecond query processing  
-- **Comprehensive Coverage**: Multi-language support (TypeScript, Rust, Python, etc.)
-- **Intelligent Matching**: Fuzzy search with typo tolerance
+## HTTP API
 
-### **Production-Ready Architecture**
-- **Multi-Stage Pipeline**: Lexical + Symbol + Semantic search layers
-- **Scalable Infrastructure**: Handles large codebases efficiently
-- **Enterprise Security**: Self-hosted with complete data privacy
-- **Monitoring & Observability**: Comprehensive metrics and health checks
+The Axum server provides search, indexing, and monitoring endpoints. See
+[docs/api.md](docs/api.md) for supported routes and response shapes. Error
+responses are encoded as structured `LensError` values.
 
-## 📖 **Documentation**
+## Language Server
 
-### **Getting Started**
-- **[Quick Start Guide](./docs/QUICKSTART.md)** - Installation and basic usage
-- **[Architecture Overview](./docs/ARCHITECTURE.md)** - System design and components
-- **[API Documentation](./docs/)** - Complete API reference
+Lens ships with a `tower-lsp` server that mirrors the search capabilities of the
+HTTP API. Documentation and integration tips are available in
+[docs/lsp.md](docs/lsp.md).
 
-### **Advanced Usage**
-- **[Benchmarking Guide](./benchmarks/README.md)** - Performance testing and validation
-- **[Configuration Reference](./configs/)** - System configuration options
-- **[Deployment Guide](./infra/)** - Production deployment instructions
+## Development
 
-### **Development**
-- **[Contributing Guide](./docs/BENEFITS.md)** - How to contribute to the project
-- **[Agent Integration](./docs/AGENT_INTEGRATION.md)** - AI assistant integration
-- **[Development Scripts](./scripts/)** - Utility scripts for development
+- Format the workspace: `cargo fmt`
+- Run tests: `cargo test`
+- Lint (clippy): `cargo clippy --workspace`
 
-## 🛠️ **Development**
+Pull requests are welcome. Please keep new code documented and covered by unit
+or integration tests.
 
-```bash
-# Install dependencies
-npm install
+## License
 
-# Build the project
-npm run build
-
-# Run tests
-npm test
-
-# Start development server
-npm run dev
-
-# Run benchmarks
-npm run benchmark:smoke
-```
-
-## 📊 **Benchmarking**
-
-Lens includes comprehensive benchmarking infrastructure:
-
-```bash
-# Quick smoke test
-npm run benchmark:smoke
-
-# Full performance suite
-npm run benchmark:full
-
-# Generate performance reports
-npm run benchmark:report
-```
-
-See [`/benchmarks`](./benchmarks/) for detailed benchmarking documentation and results.
-
-## 🚢 **Deployment**
-
-Lens supports multiple deployment methods:
-
-```bash
-# Development deployment
-npm run deploy
-
-# Production deployment with monitoring
-npm run deploy:production
-
-# Infrastructure management
-cd infra/ && docker-compose up
-```
-
-See [`/infra`](./infra/) for complete infrastructure documentation.
-
-## 🔧 **Configuration**
-
-System configuration is centralized in [`/configs`](./configs/):
-
-- **[`/configs/settings`](./configs/settings/)** - Application settings
-- **[`/configs/policies`](./configs/policies/)** - Security and access policies  
-- **[`/configs/benchmarks`](./configs/benchmarks/)** - Benchmark configurations
-
-## 📈 **Monitoring & Reports**
-
-Generated reports and metrics are stored in [`/artifacts`](./artifacts/) (git-ignored):
-
-- Performance benchmarks and analysis
-- Coverage reports and test results
-- System monitoring data and dashboards
-- Generated artifacts and build outputs
-
-## 🤝 **Contributing**
-
-We welcome contributions! Please see:
-
-- **[Development Guide](./docs/BENEFITS.md)** - How to get started
-- **[Architecture Documentation](./docs/ARCHITECTURE.md)** - System overview
-- **[Utility Scripts](./scripts/)** - Development tools and automation
-
-## 📞 **Support & Community**
-
-- **Documentation**: Complete guides in [`/docs`](./docs/)
-- **Issues**: GitHub Issues for bugs and feature requests
-- **Discussions**: GitHub Discussions for questions and ideas
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-
----
-
-**Built with ❤️ for developers who need fast, intelligent code search.**
-
-> 💡 **Tip**: Start with the [`/docs`](./docs/) directory for comprehensive documentation, or explore [`/benchmarks`](./benchmarks/) to see performance validation results.
+Licensed under the MIT License. See `LICENSE` for details.

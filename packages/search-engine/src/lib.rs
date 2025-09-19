@@ -74,11 +74,14 @@ pub struct SearchConfig {
     pub index_path: PathBuf,
     pub max_results: usize,
     pub cache_size: usize,
+    pub enable_cache: bool,
     pub enable_fuzzy: bool,
     pub fuzzy_distance: u8,
     pub heap_size_mb: usize,
     pub commit_interval_ms: u64,
     pub supported_extensions: Vec<String>,
+    pub ignored_directories: Vec<String>,
+    pub ignored_file_patterns: Vec<String>,
 }
 
 impl Default for SearchConfig {
@@ -87,6 +90,7 @@ impl Default for SearchConfig {
             index_path: PathBuf::from("./index"),
             max_results: 50,
             cache_size: 1000,
+            enable_cache: true,
             enable_fuzzy: true,
             fuzzy_distance: 2,
             heap_size_mb: 128,
@@ -110,6 +114,34 @@ impl Default for SearchConfig {
                 ".clj".to_string(),
                 ".ex".to_string(),
                 ".exs".to_string(),
+                ".md".to_string(),
+                ".txt".to_string(),
+            ],
+            ignored_directories: vec![
+                ".git".to_string(),
+                "node_modules".to_string(),
+                "target".to_string(),
+                "dist".to_string(),
+                "build".to_string(),
+                "__pycache__".to_string(),
+                ".pytest_cache".to_string(),
+                "coverage".to_string(),
+                "vendor".to_string(),
+                ".venv".to_string(),
+                "venv".to_string(),
+                "env".to_string(),
+            ],
+            ignored_file_patterns: vec![
+                "*.min.js".to_string(),
+                "*.min.css".to_string(),
+                "*.map".to_string(),
+                "*.lock".to_string(),
+                "package-lock.json".to_string(),
+                "yarn.lock".to_string(),
+                "Cargo.lock".to_string(),
+                "*.log".to_string(),
+                "*.tmp".to_string(),
+                "*.temp".to_string(),
             ],
         }
     }
@@ -167,6 +199,8 @@ impl SearchEngine {
                 .iter()
                 .map(|ext| ext.trim_start_matches('.').to_string())
                 .collect(),
+            ignored_directories: config.ignored_directories.clone(),
+            ignored_patterns: config.ignored_file_patterns.clone(),
             max_concurrent_files: 10,
             max_file_size: 10 * 1024 * 1024,
             ..Default::default()
@@ -399,7 +433,7 @@ impl SearchEngine {
     ) -> Result<Box<dyn tantivy::query::Query>> {
         let index_guard = self.index.read().await;
         let parser = QueryParser::for_index(
-            &*index_guard,
+            &index_guard,
             vec![
                 self.fields.content,
                 self.fields.function_name,
@@ -417,7 +451,7 @@ impl SearchEngine {
             QueryType::Symbol => {
                 // Search specifically in symbol fields
                 let symbol_parser = QueryParser::for_index(
-                    &*index_guard,
+                    &index_guard,
                     vec![
                         self.fields.function_name,
                         self.fields.class_name,
@@ -471,16 +505,16 @@ impl SearchEngine {
         let language = doc
             .get_first(self.fields.language)
             .and_then(|v| v.as_str())
-            .and_then(|s| match s {
-                "rust" => Some(ProgrammingLanguage::Rust),
-                "python" => Some(ProgrammingLanguage::Python),
-                "typescript" => Some(ProgrammingLanguage::TypeScript),
-                "javascript" => Some(ProgrammingLanguage::JavaScript),
-                "go" => Some(ProgrammingLanguage::Go),
-                "java" => Some(ProgrammingLanguage::Java),
-                "cpp" => Some(ProgrammingLanguage::Cpp),
-                "c" => Some(ProgrammingLanguage::C),
-                _ => Some(ProgrammingLanguage::Unknown),
+            .map(|s| match s {
+                "rust" => ProgrammingLanguage::Rust,
+                "python" => ProgrammingLanguage::Python,
+                "typescript" => ProgrammingLanguage::TypeScript,
+                "javascript" => ProgrammingLanguage::JavaScript,
+                "go" => ProgrammingLanguage::Go,
+                "java" => ProgrammingLanguage::Java,
+                "cpp" => ProgrammingLanguage::Cpp,
+                "c" => ProgrammingLanguage::C,
+                _ => ProgrammingLanguage::Unknown,
             });
 
         let line_number = doc

@@ -12,10 +12,12 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use lens_common::ProgrammingLanguage;
-use lens_search_engine::{parse_full_query, QueryBuilder, QueryType, SearchEngine};
+use lens_common::{LensError, ProgrammingLanguage};
+use lens_search_engine::{
+    parse_full_query, QueryBuilder, QueryType, SearchConfig as EngineSearchConfig, SearchEngine,
+};
 use serde::{Deserialize, Serialize};
-use std::{path::PathBuf, sync::Arc};
+use std::{path::PathBuf, sync::Arc, time::Instant};
 use tower_http::cors::CorsLayer;
 use tracing::{error, info, warn};
 
@@ -26,15 +28,18 @@ pub struct ServerConfig {
     pub port: u16,
     pub enable_cors: bool,
     pub index_path: PathBuf,
+    pub search_config: EngineSearchConfig,
 }
 
 impl Default for ServerConfig {
     fn default() -> Self {
+        let search_config = EngineSearchConfig::default();
         Self {
             bind: "127.0.0.1".to_string(),
             port: 3000,
             enable_cors: true,
-            index_path: PathBuf::from("./index"),
+            index_path: search_config.index_path.clone(),
+            search_config,
         }
     }
 }
@@ -43,33 +48,55 @@ impl Default for ServerConfig {
 #[derive(Clone)]
 pub struct ServerState {
     pub search_engine: Arc<SearchEngine>,
+    pub started_at: Instant,
+    pub index_path: PathBuf,
 }
 
 /// Start the HTTP server with real search functionality
 pub async fn start_server(config: ServerConfig) -> Result<()> {
+    let ServerConfig {
+        bind,
+        port,
+        enable_cors,
+        index_path,
+        search_config,
+    } = config;
+
     info!(
         "Starting Lens HTTP server at {}:{} with index at: {:?}",
-        config.bind, config.port, config.index_path
+        bind, port, index_path
     );
 
-    // Create the real search engine (not simulation)
-    let search_engine = Arc::new(SearchEngine::new(&config.index_path).await?);
+    let search_engine = Arc::new(SearchEngine::with_config(search_config).await?);
+    let started_at = Instant::now();
 
     // Create server state
-    let state = ServerState { search_engine };
+    let state = ServerState {
+        search_engine,
+        started_at,
+        index_path: index_path.clone(),
+    };
 
     // Create the router with real endpoints
-    let app = create_router(state, config.enable_cors);
+    let app = create_router(state, enable_cors);
 
     // Start the server
-    let listener =
-        tokio::net::TcpListener::bind(format!("{}:{}", config.bind, config.port)).await?;
-    info!(
-        "Lens HTTP server listening on http://{}:{}",
-        config.bind, config.port
-    );
+    let listener = tokio::net::TcpListener::bind(format!("{}:{}", bind, port)).await?;
+    info!("Lens HTTP server listening on http://{}:{}", bind, port);
 
-    axum::serve(listener, app).await?;
+    let shutdown_signal = async {
+        if let Err(err) = tokio::signal::ctrl_c().await {
+            warn!("Failed to listen for shutdown signal: {}", err);
+        } else {
+            info!("Shutdown signal received, shutting down HTTP server");
+        }
+    };
+
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal)
+        .await?;
+
+    info!("HTTP server shutdown complete");
 
     Ok(())
 }
@@ -200,12 +227,6 @@ pub struct HealthResponse {
     pub index_path: String,
 }
 
-#[derive(Serialize, Debug)]
-pub struct ErrorResponse {
-    pub error: String,
-    pub details: Option<String>,
-}
-
 // ============================================================================
 // Handler Functions (real implementations, not simulations)
 // ============================================================================
@@ -214,39 +235,39 @@ pub struct ErrorResponse {
 async fn search_handler(
     State(state): State<ServerState>,
     Query(params): Query<SearchParams>,
-) -> Result<Json<SearchResponse>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<SearchResponse>, (StatusCode, Json<LensError>)> {
     if params.q.trim().is_empty() {
-        return Err((
+        return Err(api_error(
             StatusCode::BAD_REQUEST,
-            Json(ErrorResponse {
-                error: "Query cannot be empty".to_string(),
-                details: None,
-            }),
+            LensError::search_with_query("Query cannot be empty", params.q.clone()),
         ));
     }
 
     if params.limit == 0 || params.limit > MAX_SEARCH_LIMIT {
-        return Err((
+        return Err(api_error(
             StatusCode::BAD_REQUEST,
-            Json(ErrorResponse {
-                error: "Invalid limit parameter".to_string(),
-                details: Some(format!("limit must be between 1 and {}", MAX_SEARCH_LIMIT)),
-            }),
+            LensError::config_with_field(
+                format!(
+                    "Invalid limit parameter: must be between 1 and {}",
+                    MAX_SEARCH_LIMIT
+                ),
+                "limit",
+            ),
         ));
     }
 
     let limit = params.limit;
     let offset = params.offset.unwrap_or(0);
     if offset > MAX_SEARCH_OFFSET {
-        return Err((
+        return Err(api_error(
             StatusCode::BAD_REQUEST,
-            Json(ErrorResponse {
-                error: "Invalid offset parameter".to_string(),
-                details: Some(format!(
-                    "offset must be between 0 and {}",
+            LensError::config_with_field(
+                format!(
+                    "Invalid offset parameter: must be between 0 and {}",
                     MAX_SEARCH_OFFSET
-                )),
-            }),
+                ),
+                "offset",
+            ),
         ));
     }
 
@@ -321,12 +342,9 @@ async fn search_handler(
             // Get real index stats
             let stats = state.search_engine.get_stats().await.map_err(|e| {
                 error!("Failed to get index stats: {}", e);
-                (
+                api_error(
                     StatusCode::INTERNAL_SERVER_ERROR,
-                    Json(ErrorResponse {
-                        error: "Failed to get index statistics".to_string(),
-                        details: Some(e.to_string()),
-                    }),
+                    LensError::index_with_details("Failed to get index statistics", e.to_string()),
                 )
             })?;
 
@@ -351,12 +369,12 @@ async fn search_handler(
         }
         Err(e) => {
             error!("Search failed: {}", e);
-            Err((
+            Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(ErrorResponse {
-                    error: "Search execution failed".to_string(),
-                    details: Some(e.to_string()),
-                }),
+                LensError::search_with_query(
+                    format!("Search execution failed: {}", e),
+                    core_query_text.clone(),
+                ),
             ))
         }
     }
@@ -366,7 +384,7 @@ async fn search_handler(
 async fn fuzzy_search_handler(
     State(state): State<ServerState>,
     Query(mut params): Query<SearchParams>,
-) -> Result<Json<SearchResponse>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<SearchResponse>, (StatusCode, Json<LensError>)> {
     params.fuzzy = true;
     search_handler(State(state), Query(params)).await
 }
@@ -375,7 +393,7 @@ async fn fuzzy_search_handler(
 async fn symbol_search_handler(
     State(state): State<ServerState>,
     Query(mut params): Query<SearchParams>,
-) -> Result<Json<SearchResponse>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<SearchResponse>, (StatusCode, Json<LensError>)> {
     params.symbols = true;
     search_handler(State(state), Query(params)).await
 }
@@ -384,7 +402,7 @@ async fn symbol_search_handler(
 async fn exact_search_handler(
     State(state): State<ServerState>,
     Query(params): Query<SearchParams>,
-) -> Result<Json<SearchResponse>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<SearchResponse>, (StatusCode, Json<LensError>)> {
     // For exact search, we use text search with no fuzzy matching
     search_handler(State(state), Query(params)).await
 }
@@ -393,16 +411,13 @@ async fn exact_search_handler(
 async fn index_handler(
     State(state): State<ServerState>,
     Json(request): Json<IndexRequest>,
-) -> Result<Json<IndexResponse>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<IndexResponse>, (StatusCode, Json<LensError>)> {
     let directory = PathBuf::from(&request.directory);
 
     if !directory.exists() {
-        return Err((
+        return Err(api_error(
             StatusCode::BAD_REQUEST,
-            Json(ErrorResponse {
-                error: "Directory does not exist".to_string(),
-                details: Some(format!("Path: {}", directory.display())),
-            }),
+            LensError::io_with_path("Directory does not exist", directory.display().to_string()),
         ));
     }
 
@@ -412,12 +427,12 @@ async fn index_handler(
         info!("Force reindex requested; clearing existing index first");
         if let Err(e) = state.search_engine.clear_index().await {
             error!("Failed to clear index before reindexing: {}", e);
-            return Err((
+            return Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(ErrorResponse {
-                    error: "Failed to clear index before reindexing".to_string(),
-                    details: Some(e.to_string()),
-                }),
+                LensError::index_with_details(
+                    "Failed to clear index before reindexing",
+                    e.to_string(),
+                ),
             ));
         }
     }
@@ -438,12 +453,9 @@ async fn index_handler(
         })),
         Err(e) => {
             error!("Indexing failed: {}", e);
-            Err((
+            Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(ErrorResponse {
-                    error: "Indexing failed".to_string(),
-                    details: Some(e.to_string()),
-                }),
+                LensError::index_with_details("Indexing failed", e.to_string()),
             ))
         }
     }
@@ -452,7 +464,7 @@ async fn index_handler(
 /// Optimize index handler
 async fn optimize_handler(
     State(state): State<ServerState>,
-) -> Result<Json<serde_json::Value>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<serde_json::Value>, (StatusCode, Json<LensError>)> {
     match state.search_engine.optimize().await {
         Ok(_) => Ok(Json(serde_json::json!({
             "success": true,
@@ -460,12 +472,9 @@ async fn optimize_handler(
         }))),
         Err(e) => {
             error!("Optimization failed: {}", e);
-            Err((
+            Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(ErrorResponse {
-                    error: "Index optimization failed".to_string(),
-                    details: Some(e.to_string()),
-                }),
+                LensError::index_with_details("Index optimization failed", e.to_string()),
             ))
         }
     }
@@ -474,7 +483,7 @@ async fn optimize_handler(
 /// Clear index handler
 async fn clear_handler(
     State(state): State<ServerState>,
-) -> Result<Json<serde_json::Value>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<serde_json::Value>, (StatusCode, Json<LensError>)> {
     info!("Clear index endpoint called");
 
     match state.search_engine.clear_index().await {
@@ -487,12 +496,9 @@ async fn clear_handler(
         }
         Err(e) => {
             error!("Failed to clear index: {}", e);
-            Err((
+            Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(ErrorResponse {
-                    error: "Failed to clear index".to_string(),
-                    details: Some(e.to_string()),
-                }),
+                LensError::index_with_details("Failed to clear index", e.to_string()),
             ))
         }
     }
@@ -501,7 +507,7 @@ async fn clear_handler(
 /// Stats handler - real statistics, not simulation
 async fn stats_handler(
     State(state): State<ServerState>,
-) -> Result<Json<IndexStatsResponse>, (StatusCode, Json<ErrorResponse>)> {
+) -> Result<Json<IndexStatsResponse>, (StatusCode, Json<LensError>)> {
     match state.search_engine.get_stats().await {
         Ok(stats) => Ok(Json(IndexStatsResponse {
             total_documents: stats.total_documents,
@@ -513,12 +519,9 @@ async fn stats_handler(
         })),
         Err(e) => {
             error!("Failed to get stats: {}", e);
-            Err((
+            Err(api_error(
                 StatusCode::INTERNAL_SERVER_ERROR,
-                Json(ErrorResponse {
-                    error: "Failed to retrieve index statistics".to_string(),
-                    details: Some(e.to_string()),
-                }),
+                LensError::index_with_details("Failed to retrieve index statistics", e.to_string()),
             ))
         }
     }
@@ -537,15 +540,18 @@ async fn health_handler(State(state): State<ServerState>) -> Json<HealthResponse
         }
         .to_string(),
         version: env!("CARGO_PKG_VERSION").to_string(),
-        uptime_seconds: 0, // Could be enhanced with actual uptime tracking
+        uptime_seconds: state.started_at.elapsed().as_secs(),
         search_engine_ready,
-        index_path: "index".to_string(), // Could be enhanced with actual path
+        index_path: state.index_path.display().to_string(),
     })
 }
 
 // ============================================================================
 // Helper Functions
 // ============================================================================
+fn api_error(status: StatusCode, error: LensError) -> (StatusCode, Json<LensError>) {
+    (status, Json(error))
+}
 
 /// Map language string to programming language enum
 fn map_language_string(language: &str) -> Option<ProgrammingLanguage> {
@@ -628,6 +634,8 @@ mod tests {
         let engine = SearchEngine::new(index_dir.path()).await.unwrap();
         let state = ServerState {
             search_engine: Arc::new(engine),
+            started_at: Instant::now(),
+            index_path: index_dir.path().to_path_buf(),
         };
 
         let params = SearchParams {
@@ -652,6 +660,8 @@ mod tests {
         let engine = SearchEngine::new(index_dir.path()).await.unwrap();
         let state = ServerState {
             search_engine: Arc::new(engine),
+            started_at: Instant::now(),
+            index_path: index_dir.path().to_path_buf(),
         };
 
         let params = SearchParams {
@@ -689,6 +699,8 @@ mod tests {
 
         let state = ServerState {
             search_engine: Arc::new(engine),
+            started_at: Instant::now(),
+            index_path: index_dir.path().to_path_buf(),
         };
 
         let params_first = SearchParams {

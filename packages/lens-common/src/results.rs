@@ -157,7 +157,7 @@ impl SearchResults {
     }
 
     /// Mark results as coming from cache
-    pub fn from_cache(mut self) -> Self {
+    pub fn into_cached(mut self) -> Self {
         self.from_cache = true;
         self
     }

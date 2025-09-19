@@ -159,7 +159,7 @@ impl Workspace {
 
     /// Add a root URI as a workspace folder
     pub async fn add_root_uri(&mut self, uri: Url) {
-        let name = uri.path().split('/').last().unwrap_or("root").to_string();
+        let name = uri.path().rsplit('/').next().unwrap_or("root").to_string();
         let folder = lsp_types::WorkspaceFolder { name, uri };
         self.add_folder(folder).await;
     }
@@ -371,6 +371,12 @@ impl Workspace {
                     .unwrap_or(false)
             })
             .collect()
+    }
+}
+
+impl Default for Workspace {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

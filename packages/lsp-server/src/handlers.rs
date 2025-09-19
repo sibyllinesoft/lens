@@ -356,7 +356,7 @@ pub async fn handle_hover(
     }))
 }
 
-/// Utility functions for LSP handlers
+// Utility functions for LSP handlers
 
 /// Extract word at the given position
 fn extract_word_at_position(text: &str, position: Position) -> String {
@@ -442,11 +442,6 @@ fn determine_symbol_kind(
                 || content.contains("interface ")
             {
                 SymbolKind::CLASS
-            } else if content.contains("const ")
-                || content.contains("let ")
-                || content.contains("var ")
-            {
-                SymbolKind::VARIABLE
             } else {
                 SymbolKind::VARIABLE
             }

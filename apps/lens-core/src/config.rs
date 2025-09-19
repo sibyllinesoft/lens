@@ -4,11 +4,13 @@
 
 use anyhow::Result;
 use config::{Config, ConfigError, Environment, File, FileFormat};
+use lens_lsp_server::LspServerConfig as EngineLspConfig;
+use lens_search_engine::SearchConfig as EngineSearchConfig;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 /// Main application configuration
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct LensConfig {
     /// Search engine configuration
     pub search: SearchConfig,
@@ -37,6 +39,10 @@ pub struct SearchConfig {
     pub commit_interval_ms: u64,
     /// Supported file extensions
     pub supported_extensions: Vec<String>,
+    /// Directories to ignore while indexing
+    pub ignored_directories: Vec<String>,
+    /// File patterns to ignore while indexing
+    pub ignored_file_patterns: Vec<String>,
     /// Enable query caching
     pub enable_cache: bool,
     /// Cache size (number of queries)
@@ -56,6 +62,8 @@ pub struct LspConfig {
     pub search_debounce_ms: u64,
     /// Enable result caching in LSP
     pub enable_result_caching: bool,
+    /// Glob patterns excluded from workspace indexing and watching
+    pub workspace_exclude_patterns: Vec<String>,
 }
 
 /// HTTP server configuration
@@ -82,17 +90,6 @@ pub struct AppConfig {
     pub enable_file_watching: bool,
     /// Number of worker threads
     pub worker_threads: Option<usize>,
-}
-
-impl Default for LensConfig {
-    fn default() -> Self {
-        Self {
-            search: SearchConfig::default(),
-            lsp: LspConfig::default(),
-            http: HttpConfig::default(),
-            app: AppConfig::default(),
-        }
-    }
 }
 
 impl Default for SearchConfig {
@@ -126,8 +123,67 @@ impl Default for SearchConfig {
                 ".md".to_string(),
                 ".txt".to_string(),
             ],
+            ignored_directories: vec![
+                ".git".to_string(),
+                "node_modules".to_string(),
+                "target".to_string(),
+                "dist".to_string(),
+                "build".to_string(),
+                "__pycache__".to_string(),
+                ".pytest_cache".to_string(),
+                "coverage".to_string(),
+                "vendor".to_string(),
+                ".venv".to_string(),
+                "venv".to_string(),
+                "env".to_string(),
+            ],
+            ignored_file_patterns: vec![
+                "*.min.js".to_string(),
+                "*.min.css".to_string(),
+                "*.map".to_string(),
+                "*.lock".to_string(),
+                "package-lock.json".to_string(),
+                "yarn.lock".to_string(),
+                "Cargo.lock".to_string(),
+                "*.log".to_string(),
+                "*.tmp".to_string(),
+                "*.temp".to_string(),
+            ],
             enable_cache: true,
             cache_size: 1000,
+        }
+    }
+}
+
+impl SearchConfig {
+    /// Convert application search settings into the engine configuration
+    pub fn to_engine_config(&self, index_path: PathBuf) -> EngineSearchConfig {
+        EngineSearchConfig {
+            index_path,
+            max_results: self.max_results,
+            cache_size: self.cache_size,
+            enable_cache: self.enable_cache,
+            enable_fuzzy: self.enable_fuzzy,
+            fuzzy_distance: self.fuzzy_distance,
+            heap_size_mb: self.heap_size_mb,
+            commit_interval_ms: self.commit_interval_ms,
+            supported_extensions: self.supported_extensions.clone(),
+            ignored_directories: self.ignored_directories.clone(),
+            ignored_file_patterns: self.ignored_file_patterns.clone(),
+        }
+    }
+}
+
+impl LspConfig {
+    /// Convert application LSP settings into the server configuration
+    pub fn to_server_config(&self) -> EngineLspConfig {
+        EngineLspConfig {
+            max_search_results: self.max_search_results,
+            enable_fuzzy_search: self.enable_fuzzy_search,
+            enable_semantic_search: self.enable_semantic_search,
+            search_debounce_ms: self.search_debounce_ms,
+            enable_result_caching: self.enable_result_caching,
+            workspace_exclude_patterns: self.workspace_exclude_patterns.clone(),
         }
     }
 }
@@ -140,6 +196,14 @@ impl Default for LspConfig {
             enable_semantic_search: false,
             search_debounce_ms: 300,
             enable_result_caching: true,
+            workspace_exclude_patterns: vec![
+                "**/node_modules/**".to_string(),
+                "**/target/**".to_string(),
+                "**/.git/**".to_string(),
+                "**/dist/**".to_string(),
+                "**/build/**".to_string(),
+                "**/__pycache__/**".to_string(),
+            ],
         }
     }
 }
@@ -239,11 +303,14 @@ impl LensConfig {
             index_path: self.search.index_path.clone(),
             max_results: self.search.max_results,
             cache_size: self.search.cache_size,
+            enable_cache: self.search.enable_cache,
             enable_fuzzy: self.search.enable_fuzzy,
             fuzzy_distance: self.search.fuzzy_distance,
             heap_size_mb: self.search.heap_size_mb,
             commit_interval_ms: self.search.commit_interval_ms,
             supported_extensions: self.search.supported_extensions.clone(),
+            ignored_directories: self.search.ignored_directories.clone(),
+            ignored_file_patterns: self.search.ignored_file_patterns.clone(),
         }
     }
 
@@ -256,6 +323,7 @@ impl LensConfig {
             enable_semantic_search: self.lsp.enable_semantic_search,
             search_debounce_ms: self.lsp.search_debounce_ms,
             enable_result_caching: self.lsp.enable_result_caching,
+            workspace_exclude_patterns: self.lsp.workspace_exclude_patterns.clone(),
         }
     }
 }

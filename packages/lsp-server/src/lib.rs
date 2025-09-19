@@ -45,6 +45,8 @@ pub struct LspServerConfig {
     pub search_debounce_ms: u64,
     /// Whether to cache search results
     pub enable_result_caching: bool,
+    /// Glob patterns excluded from workspace indexing and watching
+    pub workspace_exclude_patterns: Vec<String>,
 }
 
 impl Default for LspServerConfig {
@@ -55,6 +57,14 @@ impl Default for LspServerConfig {
             enable_semantic_search: false,
             search_debounce_ms: 300,
             enable_result_caching: true,
+            workspace_exclude_patterns: vec![
+                "**/node_modules/**".to_string(),
+                "**/target/**".to_string(),
+                "**/.git/**".to_string(),
+                "**/dist/**".to_string(),
+                "**/build/**".to_string(),
+                "**/__pycache__/**".to_string(),
+            ],
         }
     }
 }
@@ -71,10 +81,23 @@ impl LensLspServer {
         search_engine: Arc<SearchEngine>,
         config: LspServerConfig,
     ) -> Self {
+        let workspace_config = match WorkspaceConfig::default()
+            .with_exclude_patterns(config.workspace_exclude_patterns.clone())
+        {
+            Ok(cfg) => cfg,
+            Err(err) => {
+                warn!(
+                    "Failed to apply workspace exclude patterns ({}); falling back to defaults",
+                    err
+                );
+                WorkspaceConfig::default()
+            }
+        };
+
         Self {
             client,
             search_engine,
-            workspace: Arc::new(RwLock::new(Workspace::new())),
+            workspace: Arc::new(RwLock::new(Workspace::with_config(workspace_config))),
             document_cache: Arc::new(DashMap::new()),
             config,
         }
@@ -529,7 +552,7 @@ impl LanguageServer for LensLspServer {
 
         match params.command.as_str() {
             "lens.search" => {
-                if let Some(query) = params.arguments.get(0).and_then(|v| v.as_str()) {
+                if let Some(query) = params.arguments.first().and_then(|v| v.as_str()) {
                     match self.search_text_in_workspace(query).await {
                         Ok(locations) => {
                             // Send results to client
@@ -601,7 +624,11 @@ impl LanguageServer for LensLspServer {
 }
 
 /// Start LSP server over TCP
-pub async fn start_lsp_tcp_server(search_engine: Arc<SearchEngine>, port: u16) -> Result<()> {
+pub async fn start_lsp_tcp_server(
+    search_engine: Arc<SearchEngine>,
+    config: LspServerConfig,
+    port: u16,
+) -> Result<()> {
     use std::net::SocketAddr;
     use tokio::net::TcpListener;
 
@@ -610,16 +637,23 @@ pub async fn start_lsp_tcp_server(search_engine: Arc<SearchEngine>, port: u16) -
 
     info!("LSP server listening on {}", addr);
 
+    let config = Arc::new(config);
+
     loop {
         let (stream, peer_addr) = listener.accept().await?;
         info!("LSP client connected from {}", peer_addr);
 
         let search_engine = search_engine.clone();
+        let server_config = config.clone();
 
         tokio::spawn(async move {
             let (read, write) = tokio::io::split(stream);
-            let (service, socket) =
-                LspService::new(|client| LensLspServer::new(client, search_engine));
+            let engine = search_engine.clone();
+            let config = server_config.as_ref().clone();
+            let (service, socket) = LspService::build(move |client| {
+                LensLspServer::with_config(client, engine.clone(), config.clone())
+            })
+            .finish();
 
             Server::new(read, write, socket).serve(service).await;
 
@@ -706,15 +740,26 @@ fn extract_symbol_from_content(content: &str) -> String {
     }
 }
 
-/// Create and start the LSP server
-pub async fn start_lsp_server(search_engine: Arc<SearchEngine>) -> Result<()> {
+/// Create and start the LSP server over stdio
+pub async fn start_lsp_server(
+    search_engine: Arc<SearchEngine>,
+    config: LspServerConfig,
+) -> Result<()> {
     let stdin = tokio::io::stdin();
     let stdout = tokio::io::stdout();
 
-    let (service, socket) =
-        LspService::build(|client| LensLspServer::new(client, search_engine)).finish();
+    let engine = search_engine.clone();
+    let server_config = config.clone();
+    let exclude_count = config.workspace_exclude_patterns.len();
+    let (service, socket) = LspService::build(move |client| {
+        LensLspServer::with_config(client, engine.clone(), server_config.clone())
+    })
+    .finish();
 
-    info!("Starting Lens LSP Server");
+    info!(
+        "Starting Lens LSP Server (exclude patterns: {})",
+        exclude_count
+    );
     Server::new(stdin, stdout, socket).serve(service).await;
 
     Ok(())

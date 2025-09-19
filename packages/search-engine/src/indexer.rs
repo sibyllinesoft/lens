@@ -167,7 +167,7 @@ impl Indexer {
 
         // Process files sequentially (IndexWriter doesn't support parallel writes)
         let _indexing_results = self
-            .process_files_parallel(files_to_index, writer, *fields)
+            .process_files_sequentially(files_to_index, writer, *fields)
             .await?;
 
         // Update final statistics
@@ -206,7 +206,7 @@ impl Indexer {
 
         // Add ignored directories
         for ignored_dir in &self.config.ignored_directories {
-            builder.add_ignore(&format!("/{}", ignored_dir));
+            builder.add_ignore(format!("/{}", ignored_dir));
         }
 
         let walker = builder.build();
@@ -328,8 +328,8 @@ impl Indexer {
         }
     }
 
-    /// Process files sequentially (IndexWriter doesn't support parallel access)
-    async fn process_files_parallel(
+    /// Process files sequentially (IndexWriter does not support parallel access)
+    async fn process_files_sequentially(
         &self,
         files: Vec<IndexingTask>,
         writer: &IndexWriter,
@@ -424,7 +424,7 @@ impl Indexer {
             // Add basic fields
             doc.add_text(fields.content, line_content);
             doc.add_text(fields.file_path, path.to_string_lossy().as_ref());
-            doc.add_text(fields.language, &task.language.to_string());
+            doc.add_text(fields.language, task.language.to_string());
             doc.add_u64(fields.line_number, (line_number + 1) as u64);
 
             // Add extracted function name if present
@@ -447,7 +447,7 @@ impl Indexer {
             // Add extracted symbols
             let symbols = parsed_content.symbols_at_line(line_number);
             if !symbols.is_empty() {
-                doc.add_text(fields.symbols, &symbols.join(" "));
+                doc.add_text(fields.symbols, symbols.join(" "));
                 file_stats.symbols_extracted += symbols.len();
             }
 
@@ -536,13 +536,11 @@ impl Indexer {
         let mut total_size = 0u64;
 
         // Quick scan to estimate work
-        for entry in std::fs::read_dir(directory)? {
-            if let Ok(entry) = entry {
-                if entry.file_type()?.is_file() {
-                    if let Ok(metadata) = entry.metadata() {
-                        file_count += 1;
-                        total_size += metadata.len();
-                    }
+        for entry in (std::fs::read_dir(directory)?).flatten() {
+            if entry.file_type()?.is_file() {
+                if let Ok(metadata) = entry.metadata() {
+                    file_count += 1;
+                    total_size += metadata.len();
                 }
             }
         }

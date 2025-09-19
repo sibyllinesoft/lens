@@ -2,23 +2,38 @@
 
 use anyhow::Result;
 use lens_search_engine::{
-    parse_full_query, ProgrammingLanguage, QueryBuilder, QueryType, SearchEngine,
+    parse_full_query, ProgrammingLanguage, QueryBuilder, QueryType,
+    SearchConfig as EngineSearchConfig, SearchEngine,
 };
-use std::path::PathBuf;
+
+/// Options that influence how search queries are executed from the CLI.
+#[derive(Debug, Clone)]
+pub struct SearchCommandOptions {
+    pub limit: usize,
+    pub offset: usize,
+    pub fuzzy: bool,
+    pub symbols: bool,
+    pub language: Option<String>,
+    pub file_pattern: Option<String>,
+}
 
 /// Search the index
 pub async fn search_index(
-    index_path: PathBuf,
+    search_config: EngineSearchConfig,
     query: String,
-    limit: usize,
-    offset: usize,
-    fuzzy: bool,
-    symbols: bool,
-    language: Option<String>,
-    file_pattern: Option<String>,
+    options: SearchCommandOptions,
 ) -> Result<()> {
+    let SearchCommandOptions {
+        limit,
+        offset,
+        fuzzy,
+        symbols,
+        language,
+        file_pattern,
+    } = options;
+
     // Create search engine
-    let search_engine = SearchEngine::new(&index_path).await?;
+    let search_engine = SearchEngine::with_config(search_config).await?;
 
     let parsed_query =
         parse_full_query(&query).unwrap_or_else(|_| QueryBuilder::new(&query).build());
@@ -107,7 +122,7 @@ pub async fn search_index(
             println!("   {}", result.content.trim());
 
             if let Some(ref language) = result.language {
-                println!("   language: {}", language.to_string());
+                println!("   language: {}", language);
             }
 
             // Show context if available

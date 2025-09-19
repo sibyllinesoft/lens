@@ -400,11 +400,7 @@ impl LanguageDetector {
 
     /// Helper function to add a symbol to a specific line
     fn add_symbol_to_line(&self, parsed: &mut ParsedContent, line_number: usize, symbol: String) {
-        parsed
-            .symbols
-            .entry(line_number)
-            .or_insert_with(Vec::new)
-            .push(symbol);
+        parsed.symbols.entry(line_number).or_default().push(symbol);
 
         // Deduplicate symbols on this line
         if let Some(symbols) = parsed.symbols.get_mut(&line_number) {
@@ -452,6 +448,8 @@ impl LanguageDetector {
             _ => Regex::new(r"^\s*(?:import|#include)")?, // Generic pattern
         };
 
+        let identifier_regex = Regex::new(r"\b[a-zA-Z_][a-zA-Z0-9_]*\b")?;
+
         // Extract symbols from each line
         for (line_number, line) in content.lines().enumerate() {
             let mut symbols = Vec::new();
@@ -482,7 +480,6 @@ impl LanguageDetector {
             }
 
             // Extract general identifiers
-            let identifier_regex = Regex::new(r"\b[a-zA-Z_][a-zA-Z0-9_]*\b")?;
             for capture in identifier_regex.captures_iter(line) {
                 if let Some(identifier) = capture.get(0) {
                     let id = identifier.as_str();
